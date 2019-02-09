@@ -14,7 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# Commented since flutter project source is contained in lib
+# lib/ 
 lib64/
 parts/
 sdist/
