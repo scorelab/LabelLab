@@ -1,16 +1,37 @@
-# mobile
+# LabelLab - Mobile
 
 Machine learning supported web-base image labelling tool for researcher. 
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+LabelLab allows objects in images to be labeled using a web based machine learning model.
 
-A few resources to get you started if this is your first Flutter project:
+## Prototype
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+This is a prototype for LabelLab project. Currenty, this prototype allows an 
+image to be uploaded to the backend and receive the size of the image as mock result
+to simulate the actual classification model.
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+Project contains a [mobile](https://github.com/UdeshUK/LabelLab/tree/master/mobile) app which is implemented using Flutter 
+framework. And a [backend](https://github.com/UdeshUK/LabelLab/tree/master/backend) implemented with Node.js.
+
+## How To Setup
+
++ Clone the repository
++ Build and run mobile app
+  1. Navigate to mobile 
+      ```
+      cd _repository_/mobile
+      ```
+  2. Build flutter application
+      ```bash
+      flutter build apk
+      # or ios instead of apk to build for iOS
+      ```
+  3. or run the flutter application
+      ```
+      flutter run
+      # A device with USB debugging enabled or virtual device is required
+      ```
+
+For more information about Flutter read the [online documentation](https://flutter.io/docs).
