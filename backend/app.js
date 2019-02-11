@@ -14,7 +14,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(fileUpload());
 
-app.use('/', indexRouter);
+// Removed redundent root api endpoint
+// app.use('/', indexRouter);
 app.use('/classify', classifyRouter);
 
+app.set('port', process.env.PORT || 3000);
 module.exports = app;
