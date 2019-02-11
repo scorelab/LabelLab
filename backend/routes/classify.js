@@ -2,7 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Classiy images' });
+  res.send({
+    api: 'classify',
+    serverTime: Date.now().toString,
+  });
 });
 
 router.post('/image', function (req, res) {
