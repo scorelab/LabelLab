@@ -34,3 +34,20 @@ And use [localhost:3000](https://) to browse.
 
 > **NOTE**: This version is only supporting for Chrome browser. And make sure to instal the extension -> Redux Dev Tools in chrome extension library.
 
+#### How to Use (Mobile)
+
+Run the Node server in the labellab-server directory (if not already done):
+
+`npm start`
+
+In a new terminal navigate to `labellab_mobile` directory and build flutter the application
+
+`flutter build apk`
+
+> **NOTE**: Use 'ios' instead of 'apk' to build for iOS
+
+or run the flutter application
+
+`flutter run`
+
+> **NOTE**: A device with USB debugging enabled or virtual device is required
