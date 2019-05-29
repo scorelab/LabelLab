@@ -1,14 +1,13 @@
 const Validator = require("validator")
-const isEmpty   = require("is-empty")
+const isEmpty = require("is-empty")
 
-module.exports = function validateRegisterInput(data) {
+exports.validateRegisterInput = function(data) {
 	let errors = {}
-
 	// Convert empty fields to an empty string so we can use validator functions
-	data.name      = !isEmpty(data.name) ? data.name : ""
-	data.username  = !isEmpty(data.username) ? data.username : ""
-	data.email     = !isEmpty(data.email) ? data.email : ""
-	data.password  = !isEmpty(data.password) ? data.password : ""
+	data.name = !isEmpty(data.name) ? data.name : ""
+	data.username = !isEmpty(data.username) ? data.username : ""
+	data.email = !isEmpty(data.email) ? data.email : ""
+	data.password = !isEmpty(data.password) ? data.password : ""
 	data.password2 = !isEmpty(data.password2) ? data.password2 : ""
 
 	// Name checks
@@ -41,7 +40,7 @@ module.exports = function validateRegisterInput(data) {
 		errors.msg = "Confirm password field is required"
 		errors.err_field = "password2"
 	}
-	if (!Validator.isLength(data.password, {min: 6, max: 30})) {
+	if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
 		errors.msg = "Password must be at least 6 characters"
 		errors.err_field = "password"
 	}
@@ -56,11 +55,11 @@ module.exports = function validateRegisterInput(data) {
 	}
 }
 
-module.exports = function validateLoginInput(data) {
+exports.validateLoginInput = function(data) {
 	let errors = {}
 
 	// Convert empty fields to an empty string so we can use validator functions
-	data.email    = !isEmpty(data.email) ? data.email : ""
+	data.email = !isEmpty(data.email) ? data.email : ""
 	data.password = !isEmpty(data.password) ? data.password : ""
 
 	// Email checks
