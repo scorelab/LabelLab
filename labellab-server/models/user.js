@@ -7,9 +7,9 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	username:{
-		type:String,
-		required:true
+	username: {
+		type: String,
+		required: true
 	},
 	email: {
 		type: String,
@@ -22,9 +22,9 @@ const UserSchema = new mongoose.Schema({
 	created_at: {
 		type: Date,
 		default: Date.now
-	}
+	},
 })
-UserSchema.pre("save", function (next) {
+UserSchema.pre("save", function(next) {
 	var newUser = this
 	bcrypt.genSalt(10, (err, salt) => {
 		bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -35,8 +35,8 @@ UserSchema.pre("save", function (next) {
 	})
 })
 
-UserSchema.methods.comparePassword = function (password, callback) {
-	bcrypt.compare(password, this.password, function (err, isMatch) {
+UserSchema.methods.comparePassword = function(password, callback) {
+	bcrypt.compare(password, this.password, function(err, isMatch) {
 		if (err) {
 			return callback(err)
 		}

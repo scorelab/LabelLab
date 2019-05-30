@@ -12,6 +12,8 @@ let config = require("./config/db_uri")
 
 var app = express()
 
+const passportGoogle = require("./config/google_passport")
+
 app.use(logger("dev"))
 app.use(cors())
 app.use(express.json())
@@ -24,6 +26,8 @@ app.use("/", indexRouter)
 
 // Passport Config
 require("./config/passport").passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Connect to MongoDB
 mongoose
