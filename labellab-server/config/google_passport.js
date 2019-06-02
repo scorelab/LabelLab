@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 require("dotenv").config()
 
-var User = require("../models/oauth_user")
+var OAuthUser = require("../models/oauth_user")
 var passport = require("passport")
 var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
 
@@ -13,21 +13,20 @@ passport.use(
 			callbackURL: "http://127.0.0.1:5000/api/v1/auth/google/callback"
 		},
 		function(accessToken, refreshToken, profile, done) {
-			User.findOne({ googleId: profile.id })
+			OAuthUser.findOne({ googleId: profile.id })
 				.then(currentUser => {
 					if (currentUser) {
-						console.log("user is: ", currentUser)
-						done(null, currentUser)
+						return done(null, currentUser)
 					} else {
-						new User({
+						new OAuthUser({
+							accessToken: accessToken,
 							googleId: profile.id,
 							username: profile.displayName,
 							thumbnail: profile._json.picture
 						})
 							.save()
 							.then(newUser => {
-								console.log("created new user: ", newUser)
-								done(null, newUser)
+								return done(null, newUser)
 							})
 					}
 				})

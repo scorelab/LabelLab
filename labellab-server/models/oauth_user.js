@@ -2,6 +2,9 @@ const mongoose = require("mongoose")
 
 // Create Schema
 const OAuthUserSchema = new mongoose.Schema({
+	accessToken: {
+		type: String
+	},
 	username: {
 		type: String,
 		required: true
