@@ -22,13 +22,12 @@ app.use(cookieParser())
 
 app.use("static", express.static(path.join(__dirname, "public")))
 
-app.use("/", indexRouter)
-
 // Passport Config
 require("./config/passport").passport
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize())
+app.use(passport.session())
 
+app.use("/", indexRouter)
 // Connect to MongoDB
 mongoose
 	.connect(config.mongoURI, {
