@@ -13,6 +13,7 @@ let config = require("./config/db_uri")
 var app = express()
 
 const passportGoogle = require("./config/google_passport")
+const passportGithub = require("./config/github_passport")
 
 app.use(logger("dev"))
 app.use(cors())
