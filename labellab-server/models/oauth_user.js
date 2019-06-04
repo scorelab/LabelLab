@@ -12,6 +12,9 @@ const OAuthUserSchema = new mongoose.Schema({
 	googleId: {
 		type: String
 	},
+	githubId: {
+		type: String
+	},
 	created_at: {
 		type: Date,
 		default: Date.now
