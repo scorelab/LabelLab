@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/screen/home/camera_button.dart';
 import 'package:labellab_mobile/screen/home/nav_item.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +19,19 @@ class HomeScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: SafeArea(child: _buildTopNav(context)),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CameraButton(
+                onTap: () {
+                  print("Sex");
+                },
+              ),
+              SizedBox(height: 32),
+              _buildGalleryButton(context),
+            ],
           ),
           Positioned(
             bottom: 0,
@@ -57,18 +70,39 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
+  Widget _buildGalleryButton(BuildContext context) {
+    return FloatingActionButton(
+      child: Icon(
+        Icons.photo_library,
+        color: Theme.of(context).accentColor,
+      ),
+      backgroundColor: Colors.white,
+      elevation: 1,
+      onPressed: () => {},
+    );
+  }
+
   Widget _buildUserDetails(BuildContext context) {
     final _authState = Provider.of<AuthState>(context);
     if (_authState.user != null) {
       User user = _authState.user;
       return Card(
         child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.blue,
+          ),
           title: Text(user.name),
           subtitle: Text(user.username),
         ),
       );
     } else {
-      return Container();
+      return Card(
+        child: ListTile(
+          title: Text("Sign In"),
+          subtitle: Text("Sync your history and access projects"),
+          trailing: Icon(Icons.person_add),
+        ),
+      );
     }
   }
 
