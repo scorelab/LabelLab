@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/home/camera_button.dart';
 import 'package:labellab_mobile/screen/home/nav_item.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
@@ -46,28 +47,26 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildTopNav(BuildContext context) {
     final _authState = Provider.of<AuthState>(context);
-    if (_authState.user != null) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            NavItem(
-              icon: Icons.history,
-              label: "History",
-              onTap: () => _goToPage(context, 0),
-            ),
-            NavItem(
-              icon: Icons.photo_library,
-              label: "Projects",
-              onTap: () => _goToPage(context, 2),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
-    }
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          NavItem(
+            icon: Icons.history,
+            label: "History",
+            onTap: () => _goToPage(context, 0),
+          ),
+          _authState.user != null
+              ? NavItem(
+                  icon: Icons.photo_library,
+                  label: "Projects",
+                  onTap: () => _goToPage(context, 2),
+                )
+              : Container(),
+        ],
+      ),
+    );
   }
 
   Widget _buildGalleryButton(BuildContext context) {
@@ -101,6 +100,9 @@ class HomeScreen extends StatelessWidget {
           title: Text("Sign In"),
           subtitle: Text("Sync your history and access projects"),
           trailing: Icon(Icons.person_add),
+          onTap: () {
+            Application.router.navigateTo(context, "/login");
+          },
         ),
       );
     }
