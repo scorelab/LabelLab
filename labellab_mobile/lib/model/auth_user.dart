@@ -1,8 +1,15 @@
 class AuthUser {
-  String username;
+  String email;
   String password;
 
-  AuthUser(this.username, this.password);
+  AuthUser(this.email, this.password);
 
   AuthUser.just();
+
+  Map<String, dynamic> toMap() {
+    return {
+      "email": email,
+      "password": password
+    };
+  }
 }

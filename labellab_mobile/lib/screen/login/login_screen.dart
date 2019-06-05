@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -14,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> _key = GlobalKey();
 
+  bool _isLoginIn = false;
   AuthUser _user = AuthUser.just();
 
   @override
@@ -46,11 +50,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 16,
                       ),
                       LabelTextField(
-                        labelText: "Username",
+                        labelText: "Email",
                         onSaved: (String value) {
-                          _user.username = value;
+                          _user.email = value;
                         },
-                        validator: _validateUsername,
+                        validator: _validateEmail,
                       ),
                       SizedBox(
                         height: 16,
@@ -74,8 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: Text("Sign In"),
-                        onPressed: _onSubmit,
+                        child: _isLoginIn
+                            ? Text("Signing In...")
+                            : Text("Sign In"),
+                        onPressed: _isLoginIn ? null : _onSubmit,
                       ),
                     ],
                   ),
@@ -111,9 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String _validateUsername(String username) {
-    if (username.isEmpty) {
-      return "Username can't be empty";
+  String _validateEmail(String email) {
+    if (email.isEmpty) {
+      return "Email can't be empty";
     }
     return null;
   }
@@ -129,7 +135,26 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_key.currentState.validate()) {
       _key.currentState.save();
 
-      // TODO - Integrate repository login logic
+      setState(() {
+        _isLoginIn = true;
+      });
+      Provider.of<AuthState>(context).signin(_user).then((success) {
+        if (success) {
+          Application.router.pop(context);
+        } else {
+          setState(() {
+            _isLoginIn = false;
+          });
+        }
+      }).catchError((err) {
+        setState(() {
+          _isLoginIn = false;
+        });
+        print(err.toString());
+        // Scaffold.of(context).showSnackBar(SnackBar(
+        //   content: Text("Sign in failed!"),
+        // ));
+      });
     }
   }
 
