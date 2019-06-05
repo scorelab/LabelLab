@@ -40,7 +40,7 @@ exports.userRegister = function(req, res, next) {
 // @access Public
 exports.userLogin = function(req, res, next) {
 	// Form validation
-	const { errors, isValid } = validateRegisterInput(req.body)
+	const { errors, isValid } = validateLoginInput(req.body)
 	// Check validation
 	if (!isValid) {
 		return res.status(400).json(errors)
