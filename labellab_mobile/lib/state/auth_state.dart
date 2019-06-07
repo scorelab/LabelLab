@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
+import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/user.dart';
 
 class AuthState with ChangeNotifier {
@@ -32,7 +33,7 @@ class AuthState with ChangeNotifier {
     });
   }
 
-  Future<bool> register(User user) {
+  Future<bool> register(RegisterUser user) {
     return _respository.register(user).then((response) {
       print("Success: " + response.token);
       this.user = User(

@@ -3,7 +3,7 @@ import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/data/remote/dto/register_response.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
-import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/model/register_user.dart';
 
 class LabelLabAPIImpl extends LabelLabAPI {
   Dio _dio;
@@ -25,7 +25,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<RegisterResponse> register(User user) {
+  Future<RegisterResponse> register(RegisterUser user) {
     return _dio.post(BASE_URL + ENDPOINT_REGISTER, data: user.toMap()).then((response) {
       return RegisterResponse(response.data);
     });

@@ -1,12 +1,14 @@
-import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/model/auth_user.dart';
 
-class RegisterUser extends User {
+class RegisterUser extends AuthUser {
+  String name;
+  String username;
   String password2;
 
-  RegisterUser(name, username, email, password, this.password2)
-      : super(username: username, name: name, email: email, password: password);
+  RegisterUser(this.name, this.username, email, password, this.password2)
+      : super(email, password);
 
-  RegisterUser.just() : super();
+  RegisterUser.just() : super.just();
 
   Map<String, dynamic> toMap() {
     return {
