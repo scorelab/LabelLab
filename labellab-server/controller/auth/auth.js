@@ -1,12 +1,12 @@
 const jwt = require("jwt-simple")
-const config = require("../config/jwt_secret")
+const config = require("../../config/jwt_secret")
 // Load input validation
-const validateRegisterInput = require("../utils/auth_validations")
+const validateRegisterInput = require("../../utils/auth_validations")
 	.validateRegisterInput
-const validateLoginInput = require("../utils/auth_validations")
+const validateLoginInput = require("../../utils/auth_validations")
 	.validateLoginInput
 // Load User model
-const User = require("../models/user")
+const User = require("../../models/user")
 
 // @desc Register user
 // @access Public

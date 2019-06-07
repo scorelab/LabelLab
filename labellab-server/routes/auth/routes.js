@@ -3,8 +3,8 @@ var passport = require("passport")
 const router = express.Router()
 
 // Controllers of each route
-const OAuthlogin = require("../../controller/oauth").signin
-const authController = require("../../controller/auth")
+const OAuthlogin = require("../../controller/auth/oauth").signin
+const authController = require("../../controller/auth/auth")
 const requireLogin = passport.authenticate("local", { session: false })
 
 require("../../config/github_passport")
