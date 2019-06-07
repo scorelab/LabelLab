@@ -32,6 +32,19 @@ class AuthState with ChangeNotifier {
     });
   }
 
+  Future<bool> register(User user) {
+    return _respository.register(user).then((response) {
+      print("Success: " + response.token);
+      this.user = User(
+        username: "udeshuk",
+        email: "mail@udesh.xyz",
+        name: "Udesh Kumarasinghe",
+      );
+      notifyListeners();
+      return response.success;
+    });
+  }
+
   void signout() {
     // TODO - Implement sign out login
   }
