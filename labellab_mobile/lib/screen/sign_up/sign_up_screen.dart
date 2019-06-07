@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key key}) : super(key: key);
@@ -12,7 +15,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   GlobalKey<FormState> _key = GlobalKey();
 
-  User _user = User();
+  RegisterUser _user = RegisterUser.just();
+  bool _isRegistering = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,19 +58,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextField(
-                        labelText: "Firstname",
+                        labelText: "Name",
+                        textCapitalization: TextCapitalization.words,
                         onSaved: (String value) {
-                          _user.username = value;
-                        },
-                        validator: _validateName,
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      LabelTextField(
-                        labelText: "Lastname",
-                        onSaved: (String value) {
-                          _user.username = value;
+                          _user.name = value;
                         },
                         validator: _validateName,
                       ),
@@ -76,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       LabelTextField(
                         labelText: "Email",
                         onSaved: (String value) {
-                          _user.username = value;
+                          _user.email = value;
                         },
                         validator: _validateEmail,
                       ),
@@ -94,6 +89,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
+                      LabelTextField(
+                        labelText: "Confirm Password",
+                        isObscure: true,
+                        onSaved: (String value) {
+                          _user.password2 = value;
+                        },
+                        validator: _validateConfirmPassword,
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
                       RaisedButton(
                         elevation: 0,
                         color: Theme.of(context).accentColor,
@@ -102,8 +108,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: Text("Sign Up"),
-                        onPressed: _onSubmit,
+                        child: _isRegistering
+                            ? Text("Signnig Up")
+                            : Text("Sign Up"),
+                        onPressed: _isRegistering ? null : _onSubmit,
                       ),
                     ],
                   ),
@@ -155,11 +163,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  void _onSubmit() {
-    if (_key.currentState.validate()) {
-      _key.currentState.save();
+  String _validateConfirmPassword(String password) {
+    if (password.isEmpty || _user.password != _user.password2) {
+      return "Passwords doesn't match";
+    }
+    return null;
+  }
 
-      // TODO - Integrate repository signup logic
+  void _onSubmit() {
+    _key.currentState.save();
+    if (_key.currentState.validate()) {
+      setState(() {
+        _isRegistering = true;
+      });
+      Provider.of<AuthState>(context).register(_user).then((success) {
+        if (success) {
+          Application.router
+              .navigateTo(context, "/", replace: true, clearStack: true);
+        } else {
+          setState(() {
+            _isRegistering = false;
+          });
+        }
+      }).catchError((err) {
+        setState(() {
+          _isRegistering = false;
+        });
+        print(err.toString());
+        // Scaffold.of(context).showSnackBar(SnackBar(
+        //   content: Text("Sign in failed!"),
+        // ));
+      });
     }
   }
 
