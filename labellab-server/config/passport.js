@@ -31,7 +31,7 @@ const locallogin = new local({usernameField : "email"}, (email,password,done)=> 
 })
 
 const jwtoptions = {
-	jwtFromRequest: extractjwt.fromHeader("authorization"),
+  jwtFromRequest: extractjwt.fromAuthHeaderAsBearerToken(),
 	secretOrKey: config.jwt_secret
 }
   
