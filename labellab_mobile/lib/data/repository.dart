@@ -3,6 +3,7 @@ import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/user.dart';
 
 class Respository {
   LabelLabAPI _api;
@@ -26,6 +27,12 @@ class Respository {
         return login(user);
       } else throw Exception(response.msg);
     });
+  }
+
+  Future<User> usersInfo() {
+    if (accessToken == null) 
+      return Future.error(Exception("No access token found"));
+    return _api.usersInfo(accessToken);
   }
 
   // Singleton
