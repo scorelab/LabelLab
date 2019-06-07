@@ -5,7 +5,7 @@ const mongoose = require("mongoose")
 const UserSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		required: true
+		required: false
 	},
 	username: {
 		type: String,
@@ -17,22 +17,44 @@ const UserSchema = new mongoose.Schema({
 	},
 	password: {
 		type: String,
-		required: true
+		required: false
+	},
+	accessToken: {
+		type: String
+	},
+	googleId: {
+		type: String
+	},
+	githubId: {
+		type: String
 	},
 	created_at: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	thumbnail: {
+		type: String
+	},
+	project: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Project"
+		}
+	]
 })
 UserSchema.pre("save", function(next) {
 	var newUser = this
-	bcrypt.genSalt(10, (err, salt) => {
-		bcrypt.hash(newUser.password, salt, (err, hash) => {
-			if (err) throw err
-			newUser.password = hash
-			next()
+	if (newUser.password) {
+		bcrypt.genSalt(10, (err, salt) => {
+			bcrypt.hash(newUser.password, salt, (err, hash) => {
+				if (err) throw err
+				newUser.password = hash
+				next()
+			})
 		})
-	})
+	} else {
+		next()
+	}
 })
 
 UserSchema.methods.comparePassword = function(password, callback) {

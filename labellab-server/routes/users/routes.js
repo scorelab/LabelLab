@@ -4,11 +4,14 @@ const router = express.Router()
 const requireAuth = passport.authenticate("jwt", { session: false })
 
 // Include controllers of each route
+const userControls = require("../../controller/user/userControls")
 
-router.get("/profile", requireAuth, function(req, res) {
-	// res.render("profile.ejs", {
-	// 	user: req.user // get the user out of session and pass to template
-	// })
-})
+// GET method
+// To fetch user information
+router.get("/info", requireAuth, userControls.userInfo)
+
+// POST method
+// To initialize user project
+router.post("/initproject", requireAuth, userControls.initializeProject)
 
 module.exports = router
