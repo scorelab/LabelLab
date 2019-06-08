@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
             label: "History",
             onTap: () => _goToPage(context, 0),
           ),
-          _authState.user != null
+          _authState.isAuthenticated
               ? NavItem(
                   icon: Icons.photo_library,
                   label: "Projects",
@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildUserDetails(BuildContext context) {
     final _authState = Provider.of<AuthState>(context);
-    if (_authState.user != null) {
+    if (_authState.isAuthenticated) {
       User user = _authState.user;
       return Card(
         child: ListTile(
@@ -91,10 +91,16 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: Colors.blue,
           ),
           title: Text(user.name),
-          subtitle: Text(user.username),
+          subtitle: Text(user.email),
+          trailing: IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              Provider.of<AuthState>(context).signout();
+            },
+          ),
         ),
       );
-    } else {
+    } else if (!_authState.isLoading) {
       return Card(
         child: ListTile(
           title: Text("Sign In"),
@@ -105,6 +111,8 @@ class HomeScreen extends StatelessWidget {
           },
         ),
       );
+    } else {
+      return Container();
     }
   }
 
