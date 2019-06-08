@@ -10,43 +10,54 @@ class AuthState with ChangeNotifier {
   // State
   User user;
 
+  bool get isAuthenticated => user != null && user.id != null;
+  bool get isLoading => user != null && user.id == null;
+
   AuthState() {
-    // TODO - Load cached user, check the validity and assign to current user
-    // user = User(
-    //   name: "Udesh Kumarasinghe",
-    //   username: "udeshuk",
-    //   email: "mail@udesh.xyz",
-    // );
+    user = User(username: "", name: "", email: "");
     notifyListeners();
+    _respository.initToken().then((isSuccess) {
+      if (isSuccess) {
+        _respository.usersInfo().then((User user) {
+          this.user = user;
+          notifyListeners();
+        });
+      } else {
+        this.user = null;
+        notifyListeners();
+      }
+    }).catchError((err) {
+      this.user = null;
+      notifyListeners();
+    });
   }
 
   Future<bool> signin(AuthUser user) {
     return _respository.login(user).then((response) {
       print("Success: " + response.token);
-      this.user = User(
-        username: "udeshuk",
-        email: "mail@udesh.xyz",
-        name: "Udesh Kumarasinghe",
-      );
-      notifyListeners();
-      return response.success;
+      return _respository.usersInfo().then((User user) {
+        this.user = user;
+        notifyListeners();
+        return response.success;
+      });
     });
   }
 
   Future<bool> register(RegisterUser user) {
     return _respository.register(user).then((response) {
       print("Success: " + response.token);
-      this.user = User(
-        username: "udeshuk",
-        email: "mail@udesh.xyz",
-        name: "Udesh Kumarasinghe",
-      );
-      notifyListeners();
-      return response.success;
+      _respository.usersInfo().then((User user) {
+        this.user = user;
+        notifyListeners();
+        return response.success;
+      });
     });
   }
 
   void signout() {
-    // TODO - Implement sign out login
+    _respository.logout().then((_) {
+      user = null;
+      notifyListeners();
+    });
   }
 }
