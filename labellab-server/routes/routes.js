@@ -5,11 +5,13 @@ var router = express.Router()
 var authRoute = require("./auth/routes")
 var usersRoute = require("./users/routes")
 var projectRoute = require("./project/routes")
+var imageRoutes = require("./image/routes")
 
 // Routes
 // -> /api/auth/
 router.use("/api/v1/auth", authRoute)
 router.use("/api/v1/users", usersRoute)
 router.use("/api/v1/project", projectRoute)
+router.use("/api/v1/image",imageRoutes)
 
 module.exports = router
