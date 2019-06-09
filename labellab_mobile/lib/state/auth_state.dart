@@ -21,7 +21,7 @@ class AuthState with ChangeNotifier {
         _respository.usersInfo().then((User user) {
           this.user = user;
           notifyListeners();
-        });
+        }).catchError((err) {});
       } else {
         this.user = null;
         notifyListeners();
@@ -54,8 +54,8 @@ class AuthState with ChangeNotifier {
     });
   }
 
-  void signout() {
-    _respository.logout().then((_) {
+  Future<void> signout() {
+    return _respository.logout().then((_) {
       user = null;
       notifyListeners();
     });

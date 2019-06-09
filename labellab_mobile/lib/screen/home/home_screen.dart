@@ -3,6 +3,7 @@ import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/home/camera_button.dart';
 import 'package:labellab_mobile/screen/home/nav_item.dart';
+import 'package:labellab_mobile/screen/home/user_detail_loading.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
 
@@ -92,12 +93,7 @@ class HomeScreen extends StatelessWidget {
           ),
           title: Text(user.name),
           subtitle: Text(user.email),
-          trailing: IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              Provider.of<AuthState>(context).signout();
-            },
-          ),
+          onTap: () => _goToProfile(context),
         ),
       );
     } else if (!_authState.isLoading) {
@@ -112,7 +108,7 @@ class HomeScreen extends StatelessWidget {
         ),
       );
     } else {
-      return Container();
+      return UserDetailLoading();
     }
   }
 
@@ -122,5 +118,9 @@ class HomeScreen extends StatelessWidget {
       duration: Duration(milliseconds: 420),
       curve: ElasticOutCurve(),
     );
+  }
+
+  void _goToProfile(BuildContext context) {
+    Application.router.navigateTo(context, "/profile");
   }
 }

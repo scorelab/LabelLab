@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:labellab_mobile/screen/main_screen.dart';
+import 'package:labellab_mobile/screen/profile/profile_screen.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
 
 var mainHandler = Handler(
@@ -17,4 +18,9 @@ var loginHandler = Handler(
 var signupHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return SignUpScreen();
+});
+
+var profileHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return ProfileScreen();
 });
