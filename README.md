@@ -19,11 +19,18 @@ Run npm install in labellab-client folder.
     
 #### How to Use
 
+
 Use two terminals, one for labellab-server and the other for labellab-client.
 
 Run the Node server in the labellab-server folder:
     
 `$ npm start`
+
+Run the Nodemon server in the labellab-server folder:
+
+`$ npm run dev`
+
+> **NOTE**: Before starting the server create a file named `.env` same as `.env.example` and add your **OAUTH** and **DATABASE** credentials in the file.
 
 start the npm server in labellab-client directory.
 
@@ -32,7 +39,7 @@ start the npm server in labellab-client directory.
 And use [localhost:3000](https://) to browse.
 
 
-> **NOTE**: This version is only supporting for Chrome browser. And make sure to instal the extension -> Redux Dev Tools in chrome extension library.
+> **NOTE**: This version is only supporting for Chrome and Firefox browser. And make sure to instal the extension -> Redux Dev Tools in chrome extension library.
 
 #### How to Use (Mobile)
 
