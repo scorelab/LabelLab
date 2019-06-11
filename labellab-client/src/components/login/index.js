@@ -58,13 +58,9 @@ class LoginIndex extends Component {
     return (
       <div className="login">
         <div className="loginInput">
-          <span className="login-error-text" style={{}}>
+          <span className="login-error-text">
             {errors}
           </span>
-          <div className="heading">Welcome to DELTA</div>
-          <div className="subheading">
-            An online opportunity portal for students of IIT-R
-          </div>
           <form onSubmit={this.handleSubmit}>
             <Input
               type="text"
