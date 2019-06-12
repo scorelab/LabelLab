@@ -5,16 +5,15 @@ import Logout from "./logout/index";
 import Login from "./login/index";
 import PrivateRoute from "../utils/pR";
 import Navbar from "./navbar/index";
-import Register from "./register/index"
+import Register from "./register/index";
 
 class App extends Component {
   render() {
     const { match } = this.props;
-    console.log(this.props)
     return (
       <BrowserRouter>
         <React.Fragment>
-          <PrivateRoute path={`${match.path}/`} component={Navbar} />
+          {/* <PrivateRoute path={`${match.path}`} component={Navbar} /> */}
           <Switch>
             <PrivateRoute exact path={`${match.path}`} component={Dashboard} />
             <Route path={`${match.path}logout`} component={Logout} />

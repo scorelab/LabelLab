@@ -11,7 +11,7 @@ const FetchApi = (method, url, params, TokenValue) => {
 				url: url,
 				data: params,
 				headers: {
-					"Authorization": TokenValue
+					"Authorization": "Bearer "+ TokenValue
 				},
 				responseType: "json"
 			})
