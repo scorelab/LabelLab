@@ -7,11 +7,14 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
+  SET_USER_DATA_FAILURE,
+  SET_USER_DATA_REQUEST,
+  SET_USER_DATA_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
 import FetchApi from "../utils/FetchAPI";
-import { setToken, logout } from "../utils/token";
+import { setToken, logout, getToken } from "../utils/token";
 
 export const login = (username, password, callback) => {
   return dispatch => {
@@ -30,7 +33,6 @@ export const login = (username, password, callback) => {
       })
       .catch(error => {
         dispatch(failure(error));
-        alert("Wrong credentials");
       });
   };
 
@@ -83,5 +85,30 @@ export const userRegister = (data, callback) => {
   }
   function failure(error, other) {
     return { type: REGISTER_FAILURE, payload: error, other: other };
+  }
+};
+
+export const fetchUser = () => {
+  return dispatch => {
+    dispatch(request());
+    let token = getToken(TOKEN_TYPE);
+    FetchApi("GET", "/api/v1/users/info", null, token)
+      .then(res => {
+        dispatch(success(res.data.body));
+      })
+      .catch(err => {
+        if (err.response) {
+          dispatch(failure(err.response.statusText));
+        }
+      });
+  };
+  function request() {
+    return { type: SET_USER_DATA_REQUEST };
+  }
+  function success(data) {
+    return { type: SET_USER_DATA_SUCCESS, payload: data };
+  }
+  function failure(error) {
+    return { type: SET_USER_DATA_FAILURE, payload: error };
   }
 };
