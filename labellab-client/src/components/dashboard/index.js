@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   Modal,
   Dimmer,
-  Segment,
+  // Segment,
   Button,
   Loader,
   Menu,
@@ -14,20 +14,16 @@ import {
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
-//   setData,
+  //   setData,
   log_out,
-//   uploadImage,
+  uploadImage,
   fetchUser,
-//   initProject
+  initProject
 } from "../../actions/index";
-import {
-    hasToken
-} from "../../utils/token"
-import {
-    TOKEN_TYPE
-} from "../../constants/index"
+import { hasToken } from "../../utils/token";
+import { TOKEN_TYPE } from "../../constants/index";
 // import LabelPreview from "./labelpreview";
-import home from "./css/dashboard.css";
+// import home from "./css/dashboard.css";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -50,7 +46,6 @@ class Dashboard extends Component {
   }
 
   onSubmit = e => {
-    e.preventDefault();
     let { file, image } = this.state;
     if (file && file.size > 101200) {
       this.setState({
@@ -61,7 +56,7 @@ class Dashboard extends Component {
         image: image,
         format: file.type
       };
-    //   this.props.uploadImage(data, this.imageCallback);
+      this.props.uploadImage(data, this.imageCallback);
     }
   };
   imageCallback = msg => {
@@ -107,10 +102,10 @@ class Dashboard extends Component {
     });
   };
   handleProjectSubmit = () => {
-    // this.props.initProject(
-    //   { project_name: this.state.project_name },
-    //   this.projectCallback
-    // );
+    this.props.initProject(
+      { project_name: this.state.project_name },
+      this.projectCallback
+    );
     this.close();
   };
   projectCallback = id => {
@@ -156,7 +151,7 @@ class Dashboard extends Component {
                 ) : this.props.user && this.props.user.image ? (
                   <Image
                     centered
-                    src={`http://localhost:5000/static/img/${
+                    src={`http://localhost:5000${
                       this.props.user.image
                     }?${Date.now()}`}
                     size="mini"
@@ -170,7 +165,7 @@ class Dashboard extends Component {
                   content={this.props.user.username}
                 />
               </Menu.Item>
-              {/* <div>
+              <div>
                 <input
                   type="file"
                   onChange={this.handleImageChange}
@@ -183,7 +178,7 @@ class Dashboard extends Component {
                 >
                   Update Profile Image
                 </label>
-              </div> */}
+              </div>
               <Menu.Item>
                 <Button onClick={this.handleLogout}>Logout</Button>
               </Menu.Item>
@@ -229,13 +224,13 @@ const mapDispatchToProps = dispatch => {
     // setData: (data, callback) => {
     //   dispatch(setData(data, callback));
     // },
-    // uploadImage: (data, callback) => {
-    //   dispatch(uploadImage(data, callback));
-    // },
+    uploadImage: (data, callback) => {
+      dispatch(uploadImage(data, callback));
+    },
     fetchUser: () => {
       dispatch(fetchUser());
     },
-    // initProject: (data, callback) => [dispatch(initProject(data, callback))]
+    initProject: (data, callback) => [dispatch(initProject(data, callback))]
   };
 };
 
@@ -243,5 +238,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Dashboard);
-
-

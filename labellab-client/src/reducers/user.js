@@ -1,7 +1,10 @@
 import {
   SET_USER_DATA_FAILURE,
   SET_USER_DATA_REQUEST,
-  SET_USER_DATA_SUCCESS
+  SET_USER_DATA_SUCCESS,
+  UPLOAD_USER_IMAGE_FAILURE,
+  UPLOAD_USER_IMAGE_REQUEST,
+  UPLOAD_USER_IMAGE_SUCCESS
 } from "../constants/index";
 const initialState = {
   userActions: {
@@ -20,6 +23,28 @@ const initialState = {
 
 const user = (state = initialState, action) => {
   switch (action.type) {
+    case UPLOAD_USER_IMAGE_REQUEST:
+      return {
+        ...state,
+        userActions: {
+          isuploading: true
+        }
+      };
+    case UPLOAD_USER_IMAGE_FAILURE:
+      return {
+        ...state,
+        userActions: {
+          isuploading: false,
+          errors: "Something went wrong!"
+        }
+      };
+    case UPLOAD_USER_IMAGE_SUCCESS:
+      return {
+        ...state,
+        userActions: {
+          isuploading: false
+        }
+      };
     case SET_USER_DATA_REQUEST:
       return {
         ...state,

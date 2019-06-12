@@ -10,4 +10,8 @@ const userControls = require("../../controller/user/userControls")
 // To fetch user information
 router.get("/info", requireAuth, userControls.userInfo)
 
+// POST method
+// To upload user image
+router.post("/upload_image", requireAuth, userControls.userUploadImage)
+
 module.exports = router
