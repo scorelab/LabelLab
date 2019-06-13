@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Modal,
   Dimmer,
@@ -10,7 +10,8 @@ import {
   Image,
   Header,
   Container,
-  Input
+  Input,
+  Icon
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
@@ -151,9 +152,11 @@ class Dashboard extends Component {
                 ) : this.props.user && this.props.user.image ? (
                   <Image
                     centered
-                    src={`http://localhost:5000${
-                      this.props.user.image
-                    }?${Date.now()}`}
+                    src={
+                      process.env.REACT_APP_HOST +
+                      process.env.REACT_APP_SERVER_PORT +
+                      `/static/img/${this.props.user.image}?${Date.now()}`
+                    }
                     size="mini"
                   />
                 ) : null}
@@ -164,6 +167,10 @@ class Dashboard extends Component {
                   as="h5"
                   content={this.props.user.username}
                 />
+              </Menu.Item>
+              <Menu.Item as={Link} name="profile" to="/profile">
+                <Icon name="user" />
+                My profile
               </Menu.Item>
               <div>
                 <input

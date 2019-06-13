@@ -62,7 +62,7 @@ const user = (state = initialState, action) => {
           name: action.payload.name,
           email: action.payload.email,
           username: action.payload.username,
-          image: action.payload.profile_image
+          image: action.payload.thumbnail
         }
       };
     case SET_USER_DATA_FAILURE:

@@ -99,8 +99,7 @@ export const userRegister = (data, callback) => {
 export const fetchUser = () => {
   return dispatch => {
     dispatch(request());
-
-    FetchApi("GET", "/api/v1/users/info", null, token)
+    FetchApi("GET", "/api/v1/users/info", null, getToken(TOKEN_TYPE))
       .then(res => {
         dispatch(success(res.data.body));
       })

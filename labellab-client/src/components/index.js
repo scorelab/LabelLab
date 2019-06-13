@@ -4,8 +4,9 @@ import Dashboard from "./dashboard/index";
 import Logout from "./logout/index";
 import Login from "./login/index";
 import PrivateRoute from "../utils/pR";
-import Navbar from "./navbar/index";
+// import Navbar from "./navbar/index";
 import Register from "./register/index";
+import Profile from "./profile/index"
 
 class App extends Component {
   render() {
@@ -16,6 +17,7 @@ class App extends Component {
           {/* <PrivateRoute path={`${match.path}`} component={Navbar} /> */}
           <Switch>
             <PrivateRoute exact path={`${match.path}`} component={Dashboard} />
+            <PrivateRoute exact path={`${match.path}profile`} component={Profile} />
             <Route path={`${match.path}logout`} component={Logout} />
             <Route path={`${match.path}login`} component={Login} />
             <Route path={`${match.path}register`} component={Register} />
