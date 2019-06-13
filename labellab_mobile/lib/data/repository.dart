@@ -6,7 +6,7 @@ import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Respository {
+class Repository {
   LabelLabAPI _api;
 
   String accessToken;
@@ -55,11 +55,11 @@ class Respository {
   }
 
   // Singleton
-  static final Respository _respository = Respository._internal();
+  static final Repository _respository = Repository._internal();
 
-  factory Respository() {
+  factory Repository() {
     return _respository;
   }
 
-  Respository._internal() : _api = LabelLabAPIImpl();
+  Repository._internal() : _api = LabelLabAPIImpl();
 }

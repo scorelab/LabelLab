@@ -5,7 +5,7 @@ import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/user.dart';
 
 class AuthState with ChangeNotifier {
-  final Respository _respository = Respository();
+  final Repository _respository = Repository();
 
   // State
   User user;

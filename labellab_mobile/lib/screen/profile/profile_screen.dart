@@ -6,7 +6,7 @@ import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final Respository _repository = Respository();
+  final Repository _repository = Repository();
 
   @override
   Widget build(BuildContext context) {
