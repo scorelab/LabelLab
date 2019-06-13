@@ -30,7 +30,7 @@ exports.projectInfo = function(req, res) {
 
 exports.projectInfoId = function(req, res) {
 	if (req && req.params && req.params.id) {
-		Project.find({
+		Project.findOne({
 			_id: req.params.id
 		})
 			.select("project_name")
