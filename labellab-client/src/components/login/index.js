@@ -51,16 +51,19 @@ class LoginIndex extends Component {
     }
   };
   callback = () => {
-    this.props.history.push("/");
+    this.props.location &&
+    this.props.location.state &&
+    this.props.location.state.from &&
+    this.props.location.state.from.pathname
+      ? this.props.history.push(this.props.location.state.from.pathname)
+      : this.props.history.push("/");
   };
   render() {
     const { username, password, errors } = this.state;
     return (
       <div className="login">
         <div className="loginInput">
-          <span className="login-error-text">
-            {errors}
-          </span>
+          <span className="login-error-text">{errors}</span>
           <form onSubmit={this.handleSubmit}>
             <Input
               type="text"
