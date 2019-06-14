@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/screen/history/history_screen.dart';
 import 'package:labellab_mobile/screen/home/home_screen.dart';
+import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_screen.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,10 @@ class _MainScreenState extends State<MainScreen> {
               children: <Widget>[
                 HistoryScreen(),
                 HomeScreen(),
-                ProjectScreen(),
+                Provider<ProjectBloc>(
+                  builder: (context) => ProjectBloc(),
+                  child: ProjectScreen(),
+                ),
               ],
             );
           } else {
