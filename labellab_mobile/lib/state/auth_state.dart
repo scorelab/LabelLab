@@ -18,10 +18,14 @@ class AuthState with ChangeNotifier {
     notifyListeners();
     _respository.initToken().then((isSuccess) {
       if (isSuccess) {
-        _respository.usersInfo().then((User user) {
+        _respository.usersInfoLocal().then((user) async {
           this.user = user;
           notifyListeners();
-        }).catchError((err) {});
+          await _respository.usersInfo().then((User user) {
+            this.user = user;
+            notifyListeners();
+          }).catchError((err) {});
+        });
       } else {
         this.user = null;
         notifyListeners();
