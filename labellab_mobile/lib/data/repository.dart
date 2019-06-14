@@ -1,4 +1,5 @@
 import 'package:labellab_mobile/data/local/project_provider.dart';
+import 'package:labellab_mobile/data/local/user_provider.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
@@ -12,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Repository {
   LabelLabAPI _api;
   ProjectProvider _projectProvider;
+  UserProvider _userProvider;
 
   String accessToken;
 
@@ -39,8 +41,9 @@ class Repository {
 
   Future<void> logout() {
     this.accessToken = null;
-    return SharedPreferences.getInstance().then((pref) {
+    return SharedPreferences.getInstance().then((pref) async {
       pref.setString("token", null);
+      await _userProvider.delete();
     });
   }
 
@@ -53,9 +56,18 @@ class Repository {
     });
   }
 
+  Future<User> usersInfoLocal() {
+    return _userProvider.getUser();
+  }
+
   Future<User> usersInfo() {
     if (accessToken == null) return Future(null);
-    return _api.usersInfo(accessToken);
+    return _api.usersInfo(accessToken).then((user) async {
+      await _userProvider.insert(user);
+      return user;
+    });
+  }
+
   Future<ApiResponse> createProject(Project project) {
     if (accessToken == null) return Future(null);
     return _api.createProject(accessToken, project);
@@ -108,5 +120,6 @@ class Repository {
 
   Repository._internal()
       : _api = LabelLabAPIImpl(),
-        _projectProvider = ProjectProvider();
+        _projectProvider = ProjectProvider(),
+        _userProvider = UserProvider();
 }
