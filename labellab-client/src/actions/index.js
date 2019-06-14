@@ -81,7 +81,9 @@ export const userRegister = (data, callback) => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response.data.msg, err.response.data.err_field));
+          err.response.data ? 
+          dispatch(failure(err.response.data.msg, err.response.data.err_field))
+          : dispatch(failure(err.response.statusText,null))
         }
       });
   };
