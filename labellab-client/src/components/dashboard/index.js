@@ -111,7 +111,7 @@ class Dashboard extends Component {
   };
   projectCallback = id => {
     this.props.history.push({
-      pathname: "/tool",
+      pathname: "/labeller",
       search: "?project_id=" + id
     });
   };

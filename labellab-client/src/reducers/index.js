@@ -1,14 +1,16 @@
-import { combineReducers } from "redux"
-import auth from "./auth"
-import register from "./register"
-import user from "./user"
-import project from "./project"
+import { combineReducers } from "redux";
+import auth from "./auth";
+import register from "./register";
+import user from "./user";
+import project from "./project";
+import image from "./image";
 
 const rootReducers = combineReducers({
-	auth: auth,
-	register: register,
-	user: user,
-	projects: project
-})
+  auth: auth,
+  register: register,
+  user: user,
+  projects: project,
+  images: image
+});
 
-export default rootReducers
+export default rootReducers;

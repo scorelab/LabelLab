@@ -1,7 +1,10 @@
 import {
   INITIALIZE_PROJECT_FAILURE,
   INITIALIZE_PROJECT_REQUEST,
-  INITIALIZE_PROJECT_SUCCESS
+  INITIALIZE_PROJECT_SUCCESS,
+  FETCH_PROJECT_FAILURE,
+  FETCH_PROJECT_REQUEST,
+  FETCH_PROJECT_SUCCESS
 } from "../constants/index";
 const initialState = {
   userActions: {
@@ -35,6 +38,32 @@ const project = (state = initialState, action) => {
         ...state,
         userActions: {
           isinitializing: false
+        },
+        userProjects: {
+          project_name: action.payload.project_name,
+          images: action.payload.image
+        }
+      };
+    case FETCH_PROJECT_REQUEST:
+      return {
+        ...state,
+        userActions: {
+          isfetching: true
+        }
+      };
+    case FETCH_PROJECT_FAILURE:
+      return {
+        ...state,
+        userActions: {
+          isfetching: false,
+          errors: action.payload
+        }
+      };
+    case FETCH_PROJECT_SUCCESS:
+      return {
+        ...state,
+        userActions: {
+          isfetching: false
         },
         userProjects: {
           project_name: action.payload.project_name,

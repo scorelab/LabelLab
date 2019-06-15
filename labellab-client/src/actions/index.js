@@ -16,6 +16,14 @@ import {
   INITIALIZE_PROJECT_FAILURE,
   INITIALIZE_PROJECT_REQUEST,
   INITIALIZE_PROJECT_SUCCESS,
+  FETCH_PROJECT_FAILURE,
+  FETCH_PROJECT_REQUEST,
+  FETCH_PROJECT_SUCCESS,
+  IMAGE_PREVIEW_REQUEST,
+  IMAGE_PREVIEW_SUCCESS,
+  POST_IMAGE_FAILURE,
+  POST_IMAGE_SUCCESS,
+  POST_IMAGE_REQUEST,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -81,9 +89,11 @@ export const userRegister = (data, callback) => {
       })
       .catch(err => {
         if (err.response) {
-          err.response.data ? 
-          dispatch(failure(err.response.data.msg, err.response.data.err_field))
-          : dispatch(failure(err.response.statusText,null))
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -169,5 +179,76 @@ export const initProject = (data, callback) => {
   }
   function failure(error) {
     return { type: INITIALIZE_PROJECT_FAILURE, payload: error };
+  }
+};
+
+export const fetchProject = data => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("GET", "/api/v1/project/get" + data, null, token)
+      .then(res => {
+        dispatch(success(res.data.body[0]));
+        // dispatch({
+        //   type: "SET_PROJECT_NAME",
+        //   payload: res.data.body[0]
+        // });
+      })
+      .catch(err => {
+        if (err.response) {
+          dispatch(failure(err.response));
+        }
+      });
+  };
+  function request() {
+    return { type: FETCH_PROJECT_REQUEST };
+  }
+  function success(data) {
+    return { type: FETCH_PROJECT_SUCCESS, payload: data };
+  }
+  function failure(error) {
+    return { type: FETCH_PROJECT_FAILURE, payload: error };
+  }
+};
+
+export const submitImage = (data, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi(
+      "POST",
+      "/api/v1/image/" + data.project_id + "/create",
+      data,
+      token
+    )
+      .then(res => {
+        dispatch(success(res.data.body));
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          dispatch(failure(err.response));
+        }
+      });
+  };
+  function request() {
+    return { type: POST_IMAGE_REQUEST };
+  }
+  function success(data) {
+    return { type: POST_IMAGE_SUCCESS, payload: data };
+  }
+  function failure(error) {
+    return { type: POST_IMAGE_FAILURE, payload: error };
+  }
+};
+
+export const imagePreview = data => {
+  return dispatch => {
+    dispatch(request());
+    dispatch(success(data));
+  };
+  function request() {
+    return { type: IMAGE_PREVIEW_REQUEST };
+  }
+  function success(data) {
+    return { type: IMAGE_PREVIEW_SUCCESS, payload: data };
   }
 };
