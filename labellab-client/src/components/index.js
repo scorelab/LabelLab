@@ -6,7 +6,8 @@ import Login from "./login/index";
 import PrivateRoute from "../utils/pR";
 // import Navbar from "./navbar/index";
 import Register from "./register/index";
-import Profile from "./profile/index"
+import Profile from "./profile/index";
+import Labeller from "./labeller/index";
 
 class App extends Component {
   render() {
@@ -14,10 +15,18 @@ class App extends Component {
     return (
       <BrowserRouter>
         <React.Fragment>
-          {/* <PrivateRoute path={`${match.path}`} component={Navbar} /> */}
           <Switch>
             <PrivateRoute exact path={`${match.path}`} component={Dashboard} />
-            <PrivateRoute exact path={`${match.path}profile`} component={Profile} />
+            <PrivateRoute
+              exact
+              path={`${match.path}profile`}
+              component={Profile}
+            />
+            <PrivateRoute
+              exact
+              path={`${match.path}labeller`}
+              component={Labeller}
+            />
             <Route path={`${match.path}logout`} component={Logout} />
             <Route path={`${match.path}login`} component={Login} />
             <Route path={`${match.path}register`} component={Register} />

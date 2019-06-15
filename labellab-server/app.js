@@ -27,7 +27,6 @@ app.use("/static", express.static(path.join(__dirname, "public")))
 require("./config/passport").passport
 app.use(passport.initialize())
 app.use(passport.session())
-
 app.use("/", indexRouter)
 // Connect to MongoDB
 mongoose
