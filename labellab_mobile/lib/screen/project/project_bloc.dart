@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/screen/project/project_state.dart';
@@ -16,24 +17,6 @@ class ProjectBloc {
 
   void refresh() {
     _loadProjects();
-  }
-
-  Future<String> update(Project project) {
-    if (project.id == null) {
-      // Create new project
-      return _repository.createProject(project).then((res) {
-        if (!res.success) return res.msg;
-        _loadProjects();
-        return "Success";
-      });
-    } else {
-      // Update the existing project
-      return _repository.updateProject(project).then((res) {
-        if (!res.success) return res.msg;
-        _loadProjects();
-        return "Success";
-      });
-    }
   }
 
   // Project stream
@@ -53,6 +36,15 @@ class ProjectBloc {
     _repository.getProjects().then((projects) {
       this._projects = projects;
       _projectController.add(ProjectState.success(_projects));
+      _isLoading = false;
+    }).catchError((err) {
+      if (err is DioError) {
+        _projectController.add(
+            ProjectState.error(err.message.toString(), projects: _projects));
+      } else {
+        _projectController
+            .add(ProjectState.error(err.toString(), projects: _projects));
+      }
       _isLoading = false;
     });
   }
