@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/register_user.dart';
-import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
-import 'package:labellab_mobile/widgets/label_text_field.dart';
+import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -47,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      LabelTextField(
+                      LabelTextFormField(
                         labelText: "Username",
                         onSaved: (String value) {
                           _user.username = value;
@@ -57,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      LabelTextField(
+                      LabelTextFormField(
                         labelText: "Name",
                         textCapitalization: TextCapitalization.words,
                         onSaved: (String value) {
@@ -68,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      LabelTextField(
+                      LabelTextFormField(
                         labelText: "Email",
                         onSaved: (String value) {
                           _user.email = value;
@@ -78,7 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      LabelTextField(
+                      LabelTextFormField(
                         labelText: "Password",
                         isObscure: true,
                         onSaved: (String value) {
@@ -89,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      LabelTextField(
+                      LabelTextFormField(
                         labelText: "Confirm Password",
                         isObscure: true,
                         onSaved: (String value) {
