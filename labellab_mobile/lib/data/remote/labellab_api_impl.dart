@@ -13,10 +13,11 @@ import 'package:labellab_mobile/model/user.dart';
 class LabelLabAPIImpl extends LabelLabAPI {
   Dio _dio;
 
-  LabelLabAPIImpl(): _dio = Dio();
+  LabelLabAPIImpl() : _dio = Dio();
 
   /// BASE_URL - Change according to current labellab server
-  static const String BASE_URL = "https://labellab-server.herokuapp.com/api/v1/";
+  static const String BASE_URL =
+      "https://labellab-server.herokuapp.com/api/v1/";
 
   // Endpoints
   static const ENDPOINT_LOGIN = "auth/login";
@@ -26,17 +27,21 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_CREATE = "project/create";
   static const ENDPOINT_PROJECT_UPDATE = "project/update";
-  
+
   @override
   Future<LoginResponse> login(AuthUser user) {
-    return _dio.post(BASE_URL + ENDPOINT_LOGIN, data: user.toMap()).then((response) {
+    return _dio
+        .post(BASE_URL + ENDPOINT_LOGIN, data: user.toMap())
+        .then((response) {
       return LoginResponse(response.data);
     });
   }
 
   @override
   Future<RegisterResponse> register(RegisterUser user) {
-    return _dio.post(BASE_URL + ENDPOINT_REGISTER, data: user.toMap()).then((response) {
+    return _dio
+        .post(BASE_URL + ENDPOINT_REGISTER, data: user.toMap())
+        .then((response) {
       return RegisterResponse(response.data);
     });
   }
@@ -46,7 +51,9 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
-    return _dio.get(BASE_URL + ENDPOINT_USERS_INFO, options: options).then((response) {
+    return _dio
+        .get(BASE_URL + ENDPOINT_USERS_INFO, options: options)
+        .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
         return User.fromJson(response.data['body']);
@@ -61,7 +68,10 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
-    return _dio.post(BASE_URL + ENDPOINT_PROJECT_CREATE, options: options, data: project.toMap()).then((response) {
+    return _dio
+        .post(BASE_URL + ENDPOINT_PROJECT_CREATE,
+            options: options, data: project.toMap())
+        .then((response) {
       return ApiResponse(response.data);
     });
   }
@@ -71,7 +81,9 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
-    return _dio.get(BASE_URL + ENDPOINT_PROJECT_GET + "/$id", options: options).then((response) {
+    return _dio
+        .get(BASE_URL + ENDPOINT_PROJECT_GET + "/$id", options: options)
+        .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
         return Project.fromJson(response.data['body']);
@@ -86,12 +98,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
-    return _dio.get(BASE_URL + ENDPOINT_PROJECT_GET, options: options).then((response) {
+    return _dio
+        .get(BASE_URL + ENDPOINT_PROJECT_GET, options: options)
+        .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
         return (response.data['body'] as List<dynamic>)
-        .map((item) => Project.fromJson(item))
-        .toList();
+            .map((item) => Project.fromJson(item))
+            .toList();
       } else {
         throw Exception("Request unsuccessfull");
       }
@@ -103,9 +117,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
-    return _dio.put(BASE_URL + ENDPOINT_PROJECT_UPDATE, options: options, data: project.toMap()).then((response) {
+    return _dio
+        .put(BASE_URL + ENDPOINT_PROJECT_UPDATE + "/${project.id}",
+            options: options, data: project.toMap())
+        .then((response) {
       return ApiResponse(response.data);
     });
   }
-  
 }
