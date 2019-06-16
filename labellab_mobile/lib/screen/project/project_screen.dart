@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_item.dart';
 import 'package:labellab_mobile/screen/project/project_state.dart';
@@ -39,7 +40,15 @@ class ProjectScreen extends StatelessWidget {
                   state.projects != null
                       ? Column(
                           children: state.projects
-                              .map((project) => ProjectItem(project))
+                              .map((project) => ProjectItem(
+                                    project,
+                                    onEditSelected: () {
+                                      _gotoEditProject(context, project.id);
+                                    },
+                                    onDeleteSelected: () {
+                                      // TODO - Integrate project deletion API
+                                    },
+                                  ))
                               .toList(),
                         )
                       : Container(),
@@ -52,11 +61,24 @@ class ProjectScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "project_add_tag",
         child: Icon(Icons.add),
-        onPressed: () {
-          
-        },
+        onPressed: () => _gotoAddProject(context),
       ),
     );
+  }
+
+  void _gotoAddProject(BuildContext context) {
+    Application.router.navigateTo(context, "/project/add").whenComplete(() {
+      Provider.of<ProjectBloc>(context).refresh();
+    });
+  }
+
+  void _gotoEditProject(BuildContext context, String id) {
+    Application.router
+        .navigateTo(context, "/project/edit/" + id)
+        .whenComplete(() {
+      Provider.of<ProjectBloc>(context).refresh();
+    });
   }
 }

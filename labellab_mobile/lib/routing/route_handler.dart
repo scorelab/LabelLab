@@ -3,6 +3,7 @@ import 'package:fluro/fluro.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:labellab_mobile/screen/main_screen.dart';
 import 'package:labellab_mobile/screen/profile/profile_screen.dart';
+import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
 
 var mainHandler = Handler(
@@ -23,4 +24,14 @@ var signupHandler = Handler(
 var profileHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return ProfileScreen();
+});
+
+var addProjectHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return AddEditProjectScreen();
+});
+
+var editProjectHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return AddEditProjectScreen(id: params['id'].first);
 });
