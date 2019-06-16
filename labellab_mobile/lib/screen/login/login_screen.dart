@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
-import 'package:labellab_mobile/widgets/label_text_field.dart';
+import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      LabelTextField(
+                      LabelTextFormField(
                         labelText: "Email",
                         onSaved: (String value) {
                           _user.email = value;
@@ -59,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      LabelTextField(
+                      LabelTextFormField(
                         labelText: "Password",
                         isObscure: true,
                         onSaved: (String value) {

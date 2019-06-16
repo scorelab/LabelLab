@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LabelTextField extends StatelessWidget {
-  final TextEditingController controller;
+class LabelTextFormField extends StatelessWidget {
   final String hintText;
   final String labelText;
   final String errorText;
@@ -11,8 +10,7 @@ class LabelTextField extends StatelessWidget {
   final validator;
   final onSaved;
 
-  LabelTextField({
-    this.controller,
+  LabelTextFormField({
     this.hintText,
     this.errorText,
     this.isObscure = false,
@@ -27,8 +25,7 @@ class LabelTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: TextField(
-        controller: controller,
+      child: TextFormField(
         decoration: new InputDecoration(
           hintText: hintText,
           labelText: labelText,
@@ -40,6 +37,8 @@ class LabelTextField extends StatelessWidget {
         textCapitalization: textCapitalization,
         keyboardType: keyboardType,
         obscureText: isObscure,
+        validator: validator,
+        onSaved: onSaved,
       ),
     );
   }
