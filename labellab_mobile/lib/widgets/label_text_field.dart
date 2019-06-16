@@ -32,6 +32,7 @@ class LabelTextField extends StatelessWidget {
         decoration: new InputDecoration(
           hintText: hintText,
           labelText: labelText,
+          labelStyle: TextStyle(color: Colors.black45),
           errorText: errorText,
           filled: true,
           fillColor: Colors.black12,
