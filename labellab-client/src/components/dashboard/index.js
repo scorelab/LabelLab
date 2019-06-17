@@ -23,7 +23,7 @@ import {
 } from "../../actions/index";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
-// import LabelPreview from "./labelpreview";
+import PreviousWork from "./previous";
 // import home from "./css/dashboard.css";
 
 class Dashboard extends Component {
@@ -120,8 +120,10 @@ class Dashboard extends Component {
   render() {
     const { open } = this.state;
     return (
-      <div styleName={{ height: "100vh" }}>
-        <Container styleName="home.container">
+      <div styles={{ height: "100vh" }}>
+        <Container className="home.container">
+
+          {console.log(this.props,"dasdas")}
           {this.props.errors}
           <Dimmer active={this.props.isinitializing}>
             <Loader indeterminate>Preparing Files</Loader>
@@ -144,9 +146,9 @@ class Dashboard extends Component {
               />
             </Modal.Actions>
           </Modal>
-          <Menu styleName="home.menu">
+          <Menu className="home.menu">
             <Menu.Menu position="right">
-              <Menu.Item fitted styleName="home.borderless">
+              <Menu.Item fitted className="home.borderless">
                 {this.props.isfetching ? (
                   <h4>LOADING</h4>
                 ) : this.props.user && this.props.user.image ? (
@@ -202,10 +204,10 @@ class Dashboard extends Component {
                             <div id="file-name-display"></div>
                             <Button onClick={this.onSubmit}>Upload Image</Button>
                         </Segment> */}
-          {/* <div className="previous-heading">
+          <div className="previous-heading">
             <Header textAlign="left" as="h3" content="Previous Works" />
-            <LabelPreview />
-          </div> */}
+            <PreviousWork />
+          </div>
         </Container>
       </div>
     );
@@ -219,7 +221,7 @@ const mapStateToProps = state => {
     user: state.user.userDetails,
     isfetching: state.user.userActions.isfetching,
     errors: state.user.userActions.errors,
-    isinitializing: state.user.userActions.isinitializing
+    isinitializing: state.projects.projectActions.isinitializing
   };
 };
 
