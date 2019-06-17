@@ -4,16 +4,20 @@ import {
   INITIALIZE_PROJECT_SUCCESS,
   FETCH_PROJECT_FAILURE,
   FETCH_PROJECT_REQUEST,
-  FETCH_PROJECT_SUCCESS
+  FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ALL_FAILURE,
+  FETCH_PROJECT_ALL_REQUEST,
+  FETCH_PROJECT_ALL_SUCCESS
 } from "../constants/index";
 const initialState = {
-  userActions: {
+  projectActions: {
     isuploading: false,
     isfetching: false,
     isinitializing: false,
     errors: ""
   },
-  userProjects: {}
+  currentProject: {},
+  allProjects: []
 };
 
 const project = (state = initialState, action) => {
@@ -21,14 +25,14 @@ const project = (state = initialState, action) => {
     case INITIALIZE_PROJECT_REQUEST:
       return {
         ...state,
-        userActions: {
+        projectActions: {
           isinitializing: true
         }
       };
     case INITIALIZE_PROJECT_FAILURE:
       return {
         ...state,
-        userActions: {
+        projectActions: {
           isinitializing: false,
           errors: action.payload
         }
@@ -36,10 +40,10 @@ const project = (state = initialState, action) => {
     case INITIALIZE_PROJECT_SUCCESS:
       return {
         ...state,
-        userActions: {
+        projectActions: {
           isinitializing: false
         },
-        userProjects: {
+        currentProject: {
           project_name: action.payload.project_name,
           images: action.payload.image
         }
@@ -47,14 +51,14 @@ const project = (state = initialState, action) => {
     case FETCH_PROJECT_REQUEST:
       return {
         ...state,
-        userActions: {
+        projectActions: {
           isfetching: true
         }
       };
     case FETCH_PROJECT_FAILURE:
       return {
         ...state,
-        userActions: {
+        projectActions: {
           isfetching: false,
           errors: action.payload
         }
@@ -62,13 +66,36 @@ const project = (state = initialState, action) => {
     case FETCH_PROJECT_SUCCESS:
       return {
         ...state,
-        userActions: {
+        projectActions: {
           isfetching: false
         },
-        userProjects: {
+        currentProject: {
           project_name: action.payload.project_name,
           images: action.payload.image
         }
+      };
+    case FETCH_PROJECT_ALL_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: true
+        }
+      };
+    case FETCH_PROJECT_ALL_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false,
+          errors: action.payload
+        }
+      };
+    case FETCH_PROJECT_ALL_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false
+        },
+        allProjects: action.payload
       };
     default:
       return state;

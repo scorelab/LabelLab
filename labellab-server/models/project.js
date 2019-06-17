@@ -12,7 +12,11 @@ const ProjectSchema = new mongoose.Schema({
 	created_at: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	image:[{
+		type: mongoose.Schema.Types.ObjectId, 
+		ref: "Image"
+	}]
 })
 
 module.exports = mongoose.model("Project", ProjectSchema)

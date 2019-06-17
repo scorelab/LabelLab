@@ -6,6 +6,7 @@ exports.projectInfo = function(req, res) {
 		user: req.user._id
 	})
 		.select("project_name")
+		.populate("image")
 		.exec(function(err, project) {
 			if (err) {
 				return res.status(400).send({
@@ -34,6 +35,7 @@ exports.projectInfoId = function(req, res) {
 			_id: req.params.id
 		})
 			.select("project_name")
+			.populate("image")
 			.exec(function(err, project) {
 				if (err) {
 					return res.status(400).send({

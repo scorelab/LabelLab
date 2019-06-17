@@ -147,9 +147,9 @@ class Labeller extends Component {
 
 const mapStateToProps = state => {
   return {
-    project: state.projects.userProjects,
+    project: state.projects.currentProject,
     imageActions: state.images.imageActions,
-    images: state.projects.userProjects.images
+    images: state.projects.currentProject.images
   };
 };
 
