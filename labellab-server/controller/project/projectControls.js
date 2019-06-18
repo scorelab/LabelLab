@@ -35,7 +35,7 @@ exports.projectInfoId = function(req, res) {
 			_id: req.params.id
 		})
 			.select("project_name")
-			.populate("image")
+			.populate({ path: "image", populate: { path: "label" } })
 			.exec(function(err, project) {
 				if (err) {
 					return res.status(400).send({

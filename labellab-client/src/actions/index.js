@@ -27,6 +27,9 @@ import {
   POST_IMAGE_FAILURE,
   POST_IMAGE_SUCCESS,
   POST_IMAGE_REQUEST,
+  POST_LABEL_FAILURE,
+  POST_LABEL_REQUEST,
+  POST_LABEL_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -218,12 +221,7 @@ export const fetchProject = data => {
     dispatch(request());
     FetchApi("GET", "/api/v1/project/get/" + data, null, token)
       .then(res => {
-        console.log(res.data.body);
-        dispatch(success(res.data.body[0]));
-        // dispatch({
-        //   type: "SET_PROJECT_NAME",
-        //   payload: res.data.body[0]
-        // });
+        dispatch(success(res.data.body));
       })
       .catch(err => {
         if (err.response) {
@@ -282,5 +280,30 @@ export const imagePreview = data => {
   }
   function success(data) {
     return { type: IMAGE_PREVIEW_SUCCESS, payload: data };
+  }
+};
+
+export const postLabel = (data, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("POST", "/api/v1/label/" + data.image_id + "/create", data, token)
+      .then(res => {
+        dispatch(success(res.data));
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          dispatch(failure(err.response));
+        }
+      });
+  };
+  function request() {
+    return { type: POST_LABEL_REQUEST };
+  }
+  function success(data) {
+    return { type: POST_LABEL_SUCCESS, payload: data };
+  }
+  function failure(error) {
+    return { type: POST_LABEL_FAILURE, payload: error };
   }
 };

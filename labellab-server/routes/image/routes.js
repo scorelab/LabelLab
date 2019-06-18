@@ -16,6 +16,6 @@ router.get("/:project_id/fetch", requireAuth, imageControls.fetchImage)
 
 // GET method
 // To fetch a image
-router.get("/:image_id", requireAuth, imageControls.fetchImageId)
+router.get("/get/:image_id", requireAuth, imageControls.fetchImageId)
 
 module.exports = router

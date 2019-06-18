@@ -1,0 +1,12 @@
+.preview-image{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 70vh;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.image-preview-parent{
+    /* margin-top: 50px; */
+}

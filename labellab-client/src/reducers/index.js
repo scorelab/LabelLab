@@ -4,13 +4,15 @@ import register from "./register";
 import user from "./user";
 import project from "./project";
 import image from "./image";
+import label from "./label";
 
 const rootReducers = combineReducers({
   auth: auth,
   register: register,
   user: user,
   projects: project,
-  images: image
+  images: image,
+  labels: label
 });
 
 export default rootReducers;
