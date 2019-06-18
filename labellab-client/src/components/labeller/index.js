@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-// import ToolIndex from "./tool";
+import ToolIndex from "./tool";
 import { connect } from "react-redux";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
@@ -11,8 +11,8 @@ import {
   fetchProject
   //   imagePreview
 } from "../../actions/index";
-// import ImageIndex from "./imageindex";
-// import ImagePreview from "./imagepreview";
+import ImageList from "./imageList";
+import ImagePreview from "./imagePreview";
 class Labeller extends Component {
   constructor(props) {
     super(props);
@@ -124,20 +124,21 @@ class Labeller extends Component {
               </Button>
             </Form>
           ) : null}
-          {/* {this.state.image !== "" && !showform && !imageActions.ispreview ? (
+          {console.log(this.state, "tushar")}
+          {this.state.image !== "" && !showform && !imageActions.ispreview ? (
             <ToolIndex
               project_id={this.state.project_id}
               image_name={this.state.image_name}
               image={this.state.image}
               file={this.state.file}
             />
-          ) : null} */}
-          {/* {!showform && imageActions.ispreview ? <ImagePreview /> : null} */}
+          ) : null}
+          {!showform && imageActions.ispreview ? <ImagePreview /> : null}
         </div>
         <div className="tool-images">
           <div>
             <Header content="Images" as="h3" />
-            {/* <ImageIndex /> */}
+            <ImageList />
           </div>
         </div>
       </div>

@@ -1,0 +1,60 @@
+#canvas {
+    width:auto;
+    height:70vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.rectangle {
+    border: 1px solid #FF0000;
+    position: absolute;
+}
+.label-container{
+    position: absolute;
+}
+.file-input{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+    z-index: -1;
+    margin: 10px;
+}
+.img-label-parent{
+    display: flex;
+    flex-direction: row;
+}
+.tool-images{
+    padding:10px;
+    width: 25%;
+    box-shadow: 10px 10px 24px -3px rgba(0,0,0,0.75);
+    height: 100vh;
+}
+.tool-parent{
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+.tool-index-parent{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.custom-margin{
+    margin: 10px !important;
+}
+.home-button{
+    padding: 20px;
+}
+.file-submit-form{
+    padding: 10px !important;
+}
+.tool-button{
+    width: 20% !important;
+    margin-top: 20px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
