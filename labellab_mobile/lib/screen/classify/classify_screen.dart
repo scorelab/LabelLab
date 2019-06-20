@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/routing/application.dart';
@@ -43,6 +44,10 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               ClassifyState state = snapshot.data;
+              if (state.classification != null) {
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => _gotoClassificationDetail());
+              }
               return ListView(
                 children: <Widget>[
                   Row(
@@ -61,9 +66,6 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                   state.error != null
                       ? _buildError(context, state.error)
                       : Container(),
-                  state.classification != null
-                      ? Text(state.classification.id)
-                      : Container(),
                 ],
               );
             } else
@@ -75,7 +77,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
   Widget _buildError(BuildContext context, dynamic error) {
     return Column(
       children: <Widget>[
-        Text(error.toString()),
+        Text(error is DioError ? error.message.toString() : error.toString()),
         FlatButton(
           child: Text("Retry"),
           onPressed: () {
@@ -115,5 +117,10 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
         Application.router.pop(context);
       }
     }).catchError((err) => print(err));
+  }
+
+  void _gotoClassificationDetail() {
+    // TODO - Implement classification detail screen and setup navigation to it
+    Application.router.pop(context);
   }
 }
