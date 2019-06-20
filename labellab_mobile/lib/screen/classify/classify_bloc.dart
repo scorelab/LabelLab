@@ -15,20 +15,21 @@ class ClassifyBloc {
 
   ClassifyBloc();
 
+
   void classifyImage(File image) {
     if (!_isClassifing && image != null) {
       _image = image;
       _isClassifing = true;
-      _classifyController.add(ClassifyState.loading(image: image));
+      _stateController.add(ClassifyState.loading(image: image));
       _uploadProcess =
           _classify(image).asStream().listen((Classification classification) {
         _isClassifing = false;
-        _classifyController.add(ClassifyState.classified(classification, image: image));
+        _stateController
+            .add(ClassifyState.classified(classification, image: image));
       });
       _uploadProcess.onError((err) {
         _isClassifing = false;
-        _classifyController
-            .add(ClassifyState.error(err.toString(), image: image));
+        _stateController.add(ClassifyState.error(err.toString(), image: image));
       });
     }
   }
@@ -43,23 +44,18 @@ class ClassifyBloc {
     }
   }
 
-  // Classify stream
-  StreamController<ClassifyState> _classifyController =
+  // State stream
+  StreamController<ClassifyState> _stateController =
       StreamController<ClassifyState>();
 
-  Stream<ClassifyState> get state => _classifyController.stream;
+  Stream<ClassifyState> get state => _stateController.stream;
 
   Future<Classification> _classify(File image) {
-    // TODO - Remove mock result and integrate with the backend
-    return Future.delayed(Duration(seconds: 5), () {
-      Classification mockClassification = Classification();
-      mockClassification.id = "483594220985";
-      return mockClassification;
-    });
+    return _repository.classify(image);
   }
 
   void dispose() {
-    _uploadProcess.cancel();
-    _classifyController.close();
+    if (_uploadProcess != null) _uploadProcess.cancel();
+    _stateController.close();
   }
 }

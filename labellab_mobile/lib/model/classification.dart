@@ -1,18 +1,18 @@
-import 'package:labellab_mobile/model/user.dart';
+import 'label.dart';
 
 class Classification {
   String id;
-  User user;
   String imageUrl;
-  String label;
+  List<Label> label;
   DateTime createdAt;
 
   Classification();
 
   Classification.fromJson(dynamic json) {
     id = json["_id"];
-    user = User.fromJson(json['user']);
     imageUrl = json["image_url"];
     createdAt = DateTime.parse(json["created_at"]);
+    label =
+        (json['label'] as List<dynamic>).map((label) => Label.fromJson(label)).toList();
   }
 }

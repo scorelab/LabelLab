@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:labellab_mobile/data/local/project_provider.dart';
 import 'package:labellab_mobile/data/local/user_provider.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
@@ -5,6 +7,7 @@ import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
+import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/user.dart';
@@ -109,6 +112,11 @@ class Repository {
   Future<ApiResponse> updateProject(Project project) {
     if (accessToken == null) return Future(null);
     return _api.updateProject(accessToken, project);
+  }
+
+  Future<Classification> classify(File image) {
+    if (accessToken == null) return Future(null);
+    return _api.classify(accessToken, image);
   }
 
   // Singleton
