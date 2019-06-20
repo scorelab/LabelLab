@@ -1,0 +1,8 @@
+.dashboard-parent{
+    height: 100%;
+    width: 100%;
+    background: #e5e5e5;
+}
+.create-project-button{
+    padding: 2em 0;
+}

@@ -97,7 +97,7 @@ class Labeller extends Component {
               Add Image
             </label>
             <div className="home-button">
-              <Link to="/home">
+              <Link to="/">
                 <Button primary floated="right">
                   Home
                 </Button>

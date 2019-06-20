@@ -19,12 +19,14 @@ import {
   log_out,
   uploadImage,
   fetchUser,
-  initProject
+  initProject,
+  fetchAllProject
 } from "../../actions/index";
+import Navbar from "../navbar/index";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
 import PreviousWork from "./previous";
-// import home from "./css/dashboard.css";
+import home from "./css/dashboard.css";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -41,6 +43,7 @@ class Dashboard extends Component {
   componentDidMount() {
     if (hasToken(TOKEN_TYPE)) {
       this.props.fetchUser();
+      this.props.fetchAllProject();
     } else {
       this.props.history.push("/login");
     }
@@ -120,10 +123,9 @@ class Dashboard extends Component {
   render() {
     const { open } = this.state;
     return (
-      <div styles={{ height: "100vh" }}>
+      <div className="dashboard-parent">
+        <Navbar user={this.props.user} isfetching={this.props.isfetching} />
         <Container className="home.container">
-
-          {console.log(this.props,"dasdas")}
           {this.props.errors}
           <Dimmer active={this.props.isinitializing}>
             <Loader indeterminate>Preparing Files</Loader>
@@ -146,7 +148,7 @@ class Dashboard extends Component {
               />
             </Modal.Actions>
           </Modal>
-          <Menu className="home.menu">
+          {/* <Menu className="home.menu">
             <Menu.Menu position="right">
               <Menu.Item fitted className="home.borderless">
                 {this.props.isfetching ? (
@@ -192,11 +194,17 @@ class Dashboard extends Component {
                 <Button onClick={this.handleLogout}>Logout</Button>
               </Menu.Item>
             </Menu.Menu>
-          </Menu>
-          <div>{this.state.max_size_error}</div>
+          </Menu> */}
+          {/* <div>{this.state.max_size_error}</div> */}
           <div className="create-project-button">
-            <Button primary onClick={this.handleCreateProject}>
-              Create New Project
+            <Button
+              icon
+              className="create-button"
+              onClick={this.handleCreateProject}
+              labelPosition="left"
+            >
+              <Icon name="add" />
+              Start New Project
             </Button>
           </div>
           {/* <Segment>
@@ -229,6 +237,9 @@ const mapDispatchToProps = dispatch => {
   return {
     logout: callback => {
       dispatch(log_out(callback));
+    },
+    fetchAllProject: () => {
+      return dispatch(fetchAllProject());
     },
     // setData: (data, callback) => {
     //   dispatch(setData(data, callback));
