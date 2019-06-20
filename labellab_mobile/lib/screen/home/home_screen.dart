@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
             children: <Widget>[
               CameraButton(
                 onTap: () {
-                  print("Sex");
+                  _goToClassify(context, true);
                 },
               ),
               SizedBox(height: 32),
@@ -78,7 +78,9 @@ class HomeScreen extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       elevation: 1,
-      onPressed: () => {},
+      onPressed: () {
+        _goToClassify(context, false);
+      },
     );
   }
 
@@ -123,4 +125,9 @@ class HomeScreen extends StatelessWidget {
   void _goToProfile(BuildContext context) {
     Application.router.navigateTo(context, "/profile");
   }
+
+  void _goToClassify(BuildContext context, bool isCamera) {
+    Application.router.navigateTo(context, '/classify/' + (isCamera ? 'camera' : "gallery"));
+  }
+
 }

@@ -11,6 +11,9 @@ class Routes {
   static const addProject = "/project/add";
   static const editProject = "/project/edit/:id";
 
+  // Classify
+  static const classify = "/classify/:by";
+
   static void configureRouter(Router router) {
     router.define(main, handler: mainHandler);
     router.define(login, handler: loginHandler, transitionType: TransitionType.native);
@@ -19,5 +22,6 @@ class Routes {
     router.define(profile, handler: profileHandler, transitionType: TransitionType.native);
     router.define(addProject, handler: addProjectHandler, transitionType: TransitionType.native);
     router.define(editProject, handler: editProjectHandler, transitionType: TransitionType.native);
+    router.define(classify, handler: classifyHandler, transitionType: TransitionType.native);
   }
 }
