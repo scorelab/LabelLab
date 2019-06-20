@@ -18,7 +18,7 @@ const passportGithub = require("./config/github_passport")
 app.use(logger("dev"))
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false, limit: '4mb' }))
 app.use(cookieParser())
 
 app.use("/static", express.static(path.join(__dirname, "public")))

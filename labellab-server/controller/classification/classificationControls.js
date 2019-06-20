@@ -13,7 +13,6 @@ exports.classify = function(req, res) {
 			id: req.user.id,
 			image: req.body.image,
 			format: req.body.format,
-			project: req.params.project_id
 		}
 		let baseImg = data.image.split(",")[1]
 		let binaryData = new Buffer(baseImg, "base64")
@@ -27,11 +26,13 @@ exports.classify = function(req, res) {
 				if (err) {
 					return res.status(400).send({ success: false, msg: err })
 				} else {
-					const newImage = new Image({
+					const newClassification = new Classification({
 						image_url: updateData.image_url,
+            user: data.id
 					})
-					newImage.save(function(err, image) {
+					newClassification.save(function(err, image) {
 						if (err) {
+              console.log(err)
 							return res
 								.status(400)
 								.send({ success: false, msg: "Unable to Upload Image" })
