@@ -124,7 +124,7 @@ class Dashboard extends Component {
     const { open } = this.state;
     return (
       <div className="dashboard-parent">
-        <Navbar user={this.props.user} isfetching={this.props.isfetching} />
+        <Navbar user={this.props.user} isfetching={this.props.isfetching} history={this.props.history} />
         <Container className="home.container">
           {this.props.errors}
           <Dimmer active={this.props.isinitializing}>
