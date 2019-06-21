@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const LabelSchema = require("../models/label")
 
 const ClassificationSchema = new mongoose.Schema({
   user: {
@@ -10,8 +11,7 @@ const ClassificationSchema = new mongoose.Schema({
     required: true
   },
   label: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Label"
+    type: Object
   }],
   created_at: {
     type: Date,
