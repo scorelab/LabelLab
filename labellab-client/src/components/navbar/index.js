@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Image, Header } from "semantic-ui-react";
+import { Image, Header, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
 import "./css/navbar.css";
 import Searchbar from "./searchbar";
 class Navbar extends Component {
+  handleClick = () => {
+    console.log(this.props,"here");
+    this.props.history.push("/logout");
+  };
   render() {
     return (
       <div className="navbar">
@@ -38,6 +42,16 @@ class Navbar extends Component {
                   circular
                 />
               ) : null}
+            </li>
+            <li>
+              <Dropdown floated labelled>
+                <Dropdown.Menu>
+                  <Dropdown.Item text="Settings" />
+                  <Dropdown.Item as="label" onClick={this.handleClick}>
+                    Logout
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </li>
           </ul>
         </div>
