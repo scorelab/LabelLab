@@ -18,6 +18,15 @@ class ClassificationProvider {
     });
   }
 
+  Future<void> replaceClassifications(List<Classification> classifications) {
+    return db.delete(ClassificationEntity.table).then((_) async {
+      for (var classification in classifications) {
+        await db.insert(ClassificationEntity.table,
+            ClassificationEntity.from(classification).toMap());
+      }
+    });
+  }
+
   Future<void> insert(Classification classification) async {
     await db.insert(ClassificationEntity.table,
         ClassificationEntity.from(classification).toMap());

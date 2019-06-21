@@ -3,7 +3,7 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProjectProvider {
-  static const String _path = "labellab";
+  static const String _path = "labellab/project";
 
   Database db;
 
@@ -15,6 +15,15 @@ class ProjectProvider {
         ${ProjectEntity.columnId} text primary key, 
         ${ProjectEntity.columnName} text not null)
         ''');
+    });
+  }
+
+  Future<void> replaceProjects(List<Project> projects) {
+    return db.delete(ProjectEntity.table).then((_) async {
+      for (var project in projects) {
+        await db.insert(
+            ProjectEntity.table, ProjectEntity.from(project).toMap());
+      }
     });
   }
 
