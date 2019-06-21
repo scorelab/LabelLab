@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:labellab_mobile/data/local/classifcation_provider.dart';
 import 'package:labellab_mobile/data/local/project_provider.dart';
 import 'package:labellab_mobile/data/local/user_provider.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
@@ -16,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Repository {
   LabelLabAPI _api;
   ProjectProvider _projectProvider;
+  ClassificationProvider _classificationProvider;
   UserProvider _userProvider;
 
   String accessToken;
@@ -71,6 +73,7 @@ class Repository {
     });
   }
 
+  // Project
   Future<ApiResponse> createProject(Project project) {
     if (accessToken == null) return Future(null);
     return _api.createProject(accessToken, project);
@@ -114,9 +117,50 @@ class Repository {
     return _api.updateProject(accessToken, project);
   }
 
+  // Classification
   Future<Classification> classify(File image) {
     if (accessToken == null) return Future(null);
     return _api.classify(accessToken, image);
+  }
+
+  Future<List<Classification>> getClassifications() {
+    if (accessToken == null) return Future(null);
+    return _api.getClassifications(accessToken).then((classifications) {
+      _classificationProvider.open().then((_) async {
+        for (var classification in classifications) {
+          await _classificationProvider
+              .getClassification(classification.id)
+              .then((cachedClassification) async {
+            if (cachedClassification == null) {
+              await _classificationProvider.insert(classification);
+            }
+          });
+        }
+        _classificationProvider.close();
+      });
+      return classifications;
+    });
+  }
+
+  Future<List<Classification>> getClassificationsLocal() {
+    return _classificationProvider.open().then((_) {
+      return _classificationProvider.getClassifications().then((classifications) {
+        _classificationProvider.close();
+        return classifications;
+      });
+    });
+  }
+
+  Future<Classification> getClassification(String id) {
+    if (accessToken == null) return Future(null);
+    return _api.getClassification(accessToken, id);
+  }
+
+  Future<bool> deleteClassification(String id) {
+    if (accessToken == null) return Future(null);
+    return _api.deleteClassification(accessToken, id).then((res) {
+      return _classificationProvider.delete(id).then((_) => res.success);
+    });
   }
 
   // Singleton
@@ -129,5 +173,6 @@ class Repository {
   Repository._internal()
       : _api = LabelLabAPIImpl(),
         _projectProvider = ProjectProvider(),
+        _classificationProvider = ClassificationProvider(),
         _userProvider = UserProvider();
 }
