@@ -97,15 +97,7 @@ class Repository {
     if (accessToken == null) return Future(null);
     return _api.getProjects(accessToken).then((projects) {
       _projectProvider.open().then((_) async {
-        for (var project in projects) {
-          await _projectProvider
-              .getProject(project.id)
-              .then((cachedProject) async {
-            if (cachedProject == null) {
-              await _projectProvider.insert(project);
-            }
-          });
-        }
+        await _projectProvider.replaceProjects(projects);
         _projectProvider.close();
       });
       return projects;
@@ -127,15 +119,7 @@ class Repository {
     if (accessToken == null) return Future(null);
     return _api.getClassifications(accessToken).then((classifications) {
       _classificationProvider.open().then((_) async {
-        for (var classification in classifications) {
-          await _classificationProvider
-              .getClassification(classification.id)
-              .then((cachedClassification) async {
-            if (cachedClassification == null) {
-              await _classificationProvider.insert(classification);
-            }
-          });
-        }
+        await _classificationProvider.replaceClassifications(classifications);
         _classificationProvider.close();
       });
       return classifications;
@@ -144,7 +128,9 @@ class Repository {
 
   Future<List<Classification>> getClassificationsLocal() {
     return _classificationProvider.open().then((_) {
-      return _classificationProvider.getClassifications().then((classifications) {
+      return _classificationProvider
+          .getClassifications()
+          .then((classifications) {
         _classificationProvider.close();
         return classifications;
       });

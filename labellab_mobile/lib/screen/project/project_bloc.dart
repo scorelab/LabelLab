@@ -28,18 +28,18 @@ class ProjectBloc {
   void _loadProjects() {
     if (_isLoading) return;
     _isLoading = true;
-    _projectController.add(ProjectState.loading(projects: _projects));
+    _setState(ProjectState.loading(projects: _projects));
     _repository.getProjectsLocal().then((projects) {
       this._projects = projects;
-      _projectController.add(ProjectState.loading(projects: _projects));
+      _setState(ProjectState.loading(projects: _projects));
     });
     _repository.getProjects().then((projects) {
       this._projects = projects;
-      _projectController.add(ProjectState.success(_projects));
+      _setState(ProjectState.success(_projects));
       _isLoading = false;
     }).catchError((err) {
       if (err is DioError) {
-        _projectController.add(
+        _setState(
             ProjectState.error(err.message.toString(), projects: _projects));
       } else {
         _projectController
@@ -47,6 +47,10 @@ class ProjectBloc {
       }
       _isLoading = false;
     });
+  }
+
+  _setState(ProjectState state) {
+    if (!_projectController.isClosed) _projectController.add(state);
   }
 
   void dispose() {
