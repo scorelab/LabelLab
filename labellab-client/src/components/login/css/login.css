@@ -1,0 +1,34 @@
+.login-grand-parent{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.login-parent{
+    margin-top: 5em;
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.login-oauth-icon{
+    display: flex;
+    justify-content: center;
+}
+.login-oauth-icon div{
+    padding: 1em 1.5em;
+}
+.loginField{
+    width: 75%;
+}
+.login-form-label{
+    margin: 1em 0 !important;
+}
+.forgotPassword{
+    padding: 1em 0;
+}
+.loginSubmit{
+    background-color:#00A89F !important;
+    color: white !important; 
+}
+.login-create-account{
+    padding: 1em 0;
+}
