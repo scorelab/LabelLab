@@ -2,10 +2,20 @@ import React, { Component } from "react";
 // import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Input, Button } from "semantic-ui-react";
+import {
+  Input,
+  Button,
+  Image,
+  Divider,
+  Header,
+  Dimmer,
+  Loader
+} from "semantic-ui-react";
 import validateInput from "../../utils/validation";
 import { login } from "../../actions/index";
-// import "../css/login.css";
+import "./css/login.css";
+import googleIcon from "../../static/icons/search.svg";
+import githubIcon from "../../static/icons/github-logo.svg";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
 
@@ -61,32 +71,60 @@ class LoginIndex extends Component {
   render() {
     const { username, password, errors } = this.state;
     return (
-      <div className="login">
-        <div className="loginInput">
-          <span className="login-error-text">{errors}</span>
-          <form onSubmit={this.handleSubmit}>
-            <Input
-              type="text"
-              placeholder="Email ID"
-              className="loginField"
-              name="username"
-              value={username}
-              onChange={this.onChange}
-            />
-            <br />
-            <Input
-              type="password"
-              placeholder="Password"
-              className="loginField"
-              name="password"
-              value={password}
-              onChange={this.onChange}
-            />
-            <div className="forgotPassword">
-              <Link to="#">Forgot Password?</Link>
+      <div className="login-grand-parent">
+        {this.props.isAuthenticating ? (
+          <Dimmer active>
+            <Loader content="Authenticating" />
+          </Dimmer>
+        ) : null}
+        <div className="login-parent">
+          <Header as="h2" textAlign="center">
+            Login in LabelLab!
+          </Header>
+          <div className="login-oauth-icon">
+            <div>
+              <Image size="mini" src={googleIcon} />
             </div>
-            <Button content="Login" className="loginSubmit" />
-          </form>
+            <div>
+              <Image size="mini" src={githubIcon} />
+            </div>
+          </div>
+          <Divider horizontal>Or</Divider>
+          <div className="loginInput">
+            <span className="login-error-text">{errors}</span>
+            <form onSubmit={this.handleSubmit}>
+              <Header className="login-form-label" as="h5">
+                Email
+              </Header>
+              <Input
+                type="text"
+                placeholder="Email ID"
+                className="loginField"
+                name="username"
+                value={username}
+                onChange={this.onChange}
+              />
+              <Header className="login-form-label" as="h5">
+                Password
+              </Header>
+              <Input
+                type="password"
+                placeholder="Password"
+                className="loginField"
+                name="password"
+                value={password}
+                onChange={this.onChange}
+              />
+              <div className="forgotPassword">
+                <Link to="#">Forgot Password?</Link>
+              </div>
+              <Button size="medium" content="Login" className="loginSubmit" />
+            </form>
+          </div>
+          <div className="login-create-account">
+            Don't have an account?
+            <Link to="/register">Create Account</Link>
+          </div>
         </div>
       </div>
     );
@@ -95,7 +133,8 @@ class LoginIndex extends Component {
 
 const mapStateToProps = state => {
   return {
-    auth: state.login
+    auth: state.login,
+    isAuthenticating: state.auth.isAuthenticating
   };
 };
 
