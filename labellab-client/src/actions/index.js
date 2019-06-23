@@ -166,7 +166,7 @@ export const uploadImage = (data, callback) => {
 export const initProject = (data, callback) => {
   return dispatch => {
     dispatch(request());
-    FetchApi("POST", "/api/v1/project/create", data, token)
+    FetchApi("POST", "/api/v1/project/create", data, getToken(TOKEN_TYPE))
       .then(res => {
         dispatch(success(res.data.body));
         callback(res.data.body._id);
@@ -195,7 +195,7 @@ export const initProject = (data, callback) => {
 export const fetchAllProject = () => {
   return dispatch => {
     dispatch(request());
-    FetchApi("GET", "/api/v1/project/get/", null, token)
+    FetchApi("GET", "/api/v1/project/get/", null, getToken(TOKEN_TYPE))
       .then(res => {
         dispatch(success(res.data.body));
       })

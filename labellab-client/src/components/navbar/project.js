@@ -1,20 +1,36 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Image, Header, Dropdown } from "semantic-ui-react";
+import { Image, Header, Dropdown, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
+import { hasToken } from "../../utils/token";
+import { fetchUser } from "../../actions/index";
+import { TOKEN_TYPE } from "../../constants/index";
 import "./css/navbar.css";
-import Searchbar from "./searchbar";
-class Navbar extends Component {
+class ProjectNavbar extends Component {
+  componentDidMount() {
+    if (hasToken(TOKEN_TYPE)) {
+      this.props.fetchUser();
+    } else {
+      this.props.history.push("/login");
+    }
+  }
+  pushRouter=()=>{
+      this.props.history.push("/")
+  }
   handleClick = () => {
+    console.log(this.props, "here");
     this.props.history.push("/logout");
   };
   render() {
+    console.log(this.props);
     return (
       <div className="navbar">
         <div className="startnav">
-          <div className="title">LABELLAB</div>
-          <div className="searchBar">
-            <Searchbar />
+          <div className="title" onClick={this.pushRouter}>
+            <Link to="/">
+              <Icon name="arrow left" />
+              Dashboard
+            </Link>
           </div>
         </div>
         <div className="subnavbar">
@@ -61,15 +77,20 @@ class Navbar extends Component {
 
 const mapStateToProps = state => {
   return {
-    isfetching: state.user.userActions.isfetching,
+    user: state.user.userDetails,
+    isfetching: state.user.userActions.isfetching
   };
 };
 
 const mapActionToProps = dispatch => {
-  return {};
+  return {
+    fetchUser: () => {
+      return dispatch(fetchUser());
+    }
+  };
 };
 
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(Navbar);
+)(ProjectNavbar);
