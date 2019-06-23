@@ -8,6 +8,7 @@ import Navbar from "./navbar/index";
 import Register from "./register/index";
 import Profile from "./profile/index";
 import Labeller from "./labeller/index";
+import Project from "./project/index";
 
 class App extends Component {
   render() {
@@ -30,6 +31,7 @@ class App extends Component {
               path={`${match.path}labeller`}
               component={Labeller}
             />
+            <PrivateRoute path={`${match.path}project`} component={Project} />
           </Switch>
         </React.Fragment>
       </BrowserRouter>
