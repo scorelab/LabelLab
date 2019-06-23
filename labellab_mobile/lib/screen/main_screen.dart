@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/screen/history/history_bloc.dart';
 import 'package:labellab_mobile/screen/history/history_screen.dart';
 import 'package:labellab_mobile/screen/home/home_screen.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
@@ -27,10 +28,15 @@ class _MainScreenState extends State<MainScreen> {
             return PageView(
               controller: _pageController,
               children: <Widget>[
-                HistoryScreen(),
+                Provider<HistoryBloc>(
+                  builder: (context) => HistoryBloc(),
+                  dispose: (context, bloc) => bloc.dispose(),
+                  child: HistoryScreen(),
+                ),
                 HomeScreen(),
                 Provider<ProjectBloc>(
                   builder: (context) => ProjectBloc(),
+                  dispose: (context, bloc) => bloc.dispose(),
                   child: ProjectScreen(),
                 ),
               ],
@@ -39,7 +45,11 @@ class _MainScreenState extends State<MainScreen> {
             return PageView(
               controller: _pageController,
               children: <Widget>[
-                HistoryScreen(),
+                Provider<HistoryBloc>(
+                  builder: (context) => HistoryBloc(),
+                  dispose: (context, bloc) => bloc.dispose(),
+                  child: HistoryScreen(),
+                ),
                 HomeScreen(),
               ],
             );

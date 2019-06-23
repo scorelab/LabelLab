@@ -26,9 +26,16 @@ exports.classify = function(req, res) {
 				if (err) {
 					return res.status(400).send({ success: false, msg: err })
 				} else {
+          // TODO - Integrate with the classification model
+
+          // Mock label creation to emulate classification model.
+          var label = [
+            { label_name: "Label " + Math.floor((Math.random() * 10) + 1) }
+          ];
 					const newClassification = new Classification({
 						image_url: updateData.image_url,
-            user: data.id
+            user: data.id,
+            label: label
 					})
 					newClassification.save(function(err, image) {
 						if (err) {
@@ -37,7 +44,6 @@ exports.classify = function(req, res) {
 								.status(400)
 								.send({ success: false, msg: "Unable to Upload Image" })
 						} else if (image._id) {
-              // TODO - Integrate with the classification model
               return res.json({
                 success: true,
                 msg: "Image Successfully Classified",
@@ -61,8 +67,7 @@ exports.fetchClassification = function(req, res) {
   Classification.find({
     user: req.user._id
   })
-    .select("image_url created_at")
-    .populate("label")
+    .select("image_url created_at label")
     .exec(function(err, classification) {
       if (err) {
         return res.status(400).send({
@@ -90,8 +95,7 @@ exports.fetchClassificationId = function(req, res) {
 		Classification.find({
 			_id: req.params.classification_id
 		})
-			.select("image_url created_at")
-			.populate("label")
+			.select("image_url created_at label")
 			.exec(function(err, classification) {
 				if (err) {
 					return res.status(400).send({
