@@ -45,8 +45,8 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
             if (snapshot.hasData) {
               ClassifyState state = snapshot.data;
               if (state.classification != null) {
-                WidgetsBinding.instance
-                    .addPostFrameCallback((_) => _gotoClassificationDetail());
+                WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => _gotoClassificationDetail(state.classification.id));
               }
               return ListView(
                 children: <Widget>[
@@ -119,8 +119,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
     }).catchError((err) => print(err));
   }
 
-  void _gotoClassificationDetail() {
-    // TODO - Implement classification detail screen and setup navigation to it
-    Application.router.pop(context);
+  void _gotoClassificationDetail(String id) {
+    Application.router.navigateTo(context, "/classification/$id", replace: true);
   }
 }

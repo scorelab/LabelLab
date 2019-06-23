@@ -142,10 +142,26 @@ class Repository {
     return _api.getClassification(accessToken, id);
   }
 
+  Future<Classification> getClassificationLocal(String id) {
+    return _classificationProvider.open().then((_) {
+      return _classificationProvider
+          .getClassification(id)
+          .then((classification) {
+        _classificationProvider.close();
+        return classification;
+      });
+    });
+  }
+
   Future<bool> deleteClassification(String id) {
     if (accessToken == null) return Future(null);
     return _api.deleteClassification(accessToken, id).then((res) {
-      return _classificationProvider.delete(id).then((_) => res.success);
+      return _classificationProvider.open().then((_) {
+        return _classificationProvider.delete(id).then((_) {
+          _classificationProvider.close();
+          return res.success;
+        });
+      });
     });
   }
 

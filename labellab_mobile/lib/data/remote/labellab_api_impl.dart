@@ -159,9 +159,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return (response.data['body'] as List<dynamic>).first.map((item) =>
-            Classification.fromJson(item,
-                staticEndpoint: STATIC_CLASSIFICATION_URL));
+        return (response.data['body'] as List<dynamic>)
+            .map((item) => Classification.fromJson(item,
+                staticEndpoint: STATIC_CLASSIFICATION_URL))
+            .toList()
+            .first;
       } else {
         throw Exception("Request unsuccessfull");
       }

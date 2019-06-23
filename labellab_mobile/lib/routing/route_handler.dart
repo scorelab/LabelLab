@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
+import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
+import 'package:labellab_mobile/screen/classification/classification_screen.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
 import 'package:labellab_mobile/screen/classify/classify_screen.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
@@ -45,5 +47,14 @@ var classifyHandler = Handler(
     builder: (context) => ClassifyBloc(),
     dispose: (context, bloc) => bloc.dispose(),
     child: ClassifyScreen(params['by'].first == 'camera'),
+  );
+});
+
+var classificationHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ClassificationBloc>(
+    builder: (context) => ClassificationBloc(params['id'].first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ClassificationScreen(),
   );
 });
