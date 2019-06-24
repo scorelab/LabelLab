@@ -61,3 +61,41 @@ exports.userLogin = function(req, res, next) {
 		return res.status(400).json({ message: "Error in token generation!" })
 	}
 }
+
+// @desc Create google user sent from mobile oauth client
+// @access Public
+exports.googleUserCreate = function(req, res, next) {
+  if (
+		req &&
+		req.body &&
+		req.body.id &&
+		req.body.displayName &&
+		req.body.photoUrl &&
+		req.body.email &&
+		req.body.accessToken
+	) {
+  User.findOne({ googleId: req.body.id })
+  .then(currentUser => {
+    if (currentUser) {
+      req['user'] = currentUser
+      next()
+    } else {
+      new User({
+        accessToken: req.body.accessToken,
+        googleId: req.body.id,
+        username: req.body.displayName,
+        thumbnail: req.body.photoUrl,
+        email: req.body.email
+      })
+        .save()
+        .then(newUser => {
+          req['user'] = newUser
+          next()
+        })
+    }
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  } else res.status(400).send({ success: false, msg: "Invalid Data" })
+}
