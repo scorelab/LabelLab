@@ -28,6 +28,15 @@ router.get(
 		OAuthlogin(req, res, next)
 	}
 )
+
+router.post(
+	"/google/mobile",
+	authController.googleUserCreate,
+	(req, res, next) => {
+		OAuthlogin(req, res, next)
+	}
+)
+
 router.get(
 	"/github",
 	passport.authenticate("github")
