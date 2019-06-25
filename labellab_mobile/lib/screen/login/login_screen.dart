@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/login/github_signin_screen.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -91,11 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SignInButton(
                   Buttons.GoogleDark,
-                  onPressed: () {},
+                  onPressed: () => !_isLoginIn ? _signInWithGoogle() : null,
                 ),
                 SignInButton(
                   Buttons.GitHub,
-                  onPressed: () {},
+                  onPressed: () =>
+                      !_isLoginIn ? _signInWithGithub(context) : null,
                 ),
                 SizedBox(
                   height: 16,
@@ -155,6 +158,33 @@ class _LoginScreenState extends State<LoginScreen> {
         // ));
       });
     }
+  }
+
+  void _signInWithGoogle() {
+    setState(() {
+      _isLoginIn = true;
+    });
+    Provider.of<AuthState>(context).signInWithGoogle().then((success) {
+      if (success) {
+        Application.router.pop(context);
+      } else {
+        setState(() {
+          _isLoginIn = false;
+        });
+      }
+    }).catchError((err) {
+      setState(() {
+        _isLoginIn = false;
+      });
+      print(err.toString());
+      // Scaffold.of(context).showSnackBar(SnackBar(
+      //   content: Text("Sign in failed!"),
+      // ));
+    });
+  }
+
+  void _signInWithGithub(BuildContext context) {
+    
   }
 
   void _onCreateAccount() {

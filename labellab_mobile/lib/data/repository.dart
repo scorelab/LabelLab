@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:labellab_mobile/data/local/classifcation_provider.dart';
 import 'package:labellab_mobile/data/local/project_provider.dart';
 import 'package:labellab_mobile/data/local/user_provider.dart';
+import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
@@ -35,13 +36,21 @@ class Repository {
   }
 
   Future<LoginResponse> login(AuthUser user) {
-    return _api.login(user).then((response) {
-      this.accessToken = response.token;
-      SharedPreferences.getInstance().then((pref) {
-        pref.setString("token", response.token);
-      });
-      return response;
+    return _api.login(user).then((response) => _storeAccessToken(response));
+  }
+
+  Future<LoginResponse> loginWithGoogle(GoogleUserRequest user) {
+    return _api
+        .loginWithGoogle(user)
+        .then((response) => _storeAccessToken(response));
+  }
+
+  LoginResponse _storeAccessToken(LoginResponse response) {
+    this.accessToken = response.token;
+    SharedPreferences.getInstance().then((pref) {
+      pref.setString("token", response.token);
     });
+    return response;
   }
 
   Future<void> logout() {

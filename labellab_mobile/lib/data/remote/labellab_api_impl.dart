@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/data/remote/dto/register_response.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
@@ -27,6 +28,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   // Endpoints
   static const ENDPOINT_LOGIN = "auth/login";
+  static const ENDPOINT_LOGIN_GOOGLE = "auth/google/mobile";
+  static const ENDPOINT_LOGIN_GITHUB = "auth/github";
   static const ENDPOINT_REGISTER = "auth/register";
   static const ENDPOINT_USERS_INFO = "users/info";
 
@@ -42,6 +45,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
   Future<LoginResponse> login(AuthUser user) {
     return _dio
         .post(API_URL + ENDPOINT_LOGIN, data: user.toMap())
+        .then((response) {
+      return LoginResponse(response.data);
+    });
+  }
+
+  @override
+  Future<LoginResponse> loginWithGoogle(GoogleUserRequest user) {
+    return _dio
+        .post(API_URL + ENDPOINT_LOGIN_GOOGLE, data: user.toMap())
         .then((response) {
       return LoginResponse(response.data);
     });
