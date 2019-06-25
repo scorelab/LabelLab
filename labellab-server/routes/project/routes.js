@@ -26,4 +26,8 @@ router.put("/update/:id", requireAuth, projectControls.updateProject)
 // To add member in project
 router.post("/add/:project_id", requireAuth, projectControls.addMember)
 
+// POST method
+// To delete member in project
+router.post("/remove/:project_id", requireAuth, projectControls.removeMember)
+
 module.exports = router
