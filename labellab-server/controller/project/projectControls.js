@@ -105,7 +105,7 @@ exports.initializeProject = function(req, res) {
 									{ _id: project._id },
 									{ $addToSet: { members: member._id } },
 									{ new: true }
-								).exec(function(err,updatedproject) {
+								).exec(function(err, updatedproject) {
 									if (err) {
 										return res.status(400).send({
 											success: false,
@@ -119,12 +119,9 @@ exports.initializeProject = function(req, res) {
 										body: updatedproject
 									})
 								})
-
 							})
-							
 						}
 					})
-					
 				} else {
 					return res.status(400).send({
 						success: false,
@@ -224,6 +221,67 @@ exports.addMember = function(req, res) {
 								})
 							})
 						}
+					})
+				}
+			)
+		})
+	} else {
+		return res.status(400).send({ success: false, msg: "Invalid Params" })
+	}
+}
+
+exports.removeMember = function(req, res) {
+	if (req && req.params && req.params.project_id) {
+		User.findOne({ email: req.body.member_email }, function(err, user) {
+			if (err) {
+				return res
+					.status(400)
+					.send({ success: false, msg: "Something went wrong", error: err })
+			}
+			if (!user) {
+				return res
+					.status(400)
+					.send({ success: false, msg: "Unable to find Member" })
+			}
+			ProjectMembers.findOne(
+				{
+					member: user._id,
+					project_id: req.params.project_id
+				},
+				function(err, member) {
+					if (err) {
+						return res.status(400).send({
+							success: false,
+							msg: "Error in findind member",
+							error: err
+						})
+					}
+					Project.update(
+						{ _id: req.params.project_id },
+						{ $pullAll: { members: [member._id] } }
+					).exec(function(err) {
+						if (err) {
+							return res.status(400).send({
+								success: false,
+								msg: "Cannot delete Member",
+								error: err
+							})
+						}
+						ProjectMembers.findOneAndDelete({ _id: member._id }, function(err) {
+							if (err) {
+								return res
+									.status(400)
+									.send({
+										success: false,
+										msg: "Something went wrong",
+										error: err
+									})
+							}
+							return res.status(200).send({
+								success: true,
+								msg: "Member deleted successfully"
+							})
+						})
 					})
 				}
 			)
