@@ -1,5 +1,6 @@
 let User = require("../../models/user")
 let Project = require("../../models/project")
+let ProjectMembers = require("../../models/projectMembers")
 
 exports.projectInfo = function(req, res) {
 	Project.find({
@@ -61,7 +62,10 @@ exports.projectInfoId = function(req, res) {
 
 exports.initializeProject = function(req, res) {
 	if (req && req.body && req.body.project_name) {
-		Project.findOne({ project_name: req.body.project_name }).then(project => {
+		Project.findOne({
+			user: req.user.id,
+			project_name: req.body.project_name
+		}).then(project => {
 			if (project) {
 				return res.status(400).json({ msg: "Project name already exists" })
 			}
@@ -73,25 +77,54 @@ exports.initializeProject = function(req, res) {
 				if (err) {
 					return res
 						.status(400)
-						.send({ success: false, msg: "Unable to Add Idea" })
+						.send({ success: false, msg: "Unable to Add Project" })
 				} else if (project._id) {
-					User.update(
-						{ _id: req.user._id },
-						{ $addToSet: { project: project._id } }
-					).exec(function(err) {
-						if (err) {
-							return res.status(400).send({
-								success: false,
-								msg: "Cannot Append Project",
-								error: err
-							})
-						}
-						return res.json({
-							success: true,
-							msg: "Project Successfully Posted",
-							body: project
-						})
+					const newProjectMember = new ProjectMembers({
+						project_id: project._id,
+						member: req.user.id,
+						role: "Admin"
 					})
+					newProjectMember.save(function(err, member) {
+						if (err) {
+							return res
+								.status(400)
+								.send({ success: false, msg: "Unable to add Member" })
+						} else {
+							User.update(
+								{ _id: req.user._id },
+								{ $addToSet: { project: project._id } }
+							).exec(function(err) {
+								if (err) {
+									return res.status(400).send({
+										success: false,
+										msg: "Cannot Append Project",
+										error: err
+									})
+								}
+								Project.findOneAndUpdate(
+									{ _id: project._id },
+									{ $addToSet: { members: member._id } },
+									{ new: true }
+								).exec(function(err,updatedproject) {
+									if (err) {
+										return res.status(400).send({
+											success: false,
+											msg: "Cannot Append Member",
+											error: err
+										})
+									}
+									return res.json({
+										success: true,
+										msg: "Project Successfully Posted",
+										body: updatedproject
+									})
+								})
+
+							})
+							
+						}
+					})
+					
 				} else {
 					return res.status(400).send({
 						success: false,
@@ -132,6 +165,68 @@ exports.updateProject = function(req, res) {
 				msg: "Project updated successfully!",
 				body: project
 			})
+		})
+	} else {
+		return res.status(400).send({ success: false, msg: "Invalid Params" })
+	}
+}
+
+exports.addMember = function(req, res) {
+	if (req && req.params && req.params.project_id) {
+		User.findOne({ email: req.body.member_email }, function(err, user) {
+			if (err) {
+				return res
+					.status(400)
+					.send({ success: false, msg: "Something went wrong", error: err })
+			}
+			if (!user) {
+				return res
+					.status(400)
+					.send({ success: false, msg: "Unable to find Member" })
+			}
+			ProjectMembers.findOne(
+				{
+					member: user._id,
+					project_id: req.params.project_id
+				},
+				function(err, member) {
+					if (member) {
+						return res
+							.status(400)
+							.send({ success: false, msg: "Member already added" })
+					}
+					const newProjectMember = new ProjectMembers({
+						project_id: req.params.project_id,
+						member: user._id,
+						role: req.body.role
+					})
+					newProjectMember.save(function(err, member) {
+						if (err) {
+							return res
+								.status(400)
+								.send({ success: false, msg: "Unable to add Member" })
+						} else {
+							Project.update(
+								{ _id: req.params.project_id },
+								{ $addToSet: { members: member._id } }
+							).exec(function(err) {
+								if (err) {
+									return res.status(400).send({
+										success: false,
+										msg: "Cannot Append Member",
+										error: err
+									})
+								}
+								res.json({
+									success: true,
+									msg: "Project member added successfully!",
+									body: member
+								})
+							})
+						}
+					})
+				}
+			)
 		})
 	} else {
 		return res.status(400).send({ success: false, msg: "Invalid Params" })

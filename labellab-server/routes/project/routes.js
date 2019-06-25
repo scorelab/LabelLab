@@ -22,4 +22,8 @@ router.get("/get", requireAuth, projectControls.projectInfo)
 // To update user project
 router.put("/update/:id", requireAuth, projectControls.updateProject)
 
+// POST method
+// To add member in project
+router.post("/add/:project_id", requireAuth, projectControls.addMember)
+
 module.exports = router

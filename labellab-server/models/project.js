@@ -13,10 +13,18 @@ const ProjectSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
-	image:[{
-		type: mongoose.Schema.Types.ObjectId, 
-		ref: "Image"
-	}]
+	image: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Image"
+		}
+	],
+	members: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "ProjectMembers"
+		}
+	]
 })
 
 module.exports = mongoose.model("Project", ProjectSchema)
