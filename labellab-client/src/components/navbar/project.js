@@ -18,11 +18,9 @@ class ProjectNavbar extends Component {
       this.props.history.push("/")
   }
   handleClick = () => {
-    console.log(this.props, "here");
     this.props.history.push("/logout");
   };
   render() {
-    console.log(this.props);
     return (
       <div className="navbar">
         <div className="startnav">

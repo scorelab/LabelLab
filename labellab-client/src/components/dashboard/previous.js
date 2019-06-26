@@ -11,13 +11,13 @@ class PreviousProject extends Component {
     this.props.fetchAllProject();
   }
   handleClick = id => {
-    this.props.history.push({
-      pathname: "/labeller",
-      search: "?project_id=" + id
-    });
     // this.props.history.push({
-    //   pathname: "/project/" + id
+    //   pathname: "/labeller",
+    //   search: "?project_id=" + id
     // });
+    this.props.history.push({
+      pathname: "/project/" + id
+    });
   };
   render() {
     return (

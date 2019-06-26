@@ -221,6 +221,7 @@ export const fetchProject = data => {
     dispatch(request());
     FetchApi("GET", "/api/v1/project/get/" + data, null, token)
       .then(res => {
+        console.log(res.data.body)
         dispatch(success(res.data.body));
       })
       .catch(err => {
