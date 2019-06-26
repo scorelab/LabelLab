@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Image, Header, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
 import "./css/navbar.css";
@@ -61,7 +61,7 @@ class Navbar extends Component {
 
 const mapStateToProps = state => {
   return {
-    isfetching: state.user.userActions.isfetching,
+    isfetching: state.user.userActions.isfetching
   };
 };
 

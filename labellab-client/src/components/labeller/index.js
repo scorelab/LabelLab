@@ -4,7 +4,7 @@ import ToolIndex from "./tool";
 import { connect } from "react-redux";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
-import { Form, Button, Header, Image } from "semantic-ui-react";
+import { Form, Button, Header } from "semantic-ui-react";
 import {
   submitImage,
   fetchUser,

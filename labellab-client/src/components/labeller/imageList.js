@@ -1,14 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  Image,
-  List,
-  Grid,
-  Button,
-  Popup,
-  Dimmer,
-  Loader
-} from "semantic-ui-react";
+import { Image, List, Dimmer, Loader } from "semantic-ui-react";
 import { imagePreview } from "../../actions/index";
 
 class ImageList extends Component {

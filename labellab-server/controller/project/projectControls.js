@@ -35,8 +35,8 @@ exports.projectInfoId = function(req, res) {
 		Project.findOne({
 			_id: req.params.id
 		})
-			.select("project_name")
-			.populate({ path: "image", populate: { path: "label" } })
+			.select("id project_name")
+			.populate({ path: "image members", populate: { path: "label member" } })
 			.exec(function(err, project) {
 				if (err) {
 					return res.status(400).send({

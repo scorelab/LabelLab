@@ -105,9 +105,9 @@ class ToolIndex extends Component {
         buttonTrigger++;
         removecallback(num);
       }
-      function removeLabelContainer() {
-        // document.getElementById('label-container'+numRect).style.display = 'none'
-      }
+      // function removeLabelContainer() {
+      //   // document.getElementById('label-container'+numRect).style.display = 'none'
+      // }
 
       canvas.onclick = function(e) {
         if (

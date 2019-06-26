@@ -70,8 +70,10 @@ const project = (state = initialState, action) => {
           isfetching: false
         },
         currentProject: {
+          project_id: action.payload._id,
           project_name: action.payload.project_name,
-          images: action.payload.image
+          images: action.payload.image,
+          members:action.payload.members
         }
       };
     case FETCH_PROJECT_ALL_REQUEST:

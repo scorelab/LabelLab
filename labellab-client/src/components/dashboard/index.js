@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   Modal,
   Dimmer,
   // Segment,
   Button,
   Loader,
-  Menu,
-  Image,
+  // Menu,
+  // Image,
   Header,
   Container,
   Input,
@@ -26,7 +26,7 @@ import Navbar from "../navbar/index";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
 import PreviousWork from "./previous";
-import home from "./css/dashboard.css";
+// import home from "./css/dashboard.css";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -124,7 +124,11 @@ class Dashboard extends Component {
     const { open } = this.state;
     return (
       <div className="dashboard-parent">
-        <Navbar user={this.props.user} isfetching={this.props.isfetching} history={this.props.history} />
+        <Navbar
+          user={this.props.user}
+          isfetching={this.props.isfetching}
+          history={this.props.history}
+        />
         <Container className="home.container">
           {this.props.errors}
           <Dimmer active={this.props.isinitializing}>
