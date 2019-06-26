@@ -9,6 +9,12 @@ const ProjectSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
+	project_description: {
+		type: String
+	},
+	project_image: {
+		type: String
+	},
 	created_at: {
 		type: Date,
 		default: Date.now

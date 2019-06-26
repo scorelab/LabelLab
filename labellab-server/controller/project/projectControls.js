@@ -6,8 +6,8 @@ exports.projectInfo = function(req, res) {
 	Project.find({
 		user: req.user._id
 	})
-		.select("project_name")
-		.populate("image")
+		.select("project_name project_image project_description")
+		.populate("image members")
 		.exec(function(err, project) {
 			if (err) {
 				return res.status(400).send({
@@ -136,14 +136,11 @@ exports.initializeProject = function(req, res) {
 
 exports.updateProject = function(req, res) {
 	if (req && req.params && req.params.id) {
-		var data = {
-			project_name: req.body.project_name
-		}
 		Project.findOneAndUpdate(
 			{
 				_id: req.params.id
 			},
-			data,
+			req.body.data,
 			{ new: true }
 		).exec(function(err, project) {
 			if (err) {
@@ -214,10 +211,22 @@ exports.addMember = function(req, res) {
 										error: err
 									})
 								}
-								res.json({
-									success: true,
-									msg: "Project member added successfully!",
-									body: member
+								User.update(
+									{ _id: member._id },
+									{ $addToSet: { project: req.params.project_id } }
+								).exec(function(err) {
+									if (err) {
+										return res.status(400).send({
+											success: false,
+											msg: "Cannot Append Project",
+											error: err
+										})
+									}
+									res.json({
+										success: true,
+										msg: "Project member added successfully!",
+										body: member
+									})
 								})
 							})
 						}
@@ -269,13 +278,11 @@ exports.removeMember = function(req, res) {
 						}
 						ProjectMembers.findOneAndDelete({ _id: member._id }, function(err) {
 							if (err) {
-								return res
-									.status(400)
-									.send({
-										success: false,
-										msg: "Something went wrong",
-										error: err
-									})
+								return res.status(400).send({
+									success: false,
+									msg: "Something went wrong",
+									error: err
+								})
 							}
 							return res.status(200).send({
 								success: true,
