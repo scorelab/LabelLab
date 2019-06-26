@@ -1,13 +1,9 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
 import {
   Modal,
   Dimmer,
-  // Segment,
   Button,
   Loader,
-  // Menu,
-  // Image,
   Header,
   Container,
   Input,
@@ -15,7 +11,6 @@ import {
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
-  //   setData,
   log_out,
   uploadImage,
   fetchUser,
@@ -26,7 +21,7 @@ import Navbar from "../navbar/index";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
 import PreviousWork from "./previous";
-// import home from "./css/dashboard.css";
+import "./css/dashboard.css";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -245,9 +240,6 @@ const mapDispatchToProps = dispatch => {
     fetchAllProject: () => {
       return dispatch(fetchAllProject());
     },
-    // setData: (data, callback) => {
-    //   dispatch(setData(data, callback));
-    // },
     uploadImage: (data, callback) => {
       dispatch(uploadImage(data, callback));
     },

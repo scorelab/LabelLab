@@ -16,7 +16,7 @@ class PreviousProject extends Component {
     //   search: "?project_id=" + id
     // });
     this.props.history.push({
-      pathname: "/project/" + id
+      pathname: "/project/" + id + '/team'
     });
   };
   render() {

@@ -7,14 +7,18 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_ALL_FAILURE,
   FETCH_PROJECT_ALL_REQUEST,
-  FETCH_PROJECT_ALL_SUCCESS
+  FETCH_PROJECT_ALL_SUCCESS,
+  ADD_MEMBER_FAILURE,
+  ADD_MEMBER_REQUEST,
+  ADD_MEMBER_SUCCESS
 } from "../constants/index";
 const initialState = {
   projectActions: {
     isuploading: false,
     isfetching: false,
     isinitializing: false,
-    errors: ""
+    errors: "",
+    msg:""
   },
   currentProject: {},
   allProjects: []
@@ -98,6 +102,29 @@ const project = (state = initialState, action) => {
           isfetching: false
         },
         allProjects: action.payload
+      };
+      case ADD_MEMBER_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isuploading: true
+        }
+      };
+    case ADD_MEMBER_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isuploading: false,
+          errors: action.payload
+        }
+      };
+    case ADD_MEMBER_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isuploading: false,
+          msg: "Member added successfully"
+        },
       };
     default:
       return state;
