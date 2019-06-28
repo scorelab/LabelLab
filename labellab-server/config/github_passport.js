@@ -10,6 +10,7 @@ passport.use(
 		{
 			clientID: process.env.GITHUB_CLIENT_ID,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      scope: ["read:user", "user:email"],
 			callbackURL:
 				process.env.HOST +
 				":" +
@@ -17,6 +18,7 @@ passport.use(
 				"/api/v1/auth/github/callback"
 		},
 		function(accessToken, refreshToken, profile, cb) {
+      primaryEmail = profile.emails.filter(email => email.primary == true)[0]
 			User.findOne({ githubId: profile.id })
 				.then(currentUser => {
 					if (currentUser) {
@@ -27,7 +29,7 @@ passport.use(
 							githubId: profile.id,
 							username: profile.displayName,
 							thumbnail: profile._json.avatar_url,
-							email: profile._json.email
+							email: primaryEmail.value
 						})
 							.save()
 							.then(newUser => {
