@@ -14,9 +14,9 @@ class ProjectNavbar extends Component {
       this.props.history.push("/login");
     }
   }
-  pushRouter=()=>{
-      this.props.history.push("/")
-  }
+  pushRouter = () => {
+    this.props.history.push("/");
+  };
   handleClick = () => {
     this.props.history.push("/logout");
   };
@@ -30,6 +30,9 @@ class ProjectNavbar extends Component {
               Dashboard
             </Link>
           </div>
+        </div>
+        <div className="navbar-title">
+          <Header textAlign="center" as="h2" content={this.props.title} />
         </div>
         <div className="subnavbar">
           <ul>
