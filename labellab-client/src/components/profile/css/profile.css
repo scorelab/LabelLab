@@ -1,0 +1,29 @@
+.profile-first {
+  display: flex;
+  width: 100%;
+}
+.profile-first-leftbar {
+  width: 30%;
+  padding: 1em;
+}
+.profile-first-rightbar {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  padding: 1em;
+}
+.profile-rightbar-child {
+  display: flex;
+}
+.project-second {
+  display: flex;
+  margin-top: 2em;
+}
+.project-second-leftbar {
+  width: 30%;
+  padding: 1em;
+}
+.project-second-rightbar {
+  width: 70%;
+  padding: 1em;
+}
