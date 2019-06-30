@@ -1,46 +1,46 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class GithubSigninScreen extends StatefulWidget {
-  @override
-  GithubSigninScreenState createState() => GithubSigninScreenState();
+  GithubSigninScreen({Key key}) : super(key: key);
+
+  _GithubSigninScreenState createState() => _GithubSigninScreenState();
 }
 
-class GithubSigninScreenState extends State<GithubSigninScreen> {
-  final String loginUrl =
-      LabelLabAPIImpl.API_URL + LabelLabAPIImpl.ENDPOINT_LOGIN_GITHUB;
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+class _GithubSigninScreenState extends State<GithubSigninScreen> {
+  final authUrl =
+      "${LabelLabAPIImpl.API_URL}${LabelLabAPIImpl.ENDPOINT_LOGIN_GITHUB}";
+  final FlutterWebviewPlugin _webviewPlugin = FlutterWebviewPlugin();
+
+  @override
+  void initState() {
+    _webviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
+      if (state.type == WebViewState.abortLoad) {
+        print(state.url);
+        if (state.url.startsWith("$authUrl/callback")) {
+          Navigator.pop(context, state.url.split("=")[1]);
+        }
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _webviewPlugin.close();
+    _webviewPlugin.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WebviewScaffold(
       appBar: AppBar(
-        title: const Text('Sign In with GitHub'),
+        title: Text("Sign In with GitHub"),
       ),
-      body: Builder(builder: (BuildContext context) {
-        return WebView(
-          initialUrl: loginUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
-          navigationDelegate: (NavigationRequest request) {
-            if (request.url.startsWith(loginUrl + "/callback")) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-          onPageFinished: (String url) {
-            if (url.startsWith(loginUrl + "/callback")) {
-              final String code = url.split("=")[1];
-              Navigator.pop(context, code);
-            }
-          },
-        );
-      }),
+      url: authUrl,
+      invalidUrlRegex: "$authUrl/callback.*",
     );
   }
 }
