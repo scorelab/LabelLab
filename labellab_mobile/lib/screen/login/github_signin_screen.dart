@@ -1,38 +1,46 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class GithubSigninScreen extends StatefulWidget {
-  GithubSigninScreen({Key key}) : super(key: key);
-
-  _GithubSigninScreenState createState() => _GithubSigninScreenState();
+  @override
+  GithubSigninScreenState createState() => GithubSigninScreenState();
 }
 
-class _GithubSigninScreenState extends State<GithubSigninScreen> {
-  final FlutterWebviewPlugin _webviewPlugin = FlutterWebviewPlugin();
-
-  @override
-  void initState() {
-    _webviewPlugin.onUrlChanged.listen((String url) {
-      print(url);
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _webviewPlugin.close();
-    _webviewPlugin.dispose();
-    super.dispose();
-  }
+class GithubSigninScreenState extends State<GithubSigninScreen> {
+  final String loginUrl =
+      LabelLabAPIImpl.API_URL + LabelLabAPIImpl.ENDPOINT_LOGIN_GITHUB;
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text("Sign In with GitHub"),
+        title: const Text('Sign In with GitHub'),
       ),
-      url: LabelLabAPIImpl.API_URL + LabelLabAPIImpl.ENDPOINT_LOGIN_GITHUB,
+      body: Builder(builder: (BuildContext context) {
+        return WebView(
+          initialUrl: loginUrl,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+          navigationDelegate: (NavigationRequest request) {
+            if (request.url.startsWith(loginUrl + "/callback")) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+          onPageFinished: (String url) {
+            if (url.startsWith(loginUrl + "/callback")) {
+              final String code = url.split("=")[1];
+              Navigator.pop(context, code);
+            }
+          },
+        );
+      }),
     );
   }
 }

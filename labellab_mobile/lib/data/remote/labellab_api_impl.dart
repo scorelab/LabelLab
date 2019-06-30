@@ -60,6 +60,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<LoginResponse> loginWithGithub(String code) {
+    return _dio
+        .get(API_URL + ENDPOINT_LOGIN_GITHUB + "/callback?code=" + code)
+        .then((response) {
+      return LoginResponse(response.data);
+    });
+  }
+
+  @override
   Future<RegisterResponse> register(RegisterUser user) {
     return _dio
         .post(API_URL + ENDPOINT_REGISTER, data: user.toMap())
