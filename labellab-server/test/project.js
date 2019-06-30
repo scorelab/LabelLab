@@ -190,4 +190,20 @@ describe("Project tests", async () => {
 			})
 	})
 
+	it("Project Delete", done => {
+		chai
+			.request(server)
+			.delete("/api/v1/project/delete/" + createdProjectId)
+      .set("Authorization", "Bearer " + token)
+			.send()
+			.end((err, data) => {
+				if (data) {
+					expect(data).to.have.an("object")
+          expect(data.body).to.have.property("success", true)
+          expect(data.body).to.have.property("msg", "Project deleted successfully!")
+					done()
+				}
+			})
+	})
+
 })
