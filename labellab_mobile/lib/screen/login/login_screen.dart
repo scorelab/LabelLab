@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       } else {
         setState(() {
-          _isLoginIn = true;
+          _isLoginIn = false;
         });
       }
     });
