@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
@@ -91,7 +92,17 @@ class HomeScreen extends StatelessWidget {
       return Card(
         child: ListTile(
           leading: CircleAvatar(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.black12,
+            child: ClipOval(
+              child: user.thumbnail != null
+                  ? Image(
+                      height: 48,
+                      width: 48,
+                      image: CachedNetworkImageProvider(user.thumbnail),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
           ),
           title: Text(user.name),
           subtitle: Text(user.email),
@@ -127,7 +138,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _goToClassify(BuildContext context, bool isCamera) {
-    Application.router.navigateTo(context, '/classify/' + (isCamera ? 'camera' : "gallery"));
+    Application.router
+        .navigateTo(context, '/classify/' + (isCamera ? 'camera' : "gallery"));
   }
-
 }

@@ -15,7 +15,10 @@ abstract class LabelLabAPI {
   Future<LoginResponse> loginWithGoogle(GoogleUserRequest user);
   Future<LoginResponse> loginWithGithub(String code);
   Future<RegisterResponse> register(RegisterUser user);
+
+  // Profile
   Future<User> usersInfo(String token);
+  Future<ApiResponse> uploadUserImage(String token, File image);
 
   // Project
   Future<List<Project>> getProjects(String token);
