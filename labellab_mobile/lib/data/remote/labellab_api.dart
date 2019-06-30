@@ -13,6 +13,7 @@ import 'package:labellab_mobile/model/user.dart';
 abstract class LabelLabAPI {
   Future<LoginResponse> login(AuthUser user);
   Future<LoginResponse> loginWithGoogle(GoogleUserRequest user);
+  Future<LoginResponse> loginWithGithub(String code);
   Future<RegisterResponse> register(RegisterUser user);
   Future<User> usersInfo(String token);
 

@@ -62,6 +62,12 @@ class AuthState with ChangeNotifier {
     });
   }
 
+  Future<bool> signInWithGitHub(String code) {
+    return _respository
+        .loginWithGithub(code)
+        .then((response) => _loadUserData(response));
+  }
+
   Future<bool> register(RegisterUser user) {
     return _respository
         .register(user)

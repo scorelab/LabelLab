@@ -184,7 +184,33 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _signInWithGithub(BuildContext context) {
-    
+    setState(() {
+      _isLoginIn = true;
+    });
+    Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => GithubSigninScreen()),
+    ).then((String code) {
+      if (code != null) {
+        Provider.of<AuthState>(context).signInWithGitHub(code).then((success) {
+          if (success) {
+            Application.router.pop(context);
+          } else {
+            setState(() {
+              _isLoginIn = false;
+            });
+          }
+        }).catchError((err) {
+          setState(() {
+            _isLoginIn = false;
+          });
+        });
+      } else {
+        setState(() {
+          _isLoginIn = true;
+        });
+      }
+    });
   }
 
   void _onCreateAccount() {

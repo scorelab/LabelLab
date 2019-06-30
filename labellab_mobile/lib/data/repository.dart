@@ -45,6 +45,12 @@ class Repository {
         .then((response) => _storeAccessToken(response));
   }
 
+  Future<LoginResponse> loginWithGithub(String code) {
+    return _api
+        .loginWithGithub(code)
+        .then((response) => _storeAccessToken(response));
+  }
+
   LoginResponse _storeAccessToken(LoginResponse response) {
     this.accessToken = response.token;
     SharedPreferences.getInstance().then((pref) {

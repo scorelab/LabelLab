@@ -11,11 +11,6 @@ passport.use(
 			clientID: process.env.GITHUB_CLIENT_ID,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
       scope: ["read:user", "user:email"],
-			callbackURL:
-				process.env.HOST +
-				":" +
-				process.env.PORT +
-				"/api/v1/auth/github/callback"
 		},
 		function(accessToken, refreshToken, profile, cb) {
       primaryEmail = profile.emails.filter(email => email.primary == true)[0]
