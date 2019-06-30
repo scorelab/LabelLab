@@ -165,6 +165,35 @@ exports.updateProject = function(req, res) {
 	}
 }
 
+exports.deleteProject = function(req, res) {
+	if (req && req.params && req.params.id) {
+		Project.findOneAndDelete(
+			{
+				_id: req.params.id
+			}
+		).exec(function(err, project) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again."
+				})
+			}
+			if (!project) {
+				return res
+					.status(400)
+					.send({ success: false, msg: "Project not found" })
+			}
+			res.json({
+				success: true,
+				msg: "Project deleted successfully!",
+				body: project
+			})
+		})
+	} else {
+		return res.status(400).send({ success: false, msg: "Invalid Params" })
+	}
+}
+
 exports.addMember = function(req, res) {
 	if (req && req.params && req.params.project_id) {
 		User.findOne({ email: req.body.member_email }, function(err, user) {
