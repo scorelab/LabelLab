@@ -19,6 +19,12 @@ class ProjectBloc {
     _loadProjects();
   }
 
+  void delete(String id) {
+    _repository.deleteProject(id).then((_) {
+      _loadProjects();
+    });
+  }
+
   // Project stream
   StreamController<ProjectState> _projectController =
       StreamController<ProjectState>();

@@ -38,6 +38,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_CREATE = "project/create";
   static const ENDPOINT_PROJECT_UPDATE = "project/update";
+  static const ENDPOINT_PROJECT_DELETE = "project/delete";
 
   static const ENDPOINT_CLASSIFICAITON_CLASSIFY = "classification/classify";
   static const ENDPOINT_CLASSIFICATION_GET = "classification/get";
@@ -89,7 +90,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return User.fromJson(response.data['body'], imageEndpoint: STATIC_IMAGE_URL);
+        return User.fromJson(response.data['body'],
+            imageEndpoint: STATIC_IMAGE_URL);
       } else {
         throw Exception("Request unsuccessfull");
       }
@@ -169,6 +171,18 @@ class LabelLabAPIImpl extends LabelLabAPI {
     return _dio
         .put(API_URL + ENDPOINT_PROJECT_UPDATE + "/${project.id}",
             options: options, data: project.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> deleteProject(String token, String id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .delete(API_URL + ENDPOINT_PROJECT_DELETE + "/$id", options: options)
         .then((response) {
       return ApiResponse(response.data);
     });
