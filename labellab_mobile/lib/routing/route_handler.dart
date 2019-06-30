@@ -7,6 +7,7 @@ import 'package:labellab_mobile/screen/classify/classify_screen.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:labellab_mobile/screen/main_screen.dart';
 import 'package:labellab_mobile/screen/profile/profile_screen.dart';
+import 'package:labellab_mobile/screen/profile/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,11 @@ var signupHandler = Handler(
 
 var profileHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return ProfileScreen();
+  return Provider<ProfileBloc>(
+    builder: (context) => ProfileBloc(),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ProfileScreen(),
+  );
 });
 
 var addProjectHandler = Handler(

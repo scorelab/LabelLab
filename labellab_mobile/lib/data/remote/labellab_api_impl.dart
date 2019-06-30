@@ -24,14 +24,16 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const String API_URL = BASE_URL + "api/v1/";
   static const String STATIC_CLASSIFICATION_URL =
       BASE_URL + "static/classifications/";
-  static const String STATIC_IMAGE_URL = BASE_URL + "static/classifications/";
+  static const String STATIC_IMAGE_URL = BASE_URL + "static/img/";
 
   // Endpoints
   static const ENDPOINT_LOGIN = "auth/login";
   static const ENDPOINT_LOGIN_GOOGLE = "auth/google/mobile";
   static const ENDPOINT_LOGIN_GITHUB = "auth/github";
   static const ENDPOINT_REGISTER = "auth/register";
+
   static const ENDPOINT_USERS_INFO = "users/info";
+  static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_CREATE = "project/create";
@@ -87,10 +89,26 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return User.fromJson(response.data['body']);
+        return User.fromJson(response.data['body'], imageEndpoint: STATIC_IMAGE_URL);
       } else {
         throw Exception("Request unsuccessfull");
       }
+    });
+  }
+
+  @override
+  Future<ApiResponse> uploadUserImage(String token, File image) {
+    final imageBytes = image.readAsBytesSync();
+    final encodedBytes = base64Encode(imageBytes);
+    final data = {"image": "base64," + encodedBytes, "format": "image/jpg"};
+    Options options = Options(
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+        contentType: ContentType.parse("application/x-www-form-urlencoded"));
+    return _dio
+        .post(API_URL + ENDPOINT_UPLOAD_USER_IMAGE,
+            options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
     });
   }
 

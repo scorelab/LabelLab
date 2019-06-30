@@ -88,6 +88,11 @@ class Repository {
     });
   }
 
+  Future<ApiResponse> uploadUserImage(File image) {
+    if (accessToken == null) return Future(null);
+    return _api.uploadUserImage(accessToken, image);
+  }
+
   // Project
   Future<ApiResponse> createProject(Project project) {
     if (accessToken == null) return Future(null);
