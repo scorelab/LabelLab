@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_item.dart';
@@ -46,7 +47,7 @@ class ProjectScreen extends StatelessWidget {
                                       _gotoEditProject(context, project.id);
                                     },
                                     onDeleteSelected: () {
-                                      // TODO - Integrate project deletion API
+                                      _showDeleteConfirmation(context, project);
                                     },
                                   ))
                               .toList(),
@@ -80,5 +81,31 @@ class ProjectScreen extends StatelessWidget {
         .whenComplete(() {
       Provider.of<ProjectBloc>(context).refresh();
     });
+  }
+
+  void _showDeleteConfirmation(BuildContext baseContext, Project project) {
+    showDialog(
+        context: baseContext,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Delete ${project.name}"),
+            content: Text("This can't be undone. Are you sure?"),
+            actions: <Widget>[
+              FlatButton(
+                child: new Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: new Text("Delete"),
+                onPressed: () {
+                  Provider.of<ProjectBloc>(baseContext).delete(project.id);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 }

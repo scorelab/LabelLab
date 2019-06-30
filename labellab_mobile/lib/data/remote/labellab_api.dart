@@ -25,6 +25,7 @@ abstract class LabelLabAPI {
   Future<Project> getProject(String token, String id);
   Future<ApiResponse> createProject(String token, Project project);
   Future<ApiResponse> updateProject(String token, Project project);
+  Future<ApiResponse> deleteProject(String token, String id);
 
   // Classification
   Future<Classification> classify(String token, File image);

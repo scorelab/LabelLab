@@ -129,6 +129,11 @@ class Repository {
     return _api.updateProject(accessToken, project);
   }
 
+  Future<ApiResponse> deleteProject(String id) {
+    if (accessToken == null) return Future(null);
+    return _api.deleteProject(accessToken, id);
+  }
+
   // Classification
   Future<Classification> classify(File image) {
     if (accessToken == null) return Future(null);
