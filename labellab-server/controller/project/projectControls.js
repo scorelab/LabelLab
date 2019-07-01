@@ -140,7 +140,7 @@ exports.updateProject = function(req, res) {
 			{
 				_id: req.params.id
 			},
-			req.body.data,
+			req.body,
 			{ new: true }
 		).exec(function(err, project) {
 			if (err) {
