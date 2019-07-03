@@ -43,6 +43,9 @@ class ProjectScreen extends StatelessWidget {
                           children: state.projects
                               .map((project) => ProjectItem(
                                     project,
+                                    onItemTapped: () {
+                                      _gotoProjectDetail(context, project.id);
+                                    },
                                     onEditSelected: () {
                                       _gotoEditProject(context, project.id);
                                     },
@@ -71,6 +74,14 @@ class ProjectScreen extends StatelessWidget {
 
   void _gotoAddProject(BuildContext context) {
     Application.router.navigateTo(context, "/project/add").whenComplete(() {
+      Provider.of<ProjectBloc>(context).refresh();
+    });
+  }
+
+  void _gotoProjectDetail(BuildContext context, String id) {
+    Application.router
+        .navigateTo(context, "/project/detail/" + id)
+        .whenComplete(() {
       Provider.of<ProjectBloc>(context).refresh();
     });
   }

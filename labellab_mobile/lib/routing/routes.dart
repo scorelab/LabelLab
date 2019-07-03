@@ -10,6 +10,7 @@ class Routes {
   // Project
   static const addProject = "/project/add";
   static const editProject = "/project/edit/:id";
+  static const detailProject = "/project/detail/:id";
 
   // Classify
   static const classify = "/classify/:by";
@@ -23,6 +24,7 @@ class Routes {
     router.define(profile, handler: profileHandler, transitionType: TransitionType.native);
     router.define(addProject, handler: addProjectHandler, transitionType: TransitionType.native);
     router.define(editProject, handler: editProjectHandler, transitionType: TransitionType.native);
+    router.define(detailProject, handler: detailProjectHandler, transitionType: TransitionType.native);
     router.define(classify, handler: classifyHandler, transitionType: TransitionType.native);
     router.define(classification, handler: classificationHandler, transitionType: TransitionType.native);
   }
