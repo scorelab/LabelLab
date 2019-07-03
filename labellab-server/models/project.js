@@ -10,7 +10,8 @@ const ProjectSchema = new mongoose.Schema({
 		required: true
 	},
 	project_description: {
-		type: String
+		type: String,
+		default: "Image labelling"
 	},
 	project_image: {
 		type: String

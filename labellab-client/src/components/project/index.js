@@ -7,6 +7,7 @@ import Sidebar from "./sidebar";
 import ProjectNavbar from "../navbar/project";
 import Images from "./images";
 import Analytics from "./analytics";
+import ProjectDescription from "./projectDesc";
 import Team from "./team";
 import "./css/index.css";
 
@@ -16,34 +17,35 @@ class ProjectIndex extends Component {
     this.state = {};
   }
   componentDidMount() {
-    this.props.fetchProject(this.props.location.pathname.substring(9,33));
+    this.props.fetchProject(this.props.location.pathname.substring(9, 33));
   }
   render() {
     const { match } = this.props;
     return (
       <BrowserRouter>
-        <ProjectNavbar
-          history={this.props.history}
-        />
+        <ProjectNavbar history={this.props.history} />
         <div className="project-main">
           <Sidebar history={this.props.history} />
-          <Switch>
-            <PrivateRoute
-              exact
-              path={`${match.path}/:id/team`}
-              component={Team}
-            />
-            <PrivateRoute
-              exact
-              path={`${match.path}/:id/images`}
-              component={Images}
-            />
-            <PrivateRoute
-              exact
-              path={`${match.path}/:id/analytics`}
-              component={Analytics}
-            />
-          </Switch>
+          <div>
+            <ProjectDescription history={this.props.history} />
+            <Switch>
+              <PrivateRoute
+                exact
+                path={`${match.path}/:id/team`}
+                component={Team}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/:id/images`}
+                component={Images}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/:id/analytics`}
+                component={Analytics}
+              />
+            </Switch>
+          </div>
         </div>
       </BrowserRouter>
     );

@@ -33,6 +33,9 @@ import {
   ADD_MEMBER_FAILURE,
   ADD_MEMBER_REQUEST,
   ADD_MEMBER_SUCCESS,
+  UPDATE_PROJECT_FAILURE,
+  UPDATE_PROJECT_REQUEST,
+  UPDATE_PROJECT_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -330,9 +333,34 @@ export const addMember = (data, callback) => {
     return { type: ADD_MEMBER_REQUEST };
   }
   function success(data) {
-    return { type: ADD_MEMBER_SUCCESS};
+    return { type: ADD_MEMBER_SUCCESS };
   }
   function failure(error) {
     return { type: ADD_MEMBER_FAILURE, payload: error };
+  }
+};
+
+export const updateProject = (data, project_id, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("PUT", "/api/v1/project/update/" + project_id, data, token)
+      .then(res => {
+        dispatch(success());
+        callback();
+      })
+      .catch(err => {
+        if (err.response && err.response.data) {
+          dispatch(failure(err.response.data.msg));
+        }
+      });
+  };
+  function request() {
+    return { type: UPDATE_PROJECT_REQUEST };
+  }
+  function success(data) {
+    return { type: UPDATE_PROJECT_SUCCESS };
+  }
+  function failure(error) {
+    return { type: UPDATE_PROJECT_FAILURE, payload: error };
   }
 };

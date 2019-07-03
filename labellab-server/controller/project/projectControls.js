@@ -35,7 +35,7 @@ exports.projectInfoId = function(req, res) {
 		Project.findOne({
 			_id: req.params.id
 		})
-			.select("id project_name")
+			.select("id project_name project_description")
 			.populate({ path: "image members", populate: { path: "label member" } })
 			.exec(function(err, project) {
 				if (err) {
@@ -138,7 +138,7 @@ exports.updateProject = function(req, res) {
 	if (req && req.params && req.params.id) {
 		Project.findOneAndUpdate(
 			{
-				_id: req.params.id
+				_id: req.params.id,
 			},
 			req.body,
 			{ new: true }
@@ -146,7 +146,8 @@ exports.updateProject = function(req, res) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
-					msg: "Unable to connect to database. Please try again."
+					msg: "Unable to connect to database. Please try again.",
+					error: err
 				})
 			}
 			if (!project) {
