@@ -3,11 +3,12 @@ import 'package:labellab_mobile/model/project.dart';
 
 class ProjectItem extends StatelessWidget {
   final Project project;
+  final VoidCallback onItemTapped;
   final VoidCallback onEditSelected;
   final VoidCallback onDeleteSelected;
 
   const ProjectItem(this.project,
-      {Key key, this.onDeleteSelected, this.onEditSelected})
+      {Key key, this.onItemTapped, this.onDeleteSelected, this.onEditSelected})
       : super(key: key);
 
   @override
@@ -38,6 +39,7 @@ class ProjectItem extends StatelessWidget {
           ];
         },
       ),
+      onTap: this.onItemTapped,
     );
   }
 }
