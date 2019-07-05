@@ -10,7 +10,10 @@ import {
   FETCH_PROJECT_ALL_SUCCESS,
   ADD_MEMBER_FAILURE,
   ADD_MEMBER_REQUEST,
-  ADD_MEMBER_SUCCESS
+  ADD_MEMBER_SUCCESS,
+  POST_PROJECT_IMAGE_FAILURE,
+  POST_PROJECT_IMAGE_REQUEST,
+  POST_PROJECT_IMAGE_SUCCESS
 } from "../constants/index";
 const initialState = {
   projectActions: {
@@ -18,7 +21,7 @@ const initialState = {
     isfetching: false,
     isinitializing: false,
     errors: "",
-    msg:""
+    msg: ""
   },
   currentProject: {},
   allProjects: []
@@ -77,8 +80,9 @@ const project = (state = initialState, action) => {
           project_id: action.payload._id,
           project_name: action.payload.project_name,
           project_description: action.payload.project_description,
+          project_image: action.payload.project_image,
           images: action.payload.image,
-          members:action.payload.members
+          members: action.payload.members
         }
       };
     case FETCH_PROJECT_ALL_REQUEST:
@@ -104,7 +108,7 @@ const project = (state = initialState, action) => {
         },
         allProjects: action.payload
       };
-      case ADD_MEMBER_REQUEST:
+    case ADD_MEMBER_REQUEST:
       return {
         ...state,
         projectActions: {
@@ -125,7 +129,30 @@ const project = (state = initialState, action) => {
         projectActions: {
           isuploading: false,
           msg: "Member added successfully"
-        },
+        }
+      };
+    case POST_PROJECT_IMAGE_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isuploading: true
+        }
+      };
+    case POST_PROJECT_IMAGE_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isuploading: false,
+          errors: action.payload
+        }
+      };
+    case POST_PROJECT_IMAGE_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isuploading: false,
+          msg: "Member added successfully"
+        }
       };
     default:
       return state;

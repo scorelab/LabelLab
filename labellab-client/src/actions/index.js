@@ -36,6 +36,9 @@ import {
   UPDATE_PROJECT_FAILURE,
   UPDATE_PROJECT_REQUEST,
   UPDATE_PROJECT_SUCCESS,
+  POST_PROJECT_IMAGE_FAILURE,
+  POST_PROJECT_IMAGE_REQUEST,
+  POST_PROJECT_IMAGE_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -362,5 +365,35 @@ export const updateProject = (data, project_id, callback) => {
   }
   function failure(error) {
     return { type: UPDATE_PROJECT_FAILURE, payload: error };
+  }
+};
+
+export const uploadProjectImage = (data, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi(
+      "POST",
+      "/api/v1/project/" + data.project_id + "/image",
+      data,
+      token
+    )
+      .then(res => {
+        dispatch(success(res.data.body));
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          dispatch(failure(err.response.data.msg));
+        }
+      });
+  };
+  function request() {
+    return { type: POST_PROJECT_IMAGE_REQUEST };
+  }
+  function success(data) {
+    return { type: POST_PROJECT_IMAGE_SUCCESS, payload: data };
+  }
+  function failure(error) {
+    return { type: POST_PROJECT_IMAGE_FAILURE, payload: error };
   }
 };
