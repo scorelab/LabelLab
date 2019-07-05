@@ -35,7 +35,7 @@ exports.projectInfoId = function(req, res) {
 		Project.findOne({
 			_id: req.params.id
 		})
-			.select("id project_name project_description")
+			.select("id project_name project_description project_image")
 			.populate({ path: "image members", populate: { path: "label member" } })
 			.exec(function(err, project) {
 				if (err) {
@@ -138,7 +138,7 @@ exports.updateProject = function(req, res) {
 	if (req && req.params && req.params.id) {
 		Project.findOneAndUpdate(
 			{
-				_id: req.params.id,
+				_id: req.params.id
 			},
 			req.body,
 			{ new: true }
@@ -168,11 +168,9 @@ exports.updateProject = function(req, res) {
 
 exports.deleteProject = function(req, res) {
 	if (req && req.params && req.params.id) {
-		Project.findOneAndDelete(
-			{
-				_id: req.params.id
-			}
-		).exec(function(err, project) {
+		Project.findOneAndDelete({
+			_id: req.params.id
+		}).exec(function(err, project) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
@@ -326,4 +324,53 @@ exports.removeMember = function(req, res) {
 	} else {
 		return res.status(400).send({ success: false, msg: "Invalid Params" })
 	}
+}
+exports.projectUploadImage = function(req, res) {
+	if (
+		req &&
+		req.body &&
+		req.body.image &&
+		req.body.format &&
+		req.params.project_id
+	) {
+		let data = {
+			id: req.user.id,
+			img: req.body.image,
+			format: req.body.format
+		}
+		let baseImg = data.img.split(",")[1]
+		let binaryData = new Buffer(baseImg, "base64")
+		let ext = data.format.split("/")[1]
+		let updateData = { project_image: `${data.id}.${ext}` }
+		const url = `/public/project/${updateData.project_image}`
+		require("fs").writeFile(
+			`./public/project/${updateData.project_image}`,
+			binaryData,
+			function(err) {
+				if (err) {
+					return res
+						.status(400)
+						.send({ success: false, msg: "something went wrong" })
+				} else {
+					Project.findOneAndUpdate(
+						{
+							_id: req.params.project_id
+						},
+						updateData
+					).exec(function(err) {
+						if (err)
+							return res.status(400).send({
+								success: false,
+								msg: "Unable To Upload Image. Please Try Again."
+							})
+						res.json({
+							success: true,
+							body: url,
+							msg: "Image Uploaded Successfully."
+						})
+					})
+				}
+			}
+		)
+	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
