@@ -6,7 +6,7 @@ exports.projectInfo = function(req, res) {
 	Project.find({
 		user: req.user._id
 	})
-		.select("project_name project_image project_description")
+		.select("project_name project_image project_description project_image")
 		.populate("image members")
 		.exec(function(err, project) {
 			if (err) {

@@ -39,6 +39,9 @@ import {
   POST_PROJECT_IMAGE_FAILURE,
   POST_PROJECT_IMAGE_REQUEST,
   POST_PROJECT_IMAGE_SUCCESS,
+  DELETE_MEMBER_FAILURE,
+  DELETE_MEMBER_REQUEST,
+  DELETE_MEMBER_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -395,5 +398,35 @@ export const uploadProjectImage = (data, callback) => {
   }
   function failure(error) {
     return { type: POST_PROJECT_IMAGE_FAILURE, payload: error };
+  }
+};
+
+export const memberDelete = (email, project_id, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi(
+      "POST",
+      "/api/v1/project/remove/" + project_id,
+      { member_email: email },
+      token
+    )
+      .then(res => {
+        dispatch(success());
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          dispatch(failure(err.response.data.msg));
+        }
+      });
+  };
+  function request() {
+    return { type: DELETE_MEMBER_REQUEST };
+  }
+  function success() {
+    return { type: DELETE_MEMBER_SUCCESS };
+  }
+  function failure(error) {
+    return { type: DELETE_MEMBER_FAILURE, payload: error };
   }
 };

@@ -1,7 +1,10 @@
-.add-member-button{
-    padding: 2em 0;
+.add-member-button {
+  padding: 2em 0;
 }
-.add-member{
-    background-color: #00A89F !important;
-    color: white !important;
+.add-member {
+  background-color: #00a89f !important;
+  color: white !important;
+}
+.team-remove-user-icon:hover {
+  cursor: pointer;
 }
