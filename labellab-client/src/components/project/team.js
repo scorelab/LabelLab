@@ -12,7 +12,7 @@ import {
   Loader,
   Message
 } from "semantic-ui-react";
-import { addMember, fetchProject } from "../../actions";
+import { addMember, fetchProject, memberDelete } from "../../actions";
 import "./css/team.css";
 
 class TeamIndex extends Component {
@@ -41,10 +41,20 @@ class TeamIndex extends Component {
       member_email: this.state.member_email,
       project_id: this.props.project.project_id
     };
-    this.props.addMember(data, this.props.fetchProject(data.project_id));
+    this.props.addMember(data, this.fetchProjectCallback);
     this.close();
   };
   close = () => this.setState({ open: false });
+  handleDelete = email => {
+    this.props.memberDelete(
+      email,
+      this.props.project.project_id,
+      this.fetchProjectCallback
+    );
+  };
+  fetchProjectCallback = () => {
+    this.props.fetchProject(this.props.project.project_id);
+  };
   render() {
     const { project } = this.props;
     const { open } = this.state;
@@ -65,7 +75,12 @@ class TeamIndex extends Component {
         ) : null}
         {this.props.actions.isuploading ? (
           <Dimmer active={this.props.actions.isuploading}>
-            <Loader indeterminate>Adding member</Loader>
+            <Loader indeterminate>Adding member :)</Loader>
+          </Dimmer>
+        ) : null}
+        {this.props.actions.isdeleting ? (
+          <Dimmer active={this.props.actions.isdeleting}>
+            <Loader indeterminate>Removing member :(</Loader>
           </Dimmer>
         ) : null}
         <Modal size="small" open={open} onClose={this.close}>
@@ -86,11 +101,12 @@ class TeamIndex extends Component {
             />
           </Modal.Actions>
         </Modal>
-        <Table color="green" celled padded>
+        <Table color="green" celled padded striped>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell singleLine>Project Members</Table.HeaderCell>
               <Table.HeaderCell>Role</Table.HeaderCell>
+              <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
 
@@ -104,6 +120,16 @@ class TeamIndex extends Component {
                   </Table.Cell>
                   <Table.Cell>
                     <Header as="h4">{member.role}</Header>
+                  </Table.Cell>
+
+                  <Table.Cell collapsing>
+                    {member.role !== "Admin" ? (
+                      <Icon
+                        className="team-remove-user-icon"
+                        name="user delete"
+                        onClick={() => this.handleDelete(member.member.email)}
+                      />
+                    ) : null}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -138,6 +164,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchProject: data => {
       return dispatch(fetchProject(data));
+    },
+    memberDelete: (email, project_id, callback) => {
+      return dispatch(memberDelete(email, project_id, callback));
     }
   };
 };

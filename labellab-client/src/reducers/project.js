@@ -13,13 +13,17 @@ import {
   ADD_MEMBER_SUCCESS,
   POST_PROJECT_IMAGE_FAILURE,
   POST_PROJECT_IMAGE_REQUEST,
-  POST_PROJECT_IMAGE_SUCCESS
+  POST_PROJECT_IMAGE_SUCCESS,
+  DELETE_MEMBER_FAILURE,
+  DELETE_MEMBER_REQUEST,
+  DELETE_MEMBER_SUCCESS
 } from "../constants/index";
 const initialState = {
   projectActions: {
     isuploading: false,
     isfetching: false,
     isinitializing: false,
+    isdeleting:false,
     errors: "",
     msg: ""
   },
@@ -129,6 +133,29 @@ const project = (state = initialState, action) => {
         projectActions: {
           isuploading: false,
           msg: "Member added successfully"
+        }
+      };
+    case DELETE_MEMBER_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: true
+        }
+      };
+    case DELETE_MEMBER_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: false,
+          errors: action.payload
+        }
+      };
+    case DELETE_MEMBER_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: false,
+          msg: "Member removed successfully"
         }
       };
     case POST_PROJECT_IMAGE_REQUEST:

@@ -1,38 +1,51 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Card } from "semantic-ui-react";
+import { Card, Image } from "semantic-ui-react";
 import { connect } from "react-redux";
 // import "./css/home.css"
 import { fetchAllProject } from "../../actions/index";
 import CardLoader from "../../utils/cardLoader";
+import "./css/previous.css";
 
 class PreviousProject extends Component {
   componentDidMount() {
     this.props.fetchAllProject();
   }
   handleClick = id => {
-    // this.props.history.push({
-    //   pathname: "/labeller",
-    //   search: "?project_id=" + id
-    // });
     this.props.history.push({
-      pathname: "/project/" + id + '/team'
+      pathname: "/project/" + id + "/team"
     });
   };
   render() {
     return (
-      <div>
+      <div className="previous-card-parent">
         <Card.Group itemsPerRow={3}>
           {!this.props.actions.isfetching ? (
             this.props.projects[0] &&
             this.props.projects.map((project, index) => (
-              <Card onClick={() => this.handleClick(project._id)}>
+              <Card
+                key={index}
+                onClick={() => this.handleClick(project._id)}
+                color="green"
+              >
+                <Image
+                  className="previous-card-image"
+                  src={
+                    project.project_image
+                      ? process.env.REACT_APP_HOST +
+                        process.env.REACT_APP_SERVER_PORT +
+                        `/static/project/${project.project_image}?${Date.now()}`
+                      : "https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                  }
+                  wrapped
+                  fluid
+                  // ui={false}
+                />
                 <Card.Content
                   className="card-headers"
                   header={project.project_name}
                 />
                 <Card.Content description="Image Labelling App" />
-                <Card.Content extra />
               </Card>
             ))
           ) : (

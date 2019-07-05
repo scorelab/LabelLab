@@ -10,8 +10,14 @@ class ProjectSidebar extends Component {
     super(props);
     this.state = {
       file: "",
-      image: ""
+      image: "",
+      activeItem: ""
     };
+  }
+  componentDidMount() {
+    this.setState({
+      activeItem: window.location.pathname.substring(34)
+    });
   }
   handleImageChange = e => {
     e.preventDefault();
@@ -44,10 +50,11 @@ class ProjectSidebar extends Component {
   imageCallback = () => {
     this.props.fetchProject(this.props.project.project_id);
   };
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   render() {
     return (
       <div className="sidebar-parent">
-        <div className="profile-first-leftbar">
+        <div>
           {this.props.isfetching ? (
             <h4>LOADING</h4>
           ) : this.props.project && this.props.project.project_image ? (
@@ -63,7 +70,7 @@ class ProjectSidebar extends Component {
               size="medium"
             />
           ) : null}
-          <div>
+          <div className="sidebar-image-button">
             <input
               type="file"
               onChange={this.handleImageChange}
@@ -72,18 +79,20 @@ class ProjectSidebar extends Component {
             />
             <label
               htmlFor="embedpollfileinput"
-              className="ui medium primary left floated button custom-margin"
+              className="ui medium primary floated button custom-margin"
             >
               Change Project Image
             </label>
           </div>
         </div>
-        <div>
-          <Menu vertical>
+        <div className="sidebar-menu-parent">
+          <Menu vertical size="large">
             <Menu.Item
               as={Link}
               to={`/project/${this.props.project.project_id}/team`}
               name="team"
+              active={this.state.activeItem === "team"}
+              onClick={this.handleItemClick}
             >
               Project Team
             </Menu.Item>
@@ -92,6 +101,8 @@ class ProjectSidebar extends Component {
               as={Link}
               to={`/project/${this.props.project.project_id}/images`}
               name="images"
+              active={this.state.activeItem === "images"}
+              onClick={this.handleItemClick}
             >
               Project Images
             </Menu.Item>
@@ -100,6 +111,8 @@ class ProjectSidebar extends Component {
               as={Link}
               to={`/project/${this.props.project.project_id}/analytics`}
               name="analytics"
+              active={this.state.activeItem === "analytics"}
+              onClick={this.handleItemClick}
             >
               Project Analytics
             </Menu.Item>
