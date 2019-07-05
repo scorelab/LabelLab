@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  server:
+    build: ./labellab-server
+    working_dir: /labellab-server/
+    ports:
+      - 4000:4000
+    volumes:
+      - ./labellab-server/:/labellab-server
+    
+
+  client:
+    build: ./labellab-client
+    working_dir: /labellab-client/
+    ports:
+      - 3000:3000
+    volumes:
+      - ./labellab-client/:/labellab-client
+    environment:
+      - NODE_ENV=development
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
