@@ -19,8 +19,3 @@ services:
       - ./labellab-client/:/labellab-client
     environment:
       - NODE_ENV=development
-
-  mongo:
-    image: mongo
-    ports:
-      - 27017:27017
