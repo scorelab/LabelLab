@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+require("dotenv").config()
+
 var createError = require("http-errors")
 var express = require("express")
 var cookieParser = require("cookie-parser")
@@ -12,13 +15,18 @@ let config = require("./config/db_uri")
 
 var app = express()
 
-const passportGoogle = require("./config/google_passport")
-const passportGithub = require("./config/github_passport")
+if (process.env.GOOGLE_CLIENT_ID) {
+	const passportGoogle = require("./config/google_passport")
+}
+
+if (process.env.GITHUB_CLIENT_ID) {
+	const passportGithub = require("./config/github_passport")
+}
 
 app.use(logger("dev"))
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: false, limit: '4mb' }))
+app.use(express.urlencoded({ extended: false, limit: "4mb" }))
 app.use(cookieParser())
 
 app.use("/static", express.static(path.join(__dirname, "public")))
