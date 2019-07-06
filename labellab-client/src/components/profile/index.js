@@ -58,6 +58,11 @@ class Profile extends Component {
       this.props.uploadImage(data, this.imageCallback);
     }
   };
+  handleClick = id => {
+    this.props.history.push({
+      pathname: "/project/" + id + "/team"
+    });
+  };
   render() {
     const { user } = this.props;
     return (

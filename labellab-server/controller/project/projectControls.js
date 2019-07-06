@@ -341,7 +341,7 @@ exports.projectUploadImage = function(req, res) {
 		let baseImg = data.img.split(",")[1]
 		let binaryData = new Buffer(baseImg, "base64")
 		let ext = data.format.split("/")[1]
-		let updateData = { project_image: `${data.id}.${ext}` }
+		let updateData = { project_image: `${req.params.project_id}.${ext}` }
 		const url = `/public/project/${updateData.project_image}`
 		require("fs").writeFile(
 			`./public/project/${updateData.project_image}`,
