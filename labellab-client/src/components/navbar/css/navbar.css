@@ -19,7 +19,7 @@
 .navbar-title{
   width: 15%;
 }
-.title {
+.main-nav-title {
   /* position: absolute; */
   display: flex;
   flex-direction: column;

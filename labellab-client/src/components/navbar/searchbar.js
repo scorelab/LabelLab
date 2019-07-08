@@ -1,45 +1,104 @@
 import _ from "lodash";
 import React, { Component } from "react";
-import { Search } from "semantic-ui-react";
-import searchbar from "./css/searchbar.css";
-const initialState = { isLoading: false, results: [], value: "" };
+import { Search, Grid } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { getSearchProjects } from "../../actions/index";
+import "./css/searchbar.css";
 
-export default class SearchExampleStandard extends Component {
-  state = initialState;
+class SearchExampleStandard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      value: "",
+      results: []
+    };
+  }
+  componentWillMount() {
+    this.resetComponent();
+  }
+  resetComponent = () =>
+    this.setState({ isLoading: false, value: "", results: [] });
 
-  handleResultSelect = (e, { result }) =>
+  handleResultSelect = (e, { result }) => {
     this.setState({ value: result.title });
+    this.props.history.push({
+      pathname: "/project/" + result.id + "/team"
+    });
+  };
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value });
-
+    this.props.searchProject(value.trim());
     setTimeout(() => {
-      if (this.state.value.length < 1) return this.setState(initialState);
-
-      // const re = new RegExp(_.escapeRegExp(this.state.value), "i");
-      // const isMatch = result => re.test(result.title);
-
+      if (this.state.value.length < 1) return this.resetComponent();
       this.setState({
         isLoading: false
       });
     }, 300);
   };
 
+  generateResults = () => {
+    const { search } = this.props;
+    let results = [];
+    if (search == null) {
+      return results;
+    }
+
+    search.map((project, index) => {
+      if (project.project_description) {
+        let image =
+          process.env.REACT_APP_HOST +
+          process.env.REACT_APP_SERVER_PORT +
+          `/static/project/${project.project_image}?${Date.now()}`;
+        results.push({
+          key: index,
+          title: project.project_name,
+          description: project.project_description,
+          image: image,
+          id: project._id
+        });
+      }
+    });
+
+    return results;
+  };
   render() {
-    const { isLoading, value, results } = this.state;
+    const { isLoading, value } = this.state;
 
     return (
       <Search
-        className={searchbar.size}
+        className="searchbar-parent"
+        size="large"
         loading={isLoading}
         onResultSelect={this.handleResultSelect}
         onSearchChange={_.debounce(this.handleSearchChange, 500, {
           leading: true
         })}
-        results={results}
+        results={this.generateResults()}
         value={value}
-        {...this.props}
+        placeholder="Search"
+        minCharacters={1}
       />
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    search: state.searchProjects
+  };
+};
+
+const mapActionToProps = dispatch => {
+  return {
+    searchProject: query => {
+      return dispatch(getSearchProjects(query));
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionToProps
+)(SearchExampleStandard);

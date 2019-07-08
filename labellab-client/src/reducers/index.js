@@ -5,6 +5,7 @@ import user from "./user";
 import project from "./project";
 import image from "./image";
 import label from "./label";
+import searchProjects from "./search";
 
 const rootReducers = combineReducers({
   auth: auth,
@@ -12,7 +13,8 @@ const rootReducers = combineReducers({
   user: user,
   projects: project,
   images: image,
-  labels: label
+  labels: label,
+  searchProjects: searchProjects
 });
 
 export default rootReducers;
