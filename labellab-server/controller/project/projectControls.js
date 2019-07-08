@@ -374,3 +374,20 @@ exports.projectUploadImage = function(req, res) {
 		)
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
+
+exports.searchProject = function(req, res) {
+	if (req && req.params && req.params.query) {
+		Project.find(
+			{ user: req.user._id, project_name: { $regex: req.params.query, $options: "i" } },
+			function(err, project) {
+				if (err) return console.log(err)
+				res.json({
+					success: true,
+					body: project,
+				})
+			}
+		)
+	} else {
+		return res.status(400).send({ success: false, msg: "Invalid Params" })
+	}
+}

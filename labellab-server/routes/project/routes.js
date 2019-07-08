@@ -38,4 +38,8 @@ router.post("/remove/:project_id", requireAuth, projectControls.removeMember)
 // To upload project image
 router.post("/:project_id/image", requireAuth, projectControls.projectUploadImage)
 
+// GET method
+// To search project
+router.get("/search/:query", requireAuth, projectControls.searchProject)
+
 module.exports = router

@@ -12,9 +12,9 @@ class Navbar extends Component {
     return (
       <div className="navbar">
         <div className="startnav">
-          <div className="title">LABELLAB</div>
+          <div className="main-nav-title">LABELLAB</div>
           <div className="searchBar">
-            <Searchbar />
+            <Searchbar history={this.props.history} />
           </div>
         </div>
         <div className="subnavbar">

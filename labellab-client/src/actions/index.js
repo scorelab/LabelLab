@@ -42,6 +42,8 @@ import {
   DELETE_MEMBER_FAILURE,
   DELETE_MEMBER_REQUEST,
   DELETE_MEMBER_SUCCESS,
+  SEARCH_PROJECTS,
+  SEARCH_PROJECTS_FAILURE,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -135,7 +137,11 @@ export const fetchUser = () => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response.statusText));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -213,7 +219,11 @@ export const fetchAllProject = () => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -238,7 +248,11 @@ export const fetchProject = data => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -268,7 +282,11 @@ export const submitImage = (data, callback) => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -306,7 +324,11 @@ export const postLabel = (data, callback) => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -331,7 +353,11 @@ export const addMember = (data, callback) => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response.data.msg));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -355,8 +381,12 @@ export const updateProject = (data, project_id, callback) => {
         callback();
       })
       .catch(err => {
-        if (err.response && err.response.data) {
-          dispatch(failure(err.response.data.msg));
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -386,7 +416,11 @@ export const uploadProjectImage = (data, callback) => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response.data.msg));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -416,7 +450,11 @@ export const memberDelete = (email, project_id, callback) => {
       })
       .catch(err => {
         if (err.response) {
-          dispatch(failure(err.response.data.msg));
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
         }
       });
   };
@@ -428,5 +466,32 @@ export const memberDelete = (email, project_id, callback) => {
   }
   function failure(error) {
     return { type: DELETE_MEMBER_FAILURE, payload: error };
+  }
+};
+
+export const getSearchProjects = query => {
+  return dispatch => {
+    if (!query) {
+      query = "null";
+    }
+    FetchApi("GET", "/api/v1/project/search/" + query, null, token)
+      .then(response => {
+        dispatch(success(response.data.body));
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function success(data) {
+    return { type: SEARCH_PROJECTS, payload: data };
+  }
+  function failure(error) {
+    return { type: SEARCH_PROJECTS_FAILURE, payload: error };
   }
 };
