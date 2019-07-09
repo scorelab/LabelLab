@@ -65,6 +65,11 @@ class TeamIndex extends Component {
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : null}
+        {this.props.actions.isuploading ? (
+          <Dimmer active={this.props.actions.isuploading}>
+            <Loader indeterminate>Uploading Image</Loader>
+          </Dimmer>
+        ) : null}
         {this.props.actions.errors ? (
           <Message negative>
             <Message.Header>{this.props.actions.errors}</Message.Header>
@@ -73,8 +78,8 @@ class TeamIndex extends Component {
         {this.props.actions.msg ? (
           <Message success header={this.props.actions.msg} />
         ) : null}
-        {this.props.actions.isuploading ? (
-          <Dimmer active={this.props.actions.isuploading}>
+        {this.props.actions.isadding ? (
+          <Dimmer active={this.props.actions.isadding}>
             <Loader indeterminate>Adding member :)</Loader>
           </Dimmer>
         ) : null}

@@ -109,8 +109,7 @@ class Dashboard extends Component {
   };
   projectCallback = id => {
     this.props.history.push({
-      pathname: "/labeller",
-      search: "?project_id=" + id
+      pathname: "/project/" + id + "/team"
     });
   };
   callback() {}
@@ -147,54 +146,6 @@ class Dashboard extends Component {
               />
             </Modal.Actions>
           </Modal>
-          {/* <Menu className="home.menu">
-            <Menu.Menu position="right">
-              <Menu.Item fitted className="home.borderless">
-                {this.props.isfetching ? (
-                  <h4>LOADING</h4>
-                ) : this.props.user && this.props.user.image ? (
-                  <Image
-                    centered
-                    src={
-                      process.env.REACT_APP_HOST +
-                      process.env.REACT_APP_SERVER_PORT +
-                      `/static/img/${this.props.user.image}?${Date.now()}`
-                    }
-                    size="mini"
-                  />
-                ) : null}
-              </Menu.Item>
-              <Menu.Item>
-                <Header
-                  textAlign="center"
-                  as="h5"
-                  content={this.props.user.username}
-                />
-              </Menu.Item>
-              <Menu.Item as={Link} name="profile" to="/profile">
-                <Icon name="user" />
-                My profile
-              </Menu.Item>
-              <div>
-                <input
-                  type="file"
-                  onChange={this.handleImageChange}
-                  className="file-input"
-                  id="embedpollfileinput"
-                />
-                <label
-                  htmlFor="embedpollfileinput"
-                  className="ui medium primary left floated button custom-margin"
-                >
-                  Update Profile Image
-                </label>
-              </div>
-              <Menu.Item>
-                <Button onClick={this.handleLogout}>Logout</Button>
-              </Menu.Item>
-            </Menu.Menu>
-          </Menu> */}
-          {/* <div>{this.state.max_size_error}</div> */}
           <div className="create-project-button">
             <Button
               icon
@@ -206,11 +157,6 @@ class Dashboard extends Component {
               Start New Project
             </Button>
           </div>
-          {/* <Segment>
-                            <Input onChange={this.handleImageChange} type="file" />
-                            <div id="file-name-display"></div>
-                            <Button onClick={this.onSubmit}>Upload Image</Button>
-                        </Segment> */}
           <div className="previous-heading">
             <Header textAlign="left" as="h3" content="Previous Works" />
             <PreviousWork />

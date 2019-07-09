@@ -23,6 +23,7 @@ const initialState = {
     isuploading: false,
     isfetching: false,
     isinitializing: false,
+    isadding: false,
     isdeleting:false,
     errors: "",
     msg: ""
@@ -116,14 +117,14 @@ const project = (state = initialState, action) => {
       return {
         ...state,
         projectActions: {
-          isuploading: true
+          isadding: true
         }
       };
     case ADD_MEMBER_FAILURE:
       return {
         ...state,
         projectActions: {
-          isuploading: false,
+          isadding: false,
           errors: action.payload
         }
       };
@@ -131,7 +132,7 @@ const project = (state = initialState, action) => {
       return {
         ...state,
         projectActions: {
-          isuploading: false,
+          isadding: false,
           msg: "Member added successfully"
         }
       };
