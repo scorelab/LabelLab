@@ -5,7 +5,7 @@ let chaiHttp = require("chai-http")
 
 var User = require("../models/user")
 let server = require("../app")
-let config = require("../config/db_uri")
+let config = require("../config/travis")
 
 const info = {
 	name: "name",
