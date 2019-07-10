@@ -4,6 +4,7 @@ import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_item.dart';
 import 'package:labellab_mobile/screen/project/project_state.dart';
+import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
 class ProjectScreen extends StatelessWidget {
@@ -95,28 +96,21 @@ class ProjectScreen extends StatelessWidget {
   }
 
   void _showDeleteConfirmation(BuildContext baseContext, Project project) {
-    showDialog(
+    showDialog<bool>(
         context: baseContext,
         builder: (context) {
-          return AlertDialog(
-            title: Text("Delete ${project.name}"),
-            content: Text("This can't be undone. Are you sure?"),
-            actions: <Widget>[
-              FlatButton(
-                child: new Text("Cancel"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: new Text("Delete"),
-                onPressed: () {
-                  Provider.of<ProjectBloc>(baseContext).delete(project.id);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+          return DeleteConfirmDialog(
+            name: project.name,
+            onCancel: () => Navigator.pop(context),
+            onConfirm: () {
+              Provider.of<ProjectBloc>(baseContext).delete(project.id);
+              Navigator.of(context).pop(true);
+            },
           );
-        });
+        }).then((success) {
+      if (success) {
+        Navigator.pop(baseContext);
+      }
+    });
   }
 }

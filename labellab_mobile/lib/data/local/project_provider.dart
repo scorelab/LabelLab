@@ -13,6 +13,7 @@ class ProjectProvider {
       await db.execute('''
         create table ${ProjectEntity.table} ( 
         ${ProjectEntity.columnId} text primary key, 
+        ${ProjectEntity.columnDescription} text,
         ${ProjectEntity.columnName} text not null)
         ''');
     });

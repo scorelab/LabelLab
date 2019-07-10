@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/detail/project._detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
+import 'package:labellab_mobile/screen/project/project_state.dart';
+import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
@@ -40,7 +43,9 @@ class ProjectDetailScreen extends StatelessWidget {
                     : Container(
                         height: 6,
                       ),
-                Text("Sample Text"),
+                _state.project != null
+                    ? _buildBody(context, _state)
+                    : Container(),
               ],
             ),
           ),
@@ -75,6 +80,61 @@ class ProjectDetailScreen extends StatelessWidget {
         : [];
   }
 
+  Widget _buildBody(BuildContext context, ProjectDetailState state) {
+    return Column(
+      children: <Widget>[
+        state.project.description != null
+            ? _buildInfo(context, state.project.description)
+            : Container(),
+        state.project.members != null
+            ? _buildMembers(context, state.project.members)
+            : Container(),
+      ],
+    );
+  }
+
+  Widget _buildInfo(BuildContext context, String description) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Text(
+            "Info",
+            style: Theme.of(context).textTheme.title,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(description),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMembers(BuildContext context, List<Member> members) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
+          child: Text(
+            "Members",
+            style: Theme.of(context).textTheme.title,
+          ),
+        ),
+        Column(
+          children: members.map((member) {
+            return ListTile(
+              title: Text(member.member.name),
+              subtitle: Text(member.member.email),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
   void _gotoEditProject(BuildContext context, String id) {
     Application.router
         .navigateTo(context, "/project/edit/" + id)
@@ -87,24 +147,13 @@ class ProjectDetailScreen extends StatelessWidget {
     showDialog<bool>(
         context: baseContext,
         builder: (context) {
-          return AlertDialog(
-            title: Text("Delete ${project.name}"),
-            content: Text("This can't be undone. Are you sure?"),
-            actions: <Widget>[
-              FlatButton(
-                child: new Text("Cancel"),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-              FlatButton(
-                child: new Text("Delete"),
-                onPressed: () {
-                  Provider.of<ProjectDetailBloc>(baseContext).delete();
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
+          return DeleteConfirmDialog(
+            name: project.name,
+            onCancel: () => Navigator.pop(context),
+            onConfirm: () {
+              Provider.of<ProjectDetailBloc>(baseContext).delete();
+              Navigator.of(context).pop(true);
+            },
           );
         }).then((success) {
       if (success) {

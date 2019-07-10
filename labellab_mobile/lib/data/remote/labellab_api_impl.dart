@@ -136,6 +136,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .get(API_URL + ENDPOINT_PROJECT_GET + "/$id", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
+      print(response);
       if (isSuccess) {
         return Project.fromJson(response.data['body']);
       } else {
@@ -168,6 +169,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
+    print(project.toMap().toString());
     return _dio
         .put(API_URL + ENDPOINT_PROJECT_UPDATE + "/${project.id}",
             options: options, data: project.toMap())
