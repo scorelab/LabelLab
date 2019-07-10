@@ -6,7 +6,7 @@ exports.projectInfo = function(req, res) {
 	Project.find({
 		user: req.user._id
 	})
-		.select("project_name project_image project_description project_image")
+		.select("project_name project_description project_image")
 		.populate("image members")
 		.exec(function(err, project) {
 			if (err) {
@@ -69,10 +69,13 @@ exports.initializeProject = function(req, res) {
 			if (project) {
 				return res.status(400).json({ msg: "Project name already exists" })
 			}
-			const newProject = new Project({
+      var data = {
 				project_name: req.body.project_name,
 				user: req.user.id
-			})
+			};
+      if (req.body.project_description)
+        data['project_description'] = req.body.project_description;
+			const newProject = new Project(data)
 			newProject.save(function(err, project) {
 				if (err) {
 					return res

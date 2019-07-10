@@ -16,7 +16,11 @@ class AddEditProjectScreen extends StatefulWidget {
 }
 
 class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
-  final TextEditingController _controller = TextEditingController();
+  String _projectId;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
   bool _isLoading = false;
   String _error;
 
@@ -42,11 +46,23 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             LabelTextField(
-              controller: _controller,
+              controller: _nameController,
               labelText: "Project name",
               textCapitalization: TextCapitalization.words,
-              errorText: _error != null ? _error : null,
             ),
+            SizedBox(
+              height: 8,
+            ),
+            LabelTextField(
+                controller: _descriptionController,
+                labelText: "Project description",
+                textCapitalization: TextCapitalization.sentences),
+            this._error != null
+                ? Text(
+                    this._error,
+                    style: TextStyle(color: Colors.red),
+                  )
+                : Container(),
             SizedBox(
               height: 16,
             ),
@@ -68,20 +84,14 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   }
 
   void _update(BuildContext context) {
-    String projectName = _controller.text.toString();
-    if (projectName.isEmpty) {
-      setState(() {
-        _error = "Can't be empty";
-        return;
-      });
-    }
     setState(() {
       _isLoading = true;
     });
-    final Project project = Project();
-    project.id = widget.id;
-    project.name = projectName;
-    _updateLogic(project).then((String message) {
+    final Project _project = Project();
+    _project.id = _projectId;
+    _project.name = _nameController.text;
+    _project.description = _descriptionController.text;
+    _updateLogic(_project).then((String message) {
       if (message == "Success") {
         Application.router.pop(context);
       } else {
@@ -130,9 +140,12 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
 
   void _loadProjectLogic() {
     widget._repository.getProject(widget.id).then((Project project) {
+      print(project.description);
       setState(() {
-        _controller.text = project.name;
-      });   
+        _projectId = project.id;
+        _nameController.text = project.name;
+        _descriptionController.text = project.description;
+      });
     });
   }
 

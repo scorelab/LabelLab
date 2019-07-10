@@ -39,6 +39,7 @@ class ProjectDetailBloc {
     _setState(ProjectDetailState.loading(project: _project));
     _repository.getProject(projectId).then((project) {
       this._project = project;
+      print("Project => " + project.toMap().toString());
       _setState(ProjectDetailState.success(_project));
       _isLoading = false;
     }).catchError((err) {
