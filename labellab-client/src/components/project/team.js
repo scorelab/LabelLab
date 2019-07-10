@@ -60,16 +60,6 @@ class TeamIndex extends Component {
     const { open } = this.state;
     return (
       <Container>
-        {this.props.actions.isfetching ? (
-          <Dimmer active={this.props.actions.isfetching}>
-            <Loader indeterminate>Have some patience :)</Loader>
-          </Dimmer>
-        ) : null}
-        {this.props.actions.isuploading ? (
-          <Dimmer active={this.props.actions.isuploading}>
-            <Loader indeterminate>Uploading Image</Loader>
-          </Dimmer>
-        ) : null}
         {this.props.actions.errors ? (
           <Message negative>
             <Message.Header>{this.props.actions.errors}</Message.Header>

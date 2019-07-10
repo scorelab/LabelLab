@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
+import { Dimmer, Loader } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { fetchProject } from "../../actions/index";
 import PrivateRoute from "../../utils/pR";
@@ -23,6 +24,16 @@ class ProjectIndex extends Component {
     const { match } = this.props;
     return (
       <BrowserRouter>
+        {this.props.actions.isfetching ? (
+          <Dimmer active={this.props.actions.isfetching}>
+            <Loader indeterminate>Have some patience :)</Loader>
+          </Dimmer>
+        ) : null}
+        {this.props.actions.isuploading ? (
+          <Dimmer active={this.props.actions.isuploading}>
+            <Loader indeterminate>Uploading Image</Loader>
+          </Dimmer>
+        ) : null}
         <ProjectNavbar history={this.props.history} />
         <div className="project-main">
           <Sidebar history={this.props.history} />
@@ -52,7 +63,10 @@ class ProjectIndex extends Component {
   }
 }
 const mapStateToProps = state => {
-  return {};
+  return {
+    project: state.projects.currentProject,
+    actions: state.projects.projectActions
+  };
 };
 
 const mapDispatchToProps = dispatch => {
