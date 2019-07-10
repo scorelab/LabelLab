@@ -1,0 +1,12 @@
+.image-grand-parent{
+    width: 100%;
+}
+.image-parent{
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.image-parent img{
+    padding: 0 1em !important;
+}

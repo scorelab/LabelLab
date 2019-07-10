@@ -111,7 +111,7 @@ const project = (state = initialState, action) => {
         projectActions: {
           isfetching: false
         },
-        allProjects: action.payload
+        allProjects: action.payload.project
       };
     case ADD_MEMBER_REQUEST:
       return {

@@ -1,3 +1,6 @@
 .project-main{
     display: flex;
 }
+.project-non-side-section{
+    width: 75%;
+}
