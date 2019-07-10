@@ -37,7 +37,7 @@ class ProjectIndex extends Component {
         <ProjectNavbar history={this.props.history} />
         <div className="project-main">
           <Sidebar history={this.props.history} />
-          <div>
+          <div className="project-non-side-section">
             <ProjectDescription history={this.props.history} />
             <Switch>
               <PrivateRoute

@@ -3,11 +3,11 @@ let Project = require("../../models/project")
 let ProjectMembers = require("../../models/projectMembers")
 
 exports.projectInfo = function(req, res) {
-	Project.find({
-		user: req.user._id
+	User.findOne({
+		_id: req.user._id
 	})
-		.select("project_name project_description project_image")
-		.populate("image members")
+		.select("username")
+		.populate("project")
 		.exec(function(err, project) {
 			if (err) {
 				return res.status(400).send({
@@ -19,15 +19,40 @@ exports.projectInfo = function(req, res) {
 			if (!project) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "project not found" })
+					.send({ success: false, msg: "Project not found" })
 			} else {
 				return res.json({
 					success: true,
-					msg: "project Data Found",
+					msg: "Project Data Found",
 					body: project
 				})
 			}
 		})
+	// Project.find({
+	// 	user: req.user._id
+	// })
+	// 	.select("project_name project_description project_image")
+	// 	.populate("image members")
+	// 	.exec(function(err, project) {
+	// 		if (err) {
+	// 			return res.status(400).send({
+	// 				success: false,
+	// 				msg: "Unable to connect to database. Please try again.",
+	// 				error: err
+	// 			})
+	// 		}
+	// 		if (!project) {
+	// 			return res
+	// 				.status(400)
+	// 				.send({ success: false, msg: "project not found" })
+	// 		} else {
+	// 			return res.json({
+	// 				success: true,
+	// 				msg: "project Data Found",
+	// 				body: project
+	// 			})
+	// 		}
+	// 	})
 }
 
 exports.projectInfoId = function(req, res) {
@@ -69,12 +94,12 @@ exports.initializeProject = function(req, res) {
 			if (project) {
 				return res.status(400).json({ msg: "Project name already exists" })
 			}
-      var data = {
+			var data = {
 				project_name: req.body.project_name,
 				user: req.user.id
-			};
-      if (req.body.project_description)
-        data['project_description'] = req.body.project_description;
+			}
+			if (req.body.project_description)
+				data["project_description"] = req.body.project_description
 			const newProject = new Project(data)
 			newProject.save(function(err, project) {
 				if (err) {
@@ -243,7 +268,7 @@ exports.addMember = function(req, res) {
 									})
 								}
 								User.update(
-									{ _id: member._id },
+									{ _id: user._id },
 									{ $addToSet: { project: req.params.project_id } }
 								).exec(function(err) {
 									if (err) {
@@ -381,12 +406,15 @@ exports.projectUploadImage = function(req, res) {
 exports.searchProject = function(req, res) {
 	if (req && req.params && req.params.query) {
 		Project.find(
-			{ user: req.user._id, project_name: { $regex: req.params.query, $options: "i" } },
+			{
+				user: req.user._id,
+				project_name: { $regex: req.params.query, $options: "i" }
+			},
 			function(err, project) {
 				if (err) return console.log(err)
 				res.json({
 					success: true,
-					body: project,
+					body: project
 				})
 			}
 		)
