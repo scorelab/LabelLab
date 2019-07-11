@@ -83,10 +83,26 @@ class LoginIndex extends Component {
           </Header>
           <div className="login-oauth-icon">
             <div>
-              <Image size="mini" src={googleIcon} />
+              <a
+                href={
+                  process.env.REACT_APP_HOST +
+                  process.env.REACT_APP_SERVER_PORT +
+                  `/api/v1/auth/google`
+                }
+              >
+                <Image size="mini" src={googleIcon} />
+              </a>
             </div>
             <div>
-              <Image size="mini" src={githubIcon} />
+              <a
+                href={
+                  process.env.REACT_APP_HOST +
+                  process.env.REACT_APP_SERVER_PORT +
+                  `/api/v1/auth/github`
+                }
+              >
+                <Image size="mini" src={githubIcon} />
+              </a>
             </div>
           </div>
           <Divider horizontal>Or</Divider>

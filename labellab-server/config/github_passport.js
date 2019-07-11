@@ -14,7 +14,9 @@ if (process.env.GOOGLE_CLIENT_ID) {
 				scope: ["read:user", "user:email"]
 			},
 			function(accessToken, refreshToken, profile, cb) {
-				primaryEmail = profile.emails.filter(email => email.primary == true)[0]
+				let primaryEmail = profile.emails.filter(
+					email => email.primary == true
+				)[0]
 				User.findOne({ githubId: profile.id })
 					.then(currentUser => {
 						if (currentUser) {
@@ -25,7 +27,8 @@ if (process.env.GOOGLE_CLIENT_ID) {
 								githubId: profile.id,
 								username: profile.displayName,
 								thumbnail: profile._json.avatar_url,
-								email: primaryEmail.value
+								email: primaryEmail.value,
+								name: profile.displayName
 							})
 								.save()
 								.then(newUser => {

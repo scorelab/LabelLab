@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Authenticated</title>
+  </head>
+  <body>
+    Authenticated successfully.
+
+    <script type="text/javascript">
+      window.location.href = "http://localhost:3000/redirect?<%=token%>";
+      window.close();
+    </script>
+  </body>
+</html>

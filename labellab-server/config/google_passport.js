@@ -28,7 +28,8 @@ if (process.env.GOOGLE_CLIENT_ID) {
 								googleId: profile.id,
 								username: profile.displayName,
 								thumbnail: profile._json.picture,
-								email: profile._json.email
+								email: profile._json.email,
+								name: profile.displayName
 							})
 								.save()
 								.then(newUser => {

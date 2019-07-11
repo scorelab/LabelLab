@@ -9,6 +9,7 @@ import Register from "./register/index";
 import Profile from "./profile/index";
 import Labeller from "./labeller/index";
 import Project from "./project/index";
+import Redirect from "./redirect.js"
 
 class App extends Component {
   render() {
@@ -16,6 +17,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <React.Fragment>
+          <Route path={`${match.path}redirect`} component={Redirect} />
           <Route path={`${match.path}logout`} component={Logout} />
           <Route path={`${match.path}login`} component={Login} />
           <Route path={`${match.path}register`} component={Register} />
