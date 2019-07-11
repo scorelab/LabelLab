@@ -22,6 +22,7 @@ import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
 import PreviousWork from "./previous";
 import "./css/dashboard.css";
+import Test from "../labeller/test/testing.js"
 
 class Dashboard extends Component {
   constructor(props) {
@@ -162,6 +163,7 @@ class Dashboard extends Component {
             <PreviousWork />
           </div>
         </Container>
+        <Test />
       </div>
     );
   }
