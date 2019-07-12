@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { CRS } from 'leaflet';
-import { Map, ImageOverlay, ZoomControl } from 'react-leaflet';
-import Control from 'react-leaflet-control';
-import Hotkeys from 'react-hot-keys';
-import update from 'immutability-helper';
-import 'leaflet-path-drag';
+import React, { Component } from "react";
+import { CRS } from "leaflet";
+import { Map, ImageOverlay, ZoomControl } from "react-leaflet";
+import Control from "react-leaflet-control";
+import Hotkeys from "react-hot-keys";
+import update from "immutability-helper";
+import "leaflet-path-drag";
 
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 
-import { Icon } from 'semantic-ui-react';
+import { Icon } from "semantic-ui-react";
 
-import { BBoxFigure, PolygonFigure } from './Figure';
+import { BBoxFigure, PolygonFigure } from "./Figure";
 
-import { convertPoint, lighten, colorMapping } from './utils';
-import { withBounds, maxZoom } from './CalcBoundsHOC';
+import { convertPoint, lighten, colorMapping } from "./utils";
+import { withBounds, maxZoom } from "./CalcBoundsHOC";
 
 class Canvas extends Component {
   constructor(props, context) {
@@ -22,7 +22,7 @@ class Canvas extends Component {
     this.state = {
       zoom: -1,
       selectedFigureId: null,
-      cursorPos: { lat: 0, lng: 0 },
+      cursorPos: { lat: 0, lng: 0 }
     };
     this.prevSelectedFigure = null;
     this.skipNextClickEvent = false;
@@ -53,52 +53,52 @@ class Canvas extends Component {
     const drawing = !!unfinishedFigure;
 
     switch (eventType) {
-      case 'add':
+      case "add":
         if (drawing) {
           let newState = unfinishedFigure.points;
           newState = update(newState, { $push: [point] });
 
           onChange(
-            'unfinished',
+            "unfinished",
             update(unfinishedFigure, {
               points: {
-                $set: newState,
-              },
+                $set: newState
+              }
             })
           );
         } else {
           onChange(
-            'replace',
+            "replace",
             update(figure, { points: { $splice: [[pos, 0, point]] } })
           );
         }
         break;
 
-      case 'end':
+      case "end":
         const f = unfinishedFigure;
-        onChange('new', f);
+        onChange("new", f);
         break;
 
-      case 'move':
+      case "move":
         onChange(
-          'replace',
+          "replace",
           update(figure, { points: { $splice: [[pos, 1, point]] } })
         );
         break;
 
-      case 'replace':
-        onChange('replace', update(figure, { points: { $set: points } }));
+      case "replace":
+        onChange("replace", update(figure, { points: { $set: points } }));
         break;
 
-      case 'remove':
+      case "remove":
         onChange(
-          'replace',
+          "replace",
           update(figure, { points: { $splice: [[pos, 1]] } })
         );
         break;
 
       default:
-        throw new Error('unknown event type ' + eventType);
+        throw new Error("unknown event type " + eventType);
     }
   }
 
@@ -113,7 +113,7 @@ class Canvas extends Component {
     }
 
     if (drawing) {
-      this.handleChange('add', { point: convertPoint(e.latlng) });
+      this.handleChange("add", { point: convertPoint(e.latlng) });
       return;
     }
 
@@ -124,7 +124,7 @@ class Canvas extends Component {
   }
 
   renderFigure(figure, options) {
-    const Comp = figure.type === 'bbox' ? BBoxFigure : PolygonFigure;
+    const Comp = figure.type === "bbox" ? BBoxFigure : PolygonFigure;
 
     return (
       <Comp
@@ -146,7 +146,7 @@ class Canvas extends Component {
       unfinishedFigure,
       onChange,
       onReassignment,
-      style,
+      style
     } = this.props;
     const { zoom, selectedFigureId, cursorPos } = this.state;
 
@@ -165,7 +165,7 @@ class Canvas extends Component {
           color: colorMapping[unfinishedFigure.color],
           onChange: this.handleChange,
           calcDistance,
-          newPoint: cursorPos,
+          newPoint: cursorPos
         })
       : null;
 
@@ -183,7 +183,7 @@ class Canvas extends Component {
         vertexColor: colorMapping[f.color],
         onSelect: () => this.setState({ selectedFigureId: f.id }),
         onChange: this.handleChange,
-        calcDistance,
+        calcDistance
       })
     );
 
@@ -194,45 +194,45 @@ class Canvas extends Component {
           const tagName = document.activeElement
             ? document.activeElement.tagName.toLowerCase()
             : null;
-          if (['input', 'textarea'].includes(tagName)) {
+          if (["input", "textarea"].includes(tagName)) {
             return false;
           }
           if (drawing) {
-            if (key === 'f') {
+            if (key === "f") {
               const { type, points } = unfinishedFigure;
-              if (type === 'polygon' && points.length >= 3) {
-                this.handleChange('end', {});
+              if (type === "polygon" && points.length >= 3) {
+                this.handleChange("end", {});
               }
             }
           } else {
-            if (key === 'c') {
+            if (key === "c") {
               if (selectedFigureId && this.getSelectedFigure()) {
                 onReassignment(this.getSelectedFigure().type);
               }
-            } else if (key === 'backspace' || key === 'del') {
+            } else if (key === "backspace" || key === "del") {
               if (selectedFigureId && this.getSelectedFigure()) {
-                onChange('delete', this.getSelectedFigure());
+                onChange("delete", this.getSelectedFigure());
               }
             }
           }
 
           const map = this.mapRef.current.leafletElement;
-          if (key === 'left') {
+          if (key === "left") {
             map.panBy([80, 0]);
           }
-          if (key === 'right') {
+          if (key === "right") {
             map.panBy([-80, 0]);
           }
-          if (key === 'up') {
+          if (key === "up") {
             map.panBy([0, 80]);
           }
-          if (key === 'down') {
+          if (key === "down") {
             map.panBy([0, -80]);
           }
-          if (key === '=') {
+          if (key === "=") {
             map.setZoom(map.getZoom() + 1);
           }
-          if (key === '-') {
+          if (key === "-") {
             map.setZoom(map.getZoom() - 1);
           }
         }}
@@ -241,19 +241,19 @@ class Canvas extends Component {
 
     let renderedTrace = null;
     const selectedFigure = this.getSelectedFigure();
-    if (selectedFigure && selectedFigure.type === 'polygon') {
+    if (selectedFigure && selectedFigure.type === "polygon") {
       const trace = selectedFigure.tracingOptions
         ? selectedFigure.tracingOptions.trace || []
         : [];
       const figure = {
-        id: 'trace',
-        type: 'line',
-        points: trace,
+        id: "trace",
+        type: "line",
+        points: trace
       };
       const traceOptions = {
         editing: false,
         finished: true,
-        color: colorMapping[selectedFigure.color],
+        color: colorMapping[selectedFigure.color]
       };
       renderedTrace = <PolygonFigure figure={figure} options={traceOptions} />;
     }
@@ -261,9 +261,9 @@ class Canvas extends Component {
     return (
       <div
         style={{
-          cursor: drawing ? 'crosshair' : 'grab',
-          height: '100%',
-          ...style,
+          cursor: drawing ? "crosshair" : "grab",
+          height: "100%",
+          ...style
         }}
       >
         <Map
@@ -285,15 +285,15 @@ class Canvas extends Component {
           <ZoomControl position="bottomright" />
           <Control className="leaflet-bar" position="bottomright">
             <a
+              href="#"
               role="button"
               title="Zoom reset"
-              href="#"
               onClick={() => {
                 const map = this.mapRef.current.leafletElement;
                 map.setView(map.options.center, map.options.zoom);
               }}
             >
-              <Icon name="redo" fitted style={{ fontSize: '1.2em' }} />
+              <Icon name="redo" fitted style={{ fontSize: "1.2em" }} />
             </a>
           </Control>
           <ImageOverlay url={url} bounds={bounds} />

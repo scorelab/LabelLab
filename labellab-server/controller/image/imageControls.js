@@ -133,3 +133,29 @@ exports.fetchImageId = function(req, res) {
 			})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
+
+exports.imageLabels = function(req, res) {
+	if (req && req.params && req.params.project_id) {
+		let data = req.body
+		Image.findOneAndUpdate(
+			{
+				_id: req.params.image_id
+			},
+			data,
+			{ new: true }
+		).exec(function(err, image) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again.",
+					error: err
+				})
+			}
+			return res.json({
+				success: true,
+				msg: "Label Data saved!",
+				image: image
+			})
+		})
+	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+}

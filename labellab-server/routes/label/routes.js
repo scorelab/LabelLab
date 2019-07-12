@@ -10,4 +10,12 @@ const labelControls = require("../../controller/label/labelControls")
 // To post image of a project
 router.post("/:image_id/create", requireAuth, labelControls.postLabel)
 
+// POST method
+// To post label of a project
+router.post("/:project_id/create", requireAuth, labelControls.createLabel)
+
+// PUT method
+// To update label of a project
+router.put("/:project_id/update", requireAuth, labelControls.updateLabel)
+
 module.exports = router

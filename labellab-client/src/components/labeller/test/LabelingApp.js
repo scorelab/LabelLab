@@ -6,7 +6,7 @@ import "semantic-ui-css/semantic.min.css";
 
 import Canvas from "./Canvas";
 // import HotkeysPanel from './HotkeysPanel';
-// import Sidebar from './Sidebar';
+import Sidebar from './Sidebar';
 // import { PathToolbar, MakePredictionToolbar } from './CanvasToolbar';
 // import Reference from './Reference';
 import "./LabelingApp.css";
@@ -27,7 +27,6 @@ import { withLoadImageData } from "./LoadImageDataHOC";
 class LabelingApp extends Component {
   constructor(props) {
     super(props);
-
     const { labels } = props;
     const toggles = {};
     labels.map(label => (toggles[label.id] = true));
@@ -235,14 +234,46 @@ class LabelingApp extends Component {
       hotkeysPanel
     } = this.state;
 
-    // const forwardedProps = {
-    //   onBack,
-    //   onSkip,
-    //   onSubmit,
-    //   models,
-    //   makePrediction
-    // };
+    const forwardedProps = {
+      onBack,
+      onSkip,
+      onSubmit,
+      models,
+      makePrediction
+    };
+    const sidebarProps = reassigning.status
+    ? {
+        title: 'Select the new label',
+        selected: null,
+        onSelect: selected => {
+          const figure = this.canvasRef.current.getSelectedFigure();
+          if (figure) {
+            this.handleChange('recolor', figure, selected);
+          }
 
+          this.setState({ reassigning: { status: false, type: null } });
+        },
+        filter: label => label.type === reassigning.type,
+        labelData: figures,
+      }
+    : {
+        title: 'Labeling',
+        selected,
+        onSelect: this.handleSelected,
+        toggles,
+        onToggle: label =>
+          this.setState({
+            toggles: update(toggles, {
+              [label.id]: { $set: !toggles[label.id] },
+            }),
+          }),
+        openHotkeys: () => this.setState({ hotkeysPanel: true }),
+        onFormChange: (labelId, newValue) =>
+          pushState(state => ({
+            figures: update(figures, { [labelId]: { $set: newValue } }),
+          })),
+        labelData: figures,
+      };
     // let selectedFigure = null;
     const allFigures = [];
     labels.forEach((label, i) => {
@@ -271,35 +302,37 @@ class LabelingApp extends Component {
         ...figure
       });
     });
-    console.log("here")
     return (
-      <div>
-        dasuhgduasdykas
+      <div
+        style={{ display: "flex", height: "100vh", flexDirection: "column" }}
+      >
+        <div style={{ display: "flex", flex: 1, height: "100%" }}>
+        <Sidebar
+              labels={labels}
+              {...sidebarProps}
+              {...forwardedProps}
+              style={{ flex: 1, maxWidth: 300 }}
+            />
+          <div style={{ flex: 4, display: "flex", flexDirection: "column" }}>
+            <div style={{ position: "relative", height: "100%" }}>
+              <Canvas
+                url={imageUrl}
+                height={height}
+                width={width}
+                figures={allFigures}
+                unfinishedFigure={unfinishedFigure}
+                onChange={this.handleChange}
+                onReassignment={type =>
+                  this.setState({ reassigning: { status: true, type } })
+                }
+                onSelectionChange={this.handleSelectionChange}
+                ref={this.canvasRef}
+                style={{ flex: 1 }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      // <div
-      //   style={{ display: "flex", height: "100vh", flexDirection: "column" }}
-      // >
-      //   <div style={{ display: "flex", flex: 1, height: "100%" }}>
-      //     <div style={{ flex: 4, display: "flex", flexDirection: "column" }}>
-      //       <div style={{ position: "relative", height: "100%" }}>
-      //         <Canvas
-      //           url="https://www.google.com/imgres?imgurl=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F459225%2Fpexels-photo-459225.jpeg%3Fauto%3Dcompress%26cs%3Dtinysrgb%26dpr%3D1%26w%3D500&imgrefurl=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fnature%2F&docid=ShwNVOdFBcmkxM&tbnid=zXwrfQvPsQ5dwM%3A&vet=10ahUKEwjj75KNyq3jAhVNXSsKHfz9BNgQMwiIASgOMA4..i&w=500&h=237&client=ubuntu&bih=928&biw=1853&q=images&ved=0ahUKEwjj75KNyq3jAhVNXSsKHfz9BNgQMwiIASgOMA4&iact=mrc&uact=8"
-      //           height="500"
-      //           width="500"
-      //           figures={allFigures}
-      //           unfinishedFigure={unfinishedFigure}
-      //           onChange={this.handleChange}
-      //           onReassignment={type =>
-      //             this.setState({ reassigning: { status: true, type } })
-      //           }
-      //           onSelectionChange={this.handleSelectionChange}
-      //           ref={this.canvasRef}
-      //           style={{ flex: 1 }}
-      //         />
-      //       </div>
-      //     </div>
-      //   </div>
-      // </div>
     );
   }
 }

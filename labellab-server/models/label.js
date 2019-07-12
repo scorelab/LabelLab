@@ -1,29 +1,43 @@
 const mongoose = require("mongoose")
 
 var LabelSchema = new mongoose.Schema({
-	image:{
-		type: mongoose.Schema.Types.ObjectId, 
-		ref: "Image"
+	// image:{
+	// 	type: mongoose.Schema.Types.ObjectId,
+	// 	ref: "Image"
+	// },
+	// label_name:{
+	// 	type:String,
+	// 	required:true
+	// },
+	// startX:{
+	// 	type:String,
+	// 	reruired:true
+	// },
+	// endX:{
+	// 	type:String,
+	// 	reruired:true
+	// },
+	// startY:{
+	// 	type:String,
+	// 	reruired:true
+	// },
+	// endY:{
+	// 	type:String,
+	// 	reruired:true
+	// }
+	project: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Project"
 	},
-	label_name:{
-		type:String,
-		required:true
+	id: {
+		type: String,
+		unique: true
 	},
-	startX:{
-		type:String,
-		reruired:true
+	name: {
+		type: String
 	},
-	endX:{
-		type:String,
-		reruired:true
-	},
-	startY:{
-		type:String,
-		reruired:true
-	},
-	endY:{
-		type:String,
-		reruired:true
+	type: {
+		type: String
 	}
 })
 

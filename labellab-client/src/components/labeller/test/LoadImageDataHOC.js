@@ -14,6 +14,7 @@ export function withLoadImageData(Comp) {
     }
 
     componentDidUpdate(prevProps, prevState) {
+      console.log(this.props)
       const { imageUrl, demo } = this.props;
 
       if (imageUrl !== prevProps.imageUrl) {
