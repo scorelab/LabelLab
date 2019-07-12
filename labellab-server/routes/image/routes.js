@@ -18,4 +18,8 @@ router.get("/:project_id/fetch", requireAuth, imageControls.fetchImage)
 // To fetch a image
 router.get("/get/:image_id", requireAuth, imageControls.fetchImageId)
 
+// POST method
+// To post labels details
+router.post("/:image_id",requireAuth,imageControls.imageLabels)
+
 module.exports = router

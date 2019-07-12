@@ -10,7 +10,7 @@ import Profile from "./profile/index";
 import Labeller from "./labeller/index";
 import Project from "./project/index";
 import Redirect from "./redirect.js"
-import Testing from "./labeller/test/testing.js"
+import Testing from "./labeller/test/index.js"
 
 class App extends Component {
   render() {

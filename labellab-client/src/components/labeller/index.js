@@ -13,7 +13,6 @@ import {
 } from "../../actions/index";
 import ImageList from "./imageList";
 import ImagePreview from "./imagePreview";
-import Test from "./test/testing.js"
 class Labeller extends Component {
   constructor(props) {
     super(props);
