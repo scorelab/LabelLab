@@ -80,7 +80,7 @@ exports.fetchImage = function(req, res) {
 			_id: req.params.project_id
 		})
 			.select("project_name")
-			.populate({ path: "image", populate: { path: "label" } })
+			.populate("image")
 			.exec(function(err, project) {
 				if (err) {
 					return res.status(400).send({
@@ -109,8 +109,7 @@ exports.fetchImageId = function(req, res) {
 		Image.find({
 			_id: req.params.image_id
 		})
-			.select("image_name image_url created_at")
-			.populate("label")
+			.select("height width labelData image_name image_url created_at")
 			.exec(function(err, image) {
 				if (err) {
 					return res.status(400).send({
@@ -134,9 +133,10 @@ exports.fetchImageId = function(req, res) {
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
 
-exports.imageLabels = function(req, res) {
-	if (req && req.params && req.params.project_id) {
+exports.updateLabels = function(req, res) {
+	if (req && req.params && req.params.image_id) {
 		let data = req.body
+		console.log(data)
 		Image.findOneAndUpdate(
 			{
 				_id: req.params.image_id

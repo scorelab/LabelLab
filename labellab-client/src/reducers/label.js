@@ -7,14 +7,18 @@ import {
   FETCH_LABEL_SUCCESS,
   CREATE_LABEL_FAILURE,
   CREATE_LABEL_REQUEST,
-  CREATE_LABEL_SUCCESS
+  CREATE_LABEL_SUCCESS,
+  UPDATE_LABEL_FAILURE,
+  UPDATE_LABEL_REQUEST,
+  UPDATE_LABEL_SUCCESS
 } from "../constants/index";
 
 const initialState = {
   labelActions: {
     isposting: false,
     error: "",
-    isfetching: false
+    isfetching: false,
+    isupdating: false
   },
   images: {},
   labels: []
@@ -88,6 +92,28 @@ const user = (state = initialState, action) => {
         ...state,
         labelActions: {
           isposting: false
+        }
+      };
+    case UPDATE_LABEL_REQUEST:
+      return {
+        ...state,
+        labelActions: {
+          isupdating: true
+        }
+      };
+    case UPDATE_LABEL_FAILURE:
+      return {
+        ...state,
+        labelActions: {
+          isupdating: false,
+          error: "Something went wrong!"
+        }
+      };
+    case UPDATE_LABEL_SUCCESS:
+      return {
+        ...state,
+        labelActions: {
+          isupdating: false
         }
       };
     default:

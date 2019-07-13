@@ -13,7 +13,7 @@ const ImageSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	labels: {
+	labelData: {
 		type: Object
 	},
 	height: {
