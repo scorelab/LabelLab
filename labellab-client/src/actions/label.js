@@ -8,6 +8,9 @@ import {
   CREATE_LABEL_FAILURE,
   CREATE_LABEL_REQUEST,
   CREATE_LABEL_SUCCESS,
+  UPDATE_LABEL_FAILURE,
+  UPDATE_LABEL_REQUEST,
+  UPDATE_LABEL_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -105,5 +108,33 @@ export const createLabel = (data, callback) => {
   }
   function failure(error) {
     return { type: CREATE_LABEL_FAILURE, payload: error };
+  }
+};
+
+export const updateLabels = (image_id, labelData) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("POST", "/api/v1/image/" + image_id + "/update", labelData, token)
+      .then(res => {
+        dispatch(success());
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function request() {
+    return { type: UPDATE_LABEL_REQUEST };
+  }
+  function success() {
+    return { type: UPDATE_LABEL_SUCCESS };
+  }
+  function failure(error) {
+    return { type: UPDATE_LABEL_FAILURE, payload: error };
   }
 };

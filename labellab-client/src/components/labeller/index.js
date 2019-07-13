@@ -3,7 +3,7 @@ import LabelingApp from "./LabelingApp.js";
 import { connect } from "react-redux";
 import { Loader, Dimmer } from "semantic-ui-react";
 import DocumentMeta from "react-document-meta";
-import { fetchLabels } from "../../actions/label";
+import { fetchLabels, updateLabels } from "../../actions/label";
 
 class LabelingLoader extends Component {
   constructor(props) {
@@ -19,7 +19,8 @@ class LabelingLoader extends Component {
     this.props.fetchLabels(this.props.location.pathname.substring(10, 34));
   }
   pushUpdate(labelData) {
-    console.log(labelData);
+    let image_id = this.props.location.pathname.substring(35);
+    this.props.updateLabels(image_id,labelData);
   }
   markcomplete() {}
   render() {
@@ -30,8 +31,12 @@ class LabelingLoader extends Component {
     const title = "dfahsgdu";
     return (
       <DocumentMeta title={title}>
-        {this.props.actions.isfetching ? (
-          <Dimmer active={this.props.actions.isfetching}>
+        {this.props.actions.isfetching && this.props.actions.isupdating ? (
+          <Dimmer
+            active={
+              this.props.actions.isfetching && this.props.actions.isupdating
+            }
+          >
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : (
@@ -61,6 +66,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchLabels: project_id => {
       return dispatch(fetchLabels(project_id));
+    },
+    updateLabels: (image_id,labelData) => {
+      return dispatch(updateLabels(image_id,labelData));
     }
   };
 };

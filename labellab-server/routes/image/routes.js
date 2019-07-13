@@ -20,6 +20,10 @@ router.get("/get/:image_id", requireAuth, imageControls.fetchImageId)
 
 // POST method
 // To post labels details
-router.post("/:image_id",requireAuth,imageControls.imageLabels)
+// router.post("/:image_id", requireAuth, imageControls.imageLabels)
+
+// PUT method
+// To update labelData details
+router.put("/:image_id/update", requireAuth, imageControls.updateLabels)
 
 module.exports = router
