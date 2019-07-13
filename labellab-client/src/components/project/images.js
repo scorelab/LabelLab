@@ -8,6 +8,11 @@ class ImagesIndex extends Component {
     super(props);
     this.state = {};
   }
+  handleRedirection = id => {
+    this.props.history.push({
+      pathname: "/labeller/" + this.props.projects.project_id + "/" + id
+    });
+  };
   render() {
     const { projects } = this.props;
     return (
@@ -17,15 +22,17 @@ class ImagesIndex extends Component {
           {projects &&
             projects.images &&
             projects.images.map((image, index) => (
-              <Image
-                key={index}
-                src={
-                  process.env.REACT_APP_HOST +
-                  process.env.REACT_APP_SERVER_PORT +
-                  `/static/uploads/${image.image_url}?${Date.now()}`
-                }
-                size="medium"
-              />
+              <div onClick={() => this.handleRedirection(image._id)}>
+                <Image
+                  key={index}
+                  src={
+                    process.env.REACT_APP_HOST +
+                    process.env.REACT_APP_SERVER_PORT +
+                    `/static/uploads/${image.image_url}?${Date.now()}`
+                  }
+                  size="medium"
+                />
+              </div>
             ))}
         </div>
       </div>

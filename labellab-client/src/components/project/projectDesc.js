@@ -31,8 +31,8 @@ class ProjectDescriptionIndex extends Component {
   handleRedirection = () => {
     let id = this.props.project.project_id;
     this.props.history.push({
-      pathname: "/labeller",
-      search: "?project_id=" + id
+      pathname: "/labeller/" + id
+      // search: "?project_id=" + id
     });
   };
   handleUpdate = () => {
