@@ -4,6 +4,9 @@ import {
   POST_IMAGE_FAILURE,
   POST_IMAGE_SUCCESS,
   POST_IMAGE_REQUEST,
+  FETCH_IMAGE_FAILURE,
+  FETCH_IMAGE_REQUEST,
+  FETCH_IMAGE_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -46,15 +49,36 @@ export const submitImage = (data, callback) => {
   }
 };
 
-export const imagePreview = data => {
+export const fetchProjectImage = (image_id,callback)=>{
   return dispatch => {
     dispatch(request());
-    dispatch(success(data));
+    FetchApi(
+      "GET",
+      "/api/v1/image/" + image_id + "/get",
+      null,
+      token
+    )
+      .then(res => {
+        dispatch(success(res.data.body));
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
   };
   function request() {
-    return { type: IMAGE_PREVIEW_REQUEST };
+    return { type: FETCH_IMAGE_REQUEST };
   }
   function success(data) {
-    return { type: IMAGE_PREVIEW_SUCCESS, payload: data };
+    return { type: FETCH_IMAGE_SUCCESS, payload: data };
   }
-};
+  function failure(error) {
+    return { type: FETCH_IMAGE_FAILURE, payload: error };
+  }
+}

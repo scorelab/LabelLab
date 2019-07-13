@@ -1,7 +1,4 @@
 import {
-  POST_LABEL_FAILURE,
-  POST_LABEL_REQUEST,
-  POST_LABEL_SUCCESS,
   FETCH_LABEL_FAILURE,
   FETCH_LABEL_REQUEST,
   FETCH_LABEL_SUCCESS,
@@ -20,35 +17,11 @@ const initialState = {
     isfetching: false,
     isupdating: false
   },
-  images: {},
   labels: []
 };
 
 const user = (state = initialState, action) => {
   switch (action.type) {
-    case POST_LABEL_REQUEST:
-      return {
-        ...state,
-        labelActions: {
-          isposting: true
-        }
-      };
-    case POST_LABEL_FAILURE:
-      return {
-        ...state,
-        labelActions: {
-          isposting: false,
-          error: "Something went wrong!"
-        }
-      };
-    case POST_LABEL_SUCCESS:
-      return {
-        ...state,
-        labelActions: {
-          isposting: false,
-          error: "Successfully submitted"
-        }
-      };
     case FETCH_LABEL_REQUEST:
       return {
         ...state,

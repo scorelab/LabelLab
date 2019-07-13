@@ -9,7 +9,7 @@ import Canvas from "./Canvas";
 import Sidebar from './Sidebar';
 // import { PathToolbar, MakePredictionToolbar } from './CanvasToolbar';
 // import Reference from './Reference';
-import "./LabelingApp.css";
+import "./css/LabelingApp.css";
 
 import { genId, colors } from "./utils";
 // import { computeTrace } from "./tracing";

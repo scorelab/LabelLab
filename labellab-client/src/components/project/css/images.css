@@ -10,3 +10,12 @@
 .image-parent img{
     padding: 0 1em !important;
 }
+.image-file-input{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+    z-index: -1;
+    margin: 10px;
+}

@@ -7,13 +7,22 @@
   margin: 1em;
 }
 .sidebar-image-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
-.sidebar-menu-parent{
-    margin-top: 2em;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+.sidebar-menu-parent {
+  margin-top: 2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.sidebar-file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+  margin: 10px;
 }
