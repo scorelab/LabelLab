@@ -116,6 +116,15 @@ class ProjectSidebar extends Component {
             >
               Project Analytics
             </Menu.Item>
+            <Menu.Item
+              as={Link}
+              to={`/project/${this.props.project.project_id}/labels`}
+              name="labels"
+              active={this.state.activeItem === "labels"}
+              onClick={this.handleItemClick}
+            >
+              Project Labels
+            </Menu.Item>
           </Menu>
         </div>
       </div>

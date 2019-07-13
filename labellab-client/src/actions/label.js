@@ -2,6 +2,12 @@ import {
   POST_LABEL_FAILURE,
   POST_LABEL_REQUEST,
   POST_LABEL_SUCCESS,
+  FETCH_LABEL_FAILURE,
+  FETCH_LABEL_REQUEST,
+  FETCH_LABEL_SUCCESS,
+  CREATE_LABEL_FAILURE,
+  CREATE_LABEL_REQUEST,
+  CREATE_LABEL_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -36,5 +42,68 @@ export const postLabel = (data, callback) => {
   }
   function failure(error) {
     return { type: POST_LABEL_FAILURE, payload: error };
+  }
+};
+
+export const fetchLabels = (project_id, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("GET", "/api/v1/label/" + project_id + "/get", null, token)
+      .then(res => {
+        dispatch(success(res.data.body));
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function request() {
+    return { type: FETCH_LABEL_REQUEST };
+  }
+  function success(data) {
+    return { type: FETCH_LABEL_SUCCESS, payload: data };
+  }
+  function failure(error) {
+    return { type: FETCH_LABEL_FAILURE, payload: error };
+  }
+};
+
+export const createLabel = (data, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi(
+      "POST",
+      "/api/v1/label/" + data.project_id + "/create",
+      { label: data },
+      token
+    )
+      .then(res => {
+        dispatch(success());
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function request() {
+    return { type: CREATE_LABEL_REQUEST };
+  }
+  function success() {
+    return { type: CREATE_LABEL_SUCCESS };
+  }
+  function failure(error) {
+    return { type: CREATE_LABEL_FAILURE, payload: error };
   }
 };

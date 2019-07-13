@@ -10,6 +10,7 @@ import Images from "./images";
 import Analytics from "./analytics";
 import ProjectDescription from "./projectDesc";
 import Team from "./team";
+import Labels from "./label/index"
 import "./css/index.css";
 
 class ProjectIndex extends Component {
@@ -54,6 +55,11 @@ class ProjectIndex extends Component {
                 exact
                 path={`${match.path}/:id/analytics`}
                 component={Analytics}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/:id/labels`}
+                component={Labels}
               />
             </Switch>
           </div>
