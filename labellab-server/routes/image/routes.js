@@ -11,16 +11,8 @@ const imageControls = require("../../controller/image/imageControls")
 router.post("/:project_id/create", requireAuth, imageControls.postImage)
 
 // GET method
-// To fetch all images of a project
-router.get("/:project_id/fetch", requireAuth, imageControls.fetchImage)
-
-// GET method
 // To fetch a image
-router.get("/get/:image_id", requireAuth, imageControls.fetchImageId)
-
-// POST method
-// To post labels details
-// router.post("/:image_id", requireAuth, imageControls.imageLabels)
+router.get("/:image_id/get", requireAuth, imageControls.fetchImageId)
 
 // PUT method
 // To update labelData details

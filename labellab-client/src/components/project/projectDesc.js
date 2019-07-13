@@ -28,13 +28,6 @@ class ProjectDescriptionIndex extends Component {
       });
     }
   }
-  handleRedirection = () => {
-    let id = this.props.project.project_id;
-    this.props.history.push({
-      pathname: "/labeller/" + id
-      // search: "?project_id=" + id
-    });
-  };
   handleUpdate = () => {
     this.setState({
       edit: !this.state.edit
@@ -96,9 +89,6 @@ class ProjectDescriptionIndex extends Component {
         this.props.project.project_description
           ? this.props.project.project_description
           : null}
-        <div className="projectDesc-labeller-button">
-          <Button onClick={this.handleRedirection}>Labeller</Button>
-        </div>
       </div>
     );
   }

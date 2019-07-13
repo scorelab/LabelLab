@@ -74,11 +74,11 @@ class ProjectSidebar extends Component {
             <input
               type="file"
               onChange={this.handleImageChange}
-              className="file-input"
-              id="embedpollfileinput"
+              className="sidebar-file-input"
+              id="sidebar-embedpollfileinput"
             />
             <label
-              htmlFor="embedpollfileinput"
+              htmlFor="sidebar-embedpollfileinput"
               className="ui medium primary floated button custom-margin"
             >
               Change Project Image

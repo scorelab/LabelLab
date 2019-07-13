@@ -2,8 +2,9 @@ import {
   POST_IMAGE_FAILURE,
   POST_IMAGE_REQUEST,
   POST_IMAGE_SUCCESS,
-  IMAGE_PREVIEW_REQUEST,
-  IMAGE_PREVIEW_SUCCESS
+  FETCH_IMAGE_FAILURE,
+  FETCH_IMAGE_REQUEST,
+  FETCH_IMAGE_SUCCESS
 } from "../constants/index";
 
 const initialState = {
@@ -11,18 +12,8 @@ const initialState = {
     isposting: false,
     error: "",
     isfetching: false,
-    isloading: false,
-    ispreview: false
   },
-  images: {},
-  imageDetails: {},
-  imagePreview: {
-    image_id: "",
-    image_name: "",
-    image_url: "",
-    label: ""
-  },
-  currentImage: ""
+  currentImage: {}
 };
 
 const user = (state = initialState, action) => {
@@ -51,26 +42,29 @@ const user = (state = initialState, action) => {
         },
         currentImage: action.payload
       };
-    case IMAGE_PREVIEW_REQUEST:
+    case FETCH_IMAGE_REQUEST:
       return {
         ...state,
         imageActions: {
-          isloading: true
+          isfetching: true
         }
       };
-    case IMAGE_PREVIEW_SUCCESS:
+    case FETCH_IMAGE_FAILURE:
       return {
         ...state,
         imageActions: {
-          isloading: false,
-          ispreview: true
-        },
-        imagePreview: {
-          image_id: action.payload._id,
-          image_name: action.payload.image_name,
-          image_url: action.payload.image_url,
-          label: action.payload.label
+          isfetching: false,
+          error: "Something went wrong!"
         }
+      };
+    case FETCH_IMAGE_SUCCESS:
+      return {
+        ...state,
+        imageActions: {
+          isfetching: false,
+          error: "Successfully submitted"
+        },
+        currentImage: action.payload[0]
       };
     default:
       return state;

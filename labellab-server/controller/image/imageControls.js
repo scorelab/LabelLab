@@ -105,7 +105,7 @@ exports.fetchImage = function(req, res) {
 }
 
 exports.fetchImageId = function(req, res) {
-	if (req && req.params && req.params.project_id) {
+	if (req && req.params && req.params.image_id) {
 		Image.find({
 			_id: req.params.image_id
 		})
@@ -141,7 +141,7 @@ exports.updateLabels = function(req, res) {
 			{
 				_id: req.params.image_id
 			},
-			data,
+			{ height: data.height, width: data.width, labelData: data.labels },
 			{ new: true }
 		).exec(function(err, image) {
 			if (err) {
