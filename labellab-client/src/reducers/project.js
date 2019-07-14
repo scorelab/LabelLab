@@ -11,9 +11,6 @@ import {
   ADD_MEMBER_FAILURE,
   ADD_MEMBER_REQUEST,
   ADD_MEMBER_SUCCESS,
-  POST_PROJECT_IMAGE_FAILURE,
-  POST_PROJECT_IMAGE_REQUEST,
-  POST_PROJECT_IMAGE_SUCCESS,
   DELETE_MEMBER_FAILURE,
   DELETE_MEMBER_REQUEST,
   DELETE_MEMBER_SUCCESS
@@ -24,7 +21,7 @@ const initialState = {
     isfetching: false,
     isinitializing: false,
     isadding: false,
-    isdeleting:false,
+    isdeleting: false,
     errors: "",
     msg: ""
   },
@@ -85,7 +82,6 @@ const project = (state = initialState, action) => {
           project_id: action.payload._id,
           project_name: action.payload.project_name,
           project_description: action.payload.project_description,
-          project_image: action.payload.project_image,
           images: action.payload.image,
           members: action.payload.members
         }
@@ -157,29 +153,6 @@ const project = (state = initialState, action) => {
         projectActions: {
           isdeleting: false,
           msg: "Member removed successfully"
-        }
-      };
-    case POST_PROJECT_IMAGE_REQUEST:
-      return {
-        ...state,
-        projectActions: {
-          isuploading: true
-        }
-      };
-    case POST_PROJECT_IMAGE_FAILURE:
-      return {
-        ...state,
-        projectActions: {
-          isuploading: false,
-          errors: action.payload
-        }
-      };
-    case POST_PROJECT_IMAGE_SUCCESS:
-      return {
-        ...state,
-        projectActions: {
-          isuploading: false,
-          msg: "Member added successfully"
         }
       };
     default:

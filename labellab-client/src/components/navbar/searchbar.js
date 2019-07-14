@@ -47,15 +47,10 @@ class SearchExampleStandard extends Component {
 
     search.map((project, index) => {
       if (project.project_description) {
-        let image =
-          process.env.REACT_APP_HOST +
-          process.env.REACT_APP_SERVER_PORT +
-          `/static/project/${project.project_image}?${Date.now()}`;
         results.push({
           key: index,
           title: project.project_name,
           description: project.project_description,
-          image: image,
           id: project._id
         });
       }

@@ -4,7 +4,7 @@ exports.userInfo = function(req, res) {
 	User.findOne({
 		email: req.user.email
 	})
-		.select("name email thumbnail googleId githubId username")
+		.select("name email thumbnail googleId githubId username profile_image")
 		.exec(function(err, user) {
 			if (err) {
 				return res.status(400).send({
@@ -32,10 +32,10 @@ exports.userUploadImage = function(req, res) {
 		let baseImg = data.img.split(",")[1]
 		let binaryData = new Buffer(baseImg, "base64")
 		let ext = data.format.split("/")[1]
-		let updateData = { thumbnail: `${data.id}.${ext}` }
-		const url = `/public/img/${updateData.thumbnail}`
+		let updateData = { profile_image: `${data.id}.${ext}` }
+		const url = `/public/img/${updateData.profile_image}`
 		require("fs").writeFile(
-			`./public/img/${updateData.thumbnail}`,
+			`./public/img/${updateData.profile_image}`,
 			binaryData,
 			function(err) {
 				if (err) {
@@ -47,7 +47,10 @@ exports.userUploadImage = function(req, res) {
 						{
 							email: data.email
 						},
-						updateData
+						{
+							profile_image:
+								"http://localhost:4000/static/img/" + updateData.profile_image
+						}
 					).exec(function(err) {
 						if (err)
 							return res.status(400).send({

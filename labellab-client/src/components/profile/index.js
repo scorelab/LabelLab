@@ -5,9 +5,10 @@ import {
   Card,
   Image,
   Header,
-  Button,
   Container,
-  Menu
+  Menu,
+  Dimmer,
+  Loader
 } from "semantic-ui-react";
 import Navbar from "../navbar/project";
 import { fetchUser, uploadImage, fetchAllProject } from "../../actions/index";
@@ -63,23 +64,28 @@ class Profile extends Component {
       pathname: "/project/" + id + "/team"
     });
   };
+  imageCallback = () => {
+    this.props.fetchUser();
+  };
   render() {
     const { user } = this.props;
     return (
       <div>
-        <Navbar title="Profile" />
+        <Navbar title="Profile" history={this.props.history} />
         <Container>
           <div className="profile-first">
             <div className="profile-first-leftbar">
               {this.props.isfetching ? (
-                <h4>LOADING</h4>
-              ) : this.props.user && this.props.user.image ? (
+                <Dimmer active>
+                  <Loader indeterminate>Preparing Files</Loader>
+                </Dimmer>
+              ) : this.props.user ? (
                 <Image
                   centered
                   src={
-                    process.env.REACT_APP_HOST +
-                    process.env.REACT_APP_SERVER_PORT +
-                    `/static/img/${this.props.user.image}?${Date.now()}`
+                    this.props.user.profile_image === ""
+                      ? `${this.props.user.thumbnail}`
+                      : `${this.props.user.profile_image}?${Date.now()}`
                   }
                   size="medium"
                 />
@@ -88,11 +94,11 @@ class Profile extends Component {
                 <input
                   type="file"
                   onChange={this.handleImageChange}
-                  className="file-input"
-                  id="embedpollfileinput"
+                  className="profile-file-input"
+                  id="profile-embedpollfileinput"
                 />
                 <label
-                  htmlFor="embedpollfileinput"
+                  htmlFor="profile-embedpollfileinput"
                   className="ui medium primary left floated button custom-margin"
                 >
                   Change Profile Image

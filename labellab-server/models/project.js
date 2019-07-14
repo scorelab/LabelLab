@@ -13,9 +13,6 @@ const ProjectSchema = new mongoose.Schema({
 		type: String,
 		default: "Image labelling"
 	},
-	project_image: {
-		type: String
-	},
 	created_at: {
 		type: Date,
 		default: Date.now

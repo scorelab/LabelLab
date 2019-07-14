@@ -33,7 +33,12 @@ const UserSchema = new mongoose.Schema({
 		default: Date.now
 	},
 	thumbnail: {
-		type: String
+		type: String,
+		default: "https://react.semantic-ui.com/images/avatar/large/elliot.jpg"
+	},
+	profile_image: {
+		type: String,
+		default: ""
 	},
 	project: [
 		{

@@ -51,6 +51,11 @@ class ImagesIndex extends Component {
     });
   };
   handleDelete = image_id => {};
+  handleChange = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({ [name]: value });
+  };
   render() {
     const { imageActions, project } = this.props;
     const { showform, image_name } = this.state;
@@ -83,7 +88,7 @@ class ImagesIndex extends Component {
                 name="image_name"
                 value={image_name}
                 onChange={this.handleChange}
-                placeholder="First Name"
+                placeholder="Image Name"
               />
             </Form.Field>
             <Button loading={imageActions.isposting} type="submit">
@@ -173,6 +178,8 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
     <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
     <Table.Cell style={columnStyles[1]}>
       <a
+        target="_blank"
+        rel="noopener noreferrer"
         href={
           process.env.REACT_APP_HOST +
           process.env.REACT_APP_SERVER_PORT +
