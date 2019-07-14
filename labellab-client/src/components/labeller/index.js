@@ -29,7 +29,7 @@ class LabelingLoader extends Component {
     const props = {
       onLabelChange: this.pushUpdate.bind(this)
     };
-    const title = "dfahsgdu";
+    const title = this.props.image.image_name;
     return (
       <DocumentMeta title={title}>
         {this.props.labelActions.isfetching &&

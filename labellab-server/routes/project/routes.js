@@ -34,10 +34,6 @@ router.post("/add/:project_id", requireAuth, projectControls.addMember)
 // To delete member in project
 router.post("/remove/:project_id", requireAuth, projectControls.removeMember)
 
-// POST method
-// To upload project image
-router.post("/:project_id/image", requireAuth, projectControls.projectUploadImage)
-
 // GET method
 // To search project
 router.get("/search/:query", requireAuth, projectControls.searchProject)

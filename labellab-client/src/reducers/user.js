@@ -16,8 +16,9 @@ const initialState = {
   userDetails: {
     name: "",
     username: "",
-    image: "",
-    email: ""
+    thumbnail: "",
+    email: "",
+    profile_image:""
   }
 };
 
@@ -62,7 +63,8 @@ const user = (state = initialState, action) => {
           name: action.payload.name,
           email: action.payload.email,
           username: action.payload.username,
-          image: action.payload.thumbnail
+          thumbnail: action.payload.thumbnail,
+          profile_image: action.payload.profile_image
         }
       };
     case SET_USER_DATA_FAILURE:

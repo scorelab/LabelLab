@@ -29,13 +29,13 @@ class Navbar extends Component {
             <li>
               {this.props.isfetching ? (
                 <h4>LOADING</h4>
-              ) : this.props.user && this.props.user.image ? (
+              ) : this.props.user ? (
                 <Image
                   centered
                   src={
-                    process.env.REACT_APP_HOST +
-                    process.env.REACT_APP_SERVER_PORT +
-                    `/static/img/${this.props.user.image}?${Date.now()}`
+                    this.props.user.profile_image === ""
+                      ? `${this.props.user.thumbnail}`
+                      : `${this.props.user.profile_image}?${Date.now()}`
                   }
                   size="mini"
                   circular

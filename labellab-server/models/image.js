@@ -22,6 +22,10 @@ const ImageSchema = new mongoose.Schema({
 	width: {
 		type: Number
 	},
+	labelled: {
+		type: Boolean,
+		default: false
+	},
 	created_at: {
 		type: Date,
 		default: Date.now

@@ -28,19 +28,6 @@ class PreviousProject extends Component {
                 onClick={() => this.handleClick(project._id)}
                 color="green"
               >
-                <Image
-                  className="previous-card-image"
-                  src={
-                    project.project_image
-                      ? process.env.REACT_APP_HOST +
-                        process.env.REACT_APP_SERVER_PORT +
-                        `/static/project/${project.project_image}?${Date.now()}`
-                      : "https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                  }
-                  wrapped
-                  fluid
-                  // ui={false}
-                />
                 <Card.Content
                   className="card-headers"
                   header={project.project_name}
