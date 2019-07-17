@@ -12,6 +12,8 @@ import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.
 import 'package:labellab_mobile/screen/project/detail/project._detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_screen.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
+import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
+import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_screen.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -55,6 +57,15 @@ var detailProjectHandler = Handler(
     builder: (context) => ProjectDetailBloc(params['id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectDetailScreen(),
+  );
+});
+
+var uploadImageProjectHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ProjectUploadImageBloc>(
+    builder: (context) => ProjectUploadImageBloc(params['id'].first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ProjectUploadImageScreen(),
   );
 });
 
