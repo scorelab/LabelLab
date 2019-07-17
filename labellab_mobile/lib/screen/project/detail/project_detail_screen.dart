@@ -4,7 +4,6 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/detail/project._detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
-import 'package:labellab_mobile/screen/project/project_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -48,6 +47,10 @@ class ProjectDetailScreen extends StatelessWidget {
                     : Container(),
               ],
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.file_upload),
+            onPressed: () => _state.project != null ? _gotoUploadImage(context, _state.project.id): null,
           ),
         );
       },
@@ -139,6 +142,12 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/edit/" + id)
         .whenComplete(() {
+      Provider.of<ProjectDetailBloc>(context).refresh();
+    });
+  }
+
+  void _gotoUploadImage(BuildContext context) {
+    Application.router.navigateTo(context, "/project/upload/" + ).whenComplete(() {
       Provider.of<ProjectDetailBloc>(context).refresh();
     });
   }
