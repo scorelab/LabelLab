@@ -146,8 +146,8 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoUploadImage(BuildContext context) {
-    Application.router.navigateTo(context, "/project/upload/" + ).whenComplete(() {
+  void _gotoUploadImage(BuildContext context, String id) {
+    Application.router.navigateTo(context, "/project/upload/" + id).whenComplete(() {
       Provider.of<ProjectDetailBloc>(context).refresh();
     });
   }

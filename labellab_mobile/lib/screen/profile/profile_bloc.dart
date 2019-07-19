@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/user.dart';
-import 'package:labellab_mobile/screen/profile/project_state.dart';
+import 'package:labellab_mobile/screen/profile/profile_state.dart';
 
 class ProfileBloc {
   Repository _repository = Repository();
