@@ -136,7 +136,6 @@ exports.fetchImageId = function(req, res) {
 exports.updateLabels = function(req, res) {
 	if (req && req.params && req.params.image_id) {
 		let data = req.body
-		console.log(data)
 		Image.findOneAndUpdate(
 			{
 				_id: req.params.image_id
@@ -155,6 +154,26 @@ exports.updateLabels = function(req, res) {
 				success: true,
 				msg: "Label Data saved!",
 				image: image
+			})
+		})
+	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+}
+
+exports.deleteImage = function(req, res) {
+	if (req && req.params && req.params.image_id) {
+		Image.findOneAndDelete({
+			_id: req.params.image_id
+		}).exec(function(err, image) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again.",
+					error: err
+				})
+			}
+			return res.json({
+				success: true,
+				msg: "Image deleted successfully!"
 			})
 		})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })

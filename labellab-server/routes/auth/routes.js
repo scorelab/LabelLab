@@ -37,10 +37,7 @@ router.post(
 	}
 )
 
-router.get(
-	"/github",
-	passport.authenticate("github")
-)
+router.get("/github", passport.authenticate("github"))
 
 router.get(
 	"/github/callback",

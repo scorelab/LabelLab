@@ -5,7 +5,7 @@ var passport = require("passport")
 var User = require("../models/user")
 var GitHubStrategy = require("passport-github").Strategy
 
-if (process.env.GOOGLE_CLIENT_ID) {
+if (process.env.GITHUB_CLIENT_ID) {
 	passport.use(
 		new GitHubStrategy(
 			{
