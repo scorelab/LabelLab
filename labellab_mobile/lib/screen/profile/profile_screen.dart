@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
-import 'package:labellab_mobile/screen/profile/project_bloc.dart';
-import 'package:labellab_mobile/screen/profile/project_state.dart';
+import 'package:labellab_mobile/screen/profile/profile_bloc.dart';
+import 'package:labellab_mobile/screen/profile/profile_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
 

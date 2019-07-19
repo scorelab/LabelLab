@@ -1,4 +1,3 @@
-import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/user.dart';
 
 class ProfileState {
