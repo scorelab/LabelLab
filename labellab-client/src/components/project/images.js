@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Table, Button, Form } from "semantic-ui-react";
+import { Table, Button, Form, Dimmer, Loader } from "semantic-ui-react";
 import { AutoSizer, List } from "react-virtualized";
-import { submitImage } from "../../actions/image";
+import { submitImage, deleteImage } from "../../actions/image";
 import { fetchProject } from "../../actions/project/fetchDetails";
 import "./css/images.css";
 
@@ -50,7 +50,12 @@ class ImagesIndex extends Component {
       this.props.fetchProject(this.props.project.project_id);
     });
   };
-  handleDelete = image_id => {};
+  handleDelete = image_id => {
+    this.props.deleteImage(
+      image_id,
+      this.props.fetchProject(this.props.project.project_id)
+    );
+  };
   handleChange = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -61,6 +66,11 @@ class ImagesIndex extends Component {
     const { showform, image_name } = this.state;
     return (
       <div>
+        {this.props.imageActions.isdeleting ? (
+          <Dimmer active>
+            <Loader indeterminate>Removing Image :(</Loader>
+          </Dimmer>
+        ) : null}
         <div>
           <input
             type="file"
@@ -158,6 +168,9 @@ const mapDispatchToProps = dispatch => {
     },
     submitImage: (data, callback) => {
       return dispatch(submitImage(data, callback));
+    },
+    deleteImage: (image_id, callback) => {
+      return dispatch(deleteImage(image_id, callback));
     }
   };
 };
@@ -202,7 +215,7 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
           icon="trash"
           label="Delete"
           size="tiny"
-          onClick={() => onDelete(image.id)}
+          onClick={() => onDelete(image._id)}
         />
       </div>
     </Table.Cell>

@@ -1,6 +1,7 @@
 import {
-  IMAGE_PREVIEW_REQUEST,
-  IMAGE_PREVIEW_SUCCESS,
+  DELETE_IMAGE_FAILURE,
+  DELETE_IMAGE_REQUEST,
+  DELETE_IMAGE_SUCCESS,
   POST_IMAGE_FAILURE,
   POST_IMAGE_SUCCESS,
   POST_IMAGE_REQUEST,
@@ -49,15 +50,10 @@ export const submitImage = (data, callback) => {
   }
 };
 
-export const fetchProjectImage = (image_id,callback)=>{
+export const fetchProjectImage = (image_id, callback) => {
   return dispatch => {
     dispatch(request());
-    FetchApi(
-      "GET",
-      "/api/v1/image/" + image_id + "/get",
-      null,
-      token
-    )
+    FetchApi("GET", "/api/v1/image/" + image_id + "/get", null, token)
       .then(res => {
         dispatch(success(res.data.body));
         callback();
@@ -81,4 +77,33 @@ export const fetchProjectImage = (image_id,callback)=>{
   function failure(error) {
     return { type: FETCH_IMAGE_FAILURE, payload: error };
   }
-}
+};
+
+export const deleteImage = (image_id, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("DELETE", "/api/v1/image/" + image_id + "/delete", null, token)
+      .then(res => {
+        dispatch(success());
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function request() {
+    return { type: DELETE_IMAGE_REQUEST };
+  }
+  function success() {
+    return { type: DELETE_IMAGE_SUCCESS };
+  }
+  function failure(error) {
+    return { type: DELETE_IMAGE_FAILURE, payload: error };
+  }
+};

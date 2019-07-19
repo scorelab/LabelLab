@@ -14,11 +14,11 @@ export function withLoadImageData(Comp) {
     }
 
     componentDidUpdate(prevProps, prevState) {
-      console.log(this.props)
       const { imageUrl, demo } = this.props;
 
       if (imageUrl !== prevProps.imageUrl) {
         const img = new Image();
+        img.crossOrigin = "anonymous"
         const setState = this.setState.bind(this);
         img.onload = async function() {
           const { height, width } = this;

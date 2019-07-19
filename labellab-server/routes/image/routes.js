@@ -18,4 +18,8 @@ router.get("/:image_id/get", requireAuth, imageControls.fetchImageId)
 // To update labelData details
 router.put("/:image_id/update", requireAuth, imageControls.updateLabels)
 
+// DELETE method
+// To delete image
+router.delete("/:image_id/delete", requireAuth, imageControls.deleteImage)
+
 module.exports = router
