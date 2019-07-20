@@ -1,15 +1,12 @@
-import 'dart:io';
-
 import 'package:labellab_mobile/model/label.dart';
 
 class Image {
   String id;
   String imageUrl;
-  File image;
   List<Label> labels;
   DateTime createdAt;
 
-  Image({this.image, this.labels});
+  Image({this.imageUrl, this.labels});
 
   Image.fromJson(dynamic json) {
     id = json["_id"];
