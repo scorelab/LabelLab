@@ -4,7 +4,10 @@ import {
   SET_USER_DATA_SUCCESS,
   UPLOAD_USER_IMAGE_FAILURE,
   UPLOAD_USER_IMAGE_REQUEST,
-  UPLOAD_USER_IMAGE_SUCCESS
+  UPLOAD_USER_IMAGE_SUCCESS,
+  FETCH_COUNT_FAILURE,
+  FETCH_COUNT_REQUEST,
+  FETCH_COUNT_SUCCESS
 } from "../constants/index";
 const initialState = {
   userActions: {
@@ -18,7 +21,12 @@ const initialState = {
     username: "",
     thumbnail: "",
     email: "",
-    profile_image:""
+    profile_image: ""
+  },
+  userProfile: {
+    total_labels: "",
+    total_projects: "",
+    total_images: ""
   }
 };
 
@@ -68,6 +76,32 @@ const user = (state = initialState, action) => {
         }
       };
     case SET_USER_DATA_FAILURE:
+      return {
+        ...state,
+        userActions: {
+          errors: action.payload
+        }
+      };
+    case FETCH_COUNT_REQUEST:
+      return {
+        ...state,
+        userActions: {
+          isfetching: true
+        }
+      };
+    case FETCH_COUNT_SUCCESS:
+      return {
+        ...state,
+        userActions: {
+          isfetching: false
+        },
+        userProfile: {
+          total_projects: action.payload.total_projects,
+          total_labels: action.payload.total_labels,
+          total_images: action.payload.total_images
+        }
+      };
+    case FETCH_COUNT_FAILURE:
       return {
         ...state,
         userActions: {

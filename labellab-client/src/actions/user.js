@@ -5,6 +5,9 @@ import {
   UPLOAD_USER_IMAGE_FAILURE,
   UPLOAD_USER_IMAGE_REQUEST,
   UPLOAD_USER_IMAGE_SUCCESS,
+  FETCH_COUNT_FAILURE,
+  FETCH_COUNT_REQUEST,
+  FETCH_COUNT_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -63,5 +66,33 @@ export const uploadImage = (data, callback) => {
   }
   function failure() {
     return { type: UPLOAD_USER_IMAGE_FAILURE };
+  }
+};
+
+export const fetchCount = () => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("GET", "/api/v1/users/fetch_count", null, getToken(TOKEN_TYPE))
+      .then(res => {
+        dispatch(success(res.data.body));
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function request() {
+    return { type: FETCH_COUNT_REQUEST };
+  }
+  function success(data) {
+    return { type: FETCH_COUNT_SUCCESS, payload: data };
+  }
+  function failure(error) {
+    return { type: FETCH_COUNT_FAILURE, payload: error };
   }
 };

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import LabelingApp from "./LabelingApp.js";
 import { connect } from "react-redux";
-import { Loader, Dimmer } from "semantic-ui-react";
+import { Loader, Dimmer, Modal, Button } from "semantic-ui-react";
 import DocumentMeta from "react-document-meta";
 import { fetchLabels, updateLabels } from "../../actions/label";
 import { fetchProjectImage } from "../../actions/image";
@@ -52,7 +52,23 @@ class LabelingLoader extends Component {
             demo={false}
             {...props}
           />
-        ) : null}
+        ) : (
+          <Modal size="small" open>
+            <Modal.Content>
+              <p>
+                It seems that you have not created any labels in the project.
+                Click on the below button to create labels!
+              </p>
+            </Modal.Content>
+            <Modal.Actions>
+              <a
+                href={`/project/${this.props.location.pathname.substring(10, 34)}/labels`}
+              >
+                <Button positive content="Create Labels" />
+              </a>
+            </Modal.Actions>
+          </Modal>
+        )}
       </DocumentMeta>
     );
   }
