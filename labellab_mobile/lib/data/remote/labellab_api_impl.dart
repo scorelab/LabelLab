@@ -11,6 +11,7 @@ import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 
 class LabelLabAPIImpl extends LabelLabAPI {
@@ -25,6 +26,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const String STATIC_CLASSIFICATION_URL =
       BASE_URL + "static/classifications/";
   static const String STATIC_IMAGE_URL = BASE_URL + "static/img/";
+  static const String STATIC_UPLOAD_URL = BASE_URL + "static/uploads/";
 
   // Endpoints
   static const ENDPOINT_LOGIN = "auth/login";
@@ -39,6 +41,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_CREATE = "project/create";
   static const ENDPOINT_PROJECT_UPDATE = "project/update";
   static const ENDPOINT_PROJECT_DELETE = "project/delete";
+
+  static const ENDPOINT_IMAGE = "image";
 
   static const ENDPOINT_CLASSIFICAITON_CLASSIFY = "classification/classify";
   static const ENDPOINT_CLASSIFICATION_GET = "classification/get";
@@ -137,7 +141,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return Project.fromJson(response.data['body']);
+        final project = Project.fromJson(response.data['body'], imageEndpoint: STATIC_UPLOAD_URL);
+        return project;
       } else {
         throw Exception("Request unsuccessfull");
       }
@@ -154,8 +159,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return (response.data['body'] as List<dynamic>)
-            .map((item) => Project.fromJson(item))
+        return (response.data['body']['project'] as List<dynamic>)
+            .map((item) => Project.fromJson(item, isDense: true))
             .toList();
       } else {
         throw Exception("Request unsuccessfull");
@@ -183,6 +188,28 @@ class LabelLabAPIImpl extends LabelLabAPI {
     );
     return _dio
         .delete(API_URL + ENDPOINT_PROJECT_DELETE + "/$id", options: options)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> uploadImage(
+      String token, String projectId, UploadImage image) async {
+    final imageBytes = image.image.readAsBytesSync();
+    final encodedBytes = base64Encode(imageBytes);
+    final data = {
+      "project_id": projectId,
+      "image_name": "Image",
+      "image": "base64," + encodedBytes,
+      "format": "image/jpg",
+    };
+    Options options = Options(
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+        contentType: ContentType.parse("application/x-www-form-urlencoded"));
+    return _dio
+        .post(API_URL + ENDPOINT_IMAGE + "/$projectId/create",
+            options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
     });

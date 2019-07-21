@@ -8,10 +8,11 @@ class Image {
 
   Image({this.imageUrl, this.labels});
 
-  Image.fromJson(dynamic json) {
+  Image.fromJson(dynamic json, {String imageEndpoint}) {
     id = json["_id"];
-    imageUrl = json["image_url"];
-    labels = (json["label"] as List).map((label) => Label.fromJson(label));
+    imageUrl = (imageEndpoint != null ? imageEndpoint : "") + json["image_url"];
+    if (json["labelled"])
+      labels = (json["label"] as List).map((label) => Label.fromJson(label));
     createdAt = DateTime.parse(json["created_at"]);
   }
 }
