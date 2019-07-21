@@ -21,6 +21,38 @@ exports.userInfo = function(req, res) {
 		})
 }
 
+exports.countInfo = function(req, res) {
+	User.findOne({
+		_id: req.user._id
+	})
+		.select("email")
+		.populate("project")
+		.exec(function(err, user) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again.",
+					error: err
+				})
+			}
+			if (!user) {
+				return res.status(400).send({ success: false, msg: "User not found" })
+			} else {
+				let data = {
+					total_projects: user.project.length,
+					total_images: 0,
+					total_labels: 0
+				}
+				user.project.map((project, index) => {
+					data.total_images += project.image.length
+					data.total_labels += project.labels.length
+				})
+
+				return res.json({ success: true, body: data })
+			}
+		})
+}
+
 exports.userUploadImage = function(req, res) {
 	if (req && req.body && req.body.image && req.body.format) {
 		let data = {

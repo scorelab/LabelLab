@@ -47,16 +47,18 @@ class ProjectNavbar extends Component {
               {this.props.isfetching ? (
                 <h4>LOADING</h4>
               ) : this.props.user ? (
-                <Image
-                  centered
-                  src={
-                    this.props.user.profile_image === ""
-                      ? `${this.props.user.thumbnail}`
-                      : `${this.props.user.profile_image}?${Date.now()}`
-                  }
-                  size="mini"
-                  circular
-                />
+                <a target="_blank" rel="noopener noreferrer" href="/profile">
+                  <Image
+                    centered
+                    src={
+                      this.props.user.profile_image === ""
+                        ? `${this.props.user.thumbnail}`
+                        : `${this.props.user.profile_image}?${Date.now()}`
+                    }
+                    size="mini"
+                    circular
+                  />
+                </a>
               ) : null}
             </li>
             <li>

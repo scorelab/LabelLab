@@ -11,7 +11,12 @@ import {
   Loader
 } from "semantic-ui-react";
 import Navbar from "../navbar/project";
-import { fetchUser, uploadImage, fetchAllProject } from "../../actions/index";
+import {
+  fetchUser,
+  uploadImage,
+  fetchAllProject,
+  fetchCount
+} from "../../actions/index";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
 import CardLoader from "../../utils/cardLoader";
@@ -28,6 +33,7 @@ class Profile extends Component {
     if (hasToken(TOKEN_TYPE)) {
       this.props.fetchUser();
       this.props.fetchAllProject();
+      this.props.fetchCount()
     } else {
       this.props.history.push("/login");
     }
@@ -109,9 +115,18 @@ class Profile extends Component {
               <Header as="h4" content={user.email} />
               <Header as="h4" content={user.username} />
               <div className="profile-rightbar-child">
+                <div>
                 <Header as="h5" content="Total Projects" />
+                {this.props.profile.total_projects}
+                </div>
+                <div>
                 <Header as="h5" content="Total Images" />
+                {this.props.profile.total_images}
+                </div>
+                <div>
                 <Header as="h5" content="Total Labels" />
+                {this.props.profile.total_labels}
+                </div>
               </div>
             </div>
           </div>
@@ -151,28 +166,6 @@ class Profile extends Component {
               </Card.Group>
             </div>
           </div>
-          {/* <Card>
-            {actions.isfetching ? (
-              <h4>LOADING</h4>
-            ) : user && user.image ? (
-              <Image
-                centered
-                src={
-                  process.env.REACT_APP_HOST +
-                  process.env.REACT_APP_SERVER_PORT +
-                  `/static/img/${user.image}?${Date.now()}`
-                }
-                size="massive"
-              />
-            ) : null}
-            <Card.Content>
-              <Card.Header>{user.name}</Card.Header>
-              <Card.Description>
-                {user.email}
-                {user.username}
-              </Card.Description>
-            </Card.Content>
-          </Card> */}
         </Container>
       </div>
     );
@@ -181,6 +174,7 @@ class Profile extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user.userDetails,
+    profile: state.user.userProfile,
     isfetching: state.user.userActions.isfetching,
     projects: state.projects.allProjects,
     actions: state.projects.projectActions
@@ -190,13 +184,16 @@ const mapStateToProps = state => {
 const mapActionToProps = dispatch => {
   return {
     fetchUser: () => {
-      dispatch(fetchUser());
+      return dispatch(fetchUser());
     },
     uploadImage: (data, callback) => {
-      dispatch(uploadImage(data, callback));
+      return dispatch(uploadImage(data, callback));
     },
     fetchAllProject: () => {
       return dispatch(fetchAllProject());
+    },
+    fetchCount: () => {
+      return dispatch(fetchCount());
     }
   };
 };
