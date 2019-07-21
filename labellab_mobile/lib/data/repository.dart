@@ -12,6 +12,7 @@ import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -132,6 +133,12 @@ class Repository {
   Future<ApiResponse> deleteProject(String id) {
     if (accessToken == null) return Future(null);
     return _api.deleteProject(accessToken, id);
+  }
+
+  // Image
+  Future<ApiResponse> uploadImage(String projectId, UploadImage image) {
+    if (accessToken == null) return Future(null);
+    return _api.uploadImage(accessToken, projectId, image);
   }
 
   // Classification

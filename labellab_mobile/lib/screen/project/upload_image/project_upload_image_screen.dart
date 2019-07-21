@@ -65,21 +65,38 @@ class ProjectUploadImageScreen extends StatelessWidget {
                 fit: BoxFit.cover,
                 image: FileImage(image.image),
               ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: GestureDetector(
-                  child: Icon(
-                    Icons.cancel,
-                    size: 28,
-                    color: Colors.black54,
-                  ),
-                  onTap: () {
-                    Provider.of<ProjectUploadImageBloc>(context)
-                        .unselectImage(image);
-                  },
-                ),
-              ),
+              image.state == UploadImageState.PENDING
+                  ? Positioned(
+                      right: 8,
+                      top: 8,
+                      child: GestureDetector(
+                        child: Icon(
+                          Icons.cancel,
+                          size: 28,
+                          color: Colors.black54,
+                        ),
+                        onTap: () {
+                          Provider.of<ProjectUploadImageBloc>(context)
+                              .unselectImage(image);
+                        },
+                      ),
+                    )
+                  : Container(),
+              image.state == UploadImageState.LOADING
+                  ? Positioned(
+                      left: 48,
+                      right: 48,
+                      bottom: 48,
+                      top: 48,
+                      child: CircularProgressIndicator())
+                  : Container(),
+              image.state == UploadImageState.SUCCESS
+                  ? Icon(
+                      Icons.done,
+                      color: Colors.greenAccent,
+                      size: 32,
+                    )
+                  : Container(),
             ],
           ),
         ),

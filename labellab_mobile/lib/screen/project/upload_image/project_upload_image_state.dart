@@ -9,7 +9,7 @@ class ProjectUploadImageState {
     this.isLoading = false;
   }
 
-  ProjectUploadImageState.loading() {
+  ProjectUploadImageState.loading({this.images}) {
     isLoading = true;
   }
 
@@ -17,11 +17,11 @@ class ProjectUploadImageState {
     this.isLoading = false;
   }
 
-  ProjectUploadImageState.error(this.error) {
+  ProjectUploadImageState.error(this.error, {this.images}) {
     this.isLoading = false;
   }
 
-  ProjectUploadImageState.success() {
+  ProjectUploadImageState.success({this.images}) {
     this.isLoading = false;
   }
 }

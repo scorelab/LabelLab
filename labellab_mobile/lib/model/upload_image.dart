@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:labellab_mobile/model/label.dart';
+
 class UploadImageState {
   static const PENDING = 0;
   static const LOADING = 1;
@@ -10,10 +12,9 @@ class UploadImageState {
 class UploadImage {
   int state;
   File image;
+  List<Label> labels;
 
-  UploadImage({this.image}) {
+  UploadImage({this.image, this.labels}) {
     this.state = UploadImageState.PENDING;
   }
-  
-
 }
