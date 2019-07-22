@@ -7,7 +7,10 @@ import {
   CREATE_LABEL_SUCCESS,
   UPDATE_LABEL_FAILURE,
   UPDATE_LABEL_REQUEST,
-  UPDATE_LABEL_SUCCESS
+  UPDATE_LABEL_SUCCESS,
+  DELETE_LABEL_FAILURE,
+  DELETE_LABEL_REQUEST,
+  DELETE_LABEL_SUCCESS
 } from "../constants/index";
 
 const initialState = {
@@ -15,7 +18,8 @@ const initialState = {
     isposting: false,
     error: "",
     isfetching: false,
-    isupdating: false
+    isupdating: false,
+    isdeleting: false
   },
   labels: []
 };
@@ -87,6 +91,29 @@ const user = (state = initialState, action) => {
         ...state,
         labelActions: {
           isupdating: false
+        }
+      };
+
+    case DELETE_LABEL_REQUEST:
+      return {
+        ...state,
+        labelActions: {
+          isdeleting: true
+        }
+      };
+    case DELETE_LABEL_FAILURE:
+      return {
+        ...state,
+        labelActions: {
+          isdeleting: false,
+          error: "Something went wrong!"
+        }
+      };
+    case DELETE_LABEL_SUCCESS:
+      return {
+        ...state,
+        labelActions: {
+          isdeleting: false
         }
       };
     default:

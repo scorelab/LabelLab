@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Dimmer, Loader, Button, Form, Icon } from "semantic-ui-react";
-import { fetchLabels, createLabel } from "../../../actions/index";
+import { fetchLabels, createLabel, deleteLabel } from "../../../actions/index";
 import LabelItem from "./labelItem.js";
 
 const options = [
@@ -48,6 +48,12 @@ class LabelIndex extends Component {
     });
     this.props.fetchLabels(this.props.project.project_id);
   };
+  handleDelete = value => {
+    this.props.deleteLabel(
+      value._id,
+      this.props.fetchLabels(this.props.project.project_id)
+    );
+  };
   render() {
     const value = {
       name: "New Label",
@@ -60,9 +66,20 @@ class LabelIndex extends Component {
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : null}
+
+        {this.props.actions.isdeleting ? (
+          <Dimmer active>
+            <Loader indeterminate>Removing Label :)</Loader>
+          </Dimmer>
+        ) : null}
         {this.props.labels !== undefined &&
           this.props.labels.map((label, index) => (
-            <LabelItem value={label} key={index} onChange={this.onChange} />
+            <LabelItem
+              value={label}
+              key={index}
+              onChange={this.onChange}
+              onDelete={this.handleDelete}
+            />
           ))}
         <Button onClick={this.toggleForm}>Create new Label</Button>
         {this.state.showform ? (
@@ -122,6 +139,9 @@ const mapDispatchToProps = dispatch => {
     },
     createLabel: (data, callback) => {
       return dispatch(createLabel(data, callback));
+    },
+    deleteLabel: (label_id, callback) => {
+      return dispatch(deleteLabel(label_id, callback));
     }
   };
 };
