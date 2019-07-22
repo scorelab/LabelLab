@@ -1,7 +1,4 @@
 import {
-  POST_LABEL_FAILURE,
-  POST_LABEL_REQUEST,
-  POST_LABEL_SUCCESS,
   FETCH_LABEL_FAILURE,
   FETCH_LABEL_REQUEST,
   FETCH_LABEL_SUCCESS,
@@ -11,6 +8,9 @@ import {
   UPDATE_LABEL_FAILURE,
   UPDATE_LABEL_REQUEST,
   UPDATE_LABEL_SUCCESS,
+  DELETE_LABEL_FAILURE,
+  DELETE_LABEL_REQUEST,
+  DELETE_LABEL_SUCCESS,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -107,5 +107,34 @@ export const updateLabels = (image_id, labelData) => {
   }
   function failure(error) {
     return { type: UPDATE_LABEL_FAILURE, payload: error };
+  }
+};
+
+export const deleteLabel = (label_id, callback) => {
+  return dispatch => {
+    dispatch(request());
+    FetchApi("DELETE", "/api/v1/label/" + label_id + "/delete", null, token)
+      .then(res => {
+        dispatch(success());
+        callback();
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function request() {
+    return { type: DELETE_LABEL_REQUEST };
+  }
+  function success() {
+    return { type: DELETE_LABEL_SUCCESS };
+  }
+  function failure(error) {
+    return { type: DELETE_LABEL_FAILURE, payload: error };
   }
 };

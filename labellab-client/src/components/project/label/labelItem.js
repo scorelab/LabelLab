@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Form, Button, Icon } from "semantic-ui-react";
-// import {} from "../../actions";
 
 const options = [
   { key: "bbox", text: "Draw a bounding box", value: "bbox" },
@@ -9,12 +8,8 @@ const options = [
 ];
 
 class LabelItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
   render() {
-    const { value, onChange } = this.props;
+    const { value, onChange, onDelete } = this.props;
     return (
       <div
         style={{
@@ -50,7 +45,7 @@ class LabelItem extends Component {
             <Button
               type="button"
               style={{ background: "transparent", padding: 0 }}
-              onClick={() => onChange(value, null)}
+              onClick={() => onDelete(value)}
             >
               <Icon name="trash" />
             </Button>

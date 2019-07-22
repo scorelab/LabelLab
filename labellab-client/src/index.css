@@ -2,3 +2,10 @@ body {
   margin: 0;
   padding: 0;
 }
+body .canvas-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: -5000;
+  opacity: 0;
+}

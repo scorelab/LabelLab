@@ -91,3 +91,23 @@ exports.fetchLabel = function(req, res) {
 			})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
+
+exports.deleteLabel = function(req, res) {
+	if (req && req.body && req.params.label_id) {
+		Label.findOneAndDelete({
+			_id: req.params.label_id
+		}).exec(function(err, project) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again.",
+					error: err
+				})
+			}
+			return res.json({
+				success: true,
+				msg: "Removed successfully!"
+			})
+		})
+	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+}
