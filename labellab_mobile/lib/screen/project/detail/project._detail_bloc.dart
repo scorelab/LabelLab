@@ -22,9 +22,7 @@ class ProjectDetailBloc {
   }
 
   void delete() {
-    _repository.deleteProject(projectId).then((_) {
-      _loadProject();
-    });
+    _repository.deleteProject(projectId);
   }
 
   // Project stream

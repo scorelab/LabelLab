@@ -33,6 +33,10 @@ class ProjectViewImageBloc {
     });
   }
 
+  void delete() {
+    _repository.deleteImage(projectId, imageId);
+  }
+
   // Project stream
   StreamController<ProjectViewImageState> _stateController =
       StreamController<ProjectViewImageState>();

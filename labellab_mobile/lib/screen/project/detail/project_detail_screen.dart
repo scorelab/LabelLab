@@ -203,7 +203,11 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   void _gotoViewImage(BuildContext context, String projectId, String imageId) {
-    Application.router.navigateTo(context, "/project/$projectId/view/$imageId");
+    Application.router
+        .navigateTo(context, "/project/$projectId/view/$imageId")
+        .whenComplete(() {
+      Provider.of<ProjectDetailBloc>(context).refresh();
+    });
   }
 
   void _gotoUploadImage(BuildContext context, String id) {
