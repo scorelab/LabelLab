@@ -237,6 +237,20 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<ApiResponse> deleteImage(
+      String token, String projectId, String imageId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .delete(API_URL + ENDPOINT_IMAGE + "/$projectId/delete/$imageId",
+            options: options)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
   Future<Classification> classify(String token, File image) async {
     final imageBytes = image.readAsBytesSync();
     final encodedBytes = base64Encode(imageBytes);

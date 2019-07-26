@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_state.dart';
+import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
 class ProjectViewImageScreen extends StatelessWidget {
@@ -17,10 +16,31 @@ class ProjectViewImageScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(""),
               elevation: 0,
+              actions: _buildActions(context),
             ),
             body: _buildBody(context, snapshot),
           );
         });
+  }
+
+  List<Widget> _buildActions(BuildContext context) {
+    return [
+      PopupMenuButton<int>(
+        onSelected: (int value) {
+          if (value == 0) {
+            _showDeleteConfirmation(context);
+          }
+        },
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: 0,
+              child: Text("Delete"),
+            )
+          ];
+        },
+      ),
+    ];
   }
 
   Widget _buildBody(
@@ -44,5 +64,24 @@ class ProjectViewImageScreen extends StatelessWidget {
     } else {
       return Container();
     }
+  }
+
+  void _showDeleteConfirmation(BuildContext baseContext) {
+    showDialog<bool>(
+        context: baseContext,
+        builder: (context) {
+          return DeleteConfirmDialog(
+            name: "image",
+            onCancel: () => Navigator.pop(context),
+            onConfirm: () {
+              Provider.of<ProjectViewImageBloc>(baseContext).delete();
+              Navigator.of(context).pop(true);
+            },
+          );
+        }).then((success) {
+      if (success) {
+        Navigator.pop(baseContext);
+      }
+    });
   }
 }
