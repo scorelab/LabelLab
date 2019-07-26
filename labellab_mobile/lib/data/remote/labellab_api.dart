@@ -6,6 +6,7 @@ import 'package:labellab_mobile/data/remote/dto/register_response.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -30,6 +31,7 @@ abstract class LabelLabAPI {
 
   // Image
   Future<ApiResponse> uploadImage(String token, String projectId, UploadImage image);
+  Future<Image> getImage(String token, String id);
 
   // Classification
   Future<Classification> classify(String token, File image);

@@ -9,6 +9,7 @@ import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -20,13 +21,13 @@ class LabelLabAPIImpl extends LabelLabAPI {
   LabelLabAPIImpl() : _dio = Dio();
 
   /// BASE_URL - Change according to current labellab server
-  static const String BASE_URL = "https://labellab-server.herokuapp.com/";
+  static const String BASE_URL = "http://35.226.216.33:3000/";
 
   static const String API_URL = BASE_URL + "api/v1/";
   static const String STATIC_CLASSIFICATION_URL =
       BASE_URL + "static/classifications/";
   static const String STATIC_IMAGE_URL = BASE_URL + "static/img/";
-  static const String STATIC_UPLOAD_URL = BASE_URL + "static/uploads/";
+  static const String STATIC_UPLOADS_URL = BASE_URL + "static/uploads/";
 
   // Endpoints
   static const ENDPOINT_LOGIN = "auth/login";
@@ -141,7 +142,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        final project = Project.fromJson(response.data['body'], imageEndpoint: STATIC_UPLOAD_URL);
+        final project = Project.fromJson(response.data['body'],
+            imageEndpoint: STATIC_UPLOADS_URL);
         return project;
       } else {
         throw Exception("Request unsuccessfull");
@@ -212,6 +214,25 @@ class LabelLabAPIImpl extends LabelLabAPI {
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<Image> getImage(String token, String id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_IMAGE + "/$id/get", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        final image = Image.fromJson(response.data['body'],
+            imageEndpoint: STATIC_UPLOADS_URL);
+        return image;
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
     });
   }
 
