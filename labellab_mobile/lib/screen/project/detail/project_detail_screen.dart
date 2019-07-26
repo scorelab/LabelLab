@@ -75,7 +75,8 @@ class ProjectDetailScreen extends StatelessWidget {
                     )
                   : SliverFillRemaining(),
               _state.project != null && _state.project.images != null
-                  ? _buildImages(context, _state.project.images)
+                  ? _buildImages(
+                      context, _state.project.id, _state.project.images)
                   : SliverFillRemaining(),
               SliverList(
                 delegate: SliverChildListDelegate([
@@ -149,7 +150,8 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildImages(BuildContext context, List<LabelLab.Image> images) {
+  Widget _buildImages(
+      BuildContext context, String projectId, List<LabelLab.Image> images) {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       sliver: SliverGrid.count(
@@ -157,20 +159,22 @@ class ProjectDetailScreen extends StatelessWidget {
         crossAxisSpacing: 8,
         crossAxisCount: 4,
         children: images.take(8).map((image) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              width: 64,
-              height: 64,
-              child: Image(
-                image: NetworkImage(
-                  image.imageUrl,
-                ),
-                frameBuilder: (context, _, __, ___) => Container(
-                  color: Colors.black12,
+          return InkWell(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                width: 64,
+                height: 64,
+                color: Colors.black12,
+                child: Image(
+                  image: CachedNetworkImageProvider(
+                    image.imageUrl,
+                  ),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
+            onTap: () => _gotoViewImage(context, projectId, image.id),
           );
         }).toList(),
       ),
@@ -198,9 +202,13 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
+  void _gotoViewImage(BuildContext context, String projectId, String imageId) {
+    Application.router.navigateTo(context, "/project/$projectId/view/$imageId");
+  }
+
   void _gotoUploadImage(BuildContext context, String id) {
     Application.router
-        .navigateTo(context, "/project/upload/" + id)
+        .navigateTo(context, "/project/$id/upload")
         .whenComplete(() {
       Provider.of<ProjectDetailBloc>(context).refresh();
     });

@@ -106,7 +106,7 @@ exports.fetchImage = function(req, res) {
 
 exports.fetchImageId = function(req, res) {
 	if (req && req.params && req.params.image_id) {
-		Image.find({
+		Image.findOne({
 			_id: req.params.image_id
 		})
 			.select("height width labelData image_name image_url created_at")

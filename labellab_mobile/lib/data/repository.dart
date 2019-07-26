@@ -10,6 +10,7 @@ import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -139,6 +140,11 @@ class Repository {
   Future<ApiResponse> uploadImage(String projectId, UploadImage image) {
     if (accessToken == null) return Future(null);
     return _api.uploadImage(accessToken, projectId, image);
+  }
+
+  Future<Image> getImage(String id) {
+    if (accessToken == null) return Future(null);
+    return _api.getImage(accessToken, id);
   }
 
   // Classification
