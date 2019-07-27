@@ -160,7 +160,7 @@ exports.updateLabels = function(req, res) {
 }
 
 exports.deleteImage = function(req, res) {
-	if (req && req.params && req.params.project_id && req.params.image_id) {
+	if (req && req.params && req.params.image_id) {
 		Image.findOneAndDelete({
 			_id: req.params.image_id
 		}).exec(function(err, image) {
@@ -172,7 +172,7 @@ exports.deleteImage = function(req, res) {
 				})
 			} else {
         Project.findOneAndUpdate(
-          { _id: req.params.project_id },
+          { _id: image.project },
           { $pull: { image: req.params.image_id } }
         ).exec(function(err, project) {
           if (err) {

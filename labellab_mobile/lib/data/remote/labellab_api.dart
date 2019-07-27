@@ -32,7 +32,7 @@ abstract class LabelLabAPI {
   // Image
   Future<ApiResponse> uploadImage(String token, String projectId, UploadImage image);
   Future<Image> getImage(String token, String imageId);
-  Future<ApiResponse> deleteImage(String token, String projectId, String imageId);
+  Future<ApiResponse> deleteImage(String token, String imageId);
 
   // Classification
   Future<Classification> classify(String token, File image);
