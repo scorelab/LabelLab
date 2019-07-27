@@ -22,7 +22,7 @@ export const submitImage = (data, callback) => {
     dispatch(request());
     FetchApi(
       "POST",
-      "/api/v1/image/" + data.project_id + "/create",
+      "/api/v1/image/" + data.projectId + "/create",
       data,
       token
     )
@@ -33,9 +33,7 @@ export const submitImage = (data, callback) => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });
@@ -51,21 +49,19 @@ export const submitImage = (data, callback) => {
   }
 };
 
-export const fetchProjectImage = (image_id, callback) => {
+export const fetchProjectImage = (imageId, callback) => {
   return dispatch => {
     dispatch(request());
-    FetchApi("GET", "/api/v1/image/" + image_id + "/get", null, token)
+    FetchApi("GET", "/api/v1/image/" + imageId + "/get", null, token)
       .then(res => {
-        // console.log(res.data.body)
+        console.log(res.data.body)
         dispatch(success(res.data.body));
         callback();
       })
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });
@@ -81,12 +77,12 @@ export const fetchProjectImage = (image_id, callback) => {
   }
 };
 
-export const deleteImage = (image_id, project_id, callback) => {
+export const deleteImage = (imageId, projectId, callback) => {
   return dispatch => {
     dispatch(request());
     FetchApi(
       "DELETE",
-      "/api/v1/image/" + project_id + "/delete/" + image_id,
+      "/api/v1/image/" + projectId + "/delete/" + imageId,
       null,
       token
     )
@@ -97,9 +93,7 @@ export const deleteImage = (image_id, project_id, callback) => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });
@@ -121,7 +115,7 @@ export const setNextPrev = (next, prev) => {
       next: next,
       prev: prev
     };
-    console.log(data)
+    console.log(data);
     dispatch(request(data));
   };
   function request(data) {

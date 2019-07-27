@@ -11,7 +11,7 @@ import {
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import {
-  log_out,
+  logout,
   uploadImage,
   fetchUser,
   initProject,
@@ -31,24 +31,25 @@ class Dashboard extends Component {
       file: "",
       image: "",
       open: false,
-      max_size_error: "",
-      project_name: ""
+      maxSizeError: "",
+      projectName: ""
     };
   }
   componentDidMount() {
+    const { fetchAllProject, fetchUser, history } = this.props;
     if (hasToken(TOKEN_TYPE)) {
-      this.props.fetchUser();
-      this.props.fetchAllProject();
+      fetchAllProject();
+      fetchUser();
     } else {
-      this.props.history.push("/login");
+      history.push("/login");
     }
   }
 
   onSubmit = e => {
-    let { file, image } = this.state;
+    const { file, image } = this.state;
     if (file && file.size > 101200) {
       this.setState({
-        max_size_error: "max sized reached"
+        maxSizeError: "max sized reached"
       });
     } else {
       let data = {
@@ -59,7 +60,7 @@ class Dashboard extends Component {
     }
   };
   imageCallback = msg => {
-    this.props.fetchUser();
+    this.props.fetchAllProject();
   };
   handleImageChange = e => {
     e.preventDefault();
@@ -102,7 +103,7 @@ class Dashboard extends Component {
   };
   handleProjectSubmit = () => {
     this.props.initProject(
-      { project_name: this.state.project_name },
+      { projectName: this.state.projectName },
       this.projectCallback
     );
     this.close();
@@ -115,17 +116,14 @@ class Dashboard extends Component {
   callback() {}
   close = () => this.setState({ open: false });
   render() {
+    const { user, isfetching, isinitializing, history, errors } = this.props;
     const { open } = this.state;
     return (
       <div className="dashboard-parent">
-        <Navbar
-          user={this.props.user}
-          isfetching={this.props.isfetching}
-          history={this.props.history}
-        />
+        <Navbar user={user} isfetching={isfetching} history={history} />
         <Container className="home.container">
-          {this.props.errors}
-          <Dimmer active={this.props.isinitializing}>
+          {errors}
+          <Dimmer active={isinitializing}>
             <Loader indeterminate>Preparing Files</Loader>
           </Dimmer>
           <Modal size="small" open={open} onClose={this.close}>
@@ -134,7 +132,7 @@ class Dashboard extends Component {
             </Modal.Content>
             <Modal.Actions>
               <Input
-                name="project_name"
+                name="projectName"
                 onChange={this.handleChange}
                 type="text"
                 placeholder="Project name"
@@ -169,8 +167,6 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => {
   return {
-    statusText: state.register.statusText,
-    details: state.auth.details,
     user: state.user.userDetails,
     isfetching: state.user.userActions.isfetching,
     errors: state.user.userActions.errors,
@@ -181,16 +177,16 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     logout: callback => {
-      dispatch(log_out(callback));
+      dispatch(logout(callback));
     },
     fetchAllProject: () => {
       return dispatch(fetchAllProject());
     },
+    fetchUser: () => {
+      return dispatch(fetchUser());
+    },
     uploadImage: (data, callback) => {
       dispatch(uploadImage(data, callback));
-    },
-    fetchUser: () => {
-      dispatch(fetchUser());
     },
     initProject: (data, callback) => [dispatch(initProject(data, callback))]
   };

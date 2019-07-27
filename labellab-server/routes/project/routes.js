@@ -28,11 +28,11 @@ router.delete("/delete/:id", requireAuth, projectControls.deleteProject)
 
 // POST method
 // To add member in project
-router.post("/add/:project_id", requireAuth, projectControls.addMember)
+router.post("/add/:projectId", requireAuth, projectControls.addMember)
 
 // POST method
 // To delete member in project
-router.post("/remove/:project_id", requireAuth, projectControls.removeMember)
+router.post("/remove/:projectId", requireAuth, projectControls.removeMember)
 
 // GET method
 // To search project

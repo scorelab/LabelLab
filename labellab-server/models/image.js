@@ -5,11 +5,11 @@ const ImageSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Project"
 	},
-	image_name: {
+	imageName: {
 		type: String,
 		required: true
 	},
-	image_url: {
+	imageUrl: {
 		type: String,
 		required: true
 	},
@@ -26,7 +26,7 @@ const ImageSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	created_at: {
+	createdAt: {
 		type: Date,
 		default: Date.now
 	}

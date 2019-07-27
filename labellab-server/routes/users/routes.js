@@ -12,10 +12,10 @@ router.get("/info", requireAuth, userControls.userInfo)
 
 // GET method
 // To fetch user info count
-router.get("/fetch_count", requireAuth, userControls.countInfo)
+router.get("/fetchCount", requireAuth, userControls.countInfo)
 
 // POST method
 // To upload user image
-router.post("/upload_image", requireAuth, userControls.userUploadImage)
+router.post("/uploadImage", requireAuth, userControls.userUploadImage)
 
 module.exports = router

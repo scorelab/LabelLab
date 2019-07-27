@@ -5,11 +5,11 @@ const ProjectMembersSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User"
 	},
-	project_id: {
+	projectId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Project"
 	},
-	created_at: {
+	createdAt: {
 		type: Date,
 		default: Date.now
 	},

@@ -6,7 +6,7 @@ import {
 const intialState = {
   isRegistering: false,
   error: false,
-  err_field: "",
+  errField: "",
   statusText: ""
 };
 const register = (state = intialState, action) => {
@@ -29,7 +29,7 @@ const register = (state = intialState, action) => {
         ...state,
         isRegistering: false,
         statusText: action.payload,
-        err_field: action.other,
+        errField: action.other,
         error: true
       };
     default:

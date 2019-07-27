@@ -8,7 +8,7 @@ var User = require("../models/user")
 let server = require("../app")
 let config = require("../config/travis")
 
-const user_info = {
+const userInfo = {
 	name: "name",
 	username: "username",
 	email: "email@gmail.com",
@@ -16,15 +16,15 @@ const user_info = {
 	password2: "password"
 }
 
-var token = "";
-var createdProjectId = "";
+var token = ""
+var createdProjectId = ""
 
 const info = {
-	project_name: "project_name"
+	projectName: "projectName"
 }
 
-const update_info = {
-	project_name: "project_name_update"
+const updateInfo = {
+	projectName: "projectNameUpdate"
 }
 
 chai.use(chaiHttp)
@@ -47,7 +47,7 @@ describe("Project tests", async () => {
 
 	after(async () => {
 		await Project.deleteOne({
-			project_name: info.project_name
+			projectName: info.projectName
 		}).exec(function(err) {
 			if (err) {
 				console.log(err)
@@ -55,7 +55,7 @@ describe("Project tests", async () => {
 			process.exit(0)
 		})
 		await User.deleteOne({
-			email: user_info.email
+			email: userInfo.email
 		}).exec(function(err) {
 			if (err) {
 				console.log(err)
@@ -68,7 +68,7 @@ describe("Project tests", async () => {
 		chai
 			.request(server)
 			.post("/api/v1/auth/register")
-			.send(user_info)
+			.send(userInfo)
 			.end((err, data) => {
 				if (data) {
 					expect(data).to.have.an("object")
@@ -85,8 +85,8 @@ describe("Project tests", async () => {
 			.request(server)
 			.post("/api/v1/auth/login")
 			.send({
-				email: user_info.email,
-				password: user_info.password
+				email: userInfo.email,
+				password: userInfo.password
 			})
 			.end((err, data) => {
 				if (data.body) {
@@ -94,7 +94,7 @@ describe("Project tests", async () => {
 					expect(data.body).to.have.property("msg")
 					expect(data.body).to.have.property("success", true)
 					expect(data.body).to.have.property("token")
-          token = data.body.token;
+					token = data.body.token
 					done()
 				}
 			})
@@ -104,7 +104,7 @@ describe("Project tests", async () => {
 		chai
 			.request(server)
 			.post("/api/v1/project/create")
-      .set("Authorization", "Bearer " + token)
+			.set("Authorization", "Bearer " + token)
 			.send(info)
 			.end((err, data) => {
 				if (data) {
@@ -114,7 +114,7 @@ describe("Project tests", async () => {
 					expect(data.body).to.have.property("body")
 					expect(data.body.body).to.have.property("_id")
 					expect(data.body).to.not.have.property("msg", "Project name already exists")
-          createdProjectId = data.body.body._id; 
+					createdProjectId = data.body.body._id 
 					done()
 				}
 			})
@@ -124,7 +124,7 @@ describe("Project tests", async () => {
 		chai
 			.request(server)
 			.post("/api/v1/project/create")
-      .set("Authorization", "Bearer " + token)
+			.set("Authorization", "Bearer " + token)
 			.send(info)
 			.end((err, data) => {
 				if (data) {
@@ -139,15 +139,15 @@ describe("Project tests", async () => {
 		chai
 			.request(server)
 			.get("/api/v1/project/get")
-      .set("Authorization", "Bearer " + token)
+			.set("Authorization", "Bearer " + token)
 			.send(info)
 			.end((err, data) => {
 				if (data) {
 					expect(data).to.have.an("object")
-          expect(data.body).to.have.property("success", true)
-          expect(data.body).to.have.property("msg")
-          expect(data.body).to.have.property("body")
-          expect(data.body.body).to.have.an("array")
+					expect(data.body).to.have.property("success", true)
+					expect(data.body).to.have.property("msg")
+					expect(data.body).to.have.property("body")
+					expect(data.body.body).to.have.an("array")
 					done()
 				}
 			})
@@ -157,15 +157,15 @@ describe("Project tests", async () => {
 		chai
 			.request(server)
 			.get("/api/v1/project/get/" + createdProjectId)
-      .set("Authorization", "Bearer " + token)
+			.set("Authorization", "Bearer " + token)
 			.send(info)
 			.end((err, data) => {
 				if (data) {
 					expect(data).to.have.an("object")
-          expect(data.body).to.have.property("success", true)
-          expect(data.body).to.have.property("msg")
-          expect(data.body).to.have.property("body")
-          expect(data.body.body).to.have.an("object")
+					expect(data.body).to.have.property("success", true)
+					expect(data.body).to.have.property("msg")
+					expect(data.body).to.have.property("body")
+					expect(data.body.body).to.have.an("object")
 					done()
 				}
 			})
@@ -175,16 +175,16 @@ describe("Project tests", async () => {
 		chai
 			.request(server)
 			.put("/api/v1/project/update/" + createdProjectId)
-      .set("Authorization", "Bearer " + token)
-			.send(update_info)
+			.set("Authorization", "Bearer " + token)
+			.send(updateInfo)
 			.end((err, data) => {
 				if (data) {
 					expect(data).to.have.an("object")
-          expect(data.body).to.have.property("success", true)
-          expect(data.body).to.have.property("msg", "Project updated successfully!")
-          expect(data.body).to.have.property("body")
-          expect(data.body.body).to.have.an("object")
-          expect(data.body.body).to.have.property("project_name", update_info.project_name)
+					expect(data.body).to.have.property("success", true)
+					expect(data.body).to.have.property("msg", "Project updated successfully!")
+					expect(data.body).to.have.property("body")
+					expect(data.body.body).to.have.an("object")
+					expect(data.body.body).to.have.property("projectName", updateInfo.projectName)
 					done()
 				}
 			})
@@ -194,13 +194,13 @@ describe("Project tests", async () => {
 		chai
 			.request(server)
 			.delete("/api/v1/project/delete/" + createdProjectId)
-      .set("Authorization", "Bearer " + token)
+			.set("Authorization", "Bearer " + token)
 			.send()
 			.end((err, data) => {
 				if (data) {
 					expect(data).to.have.an("object")
-          expect(data.body).to.have.property("success", true)
-          expect(data.body).to.have.property("msg", "Project deleted successfully!")
+					expect(data.body).to.have.property("success", true)
+					expect(data.body).to.have.property("msg", "Project deleted successfully!")
 					done()
 				}
 			})

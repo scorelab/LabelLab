@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Form, Button, Icon } from "semantic-ui-react";
+import "../css/labelItem.css";
 
 const options = [
   { key: "bbox", text: "Draw a bounding box", value: "bbox" },
@@ -11,22 +12,14 @@ class LabelItem extends Component {
   render() {
     const { value, onChange, onDelete } = this.props;
     return (
-      <div
-        style={{
-          marginTop: "0.7em",
-          padding: "1em",
-          border: "solid 1px #efefef",
-          background: "white",
-          shadow: "rgb(204, 204, 204) 0px 1px 2px"
-        }}
-      >
-        <Form className="form-card" style={{ display: "flex" }}>
-          <div style={{ flex: 1, padding: "0 0.5em" }}>
+      <div className="form-card-parent">
+        <Form className="form-card flex">
+          <div className="form-card-child">
             <Form.Field
               placeholder="Label name"
               control="input"
               defaultValue={value.name}
-              style={{ padding: 3, fontSize: 24 }}
+              className="form-card-child-field"
               onChange={e =>
                 onChange(value, { ...value, name: e.target.value })
               }
@@ -41,10 +34,10 @@ class LabelItem extends Component {
               style={{ maxWidth: 400 }}
             />
           </div>
-          <div style={{ flex: "0 0 auto" }}>
+          <div className="form-button-parent">
             <Button
               type="button"
-              style={{ background: "transparent", padding: 0 }}
+              className="form-button-itself"
               onClick={() => onDelete(value)}
             >
               <Icon name="trash" />
@@ -55,15 +48,8 @@ class LabelItem extends Component {
     );
   }
 }
-const mapStateToProps = state => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {};
-};
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  null,
+  null
 )(LabelItem);

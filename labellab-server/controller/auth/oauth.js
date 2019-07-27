@@ -2,7 +2,7 @@
 require("dotenv").config()
 
 const jwt = require("jwt-simple")
-const secret = require("../../config/jwt_secret").jwt_secret
+const secret = require("../../config/jwtSecret").jwtSecret
 
 function createtoken(user) {
 	const timestamp = new Date().getTime()

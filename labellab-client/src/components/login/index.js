@@ -13,11 +13,11 @@ import {
 } from "semantic-ui-react";
 import validateInput from "../../utils/validation";
 import { login } from "../../actions/index";
-import "./css/login.css";
 import googleIcon from "../../static/icons/search.svg";
 import githubIcon from "../../static/icons/github-logo.svg";
 import { hasToken } from "../../utils/token";
 import { TOKEN_TYPE } from "../../constants/index";
+import "./css/login.css";
 
 class LoginIndex extends Component {
   constructor(props) {
@@ -61,18 +61,20 @@ class LoginIndex extends Component {
     }
   };
   callback = () => {
-    this.props.location &&
-    this.props.location.state &&
-    this.props.location.state.from &&
-    this.props.location.state.from.pathname
-      ? this.props.history.push(this.props.location.state.from.pathname)
-      : this.props.history.push("/");
+    const { location, history } = this.props;
+    location &&
+    location.state &&
+    location.state.from &&
+    location.state.from.pathname
+      ? history.push(location.state.from.pathname)
+      : history.push("/");
   };
   render() {
+    const { isAuthenticating } = this.props;
     const { username, password, errors } = this.state;
     return (
       <div className="login-grand-parent">
-        {this.props.isAuthenticating ? (
+        {isAuthenticating ? (
           <Dimmer active>
             <Loader content="Authenticating" />
           </Dimmer>
@@ -149,7 +151,6 @@ class LoginIndex extends Component {
 
 const mapStateToProps = state => {
   return {
-    auth: state.login,
     isAuthenticating: state.auth.isAuthenticating
   };
 };

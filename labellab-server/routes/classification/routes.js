@@ -16,10 +16,10 @@ router.get("/get", requireAuth, classificationControls.fetchClassification)
 
 // GET method
 // To fetch a classification
-router.get("/get/:classification_id", requireAuth, classificationControls.fetchClassificationId)
+router.get("/get/:classificationId", requireAuth, classificationControls.fetchClassificationId)
 
 // DELETE method
 // To delete a classification
-router.delete("/delete/:classification_id", requireAuth, classificationControls.deleteClassificationId)
+router.delete("/delete/:classificationId", requireAuth, classificationControls.deleteClassificationId)
 
 module.exports = router

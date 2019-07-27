@@ -20,7 +20,7 @@ class TeamIndex extends Component {
     super(props);
     this.state = {
       open: false,
-      member_email: ""
+      memberEmail: ""
     };
   }
   handleAddMember = () => {
@@ -34,47 +34,45 @@ class TeamIndex extends Component {
     });
   };
   handleMemberSubmit = () => {
+    const { project, addMember } = this.props;
+    const { memberEmail } = this.state;
     this.setState({
       check: true
     });
     let data = {
-      member_email: this.state.member_email,
-      project_id: this.props.project.project_id
+      memberEmail: memberEmail,
+      projectId: project.projectId
     };
-    this.props.addMember(data, this.fetchProjectCallback);
+    addMember(data, this.fetchProjectCallback);
     this.close();
   };
   close = () => this.setState({ open: false });
   handleDelete = email => {
-    this.props.memberDelete(
-      email,
-      this.props.project.project_id,
-      this.fetchProjectCallback
-    );
+    const { memberDelete, project } = this.props;
+    memberDelete(email, project.projectId, this.fetchProjectCallback);
   };
   fetchProjectCallback = () => {
-    this.props.fetchProject(this.props.project.project_id);
+    const { fetchProject, project } = this.props;
+    fetchProject(project.projectId);
   };
   render() {
-    const { project } = this.props;
+    const { project, actions } = this.props;
     const { open } = this.state;
     return (
       <Container>
-        {this.props.actions.errors ? (
+        {actions.errors ? (
           <Message negative>
-            <Message.Header>{this.props.actions.errors}</Message.Header>
+            <Message.Header>{actions.errors}</Message.Header>
           </Message>
         ) : null}
-        {this.props.actions.msg ? (
-          <Message success header={this.props.actions.msg} />
-        ) : null}
-        {this.props.actions.isadding ? (
-          <Dimmer active={this.props.actions.isadding}>
+        {actions.msg ? <Message success header={actions.msg} /> : null}
+        {actions.isadding ? (
+          <Dimmer active={actions.isadding}>
             <Loader indeterminate>Adding member :)</Loader>
           </Dimmer>
         ) : null}
-        {this.props.actions.isdeleting ? (
-          <Dimmer active={this.props.actions.isdeleting}>
+        {actions.isdeleting ? (
+          <Dimmer active={actions.isdeleting}>
             <Loader indeterminate>Removing member :(</Loader>
           </Dimmer>
         ) : null}
@@ -84,7 +82,7 @@ class TeamIndex extends Component {
           </Modal.Content>
           <Modal.Actions>
             <Input
-              name="member_email"
+              name="memberEmail"
               onChange={this.handleChange}
               type="email"
               placeholder="Member email"
@@ -160,8 +158,8 @@ const mapDispatchToProps = dispatch => {
     fetchProject: data => {
       return dispatch(fetchProject(data));
     },
-    memberDelete: (email, project_id, callback) => {
-      return dispatch(memberDelete(email, project_id, callback));
+    memberDelete: (email, projectId, callback) => {
+      return dispatch(memberDelete(email, projectId, callback));
     }
   };
 };

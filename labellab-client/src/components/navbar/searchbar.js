@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React, { Component } from "react";
-import { Search, Grid } from "semantic-ui-react";
+import { Search } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getSearchProjects } from "../../actions/index";
 import "./css/searchbar.css";
@@ -46,11 +46,11 @@ class SearchExampleStandard extends Component {
     }
 
     search.map((project, index) => {
-      if (project.project_description) {
+      if (project.projectDescription) {
         results.push({
           key: index,
-          title: project.project_name,
-          description: project.project_description,
+          title: project.projectName,
+          description: project.projectDescription,
           id: project._id
         });
       }

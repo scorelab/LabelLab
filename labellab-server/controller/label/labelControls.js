@@ -4,12 +4,12 @@ let Project = require("../../models/project")
 let makeid = require("../../utils/randomString").makeid
 
 exports.createLabel = function(req, res) {
-	if (req && req.body && req.body.label) {
-		console.log(req.body)
+	if (req && req.body && req.body.label && req.params.projectId) {
+		const { label } = req.body
 		const newLabel = new Label({
 			id: makeid(8),
-			type: req.body.label.type,
-			name: req.body.label.name
+			type: label.type,
+			name: label.name
 		})
 		newLabel.save(function(err, label) {
 			if (err) {
@@ -18,7 +18,7 @@ exports.createLabel = function(req, res) {
 					.send({ success: false, msg: "Unable to Add Label" })
 			}
 			Project.update(
-				{ _id: req.params.project_id },
+				{ _id: req.params.projectId },
 				{ $addToSet: { labels: label._id } }
 			).exec(function(err) {
 				if (err) {
@@ -39,11 +39,11 @@ exports.createLabel = function(req, res) {
 }
 
 exports.updateLabel = function(req, res) {
-	if (req && req.body && req.params.label_id) {
+	if (req && req.body && req.params.labelId) {
 		let data = req.body
 		Label.findOneAndUpdate(
 			{
-				id: req.params.label_id
+				id: req.params.labelId
 			},
 			data,
 			{ new: true }
@@ -63,9 +63,9 @@ exports.updateLabel = function(req, res) {
 }
 
 exports.fetchLabel = function(req, res) {
-	if (req && req.body && req.params.project_id) {
+	if (req && req.body && req.params.projectId) {
 		Project.findOne({
-			_id: req.params.project_id
+			_id: req.params.projectId
 		})
 			.select("project_name")
 			.populate("labels")
@@ -93,9 +93,9 @@ exports.fetchLabel = function(req, res) {
 }
 
 exports.deleteLabel = function(req, res) {
-	if (req && req.body && req.params.label_id) {
+	if (req && req.body && req.params.labelId) {
 		Label.findOneAndDelete({
-			_id: req.params.label_id
+			_id: req.params.labelId
 		}).exec(function(err, project) {
 			if (err) {
 				return res.status(400).send({

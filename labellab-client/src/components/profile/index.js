@@ -30,12 +30,13 @@ class Profile extends Component {
     };
   }
   componentDidMount() {
+    const { history, fetchUser, fetchAllProject, fetchCount } = this.props;
     if (hasToken(TOKEN_TYPE)) {
-      this.props.fetchUser();
-      this.props.fetchAllProject();
-      this.props.fetchCount()
+      fetchUser();
+      fetchAllProject();
+      fetchCount();
     } else {
-      this.props.history.push("/login");
+      history.push("/login");
     }
   }
   handleImageChange = e => {
@@ -74,24 +75,31 @@ class Profile extends Component {
     this.props.fetchUser();
   };
   render() {
-    const { user } = this.props;
+    const {
+      user,
+      history,
+      isfetching,
+      profile,
+      actions,
+      projects
+    } = this.props;
     return (
       <div>
-        <Navbar title="Profile" history={this.props.history} />
+        <Navbar title="Profile" history={history} />
         <Container>
           <div className="profile-first">
             <div className="profile-first-leftbar">
-              {this.props.isfetching ? (
+              {isfetching ? (
                 <Dimmer active>
                   <Loader indeterminate>Preparing Files</Loader>
                 </Dimmer>
-              ) : this.props.user ? (
+              ) : user ? (
                 <Image
                   centered
                   src={
-                    this.props.user.profile_image === ""
-                      ? `${this.props.user.thumbnail}`
-                      : `${this.props.user.profile_image}?${Date.now()}`
+                    user.profile_image === ""
+                      ? `${user.thumbnail}`
+                      : `${user.profile_image}?${Date.now()}`
                   }
                   size="medium"
                 />
@@ -116,16 +124,16 @@ class Profile extends Component {
               <Header as="h4" content={user.username} />
               <div className="profile-rightbar-child">
                 <div>
-                <Header as="h5" content="Total Projects" />
-                {this.props.profile.total_projects}
+                  <Header as="h5" content="Total Projects" />
+                  {profile.total_projects}
                 </div>
                 <div>
-                <Header as="h5" content="Total Images" />
-                {this.props.profile.total_images}
+                  <Header as="h5" content="Total Images" />
+                  {profile.total_images}
                 </div>
                 <div>
-                <Header as="h5" content="Total Labels" />
-                {this.props.profile.total_labels}
+                  <Header as="h5" content="Total Labels" />
+                  {profile.total_labels}
                 </div>
               </div>
             </div>
@@ -148,13 +156,13 @@ class Profile extends Component {
             </div>
             <div className="project-second-rightbar">
               <Card.Group itemsPerRow={3}>
-                {!this.props.actions.isfetching ? (
-                  this.props.projects[0] &&
-                  this.props.projects.map((project, index) => (
+                {!actions.isfetching ? (
+                  projects[0] &&
+                  projects.map((project, index) => (
                     <Card onClick={() => this.handleClick(project._id)}>
                       <Card.Content
                         className="card-headers"
-                        header={project.project_name}
+                        header={project.projectName}
                       />
                       <Card.Content description="Image Labelling App" />
                       <Card.Content extra />
@@ -186,14 +194,14 @@ const mapActionToProps = dispatch => {
     fetchUser: () => {
       return dispatch(fetchUser());
     },
-    uploadImage: (data, callback) => {
-      return dispatch(uploadImage(data, callback));
-    },
     fetchAllProject: () => {
       return dispatch(fetchAllProject());
     },
     fetchCount: () => {
       return dispatch(fetchCount());
+    },
+    uploadImage: (data, callback) => {
+      return dispatch(uploadImage(data, callback));
     }
   };
 };

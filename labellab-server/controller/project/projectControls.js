@@ -35,7 +35,7 @@ exports.projectInfoId = function(req, res) {
 		Project.findOne({
 			_id: req.params.id
 		})
-			.select("id project_name project_description")
+			.select("id projectName projectDescription")
 			.populate({
 				path: "image members labels",
 				populate: { path: "label member" }
@@ -64,20 +64,20 @@ exports.projectInfoId = function(req, res) {
 }
 
 exports.initializeProject = function(req, res) {
-	if (req && req.body && req.body.project_name) {
+	if (req && req.body && req.body.projectName) {
+		const { projectDescription, projectName } = req.body
 		Project.findOne({
 			user: req.user.id,
-			project_name: req.body.project_name
+			projectName: projectName
 		}).then(project => {
 			if (project) {
 				return res.status(400).json({ msg: "Project name already exists" })
 			}
 			var data = {
-				project_name: req.body.project_name,
+				projectName: projectName,
 				user: req.user.id
 			}
-			if (req.body.project_description)
-				data["project_description"] = req.body.project_description
+			if (projectDescription) data["projectDescription"] = projectDescription
 			const newProject = new Project(data)
 			newProject.save(function(err, project) {
 				if (err) {
@@ -86,7 +86,7 @@ exports.initializeProject = function(req, res) {
 						.send({ success: false, msg: "Unable to Add Project" })
 				} else if (project._id) {
 					const newProjectMember = new ProjectMembers({
-						project_id: project._id,
+						projectId: project._id,
 						member: req.user.id,
 						role: "Admin"
 					})
@@ -200,8 +200,8 @@ exports.deleteProject = function(req, res) {
 }
 
 exports.addMember = function(req, res) {
-	if (req && req.params && req.params.project_id) {
-		User.findOne({ email: req.body.member_email }, function(err, user) {
+	if (req && req.params && req.params.projectId) {
+		User.findOne({ email: req.body.memberEmail }, function(err, user) {
 			if (err) {
 				return res
 					.status(400)
@@ -215,7 +215,7 @@ exports.addMember = function(req, res) {
 			ProjectMembers.findOne(
 				{
 					member: user._id,
-					project_id: req.params.project_id
+					projectId: req.params.projectId
 				},
 				function(err, member) {
 					if (member) {
@@ -224,7 +224,7 @@ exports.addMember = function(req, res) {
 							.send({ success: false, msg: "Member already added" })
 					}
 					const newProjectMember = new ProjectMembers({
-						project_id: req.params.project_id,
+						projectId: req.params.projectId,
 						member: user._id,
 						role: req.body.role
 					})
@@ -235,7 +235,7 @@ exports.addMember = function(req, res) {
 								.send({ success: false, msg: "Unable to add Member" })
 						} else {
 							Project.update(
-								{ _id: req.params.project_id },
+								{ _id: req.params.projectId },
 								{ $addToSet: { members: member._id } }
 							).exec(function(err) {
 								if (err) {
@@ -247,7 +247,7 @@ exports.addMember = function(req, res) {
 								}
 								User.update(
 									{ _id: user._id },
-									{ $addToSet: { project: req.params.project_id } }
+									{ $addToSet: { project: req.params.projectId } }
 								).exec(function(err) {
 									if (err) {
 										return res.status(400).send({
@@ -274,8 +274,8 @@ exports.addMember = function(req, res) {
 }
 
 exports.removeMember = function(req, res) {
-	if (req && req.params && req.params.project_id) {
-		User.findOne({ email: req.body.member_email }, function(err, user) {
+	if (req && req.params && req.params.projectId) {
+		User.findOne({ email: req.body.memberEmail }, function(err, user) {
 			if (err) {
 				return res
 					.status(400)
@@ -289,7 +289,7 @@ exports.removeMember = function(req, res) {
 			ProjectMembers.findOne(
 				{
 					member: user._id,
-					project_id: req.params.project_id
+					projectId: req.params.projectId
 				},
 				function(err, member) {
 					if (err) {
@@ -300,7 +300,7 @@ exports.removeMember = function(req, res) {
 						})
 					}
 					Project.update(
-						{ _id: req.params.project_id },
+						{ _id: req.params.projectId },
 						{ $pullAll: { members: [member._id] } }
 					).exec(function(err) {
 						if (err) {
@@ -337,7 +337,7 @@ exports.searchProject = function(req, res) {
 		Project.find(
 			{
 				user: req.user._id,
-				project_name: { $regex: req.params.query, $options: "i" }
+				projectName: { $regex: req.params.query, $options: "i" }
 			},
 			function(err, project) {
 				if (err) return console.log(err)
