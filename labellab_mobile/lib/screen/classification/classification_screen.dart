@@ -88,7 +88,7 @@ class ClassificationScreen extends StatelessWidget {
             children: classification.label != null
                 ? classification.label.map((label) {
                     return Chip(
-                      label: Text(label.labelName),
+                      label: Text(label.name),
                     );
                   }).toList()
                 : [],

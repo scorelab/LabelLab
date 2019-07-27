@@ -38,7 +38,7 @@ class HistoryItem extends StatelessWidget {
                 children: classification.label != null
                     ? classification.label
                         .map((label) => Chip(
-                              label: Text(label.labelName),
+                              label: Text(label.name),
                             ))
                         .toList()
                     : [],
