@@ -1,19 +1,21 @@
 class Label {
   String id;
-  String labelName;
-  double startX;
-	double endX;
-	double startY;
-	double endY;
+  String name;
+  String type;
 
   Label();
 
   Label.fromJson(dynamic json) {
-    id = json["_id"];
-    labelName = json["label_name"];
-    startX = json["startX"];
-    endX = json["endX"];
-    startY = json["startY"];
-    endY = json["endY"];
+    id = json["id"];
+    name = json["name"];
+    type = json["type"];
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "name": name,
+      "type": type,
+    };
   }
 }

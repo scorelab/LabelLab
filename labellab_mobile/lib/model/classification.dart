@@ -1,9 +1,9 @@
-import 'label.dart';
+import 'package:labellab_mobile/model/classification_label.dart';
 
 class Classification {
   String id;
   String imageUrl;
-  List<Label> label;
+  List<ClassificationLabel> label;
   DateTime createdAt;
 
   Classification();
@@ -13,7 +13,7 @@ class Classification {
     imageUrl = (staticEndpoint != null ? staticEndpoint : "") + json["image_url"];
     createdAt = DateTime.parse(json["created_at"]);
     label = (json['label'] as List<dynamic>)
-        .map((label) => Label.fromJson(label))
+        .map((label) => ClassificationLabel.fromJson(label))
         .toList();
   }
 }
