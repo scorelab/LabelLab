@@ -147,9 +147,9 @@ class Repository {
     return _api.getImage(accessToken, imageId);
   }
 
-  Future<ApiResponse> deleteImage(String projectId, String imageId) {
+  Future<ApiResponse> deleteImage(String imageId) {
     if (accessToken == null) return Future(null);
-    return _api.deleteImage(accessToken, projectId, imageId);
+    return _api.deleteImage(accessToken, imageId);
   }
 
   // Classification
