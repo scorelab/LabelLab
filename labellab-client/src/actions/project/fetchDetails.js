@@ -24,7 +24,7 @@ export const fetchAllProject = () => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
+                failure(err.response.data.msg)
               )
             : dispatch(failure(err.response.statusText, null));
         }
@@ -53,7 +53,7 @@ export const fetchProject = (data, callback) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
+                failure(err.response.data.msg)
               )
             : dispatch(failure(err.response.statusText, null));
         }

@@ -18,19 +18,22 @@ class ProjectSidebar extends Component {
     });
   }
   imageCallback = () => {
-    this.props.fetchProject(this.props.project.project_id);
+    const { fetchProject, project } = this.props;
+    fetchProject(project.projectId);
   };
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   render() {
+    const { project } = this.props;
+    const { activeItem } = this.state;
     return (
       <div className="sidebar-parent">
         <div className="sidebar-menu-parent">
           <Menu vertical size="large">
             <Menu.Item
               as={Link}
-              to={`/project/${this.props.project.project_id}/team`}
+              to={`/project/${project.projectId}/team`}
               name="team"
-              active={this.state.activeItem === "team"}
+              active={activeItem === "team"}
               onClick={this.handleItemClick}
             >
               Project Team
@@ -38,9 +41,9 @@ class ProjectSidebar extends Component {
 
             <Menu.Item
               as={Link}
-              to={`/project/${this.props.project.project_id}/images`}
+              to={`/project/${project.projectId}/images`}
               name="images"
-              active={this.state.activeItem === "images"}
+              active={activeItem === "images"}
               onClick={this.handleItemClick}
             >
               Project Images
@@ -48,18 +51,18 @@ class ProjectSidebar extends Component {
 
             <Menu.Item
               as={Link}
-              to={`/project/${this.props.project.project_id}/analytics`}
+              to={`/project/${project.projectId}/analytics`}
               name="analytics"
-              active={this.state.activeItem === "analytics"}
+              active={activeItem === "analytics"}
               onClick={this.handleItemClick}
             >
               Project Analytics
             </Menu.Item>
             <Menu.Item
               as={Link}
-              to={`/project/${this.props.project.project_id}/labels`}
+              to={`/project/${project.projectId}/labels`}
               name="labels"
-              active={this.state.activeItem === "labels"}
+              active={activeItem === "labels"}
               onClick={this.handleItemClick}
             >
               Project Labels
@@ -72,7 +75,6 @@ class ProjectSidebar extends Component {
 }
 const mapStateToProps = state => {
   return {
-    isfetching: state.projects.projectActions.isfetching,
     project: state.projects.currentProject
   };
 };

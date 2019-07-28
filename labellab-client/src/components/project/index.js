@@ -10,7 +10,7 @@ import Images from "./images";
 import Analytics from "./analytics";
 import ProjectDescription from "./projectDesc";
 import Team from "./team";
-import Labels from "./label/index"
+import Labels from "./label/index";
 import "./css/index.css";
 
 class ProjectIndex extends Component {
@@ -19,53 +19,53 @@ class ProjectIndex extends Component {
     this.state = {};
   }
   componentDidMount() {
-    this.props.fetchProject(this.props.location.pathname.substring(9, 33));
+    const { match, fetchProject } = this.props;
+    fetchProject(match.params.projectId);
   }
   render() {
-    const { match } = this.props;
-    // console.log(this.props)
+    const { match, actions, history } = this.props;
     return (
       <React.Fragment>
-        {this.props.actions.isfetching ? (
-          <Dimmer active={this.props.actions.isfetching}>
+        {actions.isfetching ? (
+          <Dimmer active>
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : null}
-        {this.props.actions.isuploading ? (
-          <Dimmer active={this.props.actions.isuploading}>
+        {actions.isuploading ? (
+          <Dimmer active>
             <Loader indeterminate>Uploading Image</Loader>
           </Dimmer>
         ) : null}
-        <ProjectNavbar history={this.props.history} />
+        <ProjectNavbar history={history} />
         <div className="project-main">
-          <Sidebar history={this.props.history} />
+          <Sidebar history={history} />
           <div className="project-non-side-section">
-            <ProjectDescription history={this.props.history} />
+            <ProjectDescription history={history} />
             <Switch>
               <PrivateRoute
                 exact
-                path={`${match.path}/:id/team`}
+                path={`${match.path}/team`}
                 component={Team}
               />
               <PrivateRoute
                 exact
-                path={`${match.path}/:id/images`}
+                path={`${match.path}/images`}
                 component={Images}
               />
               <PrivateRoute
                 exact
-                path={`${match.path}/:id/analytics`}
+                path={`${match.path}/analytics`}
                 component={Analytics}
               />
               <PrivateRoute
                 exact
-                path={`${match.path}/:id/labels`}
+                path={`${match.path}/labels`}
                 component={Labels}
               />
             </Switch>
           </div>
         </div>
-        </React.Fragment>
+      </React.Fragment>
     );
   }
 }

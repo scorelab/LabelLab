@@ -4,7 +4,7 @@ exports.userInfo = function(req, res) {
 	User.findOne({
 		email: req.user.email
 	})
-		.select("name email thumbnail googleId githubId username profile_image")
+		.select("name email thumbnail googleId githubId username profileImage")
 		.exec(function(err, user) {
 			if (err) {
 				return res.status(400).send({
@@ -39,13 +39,13 @@ exports.countInfo = function(req, res) {
 				return res.status(400).send({ success: false, msg: "User not found" })
 			} else {
 				let data = {
-					total_projects: user.project.length,
-					total_images: 0,
-					total_labels: 0
+					totalProjects: user.project.length,
+					totalImages: 0,
+					totalLabels: 0
 				}
 				user.project.map((project, index) => {
-					data.total_images += project.image.length
-					data.total_labels += project.labels.length
+					data.totalImages += project.image.length
+					data.totalLabels += project.labels.length
 				})
 
 				return res.json({ success: true, body: data })
@@ -55,19 +55,21 @@ exports.countInfo = function(req, res) {
 
 exports.userUploadImage = function(req, res) {
 	if (req && req.body && req.body.image && req.body.format) {
+		const { id, email } = req.user
+		const { image, format } = req.body
 		let data = {
-			id: req.user.id,
-			email: req.user.email,
-			img: req.body.image,
-			format: req.body.format
+			id: id,
+			email: email,
+			img: image,
+			format: format
 		}
 		let baseImg = data.img.split(",")[1]
 		let binaryData = new Buffer(baseImg, "base64")
 		let ext = data.format.split("/")[1]
-		let updateData = { profile_image: `${data.id}.${ext}` }
-		const url = `/public/img/${updateData.profile_image}`
+		let updateData = { profileImage: `${data.id}.${ext}` }
+		const url = `/public/img/${updateData.profileImage}`
 		require("fs").writeFile(
-			`./public/img/${updateData.profile_image}`,
+			`./public/img/${updateData.profileImage}`,
 			binaryData,
 			function(err) {
 				if (err) {
@@ -80,8 +82,8 @@ exports.userUploadImage = function(req, res) {
 							email: data.email
 						},
 						{
-							profile_image:
-								"http://localhost:4000/static/img/" + updateData.profile_image
+							profileImage:
+								"http://localhost:4000/static/img/" + updateData.profileImage
 						}
 					).exec(function(err) {
 						if (err)

@@ -19,10 +19,10 @@ import { getToken } from "../utils/token";
 
 const token = getToken(TOKEN_TYPE);
 
-export const fetchLabels = (project_id, callback) => {
+export const fetchLabels = (projectId, callback) => {
   return dispatch => {
     dispatch(request());
-    FetchApi("GET", "/api/v1/label/" + project_id + "/get", null, token)
+    FetchApi("GET", "/api/v1/label/" + projectId + "/get", null, token)
       .then(res => {
         dispatch(success(res.data.body));
         callback();
@@ -31,7 +31,7 @@ export const fetchLabels = (project_id, callback) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
+                failure(err.response.data.msg)
               )
             : dispatch(failure(err.response.statusText, null));
         }
@@ -53,7 +53,7 @@ export const createLabel = (data, callback) => {
     dispatch(request());
     FetchApi(
       "POST",
-      "/api/v1/label/" + data.project_id + "/create",
+      "/api/v1/label/" + data.projectId + "/create",
       { label: data },
       token
     )
@@ -65,7 +65,7 @@ export const createLabel = (data, callback) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
+                failure(err.response.data.msg)
               )
             : dispatch(failure(err.response.statusText, null));
         }
@@ -93,7 +93,7 @@ export const updateLabels = (image_id, labelData) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
+                failure(err.response.data.msg)
               )
             : dispatch(failure(err.response.statusText, null));
         }
@@ -122,7 +122,7 @@ export const deleteLabel = (label_id, callback) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
+                failure(err.response.data.msg)
               )
             : dispatch(failure(err.response.statusText, null));
         }

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Dimmer, Loader, Button, Form, Icon } from "semantic-ui-react";
 import { fetchLabels, createLabel, deleteLabel } from "../../../actions/index";
 import LabelItem from "./labelItem.js";
+import "../css/labelItem.css";
 
 const options = [
   { key: "bbox", text: "Draw a bounding box", value: "bbox" },
@@ -19,7 +20,8 @@ class LabelIndex extends Component {
     };
   }
   componentDidMount() {
-    this.props.fetchLabels(this.props.location.pathname.substring(9, 33));
+    const { fetchLabels, match } = this.props;
+    fetchLabels(match.params.projectId);
   }
   toggleForm = () => {
     this.setState({
@@ -32,48 +34,50 @@ class LabelIndex extends Component {
     });
   };
   handleSubmit = e => {
+    const { project, createLabel } = this.props;
     e.preventDefault();
     let data = {
       name: this.state.name,
       type: this.state.type,
-      project_id: this.props.project.project_id
+      projectId: project.projectId
     };
-    this.props.createLabel(data, this.callback);
+    createLabel(data, this.callback);
   };
   callback = () => {
+    const { project, fetchLabels } = this.props;
     this.setState({
       showform: false,
       name: "New Label",
       type: "bbox"
     });
-    this.props.fetchLabels(this.props.project.project_id);
+    fetchLabels(project.projectId);
   };
   handleDelete = value => {
-    this.props.deleteLabel(
-      value._id,
-      this.props.fetchLabels(this.props.project.project_id)
-    );
+    const { project, deleteLabel, fetchLabels } = this.props;
+    deleteLabel(value._id, fetchLabels(project.projectId));
   };
   render() {
     const value = {
       name: "New Label",
       type: "bbox"
     };
+    const { actions, labels } = this.props;
+    const { showform } = this.state;
     return (
       <div>
-        {this.props.actions.isfetching ? (
-          <Dimmer active={this.props.actions.isfetching}>
+        {actions.isfetching ? (
+          <Dimmer active={actions.isfetching}>
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : null}
 
-        {this.props.actions.isdeleting ? (
+        {actions.isdeleting ? (
           <Dimmer active>
             <Loader indeterminate>Removing Label :)</Loader>
           </Dimmer>
         ) : null}
-        {this.props.labels !== undefined &&
-          this.props.labels.map((label, index) => (
+        {labels !== undefined &&
+          labels.map((label, index) => (
             <LabelItem
               value={label}
               key={index}
@@ -82,18 +86,14 @@ class LabelIndex extends Component {
             />
           ))}
         <Button onClick={this.toggleForm}>Create new Label</Button>
-        {this.state.showform ? (
-          <Form
-            className="form-card"
-            style={{ display: "flex" }}
-            onSubmit={this.handleSubmit}
-          >
-            <div style={{ flex: 1, padding: "0 0.5em" }}>
+        {showform ? (
+          <Form className="form-card flex" onSubmit={this.handleSubmit}>
+            <div className="form-card-child">
               <Form.Field
                 placeholder="Label name"
                 control="input"
                 defaultValue={value.name}
-                style={{ padding: 3, fontSize: 24 }}
+                className="form-card-child-field"
                 onChange={e => this.onChange(e.target.name, e.target.value)}
                 name="name"
               />
@@ -108,10 +108,10 @@ class LabelIndex extends Component {
                 name="type"
               />
             </div>
-            <div style={{ flex: "0 0 auto" }}>
+            <div className="form-button-parent">
               <Button
                 type="button"
-                style={{ background: "transparent", padding: 0 }}
+                className="form-button-itself"
                 onClick={this.onChange}
               >
                 <Icon name="trash" />
@@ -134,14 +134,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchLabels: project_id => {
-      return dispatch(fetchLabels(project_id));
+    fetchLabels: projectId => {
+      return dispatch(fetchLabels(projectId));
     },
     createLabel: (data, callback) => {
       return dispatch(createLabel(data, callback));
     },
-    deleteLabel: (label_id, callback) => {
-      return dispatch(deleteLabel(label_id, callback));
+    deleteLabel: (labelId, callback) => {
+      return dispatch(deleteLabel(labelId, callback));
     }
   };
 };

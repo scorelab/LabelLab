@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import {
   Header,
   Icon,
@@ -22,9 +21,10 @@ class ProjectDescriptionIndex extends Component {
     };
   }
   componentDidMount() {
-    if (this.props.project.currentProject) {
+    const { project } = this.props;
+    if (project.currentProject) {
       this.setState({
-        desc: this.props.project.project_description
+        desc: project.projectDescription
       });
     }
   }
@@ -34,21 +34,19 @@ class ProjectDescriptionIndex extends Component {
     });
   };
   handleSubmit = () => {
+    const { updateProject, project } = this.props;
     let data = {
-      project_description: this.state.desc
+      projectDescription: this.state.desc
     };
 
-    this.props.updateProject(
-      data,
-      this.props.project.project_id,
-      this.callback
-    );
+    updateProject(data, project.projectId, this.callback);
   };
   callback = () => {
+    const { project, fetchProject } = this.props;
     this.setState({
       edit: false
     });
-    this.props.fetchProject(this.props.project.project_id);
+    fetchProject(project.projectId);
   };
   handleChange = e => {
     this.setState({
@@ -56,10 +54,12 @@ class ProjectDescriptionIndex extends Component {
     });
   };
   render() {
+    const { actions, project } = this.props;
+    const { edit, desc } = this.state;
     return (
       <div className="projectDesc-parent">
-        {this.props.actions.isfetching ? (
-          <Dimmer active={this.props.actions.isfetching}>
+        {actions.isfetching ? (
+          <Dimmer active>
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : null}
@@ -67,11 +67,11 @@ class ProjectDescriptionIndex extends Component {
           <Header content="Project Description" as="h4" />
           <Icon name="pencil alternate" onClick={this.handleUpdate} />
         </div>
-        {this.state.edit ? (
+        {edit && desc ? (
           <Form>
             <TextArea
               placeholder="Write some project description"
-              value={this.state.desc}
+              value={desc}
               onChange={this.handleChange}
               name="desc"
             />
@@ -84,10 +84,8 @@ class ProjectDescriptionIndex extends Component {
             </Button>
           </Form>
         ) : null}
-        {!this.state.edit &&
-        this.props.project &&
-        this.props.project.project_description
-          ? this.props.project.project_description
+        {!edit && project && project.projectDescription
+          ? project.projectDescription
           : null}
       </div>
     );
@@ -102,8 +100,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateProject: (data, project_id, callback) => {
-      return dispatch(updateProject(data, project_id, callback));
+    updateProject: (data, projectId, callback) => {
+      return dispatch(updateProject(data, projectId, callback));
     },
     fetchProject: data => {
       return dispatch(fetchProject(data));

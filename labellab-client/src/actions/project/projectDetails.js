@@ -24,9 +24,7 @@ export const initProject = (data, callback) => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });
@@ -42,10 +40,10 @@ export const initProject = (data, callback) => {
   }
 };
 
-export const updateProject = (data, project_id, callback) => {
+export const updateProject = (data, projectId, callback) => {
   return dispatch => {
     dispatch(request());
-    FetchApi("PUT", "/api/v1/project/update/" + project_id, data, token)
+    FetchApi("PUT", "/api/v1/project/update/" + projectId, data, token)
       .then(res => {
         dispatch(success());
         callback();
@@ -53,9 +51,7 @@ export const updateProject = (data, project_id, callback) => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });

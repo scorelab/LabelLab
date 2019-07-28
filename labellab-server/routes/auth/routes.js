@@ -7,7 +7,7 @@ const OAuthlogin = require("../../controller/auth/oauth").signin
 const authController = require("../../controller/auth/auth")
 const requireLogin = passport.authenticate("local", { session: false })
 
-require("../../config/github_passport")
+require("../../config/githubPassport")
 
 // Routes corresponding to the controllers
 router.post("/register", authController.userRegister)

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
 import { Image, Header, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
 import "./css/navbar.css";
@@ -9,33 +8,30 @@ class Navbar extends Component {
     this.props.history.push("/logout");
   };
   render() {
+    const { history, user, isfetching } = this.props;
     return (
       <div className="navbar">
         <div className="startnav">
           <div className="main-nav-title">LABELLAB</div>
           <div className="searchBar">
-            <Searchbar history={this.props.history} />
+            <Searchbar history={history} />
           </div>
         </div>
         <div className="subnavbar">
           <ul>
             <li>
-              <Header
-                textAlign="center"
-                as="h5"
-                content={this.props.user.username}
-              />
+              <Header textAlign="center" as="h5" content={user.username} />
             </li>
             <li>
-              {this.props.isfetching ? (
+              {isfetching ? (
                 <h4>LOADING</h4>
-              ) : this.props.user ? (
+              ) : user ? (
                 <Image
                   centered
                   src={
-                    this.props.user.profile_image === ""
-                      ? `${this.props.user.thumbnail}`
-                      : `${this.props.user.profile_image}?${Date.now()}`
+                    user.profileImage === ""
+                      ? `${user.thumbnail}`
+                      : `${user.profileImage}?${Date.now()}`
                   }
                   size="mini"
                   circular

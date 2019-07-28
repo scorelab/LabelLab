@@ -5,15 +5,15 @@ const ProjectSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User"
 	},
-	project_name: {
+	projectName: {
 		type: String,
 		required: true
 	},
-	project_description: {
+	projectDescription: {
 		type: String,
 		default: "Image labelling"
 	},
-	created_at: {
+	createdAt: {
 		type: Date,
 		default: Date.now
 	},

@@ -26,9 +26,7 @@ export const fetchUser = () => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });
@@ -79,9 +77,7 @@ export const fetchCount = () => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });

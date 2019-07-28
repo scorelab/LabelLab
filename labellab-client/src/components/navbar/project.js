@@ -21,6 +21,7 @@ class ProjectNavbar extends Component {
     this.props.history.push("/logout");
   };
   render() {
+    const { title, isfetching, user } = this.props;
     return (
       <div className="navbar">
         <div className="startnav">
@@ -32,28 +33,24 @@ class ProjectNavbar extends Component {
           </div>
         </div>
         <div className="navbar-title">
-          <Header textAlign="center" as="h2" content={this.props.title} />
+          <Header textAlign="center" as="h2" content={title} />
         </div>
         <div className="subnavbar">
           <ul>
             <li>
-              <Header
-                textAlign="center"
-                as="h5"
-                content={this.props.user.username}
-              />
+              <Header textAlign="center" as="h5" content={user.username} />
             </li>
             <li>
-              {this.props.isfetching ? (
+              {isfetching ? (
                 <h4>LOADING</h4>
-              ) : this.props.user ? (
+              ) : user ? (
                 <a target="_blank" rel="noopener noreferrer" href="/profile">
                   <Image
                     centered
                     src={
-                      this.props.user.profile_image === ""
-                        ? `${this.props.user.thumbnail}`
-                        : `${this.props.user.profile_image}?${Date.now()}`
+                      user.profileImage === ""
+                        ? `${user.thumbnail}`
+                        : `${user.profileImage}?${Date.now()}`
                     }
                     size="mini"
                     circular

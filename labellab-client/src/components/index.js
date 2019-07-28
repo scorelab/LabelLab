@@ -4,13 +4,11 @@ import Dashboard from "./dashboard/index";
 import Logout from "./logout/index";
 import Login from "./login/index";
 import PrivateRoute from "../utils/pR";
-// import Navbar from "./navbar/index";
 import Register from "./register/index";
 import Profile from "./profile/index";
 import Labeller from "./labeller/index";
 import Project from "./project/index";
 import Redirect from "./redirect.js";
-// import Testing from "./labeller/index.js"
 
 class App extends Component {
   render() {
@@ -18,7 +16,6 @@ class App extends Component {
     return (
       <BrowserRouter>
         <React.Fragment>
-          {/* <Route path={`${match.path}test`} component={Testing} /> */}
           <Switch>
             <Route path={`${match.path}redirect`} component={Redirect} />
             <Route path={`${match.path}logout`} component={Logout} />
@@ -31,10 +28,13 @@ class App extends Component {
               component={Profile}
             />
             <PrivateRoute
-              path={`${match.path}labeller/:project_id/:image_id`}
+              path={`${match.path}labeller/:projectId/:imageId`}
               component={Labeller}
             />
-            <PrivateRoute path={`${match.path}project`} component={Project} />
+            <PrivateRoute
+              path={`${match.path}project/:projectId`}
+              component={Project}
+            />
           </Switch>
         </React.Fragment>
       </BrowserRouter>

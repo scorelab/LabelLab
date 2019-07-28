@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Table, Button, Form, Dimmer, Loader } from "semantic-ui-react";
 import { AutoSizer, List } from "react-virtualized";
-import { submitImage, deleteImage } from "../../actions/image";
-import { fetchProject } from "../../actions/project/fetchDetails";
+import { submitImage, deleteImage, fetchProject } from "../../actions/index";
 import "./css/images.css";
 
 class ImagesIndex extends Component {
@@ -13,8 +12,8 @@ class ImagesIndex extends Component {
     this.state = {
       image: "",
       file: "",
-      image_name: "",
-      project_id: "",
+      imageName: "",
+      projectId: "",
       showform: false,
       format: ""
     };
@@ -28,7 +27,7 @@ class ImagesIndex extends Component {
         image: reader.result,
         file: file,
         format: file.type,
-        image_name: file.name,
+        imageName: file.name,
         showform: true
       });
     };
@@ -36,27 +35,24 @@ class ImagesIndex extends Component {
   };
   handleSubmit = e => {
     e.preventDefault();
-
-    const { image_name, image, format } = this.state;
+    const { project, fetchProject, submitImage } = this.props;
+    const { imageName, image, format } = this.state;
     let data = {
-      image_name: image_name,
+      imageName: imageName,
       image: image,
-      project_id: this.props.project.project_id,
+      projectId: project.projectId,
       format: format
     };
-    this.props.submitImage(data, () => {
+    submitImage(data, () => {
       this.setState({
         showform: false
       });
-      this.props.fetchProject(this.props.project.project_id);
+      fetchProject(project.projectId);
     });
   };
   handleDelete = image_id => {
-    this.props.deleteImage(
-      image_id,
-      this.props.project.project_id,
-      this.props.fetchProject(this.props.project.project_id)
-    );
+    const { deleteImage, project, fetchProject } = this.props;
+    deleteImage(image_id, project.projectId, fetchProject(project.projectId));
   };
   handleChange = e => {
     const name = e.target.name;
@@ -65,10 +61,10 @@ class ImagesIndex extends Component {
   };
   render() {
     const { imageActions, project } = this.props;
-    const { showform, image_name } = this.state;
+    const { showform, imageName } = this.state;
     return (
       <div>
-        {this.props.imageActions.isdeleting ? (
+        {imageActions.isdeleting ? (
           <Dimmer active>
             <Loader indeterminate>Removing Image :(</Loader>
           </Dimmer>
@@ -97,8 +93,8 @@ class ImagesIndex extends Component {
             <Form.Field>
               <label>Image Name</label>
               <input
-                name="image_name"
-                value={image_name}
+                name="imageName"
+                value={imageName}
                 onChange={this.handleChange}
                 placeholder="Image Name"
               />
@@ -108,12 +104,9 @@ class ImagesIndex extends Component {
             </Button>
           </Form>
         ) : null}
-        <Table
-          celled
-          style={{ display: "flex", flexDirection: "column", height: 600 }}
-        >
-          <Table.Header style={{ flex: "0 0 auto" }}>
-            <Table.Row style={{ display: "flex", background: "#f9fafb" }}>
+        <Table celled className="flex-column height-600">
+          <Table.Header className="image-table-header">
+            <Table.Row className="flex image-table-row-back">
               <Table.HeaderCell style={columnStyles[0]}>ID</Table.HeaderCell>
               <Table.HeaderCell style={columnStyles[1]}>
                 Image Link
@@ -121,19 +114,10 @@ class ImagesIndex extends Component {
               <Table.HeaderCell style={columnStyles[2]}>
                 Actions
               </Table.HeaderCell>
-              {/* extra header cell to even out the width with a fake scrollbar */}
-              <Table.HeaderCell
-                style={{
-                  flex: "0 0 auto",
-                  opacity: 0,
-                  overflowY: "scroll",
-                  padding: 0,
-                  border: 0
-                }}
-              />
+              <Table.HeaderCell className="image-table-special-headercell" />
             </Table.Row>
           </Table.Header>
-          <Table.Body style={{ height: "100%", flex: 1, outline: 0 }}>
+          <Table.Body className="image-table-body">
             <AutoSizedList
               rowHeight={55}
               rowCount={project.images && project.images.length}
@@ -143,7 +127,7 @@ class ImagesIndex extends Component {
                   key={key}
                   style={style}
                   image={project.images[index]}
-                  projectId={project.project_id}
+                  projectId={project.projectId}
                   onDelete={this.handleDelete}
                   imageId={index}
                 />
@@ -171,8 +155,8 @@ const mapDispatchToProps = dispatch => {
     submitImage: (data, callback) => {
       return dispatch(submitImage(data, callback));
     },
-    deleteImage: (image_id, project_id, callback) => {
-      return dispatch(deleteImage(image_id, project_id, callback));
+    deleteImage: (image_id, projectId, callback) => {
+      return dispatch(deleteImage(image_id, projectId, callback));
     }
   };
 };
@@ -199,7 +183,7 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
           `/static/uploads/${image.image_url}?${Date.now()}`
         }
       >
-        {image.image_name}
+        {image.imageName}
       </Link>
     </Table.Cell>
     <Table.Cell style={columnStyles[2]}>

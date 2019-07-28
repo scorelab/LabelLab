@@ -11,16 +11,16 @@ let cors = require("cors")
 let path = require("path")
 
 var indexRouter = require("./routes/routes")
-let config = require("./config/db_uri")
+let config = require("./config/dbURI")
 
 var app = express()
 
 if (process.env.GOOGLE_CLIENT_ID) {
-	const passportGoogle = require("./config/google_passport")
+	const passportGoogle = require("./config/googlePassport")
 }
 
 if (process.env.GITHUB_CLIENT_ID) {
-	const passportGithub = require("./config/github_passport")
+	const passportGithub = require("./config/githubPassport")
 }
 
 app.use(logger("dev"))

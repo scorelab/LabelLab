@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { Card, Image } from "semantic-ui-react";
 import { connect } from "react-redux";
-// import "./css/home.css"
+import { withRouter } from "react-router-dom";
+import { Card } from "semantic-ui-react";
 import { fetchAllProject } from "../../actions/index";
 import CardLoader from "../../utils/cardLoader";
 import "./css/previous.css";
@@ -17,12 +16,13 @@ class PreviousProject extends Component {
     });
   };
   render() {
+    const { actions, projects } = this.props;
     return (
       <div className="previous-card-parent">
         <Card.Group itemsPerRow={3}>
-          {!this.props.actions.isfetching ? (
-            this.props.projects[0] &&
-            this.props.projects.map((project, index) => (
+          {!actions.isfetching ? (
+            projects[0] &&
+            projects.map((project, index) => (
               <Card
                 key={index}
                 onClick={() => this.handleClick(project._id)}
@@ -30,7 +30,7 @@ class PreviousProject extends Component {
               >
                 <Card.Content
                   className="card-headers"
-                  header={project.project_name}
+                  header={project.projectName}
                 />
                 <Card.Content description="Image Labelling App" />
               </Card>

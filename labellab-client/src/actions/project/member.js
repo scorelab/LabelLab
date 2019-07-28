@@ -16,7 +16,7 @@ const token = getToken(TOKEN_TYPE);
 export const addMember = (data, callback) => {
   return dispatch => {
     dispatch(request());
-    FetchApi("POST", "/api/v1/project/add/" + data.project_id, data, token)
+    FetchApi("POST", "/api/v1/project/add/" + data.projectId, data, token)
       .then(res => {
         dispatch(success());
         callback();
@@ -24,9 +24,7 @@ export const addMember = (data, callback) => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });
@@ -42,12 +40,12 @@ export const addMember = (data, callback) => {
   }
 };
 
-export const memberDelete = (email, project_id, callback) => {
+export const memberDelete = (email, projectId, callback) => {
   return dispatch => {
     dispatch(request());
     FetchApi(
       "POST",
-      "/api/v1/project/remove/" + project_id,
+      "/api/v1/project/remove/" + projectId,
       { member_email: email },
       token
     )
@@ -58,9 +56,7 @@ export const memberDelete = (email, project_id, callback) => {
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null));
         }
       });
