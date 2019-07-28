@@ -8,6 +8,7 @@ import {
   FETCH_IMAGE_FAILURE,
   FETCH_IMAGE_REQUEST,
   FETCH_IMAGE_SUCCESS,
+  SET_IMAGE_STATE,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -55,6 +56,7 @@ export const fetchProjectImage = (image_id, callback) => {
     dispatch(request());
     FetchApi("GET", "/api/v1/image/" + image_id + "/get", null, token)
       .then(res => {
+        // console.log(res.data.body)
         dispatch(success(res.data.body));
         callback();
       })
@@ -79,10 +81,15 @@ export const fetchProjectImage = (image_id, callback) => {
   }
 };
 
-export const deleteImage = (image_id, callback) => {
+export const deleteImage = (image_id, project_id, callback) => {
   return dispatch => {
     dispatch(request());
-    FetchApi("DELETE", "/api/v1/image/" + image_id + "/delete", null, token)
+    FetchApi(
+      "DELETE",
+      "/api/v1/image/" + project_id + "/delete/" + image_id,
+      null,
+      token
+    )
       .then(res => {
         dispatch(success());
         callback();
@@ -105,5 +112,19 @@ export const deleteImage = (image_id, callback) => {
   }
   function failure(error) {
     return { type: DELETE_IMAGE_FAILURE, payload: error };
+  }
+};
+
+export const setNextPrev = (next, prev) => {
+  return dispatch => {
+    let data = {
+      next: next,
+      prev: prev
+    };
+    console.log(data)
+    dispatch(request(data));
+  };
+  function request(data) {
+    return { type: SET_IMAGE_STATE, payload: data };
   }
 };
