@@ -7,7 +7,8 @@ import {
   FETCH_IMAGE_SUCCESS,
   DELETE_IMAGE_FAILURE,
   DELETE_IMAGE_REQUEST,
-  DELETE_IMAGE_SUCCESS
+  DELETE_IMAGE_SUCCESS,
+  SET_IMAGE_STATE,
 } from "../constants/index";
 
 const initialState = {
@@ -17,7 +18,9 @@ const initialState = {
     isfetching: false,
     isdeleting: false
   },
-  currentImage: {}
+  currentImage: {},
+  nextImage: {},
+  prevImage: {}
 };
 
 const user = (state = initialState, action) => {
@@ -66,9 +69,9 @@ const user = (state = initialState, action) => {
         ...state,
         imageActions: {
           isfetching: false,
-          error: "Successfully submitted"
+          error: "Successfully fetched!"
         },
-        currentImage: action.payload[0]
+        currentImage: action.payload
       };
     case DELETE_IMAGE_REQUEST:
       return {
@@ -92,6 +95,12 @@ const user = (state = initialState, action) => {
           isdeleting: false,
           error: "Successfully deleted"
         }
+      };
+    case SET_IMAGE_STATE:
+      return {
+        ...state,
+        nextImage: action.payload.next,
+        prevImage: action.payload.prev
       };
     default:
       return state;
