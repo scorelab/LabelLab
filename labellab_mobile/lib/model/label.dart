@@ -3,7 +3,7 @@ class Label {
   String name;
   String type;
 
-  Label();
+  Label({this.id, this.name, this.type});
 
   Label.fromJson(dynamic json) {
     id = json["id"];

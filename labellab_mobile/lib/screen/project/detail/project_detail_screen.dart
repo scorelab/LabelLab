@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
+import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/detail/project._detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
@@ -78,6 +80,10 @@ class ProjectDetailScreen extends StatelessWidget {
                   ? _buildImages(
                       context, _state.project.id, _state.project.images)
                   : SliverFillRemaining(),
+              _state.project != null && _state.project.labels != null
+                  ? _buildLabels(
+                      context, _state.project.id, _state.project.labels)
+                  : SliverFillRemaining(),
               SliverList(
                 delegate: SliverChildListDelegate([
                   Padding(
@@ -115,7 +121,7 @@ class ProjectDetailScreen extends StatelessWidget {
             PopupMenuButton<int>(
               onSelected: (int value) {
                 if (value == 0) {
-                  _showDeleteConfirmation(context, project);
+                  _showProjectDeleteConfirmation(context, project);
                 }
               },
               itemBuilder: (context) {
@@ -181,6 +187,44 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildLabels(
+      BuildContext context, String projectId, List<Label> labels) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Labels",
+                style: Theme.of(context).textTheme.title,
+              ),
+              FlatButton.icon(
+                icon: Icon(Icons.add),
+                label: Text("Add"),
+                onPressed: () => _showAddEditLabelModel(context, null),
+              ),
+            ],
+          ),
+          Wrap(
+            spacing: 8,
+            children: labels.map((label) {
+              return InkWell(
+                child: Chip(
+                  label: Text(label.name),
+                  deleteIcon: Icon(Icons.cancel),
+                  onDeleted: () => _showLabelDeleteConfirmation(context, label),
+                ),
+                onTap: () => _showAddEditLabelModel(context, label),
+              );
+            }).toList(),
+          ),
+        ]),
+      ),
+    );
+  }
+
   Widget _buildMembers(BuildContext context, List<Member> members) {
     return SliverList(
       delegate: SliverChildListDelegate(
@@ -218,7 +262,8 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _showDeleteConfirmation(BuildContext baseContext, Project project) {
+  void _showProjectDeleteConfirmation(
+      BuildContext baseContext, Project project) {
     showDialog<bool>(
         context: baseContext,
         builder: (context) {
@@ -233,6 +278,41 @@ class ProjectDetailScreen extends StatelessWidget {
         }).then((success) {
       if (success) {
         Navigator.pop(baseContext);
+      }
+    });
+  }
+
+  void _showLabelDeleteConfirmation(BuildContext baseContext, Label label) {
+    showDialog<bool>(
+        context: baseContext,
+        builder: (context) {
+          return DeleteConfirmDialog(
+            name: label.name,
+            onCancel: () => Navigator.pop(context),
+            onConfirm: () {
+              Provider.of<ProjectDetailBloc>(baseContext).deleteLabel(label.id);
+              Navigator.of(context).pop(true);
+            },
+          );
+        }).then((success) {
+      if (success) {
+        Provider.of<ProjectDetailBloc>(baseContext).refresh();
+      }
+    });
+  }
+
+  void _showAddEditLabelModel(BuildContext baseContext, Label label) {
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return AddEditLabelDialog(
+          Provider.of<ProjectDetailBloc>(baseContext).projectId,
+          label: label,
+        );
+      },
+    ).then((bool isSuccess) {
+      if (isSuccess) {
+        Provider.of<ProjectDetailBloc>(baseContext).refresh();
       }
     });
   }
