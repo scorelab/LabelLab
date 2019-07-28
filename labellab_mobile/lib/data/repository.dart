@@ -11,6 +11,7 @@ import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
+import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -150,6 +151,27 @@ class Repository {
   Future<ApiResponse> deleteImage(String imageId) {
     if (accessToken == null) return Future(null);
     return _api.deleteImage(accessToken, imageId);
+  }
+
+  // Label
+  Future<ApiResponse> createLabel(String projectId, Label label) {
+    if (accessToken == null) return Future(null);
+    return _api.createLabel(accessToken, projectId, label);
+  }
+
+  Future<List<Label>> getLabels(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getLabels(accessToken, projectId);
+  }
+
+  Future<ApiResponse> updateLabel(Label label) {
+    if (accessToken == null) return Future(null);
+    return _api.updateLabel(accessToken, label);
+  }
+
+  Future<ApiResponse> deleteLabel(String id) {
+    if (accessToken == null) return Future(null);
+    return _api.deleteLabel(accessToken, id);
   }
 
   // Classification

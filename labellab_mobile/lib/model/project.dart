@@ -1,4 +1,5 @@
 import 'package:labellab_mobile/model/image.dart';
+import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
 
 class Project {
@@ -7,8 +8,15 @@ class Project {
   String description;
   List<Member> members;
   List<Image> images;
+  List<Label> labels;
 
-  Project({this.id, this.name, this.description, this.members, this.images});
+  Project(
+      {this.id,
+      this.name,
+      this.description,
+      this.members,
+      this.images,
+      this.labels});
 
   Project.fromJson(dynamic json, {bool isDense = false, String imageEndpoint}) {
     id = json["_id"];
@@ -25,6 +33,13 @@ class Project {
       images = (json["image"] as List)
           .map(
             (image) => Image.fromJson(image, imageEndpoint: imageEndpoint),
+          )
+          .toList();
+    }
+    if (json["labels"] != null && !isDense) {
+      labels = (json["labels"] as List)
+          .map(
+            (label) => Label.fromJson(label),
           )
           .toList();
     }

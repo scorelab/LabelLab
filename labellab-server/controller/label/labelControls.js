@@ -96,7 +96,7 @@ exports.deleteLabel = function(req, res) {
 	if (req && req.body && req.params.label_id) {
 		Label.findOneAndDelete({
 			_id: req.params.label_id
-		}).exec(function(err, project) {
+		}).exec(function(err, label) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
@@ -104,10 +104,22 @@ exports.deleteLabel = function(req, res) {
 					error: err
 				})
 			}
-			return res.json({
-				success: true,
-				msg: "Removed successfully!"
-			})
+      Project.findOneAndUpdate(
+        { _id: label.project },
+        { $pull: { labels: req.params.label_id } }
+      ).exec(function(err, project) {
+        if (err) {
+          return res.status(400).send({
+            success: false,
+            msg: "Cannot delete label",
+            error: err
+          })
+        }
+        return res.json({
+          success: true,
+          msg: "Removed successfully!"
+        })
+      })
 		})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }

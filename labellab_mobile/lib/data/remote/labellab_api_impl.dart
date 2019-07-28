@@ -10,6 +10,7 @@ import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
+import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -44,6 +45,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_DELETE = "project/delete";
 
   static const ENDPOINT_IMAGE = "image";
+
+  static const ENDPOINT_LABEL = "label";
 
   static const ENDPOINT_CLASSIFICAITON_CLASSIFY = "classification/classify";
   static const ENDPOINT_CLASSIFICATION_GET = "classification/get";
@@ -243,6 +246,66 @@ class LabelLabAPIImpl extends LabelLabAPI {
     );
     return _dio
         .delete(API_URL + ENDPOINT_IMAGE + "/$imageId/delete", options: options)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<List<Label>> getLabels(String token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_LABEL + "/$projectId/get", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body']['labels'] as List<dynamic>)
+            .map((item) => Label.fromJson(item))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+  @override
+  Future<ApiResponse> createLabel(String token, String projectId, Label label) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    final data = {
+      "label": label.toMap(),
+    };
+    return _dio
+        .post(API_URL + ENDPOINT_LABEL + "/$projectId/create",
+            options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> updateLabel(String token, Label label) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .put(API_URL + ENDPOINT_LABEL + "/${label.id}/update",
+            options: options, data: label.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> deleteLabel(String token, String id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .delete(API_URL + ENDPOINT_LABEL + "/$id/delete", options: options)
         .then((response) {
       return ApiResponse(response.data);
     });

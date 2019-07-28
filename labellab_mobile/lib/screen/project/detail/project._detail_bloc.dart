@@ -25,6 +25,10 @@ class ProjectDetailBloc {
     _repository.deleteProject(projectId);
   }
 
+  void deleteLabel(String id) {
+    _repository.deleteLabel(id);
+  }
+
   // Project stream
   StreamController<ProjectDetailState> _stateController =
       StreamController<ProjectDetailState>();
