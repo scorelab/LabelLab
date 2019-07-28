@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { Table, Button, Form, Dimmer, Loader } from "semantic-ui-react";
 import { AutoSizer, List } from "react-virtualized";
 import { submitImage, deleteImage } from "../../actions/image";
@@ -53,6 +54,7 @@ class ImagesIndex extends Component {
   handleDelete = image_id => {
     this.props.deleteImage(
       image_id,
+      this.props.project.project_id,
       this.props.fetchProject(this.props.project.project_id)
     );
   };
@@ -169,8 +171,8 @@ const mapDispatchToProps = dispatch => {
     submitImage: (data, callback) => {
       return dispatch(submitImage(data, callback));
     },
-    deleteImage: (image_id, callback) => {
-      return dispatch(deleteImage(image_id, callback));
+    deleteImage: (image_id, project_id, callback) => {
+      return dispatch(deleteImage(image_id, project_id, callback));
     }
   };
 };
@@ -190,27 +192,21 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
   <Table.Row style={{ ...style, display: "flex" }}>
     <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
     <Table.Cell style={columnStyles[1]}>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href={
+      <Link
+        to={
           process.env.REACT_APP_HOST +
           process.env.REACT_APP_SERVER_PORT +
           `/static/uploads/${image.image_url}?${Date.now()}`
         }
       >
         {image.image_name}
-      </a>
+      </Link>
     </Table.Cell>
     <Table.Cell style={columnStyles[2]}>
       <div>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={`/labeller/${projectId}/${image._id}`}
-        >
+        <Link to={`/labeller/${projectId}/${image._id}`}>
           <Button icon="pencil" label="Edit" size="tiny" />
-        </a>
+        </Link>
         <Button
           icon="trash"
           label="Delete"

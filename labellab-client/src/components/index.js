@@ -19,18 +19,21 @@ class App extends Component {
       <BrowserRouter>
         <React.Fragment>
           {/* <Route path={`${match.path}test`} component={Testing} /> */}
-          <Route path={`${match.path}redirect`} component={Redirect} />
-          <Route path={`${match.path}logout`} component={Logout} />
-          <Route path={`${match.path}login`} component={Login} />
-          <Route path={`${match.path}register`} component={Register} />
           <Switch>
+            <Route path={`${match.path}redirect`} component={Redirect} />
+            <Route path={`${match.path}logout`} component={Logout} />
+            <Route path={`${match.path}login`} component={Login} />
+            <Route path={`${match.path}register`} component={Register} />
             <PrivateRoute exact path={`${match.path}`} component={Dashboard} />
             <PrivateRoute
               exact
               path={`${match.path}profile`}
               component={Profile}
             />
-            <PrivateRoute path={`${match.path}labeller`} component={Labeller} />
+            <PrivateRoute
+              path={`${match.path}labeller/:project_id/:image_id`}
+              component={Labeller}
+            />
             <PrivateRoute path={`${match.path}project`} component={Project} />
           </Switch>
         </React.Fragment>

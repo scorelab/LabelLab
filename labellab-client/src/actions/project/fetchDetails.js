@@ -41,12 +41,13 @@ export const fetchAllProject = () => {
   }
 };
 
-export const fetchProject = data => {
+export const fetchProject = (data, callback) => {
   return dispatch => {
     dispatch(request());
     FetchApi("GET", "/api/v1/project/get/" + data, null, token)
       .then(res => {
         dispatch(success(res.data.body));
+        callback();
       })
       .catch(err => {
         if (err.response) {
@@ -68,4 +69,3 @@ export const fetchProject = data => {
     return { type: FETCH_PROJECT_FAILURE, payload: error };
   }
 };
-

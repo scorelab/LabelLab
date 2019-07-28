@@ -23,8 +23,9 @@ class ProjectIndex extends Component {
   }
   render() {
     const { match } = this.props;
+    // console.log(this.props)
     return (
-      <BrowserRouter>
+      <React.Fragment>
         {this.props.actions.isfetching ? (
           <Dimmer active={this.props.actions.isfetching}>
             <Loader indeterminate>Have some patience :)</Loader>
@@ -64,7 +65,7 @@ class ProjectIndex extends Component {
             </Switch>
           </div>
         </div>
-      </BrowserRouter>
+        </React.Fragment>
     );
   }
 }

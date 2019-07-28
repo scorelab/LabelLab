@@ -3,8 +3,13 @@ import LabelingApp from "./LabelingApp.js";
 import { connect } from "react-redux";
 import { Loader, Dimmer, Modal, Button } from "semantic-ui-react";
 import DocumentMeta from "react-document-meta";
-import { fetchLabels, updateLabels } from "../../actions/label";
-import { fetchProjectImage } from "../../actions/image";
+import {
+  fetchLabels,
+  updateLabels,
+  fetchProjectImage,
+  fetchProject,
+  setNextPrev
+} from "../../actions/index";
 
 class LabelingLoader extends Component {
   constructor(props) {
@@ -19,17 +24,56 @@ class LabelingLoader extends Component {
   componentDidMount() {
     this.props.fetchLabels(this.props.location.pathname.substring(10, 34));
     this.props.fetchProjectImage(this.props.location.pathname.substring(35));
+    this.props.fetchProject(
+      this.props.location.pathname.substring(10, 34),
+      this.setImageState
+    );
   }
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.image_id !== this.props.match.params.image_id) {
+      this.props.fetchLabels(this.props.match.params.project_id);
+      this.props.fetchProjectImage(this.props.match.params.image_id);
+    }
+  }
+  setImageState = () => {
+    const len = this.props.allImages && this.props.allImages.length;
+    this.props.allImages &&
+      this.props.allImages.map((image, index) =>
+        image._id === this.props.location.pathname.substring(35)
+          ? index === 0
+            ? len <= 1
+              ? this.props.setNextPrev({}, {})
+              : this.props.setNextPrev(this.props.allImages[index + 1], {})
+            : this.props.setNextPrev(
+                this.props.allImages[index + 1],
+                this.props.allImages[index - 1]
+              )
+          : null
+      );
+  };
   pushUpdate(labelData) {
     let image_id = this.props.location.pathname.substring(35);
     this.props.updateLabels(image_id, labelData);
   }
-  markcomplete() {}
   render() {
     const props = {
+      onBack: () => {
+        this.props.history.push(
+          `/labeller/${this.props.location.pathname.substring(10, 34)}/${
+            this.props.prev._id
+          }`
+        );
+      },
+      onSkip: () => {
+        this.props.history.push(
+          `/labeller/${this.props.location.pathname.substring(10, 34)}/${
+            this.props.next._id
+          }`
+        );
+      },
       onLabelChange: this.pushUpdate.bind(this)
     };
-    const title = this.props.image.image_name;
+    const title = this.props.image && this.props.image.image_name;
     return (
       <DocumentMeta title={title}>
         {this.props.labelActions.isfetching &&
@@ -42,7 +86,7 @@ class LabelingLoader extends Component {
           <LabelingApp
             labels={this.props.lab}
             // reference={{ referenceLink, referenceText }}
-            labelData={this.props.image.labelData || {}}
+            labelData={(this.props.image && this.props.image.labelData) || {}}
             imageUrl={
               process.env.REACT_APP_HOST +
               process.env.REACT_APP_SERVER_PORT +
@@ -62,7 +106,10 @@ class LabelingLoader extends Component {
             </Modal.Content>
             <Modal.Actions>
               <a
-                href={`/project/${this.props.location.pathname.substring(10, 34)}/labels`}
+                href={`/project/${this.props.location.pathname.substring(
+                  10,
+                  34
+                )}/labels`}
               >
                 <Button positive content="Create Labels" />
               </a>
@@ -79,7 +126,10 @@ const mapStateToProps = state => {
     lab: state.labels.labels,
     labelActions: state.labels.labelActions,
     imageActions: state.images.imageActions,
-    image: state.images.currentImage
+    image: state.images.currentImage,
+    allImages: state.projects.currentProject.images,
+    next: state.images.nextImage,
+    prev: state.images.prevImage
   };
 };
 
@@ -93,6 +143,12 @@ const mapDispatchToProps = dispatch => {
     },
     fetchProjectImage: (image_id, callback) => {
       return dispatch(fetchProjectImage(image_id, callback));
+    },
+    fetchProject: (data, callback) => {
+      return dispatch(fetchProject(data, callback));
+    },
+    setNextPrev: (next, prev) => {
+      return dispatch(setNextPrev(next, prev));
     }
   };
 };

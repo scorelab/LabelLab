@@ -171,23 +171,23 @@ exports.deleteImage = function(req, res) {
 					error: err
 				})
 			} else {
-        Project.findOneAndUpdate(
-          { _id: req.params.project_id },
-          { $pull: { image: req.params.image_id } }
-        ).exec(function(err, project) {
-          if (err) {
-            return res.status(400).send({
-              success: false,
-              msg: "Cannot delete image",
-              error: err
-            })
-          }
-          return res.json({
-            success: true,
-            msg: "Image deleted successfully!"
-          })
-        })
-      }
+				Project.findOneAndUpdate(
+					{ _id: req.params.project_id },
+					{ $pull: { image: req.params.image_id } }
+				).exec(function(err, project) {
+					if (err) {
+						return res.status(400).send({
+							success: false,
+							msg: "Cannot delete image",
+							error: err
+						})
+					}
+					return res.json({
+						success: true,
+						msg: "Image deleted successfully!"
+					})
+				})
+			}
 		})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
