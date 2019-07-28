@@ -2,6 +2,7 @@ import 'package:labellab_mobile/model/upload_image.dart';
 
 class ProjectUploadImageState {
   bool isLoading;
+  bool isSuccess = false;
   String error;
   List<UploadImage> images = [];
 
@@ -23,5 +24,6 @@ class ProjectUploadImageState {
 
   ProjectUploadImageState.success({this.images}) {
     this.isLoading = false;
+    this.isSuccess = true;
   }
 }
