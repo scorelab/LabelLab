@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema({
 	githubId: {
 		type: String
 	},
-	created_at: {
+	createdAt: {
 		type: Date,
 		default: Date.now
 	},
@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		default: "https://react.semantic-ui.com/images/avatar/large/elliot.jpg"
 	},
-	profile_image: {
+	profileImage: {
 		type: String,
 		default: ""
 	},

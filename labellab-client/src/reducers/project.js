@@ -53,7 +53,7 @@ const project = (state = initialState, action) => {
           isinitializing: false
         },
         currentProject: {
-          project_name: action.payload.project_name,
+          projectName: action.payload.projectName,
           images: action.payload.image
         }
       };
@@ -79,9 +79,9 @@ const project = (state = initialState, action) => {
           isfetching: false
         },
         currentProject: {
-          project_id: action.payload._id,
-          project_name: action.payload.project_name,
-          project_description: action.payload.project_description,
+          projectId: action.payload._id,
+          projectName: action.payload.projectName,
+          projectDescription: action.payload.projectDescription,
           images: action.payload.image,
           members: action.payload.members
         }

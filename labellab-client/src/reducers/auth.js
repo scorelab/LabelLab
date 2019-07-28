@@ -14,7 +14,7 @@ const initialState = {
     email: ""
   },
   error: false,
-  err_field: ""
+  errField: ""
 };
 
 const auth = (state = initialState, action) => {
@@ -42,7 +42,7 @@ const auth = (state = initialState, action) => {
         statusText:
           action.payload === "Unauthorized" ? "Email is not registered" : null,
         error: true,
-        err_field: action.other
+        errField: action.other
       };
     case LOGOUT_REQUEST:
       return {

@@ -23,24 +23,22 @@ class RegisterIndex extends Component {
   };
   handleSubmit = e => {
     e.preventDefault();
-
-    let { name, username, email, password, password2 } = this.state;
-
+    const { name, username, email, password, password2 } = this.state;
+    const { history, setProfile } = this.props;
     this.setState({
       submitted: true
     });
-
     if (name && username && email && password && password2) {
       if (password === password2) {
         let data = {
-          name: this.state.name,
-          username: this.state.username,
-          email: this.state.email,
-          password: this.state.password,
-          password2: this.state.password2
+          name: name,
+          username: username,
+          email: email,
+          password: password,
+          password2: password2
         };
-        this.props.set_profile(data, () => {
-          this.props.history.push("/login");
+        setProfile(data, () => {
+          history.push("/login");
         });
       } else {
         this.setState({
@@ -51,6 +49,7 @@ class RegisterIndex extends Component {
   };
 
   render() {
+    const { errField, statusText, isRegistering } = this.props;
     const {
       name,
       username,
@@ -68,9 +67,7 @@ class RegisterIndex extends Component {
         />
         <Form onSubmit={this.handleSubmit} className="attached fluid segment">
           <Form.Input
-            error={
-              this.props.err_field === "name" || (submitted && name === "")
-            }
+            error={errField === "name" || (submitted && name === "")}
             onChange={this.onChange}
             fluid
             name="name"
@@ -83,13 +80,11 @@ class RegisterIndex extends Component {
               Name field cannot be empty
             </div>
           )}
-          {this.props.statusText && this.props.err_field === "name" && (
-            <div className={register.errorText}>{this.props.statusText}</div>
+          {statusText && errField === "name" && (
+            <div className={register.errorText}>{statusText}</div>
           )}
           <Form.Input
-            error={
-              this.props.err_field === "email" || (submitted && email === "")
-            }
+            error={errField === "email" || (submitted && email === "")}
             onChange={this.onChange}
             name="email"
             label="Email"
@@ -101,14 +96,11 @@ class RegisterIndex extends Component {
               Email field cannot be empty
             </div>
           )}
-          {this.props.statusText && this.props.err_field === "email" && (
-            <div className="register-error-text">{this.props.statusText}</div>
+          {statusText && errField === "email" && (
+            <div className="register-error-text">{statusText}</div>
           )}
           <Form.Input
-            error={
-              this.props.err_field === "username" ||
-              (submitted && username === "")
-            }
+            error={errField === "username" || (submitted && username === "")}
             onChange={this.onChange}
             name="username"
             label="Username"
@@ -120,14 +112,11 @@ class RegisterIndex extends Component {
               Username field cannot be empty
             </div>
           )}
-          {this.props.statusText && this.props.err_field === "username" && (
-            <div className="register-error-text">{this.props.statusText}</div>
+          {statusText && errField === "username" && (
+            <div className="register-error-text">{statusText}</div>
           )}
           <Form.Input
-            error={
-              this.props.err_field === "password" ||
-              (submitted && password === "")
-            }
+            error={errField === "password" || (submitted && password === "")}
             onChange={this.onChange}
             name="password"
             label="Password"
@@ -139,14 +128,11 @@ class RegisterIndex extends Component {
               Password field cannot be empty
             </div>
           )}
-          {this.props.statusText && this.props.err_field === "password" && (
-            <div className="register-error-text">{this.props.statusText}</div>
+          {statusText && errField === "password" && (
+            <div className="register-error-text">{statusText}</div>
           )}
           <Form.Input
-            error={
-              this.props.err_field === "password2" ||
-              (submitted && password2 === "")
-            }
+            error={errField === "password2" || (submitted && password2 === "")}
             onChange={this.onChange}
             name="password2"
             label="Confirm Password"
@@ -163,10 +149,10 @@ class RegisterIndex extends Component {
               Both password are not equal!
             </div>
           )}
-          {this.props.statusText && this.props.err_field === "password2" && (
-            <div className="register-error-text">{this.props.statusText}</div>
+          {statusText && errField === "password2" && (
+            <div className="register-error-text">{statusText}</div>
           )}
-          <Button loading={this.props.isRegistering} color="blue">
+          <Button loading={isRegistering} color="blue">
             Submit
           </Button>
         </Form>
@@ -183,14 +169,13 @@ const mapStateToProps = state => {
   return {
     isRegistering: state.register.isRegistering,
     statusText: state.register.statusText,
-    error: state.register.error,
-    err_field: state.register.err_field
+    errField: state.register.errField
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    set_profile: (data, callback) => {
+    setProfile: (data, callback) => {
       dispatch(userRegister(data, callback));
     }
   };

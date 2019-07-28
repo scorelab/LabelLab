@@ -8,7 +8,7 @@ import {
 } from "../constants/index";
 
 import FetchApi from "../utils/FetchAPI";
-import { setToken, logout } from "../utils/token";
+import { setToken, removeToken } from "../utils/token";
 
 export const login = (username, password, callback) => {
   return dispatch => {
@@ -25,8 +25,12 @@ export const login = (username, password, callback) => {
           callback();
         }
       })
-      .catch(error => {
-        dispatch(failure(error));
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null));
+        }
       });
   };
 
@@ -41,10 +45,10 @@ export const login = (username, password, callback) => {
   }
 };
 
-export const log_out = callback => {
+export const logout = callback => {
   return dispatch => {
     dispatch(request());
-    logout(TOKEN_TYPE);
+    removeToken(TOKEN_TYPE);
     dispatch(success());
     callback();
   };

@@ -7,35 +7,37 @@ exports.postImage = function(req, res) {
 		req &&
 		req.body &&
 		req.params &&
-		req.params.project_id &&
+		req.params.projectId &&
 		req.body.image &&
-		req.body.project_id &&
-		req.body.image_name &&
+		req.body.projectId &&
+		req.body.imageName &&
 		req.body.format
 	) {
+		const {image,imageName,format,projectId} = req.body
 		let data = {
 			id: req.user.id,
-			image: req.body.image,
-			image_name: req.body.image_name,
-			format: req.body.format,
-			project: req.params.project_id
+			image: image,
+			imageName: imageName,
+			format: format,
+			project: req.params.projectId
 		}
+		console.log(data)
 		let baseImg = data.image.split(",")[1]
 		let binaryData = new Buffer(baseImg, "base64")
 		let ext = data.format.split("/")[1]
-		let updateData = { image_url: `${data.id}${Date.now()}.${ext}` }
-
+		let updateData = { imageUrl: `${data.id}${Date.now()}.${ext}` }
+		console.log(updateData)
 		fs.writeFile(
-			`./public/uploads/${updateData.image_url}`,
+			`./public/uploads/${updateData.imageUrl}`,
 			binaryData,
 			async err => {
 				if (err) {
 					return res.status(400).send({ success: false, msg: err })
 				} else {
 					const newImage = new Image({
-						project: req.body.project_id,
-						image_url: updateData.image_url,
-						image_name: data.image_name
+						project: projectId,
+						imageUrl: updateData.imageUrl,
+						imageName: data.imageName
 					})
 					newImage.save(function(err, image) {
 						if (err) {
@@ -44,7 +46,7 @@ exports.postImage = function(req, res) {
 								.send({ success: false, msg: "Unable to Add Image" })
 						} else if (image._id) {
 							Project.updateOne(
-								{ _id: req.body.project_id },
+								{ _id: req.body.projectId },
 								{ $addToSet: { image: image._id } }
 							).exec(function(err, project) {
 								if (err) {
@@ -75,11 +77,11 @@ exports.postImage = function(req, res) {
 }
 
 exports.fetchImage = function(req, res) {
-	if (req && req.params && req.params.project_id) {
+	if (req && req.params && req.params.projectId) {
 		Project.find({
-			_id: req.params.project_id
+			_id: req.params.projectId
 		})
-			.select("project_name")
+			.select("projectName")
 			.populate("image")
 			.exec(function(err, project) {
 				if (err) {
@@ -105,11 +107,11 @@ exports.fetchImage = function(req, res) {
 }
 
 exports.fetchImageId = function(req, res) {
-	if (req && req.params && req.params.image_id) {
+	if (req && req.params && req.params.imageId) {
 		Image.findOne({
-			_id: req.params.image_id
+			_id: req.params.imageId
 		})
-			.select("height width labelData image_name image_url created_at")
+			.select("height width labelData imageName imageUrl createdAt")
 			.exec(function(err, image) {
 				if (err) {
 					return res.status(400).send({
@@ -134,11 +136,11 @@ exports.fetchImageId = function(req, res) {
 }
 
 exports.updateLabels = function(req, res) {
-	if (req && req.params && req.params.image_id) {
+	if (req && req.params && req.params.imageId) {
 		let data = req.body
 		Image.findOneAndUpdate(
 			{
-				_id: req.params.image_id
+				_id: req.params.imageId
 			},
 			{ height: data.height, width: data.width, labelData: data.labels },
 			{ new: true }
@@ -160,9 +162,9 @@ exports.updateLabels = function(req, res) {
 }
 
 exports.deleteImage = function(req, res) {
-	if (req && req.params && req.params.image_id) {
+	if (req && req.params && req.params.projectId && req.params.imageId) {
 		Image.findOneAndDelete({
-			_id: req.params.image_id
+			_id: req.params.imageId
 		}).exec(function(err, image) {
 			if (err) {
 				return res.status(400).send({
@@ -171,23 +173,23 @@ exports.deleteImage = function(req, res) {
 					error: err
 				})
 			} else {
-        Project.findOneAndUpdate(
-          { _id: image.project },
-          { $pull: { image: req.params.image_id } }
-        ).exec(function(err, project) {
-          if (err) {
-            return res.status(400).send({
-              success: false,
-              msg: "Cannot delete image",
-              error: err
-            })
-          }
-          return res.json({
-            success: true,
-            msg: "Image deleted successfully!"
-          })
-        })
-      }
+				Project.findOneAndUpdate(
+					{ _id: req.params.projectId },
+					{ $pull: { image: req.params.imageId } }
+				).exec(function(err, project) {
+					if (err) {
+						return res.status(400).send({
+							success: false,
+							msg: "Cannot delete image",
+							error: err
+						})
+					}
+					return res.json({
+						success: true,
+						msg: "Image deleted successfully!"
+					})
+				})
+			}
 		})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
