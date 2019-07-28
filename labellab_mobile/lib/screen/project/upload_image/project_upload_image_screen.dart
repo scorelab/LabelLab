@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
+import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,10 @@ class ProjectUploadImageScreen extends StatelessWidget {
         stream: Provider.of<ProjectUploadImageBloc>(context).state,
         initialData: ProjectUploadImageState.initial(),
         builder: (context, AsyncSnapshot<ProjectUploadImageState> snapshot) {
+          if (snapshot.data.isSuccess) {
+            WidgetsBinding.instance
+                .addPostFrameCallback((_) => Application.router.pop(context));
+          }
           return Scaffold(
             appBar: AppBar(
               title: Text("Upload Image"),
@@ -20,10 +25,12 @@ class ProjectUploadImageScreen extends StatelessWidget {
             floatingActionButton: snapshot.data.images.length > 0
                 ? FloatingActionButton(
                     child: Icon(Icons.done),
-                    onPressed: () {
-                      Provider.of<ProjectUploadImageBloc>(context)
-                          .uploadImages();
-                    },
+                    onPressed: !snapshot.data.isLoading
+                        ? () {
+                            Provider.of<ProjectUploadImageBloc>(context)
+                                .uploadImages();
+                          }
+                        : null,
                   )
                 : null,
           );
@@ -53,55 +60,52 @@ class ProjectUploadImageScreen extends StatelessWidget {
   }
 
   Widget _imageItem(BuildContext context, UploadImage image) {
-    return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Image(
-                fit: BoxFit.cover,
-                image: FileImage(image.image),
-              ),
-              image.state == UploadImageState.PENDING
-                  ? Positioned(
-                      right: 8,
-                      top: 8,
-                      child: GestureDetector(
-                        child: Icon(
-                          Icons.cancel,
-                          size: 28,
-                          color: Colors.black54,
-                        ),
-                        onTap: () {
-                          Provider.of<ProjectUploadImageBloc>(context)
-                              .unselectImage(image);
-                        },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Image(
+              fit: BoxFit.cover,
+              image: FileImage(image.image),
+            ),
+            image.state == UploadImageState.PENDING
+                ? Positioned(
+                    right: 8,
+                    top: 8,
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.cancel,
+                        size: 28,
+                        color: Colors.black54,
                       ),
-                    )
-                  : Container(),
-              image.state == UploadImageState.LOADING
-                  ? Positioned(
-                      left: 48,
-                      right: 48,
-                      bottom: 48,
-                      top: 48,
-                      child: CircularProgressIndicator())
-                  : Container(),
-              image.state == UploadImageState.SUCCESS
-                  ? Icon(
-                      Icons.done,
-                      color: Colors.greenAccent,
-                      size: 32,
-                    )
-                  : Container(),
-            ],
-          ),
+                      onTap: () {
+                        Provider.of<ProjectUploadImageBloc>(context)
+                            .unselectImage(image);
+                      },
+                    ),
+                  )
+                : Container(),
+            image.state == UploadImageState.LOADING
+                ? Positioned(
+                    left: 48,
+                    right: 48,
+                    bottom: 48,
+                    top: 48,
+                    child: CircularProgressIndicator())
+                : Container(),
+            image.state == UploadImageState.SUCCESS
+                ? Icon(
+                    Icons.done,
+                    color: Colors.greenAccent,
+                    size: 32,
+                  )
+                : Container(),
+          ],
         ),
       ),
-      onTap: () => _showChangePictureMethodSelect(context),
     );
   }
 
