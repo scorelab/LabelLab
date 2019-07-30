@@ -187,7 +187,6 @@ exports.deleteImage = function(req, res) {
 						msg: "Image deleted successfully!"
 					})
 				})
-			}
-		})
+}
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
