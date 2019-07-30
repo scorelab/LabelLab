@@ -160,9 +160,9 @@ exports.updateLabels = function(req, res) {
 }
 
 exports.deleteImage = function(req, res) {
-	if (req && req.params && req.params.image_id) {
+	if (req && req.params && req.params.imageId) {
 		Image.findOneAndDelete({
-			_id: req.params.image_id
+			_id: req.params.imageId
 		}).exec(function(err, image) {
 			if (err) {
 				return res.status(400).send({
@@ -171,23 +171,23 @@ exports.deleteImage = function(req, res) {
 					error: err
 				})
 			} else {
-        Project.findOneAndUpdate(
-          { _id: image.project },
-          { $pull: { image: req.params.image_id } }
-        ).exec(function(err, project) {
-          if (err) {
-            return res.status(400).send({
-              success: false,
-              msg: "Cannot delete image",
-              error: err
-            })
-          }
-          return res.json({
-            success: true,
-            msg: "Image deleted successfully!"
-          })
-        })
-      }
+				Project.findOneAndUpdate(
+					{ _id: image.project },
+					{ $pull: { image: req.params.imageId } }
+				).exec(function(err, project) {
+					if (err) {
+						return res.status(400).send({
+							success: false,
+							msg: "Cannot delete image",
+							error: err
+						})
+					}
+					return res.json({
+						success: true,
+						msg: "Image deleted successfully!"
+					})
+				})
+			}
 		})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
