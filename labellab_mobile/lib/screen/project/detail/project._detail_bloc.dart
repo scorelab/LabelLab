@@ -25,8 +25,16 @@ class ProjectDetailBloc {
     _repository.deleteProject(projectId);
   }
 
+  void removeUser(String email) {
+    _repository.removeMember(projectId, email).then((_) {
+      refresh();
+    });
+  }
+
   void deleteLabel(String id) {
-    _repository.deleteLabel(id);
+    _repository.deleteLabel(id).then((_) {
+      refresh();
+    });
   }
 
   // Project stream
@@ -41,7 +49,6 @@ class ProjectDetailBloc {
     _setState(ProjectDetailState.loading(project: _project));
     _repository.getProject(projectId).then((project) {
       this._project = project;
-      print("Project => " + project.toMap().toString());
       _setState(ProjectDetailState.success(_project));
       _isLoading = false;
     }).catchError((err) {
