@@ -10,8 +10,8 @@ class Classification {
 
   Classification.fromJson(dynamic json, {String staticEndpoint}) {
     id = json["_id"];
-    imageUrl = (staticEndpoint != null ? staticEndpoint : "") + json["image_url"];
-    createdAt = DateTime.parse(json["created_at"]);
+    imageUrl = (staticEndpoint != null ? staticEndpoint : "") + json["imageUrl"];
+    createdAt = DateTime.parse(json["createdAt"]);
     label = (json['label'] as List<dynamic>)
         .map((label) => ClassificationLabel.fromJson(label))
         .toList();

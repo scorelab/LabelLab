@@ -10,9 +10,9 @@ class Image {
 
   Image.fromJson(dynamic json, {String imageEndpoint}) {
     id = json["_id"];
-    imageUrl = (imageEndpoint != null ? imageEndpoint : "") + json["image_url"];
+    imageUrl = (imageEndpoint != null ? imageEndpoint : "") + json["imageUrl"];
     if (json["labelled"] != null && json["labelled"])
       labels = (json["label"] as List).map((label) => Label.fromJson(label));
-    createdAt = DateTime.parse(json["created_at"]);
+    createdAt = DateTime.parse(json["createdAt"]);
   }
 }
