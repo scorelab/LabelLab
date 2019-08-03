@@ -91,6 +91,11 @@ class Repository {
     });
   }
 
+  Future<User> searchUser(String email) {
+    if (accessToken == null) return Future(null);
+    return _api.searchUser(accessToken, email);
+  }
+
   Future<ApiResponse> uploadUserImage(File image) {
     if (accessToken == null) return Future(null);
     return _api.uploadUserImage(accessToken, image);
@@ -135,6 +140,16 @@ class Repository {
   Future<ApiResponse> deleteProject(String id) {
     if (accessToken == null) return Future(null);
     return _api.deleteProject(accessToken, id);
+  }
+
+  Future<ApiResponse> addMember(String projectId, String email) {
+    if (accessToken == null) return Future(null);
+    return _api.addMember(accessToken, projectId, email);
+  }
+
+  Future<ApiResponse> removeMember(String projectId, String email) {
+    if (accessToken == null) return Future(null);
+    return _api.removeMember(accessToken, projectId, email);
   }
 
   // Image

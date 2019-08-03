@@ -21,6 +21,7 @@ abstract class LabelLabAPI {
 
   // Profile
   Future<User> usersInfo(String token);
+  Future<User> searchUser(String token, String email);
   Future<ApiResponse> uploadUserImage(String token, File image);
 
   // Project
@@ -29,6 +30,8 @@ abstract class LabelLabAPI {
   Future<ApiResponse> createProject(String token, Project project);
   Future<ApiResponse> updateProject(String token, Project project);
   Future<ApiResponse> deleteProject(String token, String id);
+  Future<ApiResponse> addMember(String token, String projectId, String email);
+  Future<ApiResponse> removeMember(String token, String projectId, String email);
 
   // Image
   Future<ApiResponse> uploadImage(String token, String projectId, UploadImage image);
