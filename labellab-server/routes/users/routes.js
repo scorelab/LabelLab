@@ -11,6 +11,10 @@ const userControls = require("../../controller/user/userControls")
 router.get("/info", requireAuth, userControls.userInfo)
 
 // GET method
+// To fetch user information of a given user
+router.get("/search", requireAuth, userControls.searchUser)
+
+// GET method
 // To fetch user info count
 router.get("/fetchCount", requireAuth, userControls.countInfo)
 
