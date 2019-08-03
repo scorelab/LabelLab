@@ -20,6 +20,6 @@ router.put("/:imageId/update", requireAuth, imageControls.updateLabels)
 
 // DELETE method
 // To delete image
-router.delete("/:projectId/delete/:imageId", requireAuth, imageControls.deleteImage)
+router.delete("/:imageId/delete", requireAuth, imageControls.deleteImage)
 
 module.exports = router
