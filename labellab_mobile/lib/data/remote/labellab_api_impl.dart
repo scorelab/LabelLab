@@ -37,12 +37,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_REGISTER = "auth/register";
 
   static const ENDPOINT_USERS_INFO = "users/info";
+  static const ENDPOINT_USERS_SEARCH = "users/search?email=";
   static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_CREATE = "project/create";
   static const ENDPOINT_PROJECT_UPDATE = "project/update";
   static const ENDPOINT_PROJECT_DELETE = "project/delete";
+  static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add";
+  static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove";
 
   static const ENDPOINT_IMAGE = "image";
 
@@ -67,6 +70,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .post(API_URL + ENDPOINT_LOGIN_GOOGLE, data: user.toMap())
         .then((response) {
       return LoginResponse(response.data);
+    }).catchError((err) {
+      print("Sex");
     });
   }
 
@@ -98,6 +103,25 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
+        return User.fromJson(response.data['body'],
+            imageEndpoint: STATIC_IMAGE_URL);
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+  @override
+  Future<User> searchUser(String token, String email) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_USERS_SEARCH + "$email", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        print("Got users");
         return User.fromJson(response.data['body'],
             imageEndpoint: STATIC_IMAGE_URL);
       } else {
@@ -199,13 +223,46 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<ApiResponse> addMember(String token, String projectId, String email) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    final data = {
+      "memberEmail": email,
+    };
+    return _dio
+        .post(API_URL + ENDPOINT_PROJECT_ADD_MEMBER + "/$projectId",
+            options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> removeMember(
+      String token, String projectId, String email) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    final data = {
+      "memberEmail": email,
+    };
+    return _dio
+        .post(API_URL + ENDPOINT_PROJECT_REMOVE_MEMBER + "/$projectId",
+            options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
   Future<ApiResponse> uploadImage(
       String token, String projectId, UploadImage image) async {
     final imageBytes = image.image.readAsBytesSync();
     final encodedBytes = base64Encode(imageBytes);
     final data = {
-      "project_id": projectId,
-      "image_name": "Image",
+      "projectId": projectId,
+      "imageName": "Image",
       "image": "base64," + encodedBytes,
       "format": "image/jpg",
     };
