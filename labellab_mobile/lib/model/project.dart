@@ -20,8 +20,8 @@ class Project {
 
   Project.fromJson(dynamic json, {bool isDense = false, String imageEndpoint}) {
     id = json["_id"];
-    name = json["project_name"];
-    description = json["project_description"];
+    name = json["projectName"];
+    description = json["projectDescription"];
     if (json["members"] != null && !isDense) {
       members = (json["members"] as List)
           .map(
@@ -47,8 +47,8 @@ class Project {
 
   Map<String, dynamic> toMap() {
     return {
-      "project_name": name,
-      "project_description": description,
+      "projectName": name,
+      "projectDescription": description,
     };
   }
 }

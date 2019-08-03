@@ -12,6 +12,6 @@ class Member {
     id = json["_id"];
     role = json["role"];
     if (!(json["member"] is String)) member = User.fromJson(json["member"]);
-    createdAt = DateTime.parse(json["created_at"]);
+    createdAt = DateTime.parse(json["createdAt"]);
   }
 }
