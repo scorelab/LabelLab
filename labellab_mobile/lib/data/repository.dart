@@ -72,7 +72,7 @@ class Repository {
 
   Future<LoginResponse> register(RegisterUser user) {
     return _api.register(user).then((response) {
-      if (response.err_field == null) {
+      if (response.errField == null) {
         return login(user);
       } else
         throw Exception(response.msg);

@@ -15,12 +15,10 @@ class ProjectAddMemberBloc {
   ProjectAddMemberBloc(this.projectId);
 
   void searchUser(String email) {
-    print("Searching users");
     if (_isLoading) return;
     _isLoading = true;
     _setState(ProjectAddMemberState.loading(user: _user));
     _repository.searchUser(email).then((user) {
-      print("Got User");
       _isLoading = false;
       _setState(ProjectAddMemberState.successFetch(user));
     }).catchError((err) {

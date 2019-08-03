@@ -19,9 +19,7 @@ class ClassificationScreen extends StatelessWidget {
           PopupMenuButton<int>(
             onSelected: (selected) {
               if (selected == 0) {
-                Provider.of<ClassificationBloc>(context).delete().then((_) {
-                  Application.router.pop(context);
-                });
+                _showOnDeleteAlert(context);
               }
             },
             itemBuilder: (context) {
@@ -106,8 +104,7 @@ class ClassificationScreen extends StatelessWidget {
     );
   }
 
-  void _showOnDeleteAlert(
-      BuildContext baseContext, Classification classification) {
+  void _showOnDeleteAlert(BuildContext baseContext) {
     showDialog(
         context: baseContext,
         builder: (context) {
@@ -120,20 +117,22 @@ class ClassificationScreen extends StatelessWidget {
                   FlatButton(
                     child: Text("No"),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, false);
                     },
                   ),
                   FlatButton(
                     child: Text("Yes"),
                     onPressed: () {
                       Provider.of<ClassificationBloc>(baseContext).delete();
-                      Navigator.pop(context);
+                      Navigator.pop(context, true);
                     },
                   ),
                 ],
               )
             ],
           );
-        });
+        }).then((isDeleted) {
+      Application.router.pop(baseContext);
+    });
   }
 }
