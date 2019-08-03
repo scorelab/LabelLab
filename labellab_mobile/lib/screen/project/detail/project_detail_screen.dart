@@ -4,10 +4,12 @@ import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/project.dart';
+import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/detail/project._detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
+import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -121,6 +123,8 @@ class ProjectDetailScreen extends StatelessWidget {
             PopupMenuButton<int>(
               onSelected: (int value) {
                 if (value == 0) {
+                  _gotoAddMemberScreen(context, project);
+                } else if (value == 1) {
                   _showProjectDeleteConfirmation(context, project);
                 }
               },
@@ -128,8 +132,12 @@ class ProjectDetailScreen extends StatelessWidget {
                 return [
                   PopupMenuItem(
                     value: 0,
+                    child: Text("Add member"),
+                  ),
+                  PopupMenuItem(
+                    value: 1,
                     child: Text("Delete"),
-                  )
+                  ),
                 ];
               },
             ),
@@ -226,12 +234,30 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildMembers(BuildContext context, List<Member> members) {
+    final User _currentUser = Provider.of<AuthState>(context).user;
     return SliverList(
       delegate: SliverChildListDelegate(
         members.map((member) {
           return ListTile(
             title: Text(member.member.name),
             subtitle: Text(member.member.email),
+            trailing: _currentUser.id != member.member.id
+                ? PopupMenuButton<int>(
+                    onSelected: (value) {
+                      if (value == 0) {
+                        _showRemoveMemberConfirmation(context, member.member);
+                      }
+                    },
+                    itemBuilder: (context) {
+                      return [
+                        PopupMenuItem(
+                          value: 0,
+                          child: Text("Remove"),
+                        )
+                      ];
+                    },
+                  )
+                : null,
           );
         }).toList(),
       ),
@@ -262,6 +288,14 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
+  void _gotoAddMemberScreen(BuildContext context, Project project) {
+    Application.router
+        .navigateTo(context, "/project/${project.id}/add")
+        .whenComplete(() {
+      Provider.of<ProjectDetailBloc>(context).refresh();
+    });
+  }
+
   void _showProjectDeleteConfirmation(
       BuildContext baseContext, Project project) {
     showDialog<bool>(
@@ -282,6 +316,22 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
+  void _showRemoveMemberConfirmation(BuildContext baseContext, User user) {
+    showDialog<bool>(
+        context: baseContext,
+        builder: (context) {
+          return DeleteConfirmDialog(
+            name: user.name,
+            onCancel: () => Navigator.pop(context),
+            onConfirm: () {
+              Provider.of<ProjectDetailBloc>(baseContext)
+                  .removeUser(user.email);
+              Navigator.of(context).pop(true);
+            },
+          );
+        });
+  }
+
   void _showLabelDeleteConfirmation(BuildContext baseContext, Label label) {
     showDialog<bool>(
         context: baseContext,
@@ -294,11 +344,7 @@ class ProjectDetailScreen extends StatelessWidget {
               Navigator.of(context).pop(true);
             },
           );
-        }).then((success) {
-      if (success) {
-        Provider.of<ProjectDetailBloc>(baseContext).refresh();
-      }
-    });
+        });
   }
 
   void _showAddEditLabelModel(BuildContext baseContext, Label label) {
