@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/login/github_signin_screen.dart';

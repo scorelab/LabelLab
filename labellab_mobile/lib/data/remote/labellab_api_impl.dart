@@ -121,7 +121,6 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        print("Got users");
         return User.fromJson(response.data['body'],
             imageEndpoint: STATIC_IMAGE_URL);
       } else {
