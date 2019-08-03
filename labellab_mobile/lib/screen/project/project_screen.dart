@@ -107,10 +107,6 @@ class ProjectScreen extends StatelessWidget {
               Navigator.of(context).pop(true);
             },
           );
-        }).then((success) {
-      if (success) {
-        Navigator.pop(baseContext);
-      }
-    });
+        });
   }
 }

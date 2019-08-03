@@ -8,8 +8,7 @@ class LabelTextField extends StatelessWidget {
   final bool isObscure;
   final TextCapitalization textCapitalization;
   final TextInputType keyboardType;
-  final validator;
-  final onSaved;
+  final onSubmit;
 
   LabelTextField({
     this.controller,
@@ -19,8 +18,7 @@ class LabelTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.keyboardType = TextInputType.text,
     this.labelText,
-    this.validator,
-    this.onSaved,
+    this.onSubmit,
   });
 
   @override
@@ -41,6 +39,7 @@ class LabelTextField extends StatelessWidget {
         textCapitalization: textCapitalization,
         keyboardType: keyboardType,
         obscureText: isObscure,
+        onSubmitted: onSubmit,
       ),
     );
   }
