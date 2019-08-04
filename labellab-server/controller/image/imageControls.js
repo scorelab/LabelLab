@@ -21,12 +21,10 @@ exports.postImage = function(req, res) {
 			format: format,
 			project: req.params.projectId
 		}
-		console.log(data)
 		let baseImg = data.image.split(",")[1]
 		let binaryData = new Buffer(baseImg, "base64")
 		let ext = data.format.split("/")[1]
 		let updateData = { imageUrl: `${data.id}${Date.now()}.${ext}` }
-		console.log(updateData)
 		fs.writeFile(
 			`./public/uploads/${updateData.imageUrl}`,
 			binaryData,

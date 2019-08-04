@@ -45,16 +45,16 @@ class SearchExampleStandard extends Component {
       return results;
     }
 
-    search.map((project, index) => {
-      if (project.projectDescription) {
-        results.push({
-          key: index,
-          title: project.projectName,
-          description: project.projectDescription,
-          id: project._id
-        });
-      }
-    });
+    search.map((project, index) =>
+      project.projectDescription
+        ? results.push({
+            key: index,
+            title: project.projectName,
+            description: project.projectDescription,
+            id: project._id
+          })
+        : null
+    );
 
     return results;
   };

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter, Switch } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import { Dimmer, Loader } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { fetchProject } from "../../actions/index";
