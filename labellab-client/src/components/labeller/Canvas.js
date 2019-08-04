@@ -4,6 +4,7 @@ import { Map, ImageOverlay, ZoomControl } from "react-leaflet";
 import Control from "react-leaflet-control";
 import Hotkeys from "react-hot-keys";
 import update from "immutability-helper";
+import { Link } from "react-router-dom";
 import "leaflet-path-drag";
 
 import "leaflet/dist/leaflet.css";
@@ -284,8 +285,8 @@ class Canvas extends Component {
         >
           <ZoomControl position="bottomright" />
           <Control className="leaflet-bar" position="bottomright">
-            <a
-              href="#"
+            <Link
+              to="#"
               role="button"
               title="Zoom reset"
               onClick={() => {
@@ -294,7 +295,7 @@ class Canvas extends Component {
               }}
             >
               <Icon name="redo" fitted style={{ fontSize: "1.2em" }} />
-            </a>
+            </Link>
           </Control>
           <ImageOverlay url={url} bounds={bounds} />
           {unfinishedDrawingDOM}

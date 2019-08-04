@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Menu, Image } from "semantic-ui-react";
+import { Menu } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { fetchProject } from "../../actions/index";
 import "./css/sidebar.css";

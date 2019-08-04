@@ -6,7 +6,7 @@ import "semantic-ui-css/semantic.min.css";
 
 import Canvas from "./Canvas";
 // import HotkeysPanel from './HotkeysPanel';
-import Sidebar from './Sidebar';
+import Sidebar from "./Sidebar";
 // import { PathToolbar, MakePredictionToolbar } from './CanvasToolbar';
 // import Reference from './Reference';
 import "./css/LabelingApp.css";
@@ -45,7 +45,7 @@ class LabelingApp extends Component {
     this.canvasRef = React.createRef();
   }
 
-  handleSelected=(selected)=> {
+  handleSelected = selected => {
     if (selected === this.state.selected) return;
     const { pushState } = this.props;
 
@@ -76,9 +76,9 @@ class LabelingApp extends Component {
       }),
       () => this.setState({ selected })
     );
-  }
+  };
 
-  handleSelectionChange=(figureId)=> {
+  handleSelectionChange = figureId => {
     if (figureId) {
       this.setState({ selectedFigureId: figureId });
     } else {
@@ -87,11 +87,12 @@ class LabelingApp extends Component {
         selectedFigureId: null
       });
     }
-  }
+  };
 
-  handleChange=(eventType, figure, newLabelId)=> {
+  handleChange = (eventType, figure, newLabelId) => {
     if (!figure.color) return;
-    const { labels, figures, pushState, height, width, imageData } = this.props;
+    // const { labels, figures, pushState, height, width, imageData } = this.props;
+    const { labels, figures, pushState } = this.props;
     const label =
       figure.color === "gray"
         ? { id: "__temp" }
@@ -158,7 +159,7 @@ class LabelingApp extends Component {
       //       })
       //     };
       //   });
-        // break;
+      // break;
 
       case "delete":
         pushState(state => ({
@@ -207,18 +208,18 @@ class LabelingApp extends Component {
       default:
         throw new Error("unknown event type " + eventType);
     }
-  }
+  };
 
   render() {
     const {
       labels,
       imageUrl,
-      reference,
+      // reference,
       onBack,
       onSkip,
       onSubmit,
       pushState,
-      popState,
+      // popState,
       figures,
       unfinishedFigure,
       height,
@@ -228,10 +229,10 @@ class LabelingApp extends Component {
     } = this.props;
     const {
       selected,
-      selectedFigureId,
+      // selectedFigureId,
       reassigning,
       toggles,
-      hotkeysPanel
+      // hotkeysPanel
     } = this.state;
 
     const forwardedProps = {
@@ -242,38 +243,38 @@ class LabelingApp extends Component {
       makePrediction
     };
     const sidebarProps = reassigning.status
-    ? {
-        title: 'Select the new label',
-        selected: null,
-        onSelect: selected => {
-          const figure = this.canvasRef.current.getSelectedFigure();
-          if (figure) {
-            this.handleChange('recolor', figure, selected);
-          }
+      ? {
+          title: "Select the new label",
+          selected: null,
+          onSelect: selected => {
+            const figure = this.canvasRef.current.getSelectedFigure();
+            if (figure) {
+              this.handleChange("recolor", figure, selected);
+            }
 
-          this.setState({ reassigning: { status: false, type: null } });
-        },
-        filter: label => label.type === reassigning.type,
-        labelData: figures,
-      }
-    : {
-        title: 'Labeling',
-        selected,
-        onSelect: this.handleSelected,
-        toggles,
-        onToggle: label =>
-          this.setState({
-            toggles: update(toggles, {
-              [label.id]: { $set: !toggles[label.id] },
+            this.setState({ reassigning: { status: false, type: null } });
+          },
+          filter: label => label.type === reassigning.type,
+          labelData: figures
+        }
+      : {
+          title: "Labeling",
+          selected,
+          onSelect: this.handleSelected,
+          toggles,
+          onToggle: label =>
+            this.setState({
+              toggles: update(toggles, {
+                [label.id]: { $set: !toggles[label.id] }
+              })
             }),
-          }),
-        openHotkeys: () => this.setState({ hotkeysPanel: true }),
-        onFormChange: (labelId, newValue) =>
-          pushState(state => ({
-            figures: update(figures, { [labelId]: { $set: newValue } }),
-          })),
-        labelData: figures,
-      };
+          openHotkeys: () => this.setState({ hotkeysPanel: true }),
+          onFormChange: (labelId, newValue) =>
+            pushState(state => ({
+              figures: update(figures, { [labelId]: { $set: newValue } })
+            })),
+          labelData: figures
+        };
     // let selectedFigure = null;
     const allFigures = [];
     labels.forEach((label, i) => {
@@ -307,12 +308,12 @@ class LabelingApp extends Component {
         style={{ display: "flex", height: "100vh", flexDirection: "column" }}
       >
         <div style={{ display: "flex", flex: 1, height: "100%" }}>
-        <Sidebar
-              labels={labels}
-              {...sidebarProps}
-              {...forwardedProps}
-              style={{ flex: 1, maxWidth: 300 }}
-            />
+          <Sidebar
+            labels={labels}
+            {...sidebarProps}
+            {...forwardedProps}
+            style={{ flex: 1, maxWidth: 300 }}
+          />
           <div style={{ flex: 4, display: "flex", flexDirection: "column" }}>
             <div style={{ position: "relative", height: "100%" }}>
               <Canvas

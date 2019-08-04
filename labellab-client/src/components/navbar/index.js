@@ -39,7 +39,7 @@ class Navbar extends Component {
               ) : null}
             </li>
             <li>
-              <Dropdown floated labelled>
+              <Dropdown>
                 <Dropdown.Menu>
                   <Dropdown.Item text="Settings" />
                   <Dropdown.Item as="label" onClick={this.handleClick}>

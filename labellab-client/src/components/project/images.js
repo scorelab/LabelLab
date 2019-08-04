@@ -50,9 +50,9 @@ class ImagesIndex extends Component {
       fetchProject(project.projectId);
     });
   };
-  handleDelete = image_id => {
+  handleDelete = imageId => {
     const { deleteImage, project, fetchProject } = this.props;
-    deleteImage(image_id, project.projectId, fetchProject(project.projectId));
+    deleteImage(imageId, project.projectId, fetchProject(project.projectId));
   };
   handleChange = e => {
     const name = e.target.name;
@@ -77,7 +77,7 @@ class ImagesIndex extends Component {
             id="image-embedpollfileinput"
           />
           <label
-            for="image-embedpollfileinput"
+            htmlFor="image-embedpollfileinput"
             className="ui medium primary left floated button custom-margin"
           >
             Add Image
@@ -104,7 +104,10 @@ class ImagesIndex extends Component {
             </Button>
           </Form>
         ) : null}
-        <Table celled className="flex-column height-600">
+        <Table
+          celled
+          style={{ display: "flex", flexDirection: "column", height: 600 }}
+        >
           <Table.Header className="image-table-header">
             <Table.Row className="flex image-table-row-back">
               <Table.HeaderCell style={columnStyles[0]}>ID</Table.HeaderCell>
@@ -118,22 +121,24 @@ class ImagesIndex extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body className="image-table-body">
-            <AutoSizedList
-              rowHeight={55}
-              rowCount={project.images && project.images.length}
-              style={{ overflowY: "scroll" }}
-              rowRenderer={({ index, style, key }) => (
-                <Row
-                  key={key}
-                  style={style}
-                  image={project.images[index]}
-                  projectId={project.projectId}
-                  onDelete={this.handleDelete}
-                  imageId={index}
-                />
-              )}
-              overscanRowCount={10}
-            />
+            {project.images && project.images.length > 0 ? (
+              <AutoSizedList
+                rowHeight={55}
+                rowCount={project && project.images && project.images.length}
+                style={{ overflowY: "scroll" }}
+                rowRenderer={({ index, style, key }) => (
+                  <Row
+                    key={key}
+                    style={style}
+                    image={project.images[index]}
+                    projectId={project.projectId}
+                    onDelete={this.handleDelete}
+                    imageId={index}
+                  />
+                )}
+                overscanRowCount={10}
+              />
+            ) : null}
           </Table.Body>
         </Table>
       </div>
@@ -155,8 +160,8 @@ const mapDispatchToProps = dispatch => {
     submitImage: (data, callback) => {
       return dispatch(submitImage(data, callback));
     },
-    deleteImage: (image_id, projectId, callback) => {
-      return dispatch(deleteImage(image_id, projectId, callback));
+    deleteImage: (imageId, projectId, callback) => {
+      return dispatch(deleteImage(imageId, projectId, callback));
     }
   };
 };
@@ -174,13 +179,14 @@ const columnStyles = [
 
 const Row = ({ image, projectId, style, onDelete, imageId }) => (
   <Table.Row style={{ ...style, display: "flex" }}>
+    {console.log(image)}
     <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
     <Table.Cell style={columnStyles[1]}>
       <Link
         to={
           process.env.REACT_APP_HOST +
           process.env.REACT_APP_SERVER_PORT +
-          `/static/uploads/${image.image_url}?${Date.now()}`
+          `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
       >
         {image.imageName}
