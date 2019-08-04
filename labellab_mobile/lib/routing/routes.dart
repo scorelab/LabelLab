@@ -14,8 +14,9 @@ class Routes {
   static const addMemberProject = "/project/:id/add";
 
   // Image
-  static const uploadImageProject = "/project/:project_id/upload";
-  static const viewImageProject = "/project/:project_id/view/:image_id";
+  static const uploadImage = "/project/:project_id/upload";
+  static const viewImage = "/project/:project_id/view/:image_id";
+  static const labelImage = "/project/:project_id/label/:image_id";
 
   // Classify
   static const classify = "/classify/:by";
@@ -31,8 +32,9 @@ class Routes {
     router.define(editProject, handler: editProjectHandler, transitionType: TransitionType.native);
     router.define(detailProject, handler: detailProjectHandler, transitionType: TransitionType.native);
     router.define(addMemberProject, handler: addMemberProjectHandler, transitionType: TransitionType.native);
-    router.define(uploadImageProject, handler: uploadImageProjectHandler, transitionType: TransitionType.native);
-    router.define(viewImageProject, handler: viewImageProjectHandler, transitionType: TransitionType.native);
+    router.define(uploadImage, handler: uploadImageHandler, transitionType: TransitionType.native);
+    router.define(viewImage, handler: viewImageHandler, transitionType: TransitionType.native);
+    router.define(labelImage, handler: labelImageHandler, transitionType: TransitionType.native);
     router.define(classify, handler: classifyHandler, transitionType: TransitionType.native);
     router.define(classification, handler: classificationHandler, transitionType: TransitionType.native);
   }
