@@ -2,10 +2,10 @@ import _ from "lodash";
 import React, { Component } from "react";
 import { Search } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { getSearchProjects } from "../../actions/index";
-import "./css/searchbar.css";
+import { getSearchUser } from "../../actions/index";
+import "./css/searchUser.css";
 
-class SearchProject extends Component {
+class SearchUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,15 +21,12 @@ class SearchProject extends Component {
     this.setState({ isLoading: false, value: "", results: [] });
 
   handleResultSelect = (e, { result }) => {
-    this.setState({ value: result.title });
-    this.props.history.push({
-      pathname: "/project/" + result.id + "/team"
-    });
+    this.setState({ value: result.email });
   };
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value });
-    this.props.searchProject(value.trim());
+    this.props.searchUser(value.trim());
     setTimeout(() => {
       if (this.state.value.length < 1) return this.resetComponent();
       this.setState({
@@ -45,13 +42,14 @@ class SearchProject extends Component {
       return results;
     }
 
-    search.map((project, index) =>
-      project.projectDescription
+    search.map((user, index) =>
+      user
         ? results.push({
             key: index,
-            title: project.projectName,
-            description: project.projectDescription,
-            id: project._id
+            title: user.name,
+            description: user.email,
+            email: user.email,
+            id: user._id
           })
         : null
     );
@@ -63,7 +61,7 @@ class SearchProject extends Component {
 
     return (
       <Search
-        className="searchbar-parent"
+        className="searchbar-user-parent"
         size="large"
         loading={isLoading}
         onResultSelect={this.handleResultSelect}
@@ -72,7 +70,7 @@ class SearchProject extends Component {
         })}
         results={this.generateResults()}
         value={value}
-        placeholder="Search"
+        placeholder="Search members.."
         minCharacters={1}
       />
     );
@@ -81,14 +79,14 @@ class SearchProject extends Component {
 
 const mapStateToProps = state => {
   return {
-    search: state.searchProjects
+    search: state.searchUser
   };
 };
 
 const mapActionToProps = dispatch => {
   return {
-    searchProject: query => {
-      return dispatch(getSearchProjects(query));
+    searchUser: query => {
+      return dispatch(getSearchUser(query));
     }
   };
 };
@@ -96,4 +94,4 @@ const mapActionToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(SearchProject);
+)(SearchUser);

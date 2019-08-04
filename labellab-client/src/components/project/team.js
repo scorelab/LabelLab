@@ -7,12 +7,12 @@ import {
   Button,
   Icon,
   Modal,
-  Input,
   Dimmer,
   Loader,
   Message
 } from "semantic-ui-react";
 import { addMember, fetchProject, memberDelete } from "../../actions";
+import SearchUser from "./searchUser.js";
 import "./css/team.css";
 
 class TeamIndex extends Component {
@@ -56,7 +56,7 @@ class TeamIndex extends Component {
     fetchProject(project.projectId);
   };
   render() {
-    const { project, actions } = this.props;
+    const { project, actions, history } = this.props;
     const { open } = this.state;
     return (
       <Container>
@@ -81,12 +81,7 @@ class TeamIndex extends Component {
             <p>Enter Member email:</p>
           </Modal.Content>
           <Modal.Actions>
-            <Input
-              name="memberEmail"
-              onChange={this.handleChange}
-              type="email"
-              placeholder="Member email"
-            />
+            <SearchUser history={history} />
             <Button
               positive
               onClick={this.handleMemberSubmit}

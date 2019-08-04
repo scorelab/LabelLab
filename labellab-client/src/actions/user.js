@@ -8,6 +8,8 @@ import {
   FETCH_COUNT_FAILURE,
   FETCH_COUNT_REQUEST,
   FETCH_COUNT_SUCCESS,
+  SEARCH_USER,
+  SEARCH_USER_FAILURE,
   TOKEN_TYPE
 } from "../constants/index";
 
@@ -90,5 +92,32 @@ export const fetchCount = () => {
   }
   function failure(error) {
     return { type: FETCH_COUNT_FAILURE, payload: error };
+  }
+};
+
+export const getSearchUser = query => {
+  return dispatch => {
+    if (!query) {
+      query = "null";
+    }
+    FetchApi("GET", "/api/v1/users/search/" + query, null, token)
+      .then(response => {
+        dispatch(success(response.data.body));
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null));
+        }
+      });
+  };
+  function success(data) {
+    return { type: SEARCH_USER, payload: data };
+  }
+  function failure(error) {
+    return { type: SEARCH_USER_FAILURE, payload: error };
   }
 };

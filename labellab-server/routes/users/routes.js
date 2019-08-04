@@ -12,7 +12,7 @@ router.get("/info", requireAuth, userControls.userInfo)
 
 // GET method
 // To fetch user information of a given user
-router.get("/search", requireAuth, userControls.searchUser)
+router.get("/search/:query", requireAuth, userControls.searchUser)
 
 // GET method
 // To fetch user info count
