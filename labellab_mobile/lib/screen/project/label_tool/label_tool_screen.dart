@@ -48,16 +48,29 @@ class LabelToolScreen extends StatelessWidget {
                 painter: Painter(state.selections, state.currentSelection),
               ),
             ),
-            onPanStart: state.currentSelection != null
+            onPanStart: state.currentSelection != null &&
+                    state.currentSelection.label.type == LabelType.RECTANGLE
                 ? (event) {
                     Provider.of<LabelToolBloc>(context).startCurrentSelection(
-                        Point(event.localPosition.dx, event.localPosition.dy));
+                      Point(event.localPosition.dx, event.localPosition.dy),
+                    );
                   }
                 : null,
-            onPanUpdate: state.currentSelection != null
+            onPanUpdate: state.currentSelection != null &&
+                    state.currentSelection.label.type == LabelType.RECTANGLE
                 ? (event) {
                     Provider.of<LabelToolBloc>(context).updateCurrentSelection(
-                        Point(event.localPosition.dx, event.localPosition.dy));
+                      Point(event.localPosition.dx, event.localPosition.dy),
+                    );
+                  }
+                : null,
+            onTapUp: state.currentSelection != null &&
+                    state.currentSelection.label.type == LabelType.POLYGON
+                ? (event) {
+                    Provider.of<LabelToolBloc>(context)
+                        .appendToCurrentSelection(
+                      Point(event.localPosition.dx, event.localPosition.dy),
+                    );
                   }
                 : null,
           ),
@@ -68,7 +81,11 @@ class LabelToolScreen extends StatelessWidget {
                 child: Container(
                   height: 64,
                   child: state.currentSelection != null
-                      ? _buildDrawRectangleTools(context)
+                      ? _buildDrawTools(
+                          context,
+                          state.currentSelection.label.type ==
+                                  LabelType.POLYGON &&
+                              state.currentSelection.points.length > 0)
                       : _buildMainActions(context, state),
                 ),
               )
@@ -121,7 +138,7 @@ class LabelToolScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawRectangleTools(BuildContext context) {
+  Widget _buildDrawTools(BuildContext context, isUndoEnable) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -136,6 +153,14 @@ class LabelToolScreen extends StatelessWidget {
           "Reset",
           onTap: () =>
               Provider.of<LabelToolBloc>(context).resetCurrentSelection(),
+        ),
+        LabelIconButton(
+          Icons.undo,
+          "Undo",
+          onTap: isUndoEnable
+              ? () =>
+                  Provider.of<LabelToolBloc>(context).undoFromCurrentSelection()
+              : null,
         ),
         LabelIconButton(
           Icons.done,
@@ -164,6 +189,7 @@ class LabelToolScreen extends StatelessWidget {
               state.labels == null
                   ? LinearProgressIndicator()
                   : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: state.labels.map((label) {
                         return InkWell(
                           child: Chip(label: Text(label.name)),
@@ -191,37 +217,42 @@ class Painter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (var labelPoint in labelSelections) {
-      drawRectangle(canvas, labelPoint.color, labelPoint.points,
+      drawPath(canvas, labelPoint.color, labelPoint.points,
           withVertices: false);
     }
     if (current != null) {
-      drawRectangle(canvas, Colors.blue, current.points);
+      drawPath(canvas, Colors.blue, current.points);
     }
   }
 
   @override
   bool shouldRepaint(Painter oldDelegate) => true;
 
-  void drawRectangle(Canvas canvas, Color color, List<Point> points,
+  void drawPath(Canvas canvas, Color color, List<Point> points,
       {bool withVertices = true}) {
-    if (points.length > 3) {
+    if (points.length > 0) {
       final paint = Paint();
       final paintStroke = Paint();
 
       paint.color = color;
       paintStroke.color = color;
       paintStroke.style = PaintingStyle.stroke;
-      paintStroke.strokeWidth = 5;
+      paintStroke.strokeWidth = 4;
 
+      final path = Path();
       if (withVertices) {
         for (var point in points) {
-          canvas.drawCircle(Offset(point.x, point.y), 10, paint);
+          canvas.drawCircle(Offset(point.x, point.y), 6, paint);
         }
       }
-      var rect = Rect.fromLTWH(points[0].x, points[0].y,
-          points[3].x - points[0].x, points[3].y - points[0].y);
 
-      canvas.drawRect(rect, paintStroke);
+      path.moveTo(points[0].x, points[0].y);
+      for (var point in points) {
+        path.lineTo(point.x, point.y);
+      }
+      path.lineTo(points[0].x, points[0].y);
+
+      canvas.drawPath(path, paintStroke);
     }
   }
 }
