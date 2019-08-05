@@ -37,7 +37,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_REGISTER = "auth/register";
 
   static const ENDPOINT_USERS_INFO = "users/info";
-  static const ENDPOINT_USERS_SEARCH = "users/search?email=";
+  static const ENDPOINT_USERS_SEARCH = "users/search";
   static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
@@ -117,7 +117,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .get(API_URL + ENDPOINT_USERS_SEARCH + "$email", options: options)
+        .get(API_URL + ENDPOINT_USERS_SEARCH + "/$email", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
