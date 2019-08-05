@@ -57,6 +57,12 @@ class LabelToolBloc {
         labels: _labels, currentSelection: _currentSelection));
   }
 
+  void appendToCurrentSelection(Point point) {
+    _currentSelection.appendPoint(point);
+    _setState(LabelToolState.drawingSelection(_selections, _image,
+        labels: _labels, currentSelection: _currentSelection));
+  }
+
   void cancelCurrentSelection() {
     _currentSelection = null;
     _setState(
@@ -65,6 +71,12 @@ class LabelToolBloc {
 
   void resetCurrentSelection() {
     _currentSelection.points.removeRange(0, _currentSelection.points.length);
+    _setState(LabelToolState.drawingSelection(_selections, _image,
+        labels: _labels, currentSelection: _currentSelection));
+  }
+
+  void undoFromCurrentSelection() {
+    _currentSelection.points.removeLast();
     _setState(LabelToolState.drawingSelection(_selections, _image,
         labels: _labels, currentSelection: _currentSelection));
   }

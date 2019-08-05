@@ -1,3 +1,8 @@
+class LabelType {
+  static const RECTANGLE = "Rectangle";
+  static const POLYGON = "Polygon";
+}
+
 class Label {
   String id;
   String name;

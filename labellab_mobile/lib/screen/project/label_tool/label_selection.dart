@@ -25,7 +25,11 @@ class LabelSelection {
     points.removeRange(points.length - 3, points.length);
     Point _start = points[0];
     points.add(Point(point.x, _start.y));
+    points.add(Point(point.x, point.y));
     points.add(Point(_start.x, point.y));
+  }
+
+  void appendPoint(Point point) {
     points.add(Point(point.x, point.y));
   }
 

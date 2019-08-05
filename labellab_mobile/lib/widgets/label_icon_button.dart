@@ -22,11 +22,13 @@ class LabelIconButton extends StatelessWidget {
             Icon(
               icon,
               size: 28,
-              color: color,
+              color: onTap == null ? color.withAlpha(80) : color,
             ),
             Text(
               label,
-              style: TextStyle(color: color, fontSize: 12),
+              style: TextStyle(
+                  color: onTap == null ? color.withAlpha(80) : color,
+                  fontSize: 12),
             ),
           ],
         ),
