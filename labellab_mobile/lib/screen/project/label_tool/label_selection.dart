@@ -1,14 +1,20 @@
-
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/label.dart';
+import 'package:random_color/random_color.dart';
 
 class LabelSelection {
   final Label label;
   final List<Point> points = [];
+  final Color color;
 
-  LabelSelection(this.label);
+  LabelSelection(this.label)
+      : color = RandomColor().randomColor(
+          colorBrightness: ColorBrightness.light,
+        );
 
   void setStartPoint(Point point) {
+    points.clear();
     points.add(point);
     points.add(point);
     points.add(point);

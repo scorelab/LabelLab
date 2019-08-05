@@ -96,7 +96,8 @@ var viewImageHandler = Handler(
 var labelImageHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<LabelToolBloc>(
-    builder: (context) => LabelToolBloc(),
+    builder: (context) =>
+        LabelToolBloc(params['project_id'].first, params['image_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: LabelToolScreen(),
   );
