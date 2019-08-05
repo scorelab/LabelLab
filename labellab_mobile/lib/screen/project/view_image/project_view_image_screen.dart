@@ -63,7 +63,7 @@ class ProjectViewImageScreen extends StatelessWidget {
           _state.image != null
               ? Image(
                   image: CachedNetworkImageProvider(_state.image.imageUrl),
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.contain,
                 )
               : Container(),
         ],
@@ -77,7 +77,7 @@ class ProjectViewImageScreen extends StatelessWidget {
     final String projectId =
         Provider.of<ProjectViewImageBloc>(context).projectId;
     Application.router
-        .navigateTo(context, "/project/$projectId/label/:imageId")
+        .navigateTo(context, "/project/$projectId/label/$imageId")
         .whenComplete(() {
       Provider.of<ProjectViewImageBloc>(context).fetchImage();
     });
