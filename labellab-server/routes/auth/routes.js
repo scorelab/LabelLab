@@ -1,47 +1,47 @@
-var express = require("express")
-var passport = require("passport")
+var express = require('express')
+var passport = require('passport')
 const router = express.Router()
 
 // Controllers of each route
-const OAuthlogin = require("../../controller/auth/oauth").signin
-const authController = require("../../controller/auth/auth")
-const requireLogin = passport.authenticate("local", { session: false })
+const OAuthlogin = require('../../controller/auth/oauth').signin
+const authController = require('../../controller/auth/auth')
+const requireLogin = passport.authenticate('local', { session: false })
 
-require("../../config/githubPassport")
+require('../../config/githubPassport')
 
 // Routes corresponding to the controllers
-router.post("/register", authController.userRegister)
+router.post('/register', authController.userRegister)
 
-router.post("/login", requireLogin, authController.userLogin)
+router.post('/login', requireLogin, authController.userLogin)
 router.get(
-	"/google",
-	passport.authenticate("google", {
+	'/google',
+	passport.authenticate('google', {
 		session: false,
-		scope: ["profile", "email"]
+		scope: ['profile', 'email']
 	})
 )
 
 router.get(
-	"/google/callback",
-	passport.authenticate("google", { session: false }),
+	'/google/callback',
+	passport.authenticate('google', { session: false }),
 	(req, res, next) => {
 		OAuthlogin(req, res, next)
 	}
 )
 
 router.post(
-	"/google/mobile",
+	'/google/mobile',
 	authController.googleUserCreate,
 	(req, res, next) => {
 		OAuthlogin(req, res, next)
 	}
 )
 
-router.get("/github", passport.authenticate("github"))
+router.get('/github', passport.authenticate('github'))
 
 router.get(
-	"/github/callback",
-	passport.authenticate("github", { session: false }),
+	'/github/callback',
+	passport.authenticate('github', { session: false }),
 	(req, res, next) => {
 		OAuthlogin(req, res, next)
 	}

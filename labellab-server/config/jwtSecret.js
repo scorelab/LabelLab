@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-require("dotenv").config()
+require('dotenv').config()
 
 var jwtSecret = process.env.JWT_SECRET
 
 if(!jwtSecret){
-	jwtSecret = "JWTSECRET"
+	jwtSecret = 'JWTSECRET'
 }
 
 module.exports = {

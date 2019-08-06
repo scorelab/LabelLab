@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-require("dotenv").config()
+require('dotenv').config()
 
-var passport = require("passport")
-var User = require("../models/user")
-var GitHubStrategy = require("passport-github").Strategy
+var passport = require('passport')
+var User = require('../models/user')
+var GitHubStrategy = require('passport-github').Strategy
 
 if (process.env.GITHUB_CLIENT_ID) {
 	passport.use(
@@ -11,7 +11,7 @@ if (process.env.GITHUB_CLIENT_ID) {
 			{
 				clientID: process.env.GITHUB_CLIENT_ID,
 				clientSecret: process.env.GITHUB_CLIENT_SECRET,
-				scope: ["read:user", "user:email"]
+				scope: ['read:user', 'user:email']
 			},
 			function(accessToken, refreshToken, profile, cb) {
 				let primaryEmail = profile.emails.filter(

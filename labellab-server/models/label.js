@@ -1,9 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 var LabelSchema = new mongoose.Schema({
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "Project"
+		ref: 'Project'
 	},
 	id: {
 		type: String,
@@ -17,4 +17,4 @@ var LabelSchema = new mongoose.Schema({
 	}
 })
 
-module.exports = mongoose.model("Label", LabelSchema)
+module.exports = mongoose.model('Label', LabelSchema)

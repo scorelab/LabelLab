@@ -1,12 +1,12 @@
-const jwt = require("jwt-simple")
-const config = require("../../config/jwtSecret")
+const jwt = require('jwt-simple')
+const config = require('../../config/jwtSecret')
 // Load input validation
-const validateRegisterInput = require("../../utils/authValidations")
+const validateRegisterInput = require('../../utils/authValidations')
 	.validateRegisterInput
-const validateLoginInput = require("../../utils/authValidations")
+const validateLoginInput = require('../../utils/authValidations')
 	.validateLoginInput
 // Load User model
-const User = require("../../models/user")
+const User = require('../../models/user')
 
 // @desc Register user
 // @access Public
@@ -22,7 +22,7 @@ exports.userRegister = function(req, res, next) {
 		if (user) {
 			return res
 				.status(400)
-				.json({ msg: "Email already exists", errField: "email" })
+				.json({ msg: 'Email already exists', errField: 'email' })
 		}
 		const newUser = new User({
 			name: name,
@@ -32,7 +32,7 @@ exports.userRegister = function(req, res, next) {
 		})
 		newUser
 			.save()
-			.then(user => res.json({ user, msg: "You are successfully registered!" }))
+			.then(user => res.json({ user, msg: 'You are successfully registered!' }))
 			.catch(err => console.log(err))
 	})
 }
@@ -56,10 +56,10 @@ exports.userLogin = function(req, res, next) {
 		res.send({
 			success: true,
 			token: token,
-			msg: "You are successfully logged in!"
+			msg: 'You are successfully logged in!'
 		})
 	} else {
-		return res.status(400).json({ message: "Error in token generation!" })
+		return res.status(400).json({ message: 'Error in token generation!' })
 	}
 }
 
@@ -79,7 +79,7 @@ exports.googleUserCreate = function(req, res, next) {
 		User.findOne({ googleId: id })
 			.then(currentUser => {
 				if (currentUser) {
-					req["user"] = currentUser
+					req['user'] = currentUser
 					next()
 				} else {
 					new User({
@@ -91,7 +91,7 @@ exports.googleUserCreate = function(req, res, next) {
 					})
 						.save()
 						.then(newUser => {
-							req["user"] = newUser
+							req['user'] = newUser
 							next()
 						})
 				}
@@ -99,5 +99,5 @@ exports.googleUserCreate = function(req, res, next) {
 			.catch(err => {
 				console.log(err)
 			})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }

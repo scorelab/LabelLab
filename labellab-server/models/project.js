@@ -1,9 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const ProjectSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "User"
+		ref: 'User'
 	},
 	projectName: {
 		type: String,
@@ -11,7 +11,7 @@ const ProjectSchema = new mongoose.Schema({
 	},
 	projectDescription: {
 		type: String,
-		default: "Image labelling"
+		default: 'Image labelling'
 	},
 	createdAt: {
 		type: Date,
@@ -20,21 +20,21 @@ const ProjectSchema = new mongoose.Schema({
 	image: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Image"
+			ref: 'Image'
 		}
 	],
 	members: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "ProjectMembers"
+			ref: 'ProjectMembers'
 		}
 	],
 	labels: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Label"
+			ref: 'Label'
 		}
 	]
 })
 
-module.exports = mongoose.model("Project", ProjectSchema)
+module.exports = mongoose.model('Project', ProjectSchema)

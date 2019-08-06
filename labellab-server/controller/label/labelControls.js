@@ -1,7 +1,7 @@
-let Image = require("../../models/image")
-let Label = require("../../models/label")
-let Project = require("../../models/project")
-let makeid = require("../../utils/randomString").makeid
+let Image = require('../../models/image')
+let Label = require('../../models/label')
+let Project = require('../../models/project')
+let makeid = require('../../utils/randomString').makeid
 
 exports.createLabel = function(req, res) {
 	if (req && req.body && req.body.label && req.params.projectId) {
@@ -15,7 +15,7 @@ exports.createLabel = function(req, res) {
 			if (err) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Unable to Add Label" })
+					.send({ success: false, msg: 'Unable to Add Label' })
 			}
 			Project.update(
 				{ _id: req.params.projectId },
@@ -24,18 +24,18 @@ exports.createLabel = function(req, res) {
 				if (err) {
 					return res.status(400).send({
 						success: false,
-						msg: "Cannot Append Member",
+						msg: 'Cannot Append Member',
 						error: err
 					})
 				}
 				return res.status(200).send({
 					success: true,
-					msg: "Label created!",
+					msg: 'Label created!',
 					body: label
 				})
 			})
 		})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
 exports.updateLabel = function(req, res) {
@@ -51,15 +51,15 @@ exports.updateLabel = function(req, res) {
 			if (err) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Unable to update Label" })
+					.send({ success: false, msg: 'Unable to update Label' })
 			}
 			return res.status(200).send({
 				success: true,
-				msg: "Label updated!",
+				msg: 'Label updated!',
 				body: label
 			})
 		})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
 exports.fetchLabel = function(req, res) {
@@ -67,29 +67,29 @@ exports.fetchLabel = function(req, res) {
 		Project.findOne({
 			_id: req.params.projectId
 		})
-			.select("project_name")
-			.populate("labels")
+			.select('project_name')
+			.populate('labels')
 			.exec(function(err, project) {
 				if (err) {
 					return res.status(400).send({
 						success: false,
-						msg: "Unable to connect to database. Please try again.",
+						msg: 'Unable to connect to database. Please try again.',
 						error: err
 					})
 				}
 				if (!project) {
 					return res
 						.status(400)
-						.send({ success: false, msg: "Project not found" })
+						.send({ success: false, msg: 'Project not found' })
 				} else {
 					return res.json({
 						success: true,
-						msg: "Project Data Found",
+						msg: 'Project Data Found',
 						body: project
 					})
 				}
 			})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
 exports.deleteLabel = function(req, res) {
@@ -100,7 +100,7 @@ exports.deleteLabel = function(req, res) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
-					msg: "Unable to connect to database. Please try again.",
+					msg: 'Unable to connect to database. Please try again.',
 					error: err
 				})
 			}
@@ -111,15 +111,15 @@ exports.deleteLabel = function(req, res) {
 				if (err) {
 					return res.status(400).send({
 						success: false,
-						msg: "Cannot delete label",
+						msg: 'Cannot delete label',
 						error: err
 					})
 				}
 				return res.json({
 					success: true,
-					msg: "Removed successfully!"
+					msg: 'Removed successfully!'
 				})
 			})
 		})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
