@@ -1,5 +1,5 @@
-const bcrypt = require("bcryptjs")
-const mongoose = require("mongoose")
+const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose')
 
 // Create Schema
 const UserSchema = new mongoose.Schema({
@@ -34,20 +34,20 @@ const UserSchema = new mongoose.Schema({
 	},
 	thumbnail: {
 		type: String,
-		default: "https://react.semantic-ui.com/images/avatar/large/elliot.jpg"
+		default: 'https://react.semantic-ui.com/images/avatar/large/elliot.jpg'
 	},
 	profileImage: {
 		type: String,
-		default: ""
+		default: ''
 	},
 	project: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Project"
+			ref: 'Project'
 		}
 	]
 })
-UserSchema.pre("save", function(next) {
+UserSchema.pre('save', function(next) {
 	var newUser = this
 	if (newUser.password) {
 		bcrypt.genSalt(10, (err, salt) => {
@@ -70,4 +70,4 @@ UserSchema.methods.comparePassword = function(password, callback) {
 		callback(null, isMatch)
 	})
 }
-module.exports = mongoose.model("User", UserSchema)
+module.exports = mongoose.model('User', UserSchema)

@@ -1,6 +1,6 @@
-let fs = require("fs")
-const Image = require("../../models/image")
-const Classification = require("../../models/classification")
+let fs = require('fs')
+const Image = require('../../models/image')
+const Classification = require('../../models/classification')
 
 exports.classify = function(req, res) {
 	if (req && req.body && req.body.image && req.body.format) {
@@ -10,9 +10,9 @@ exports.classify = function(req, res) {
 			image: image,
 			format: format
 		}
-		let baseImg = data.image.split(",")[1]
-		let binaryData = new Buffer(baseImg, "base64")
-		let ext = data.format.split("/")[1]
+		let baseImg = data.image.split(',')[1]
+		let binaryData = new Buffer(baseImg, 'base64')
+		let ext = data.format.split('/')[1]
 		let updateData = { imageUrl: `${data.id}${Date.now()}.${ext}` }
 
 		fs.writeFile(
@@ -26,7 +26,7 @@ exports.classify = function(req, res) {
 
 					// Mock label creation to emulate classification model.
 					var label = [
-						{ label_name: "Label " + Math.floor(Math.random() * 10 + 1) }
+						{ label_name: 'Label ' + Math.floor(Math.random() * 10 + 1) }
 					]
 					const newClassification = new Classification({
 						imageUrl: updateData.imageUrl,
@@ -38,17 +38,17 @@ exports.classify = function(req, res) {
 							console.log(err)
 							return res
 								.status(400)
-								.send({ success: false, msg: "Unable to Upload Image" })
+								.send({ success: false, msg: 'Unable to Upload Image' })
 						} else if (image._id) {
 							return res.json({
 								success: true,
-								msg: "Image Successfully Classified",
+								msg: 'Image Successfully Classified',
 								body: image
 							})
 						} else {
 							return res.status(400).send({
 								success: false,
-								msg: "Image ID Not Found",
+								msg: 'Image ID Not Found',
 								body: image
 							})
 						}
@@ -56,30 +56,30 @@ exports.classify = function(req, res) {
 				}
 			}
 		)
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
 exports.fetchClassification = function(req, res) {
 	Classification.find({
 		user: req.user._id
 	})
-		.select("imageUrl createdAt label")
+		.select('imageUrl createdAt label')
 		.exec(function(err, classification) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
-					msg: "Unable to connect to database. Please try again.",
+					msg: 'Unable to connect to database. Please try again.',
 					error: err
 				})
 			}
 			if (!classification) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Classifications not found" })
+					.send({ success: false, msg: 'Classifications not found' })
 			} else {
 				return res.json({
 					success: true,
-					msg: "Classification data Found",
+					msg: 'Classification data Found',
 					body: classification
 				})
 			}
@@ -91,28 +91,28 @@ exports.fetchClassificationId = function(req, res) {
 		Classification.find({
 			_id: req.params.classificationId
 		})
-			.select("imageUrl createdAt label")
+			.select('imageUrl createdAt label')
 			.exec(function(err, classification) {
 				if (err) {
 					return res.status(400).send({
 						success: false,
-						msg: "Unable to connect to database. Please try again.",
+						msg: 'Unable to connect to database. Please try again.',
 						error: err
 					})
 				}
 				if (!classification) {
 					return res
 						.status(400)
-						.send({ success: false, msg: "Classification not found" })
+						.send({ success: false, msg: 'Classification not found' })
 				} else {
 					return res.json({
 						success: true,
-						msg: "Classification Data Found",
+						msg: 'Classification Data Found',
 						body: classification
 					})
 				}
 			})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
 exports.deleteClassificationId = function(req, res) {
@@ -123,14 +123,14 @@ exports.deleteClassificationId = function(req, res) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
-					msg: "Unable to connect to database. Please try again.",
+					msg: 'Unable to connect to database. Please try again.',
 					error: err
 				})
 			}
 			return res.json({
 				success: true,
-				msg: "Classification deleted"
+				msg: 'Classification deleted'
 			})
 		})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }

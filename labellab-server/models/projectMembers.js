@@ -1,13 +1,13 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const ProjectMembersSchema = new mongoose.Schema({
 	member: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "User"
+		ref: 'User'
 	},
 	projectId: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "Project"
+		ref: 'Project'
 	},
 	createdAt: {
 		type: Date,
@@ -15,8 +15,8 @@ const ProjectMembersSchema = new mongoose.Schema({
 	},
 	role: {
 		type: String,
-		default: "Member"
+		default: 'Member'
 	}
 })
 
-module.exports = mongoose.model("ProjectMembers", ProjectMembersSchema)
+module.exports = mongoose.model('ProjectMembers', ProjectMembersSchema)

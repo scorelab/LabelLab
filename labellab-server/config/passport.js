@@ -1,15 +1,15 @@
-const local = require("passport-local")
-const passport = require("passport")
+const local = require('passport-local')
+const passport = require('passport')
 // the token strategy
-const jwtstrat = require("passport-jwt").Strategy
-const extractjwt = require("passport-jwt").ExtractJwt
-const config = require("./jwtSecret")
+const jwtstrat = require('passport-jwt').Strategy
+const extractjwt = require('passport-jwt').ExtractJwt
+const config = require('./jwtSecret')
 
 // Load User model
-const User = require("../models/user")
+const User = require('../models/user')
 
 const locallogin = new local(
-	{ usernameField: "email" },
+	{ usernameField: 'email' },
 	(email, password, done) => {
 		//find a user with the supplied email
 		User.findOne({ email: email }, (err, user) => {
@@ -27,7 +27,7 @@ const locallogin = new local(
 			//this is the rewritten function in mongoose (in the file User.js in models)
 			user.comparePassword(password, (err, isMatch) => {
 				if (err) {
-					console.log("error here")
+					console.log('error here')
 					return done(err)
 				}
 				if (!isMatch) {

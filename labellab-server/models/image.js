@@ -1,9 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const ImageSchema = new mongoose.Schema({
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "Project"
+		ref: 'Project'
 	},
 	imageName: {
 		type: String,
@@ -32,4 +32,4 @@ const ImageSchema = new mongoose.Schema({
 	}
 })
 
-module.exports = mongoose.model("Image", ImageSchema)
+module.exports = mongoose.model('Image', ImageSchema)

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-require("dotenv").config()
+require('dotenv').config()
 
-var User = require("../models/user")
-var passport = require("passport")
-var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
+var User = require('../models/user')
+var passport = require('passport')
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
 if (process.env.GOOGLE_CLIENT_ID) {
 	passport.use(
@@ -13,9 +13,9 @@ if (process.env.GOOGLE_CLIENT_ID) {
 				clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 				callbackURL:
 					process.env.HOST +
-					":" +
+					':' +
 					process.env.PORT +
-					"/api/v1/auth/google/callback"
+					'/api/v1/auth/google/callback'
 			},
 			function(accessToken, refreshToken, profile, done) {
 				User.findOne({ googleId: profile.id })

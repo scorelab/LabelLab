@@ -1,29 +1,29 @@
-let User = require("../../models/user")
-let Project = require("../../models/project")
-let ProjectMembers = require("../../models/projectMembers")
+let User = require('../../models/user')
+let Project = require('../../models/project')
+let ProjectMembers = require('../../models/projectMembers')
 
 exports.projectInfo = function(req, res) {
 	User.findOne({
 		_id: req.user._id
 	})
-		.select("username")
-		.populate("project")
+		.select('username')
+		.populate('project')
 		.exec(function(err, project) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
-					msg: "Unable to connect to database. Please try again.",
+					msg: 'Unable to connect to database. Please try again.',
 					error: err
 				})
 			}
 			if (!project) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Project not found" })
+					.send({ success: false, msg: 'Project not found' })
 			} else {
 				return res.json({
 					success: true,
-					msg: "Project Data Found",
+					msg: 'Project Data Found',
 					body: project
 				})
 			}
@@ -35,32 +35,32 @@ exports.projectInfoId = function(req, res) {
 		Project.findOne({
 			_id: req.params.id
 		})
-			.select("id projectName projectDescription")
+			.select('id projectName projectDescription')
 			.populate({
-				path: "image members labels",
-				populate: { path: "label member" }
+				path: 'image members labels',
+				populate: { path: 'label member' }
 			})
 			.exec(function(err, project) {
 				if (err) {
 					return res.status(400).send({
 						success: false,
-						msg: "Unable to connect to database. Please try again.",
+						msg: 'Unable to connect to database. Please try again.',
 						error: err
 					})
 				}
 				if (!project) {
 					return res
 						.status(400)
-						.send({ success: false, msg: "Project not found" })
+						.send({ success: false, msg: 'Project not found' })
 				} else {
 					return res.json({
 						success: true,
-						msg: "Project Data Found",
+						msg: 'Project Data Found',
 						body: project
 					})
 				}
 			})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
 exports.initializeProject = function(req, res) {
@@ -71,30 +71,30 @@ exports.initializeProject = function(req, res) {
 			projectName: projectName
 		}).then(project => {
 			if (project) {
-				return res.status(400).json({ msg: "Project name already exists" })
+				return res.status(400).json({ msg: 'Project name already exists' })
 			}
 			var data = {
 				projectName: projectName,
 				user: req.user.id
 			}
-			if (projectDescription) data["projectDescription"] = projectDescription
+			if (projectDescription) data['projectDescription'] = projectDescription
 			const newProject = new Project(data)
 			newProject.save(function(err, project) {
 				if (err) {
 					return res
 						.status(400)
-						.send({ success: false, msg: "Unable to Add Project" })
+						.send({ success: false, msg: 'Unable to Add Project' })
 				} else if (project._id) {
 					const newProjectMember = new ProjectMembers({
 						projectId: project._id,
 						member: req.user.id,
-						role: "Admin"
+						role: 'Admin'
 					})
 					newProjectMember.save(function(err, member) {
 						if (err) {
 							return res
 								.status(400)
-								.send({ success: false, msg: "Unable to add Member" })
+								.send({ success: false, msg: 'Unable to add Member' })
 						} else {
 							User.update(
 								{ _id: req.user._id },
@@ -103,7 +103,7 @@ exports.initializeProject = function(req, res) {
 								if (err) {
 									return res.status(400).send({
 										success: false,
-										msg: "Cannot Append Project",
+										msg: 'Cannot Append Project',
 										error: err
 									})
 								}
@@ -115,13 +115,13 @@ exports.initializeProject = function(req, res) {
 									if (err) {
 										return res.status(400).send({
 											success: false,
-											msg: "Cannot Append Member",
+											msg: 'Cannot Append Member',
 											error: err
 										})
 									}
 									return res.json({
 										success: true,
-										msg: "Project Successfully Posted",
+										msg: 'Project Successfully Posted',
 										body: updatedproject
 									})
 								})
@@ -131,13 +131,13 @@ exports.initializeProject = function(req, res) {
 				} else {
 					return res.status(400).send({
 						success: false,
-						msg: "Project ID Not Found",
+						msg: 'Project ID Not Found',
 						body: project
 					})
 				}
 			})
 		})
-	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
 exports.updateProject = function(req, res) {
@@ -152,23 +152,23 @@ exports.updateProject = function(req, res) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
-					msg: "Unable to connect to database. Please try again.",
+					msg: 'Unable to connect to database. Please try again.',
 					error: err
 				})
 			}
 			if (!project) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Project not found" })
+					.send({ success: false, msg: 'Project not found' })
 			}
 			res.json({
 				success: true,
-				msg: "Project updated successfully!",
+				msg: 'Project updated successfully!',
 				body: project
 			})
 		})
 	} else {
-		return res.status(400).send({ success: false, msg: "Invalid Params" })
+		return res.status(400).send({ success: false, msg: 'Invalid Params' })
 	}
 }
 
@@ -180,22 +180,22 @@ exports.deleteProject = function(req, res) {
 			if (err) {
 				return res.status(400).send({
 					success: false,
-					msg: "Unable to connect to database. Please try again."
+					msg: 'Unable to connect to database. Please try again.'
 				})
 			}
 			if (!project) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Project not found" })
+					.send({ success: false, msg: 'Project not found' })
 			}
 			res.json({
 				success: true,
-				msg: "Project deleted successfully!",
+				msg: 'Project deleted successfully!',
 				body: project
 			})
 		})
 	} else {
-		return res.status(400).send({ success: false, msg: "Invalid Params" })
+		return res.status(400).send({ success: false, msg: 'Invalid Params' })
 	}
 }
 
@@ -205,12 +205,12 @@ exports.addMember = function(req, res) {
 			if (err) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Something went wrong", error: err })
+					.send({ success: false, msg: 'Something went wrong', error: err })
 			}
 			if (!user) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Unable to find Member" })
+					.send({ success: false, msg: 'Unable to find Member' })
 			}
 			ProjectMembers.findOne(
 				{
@@ -221,7 +221,7 @@ exports.addMember = function(req, res) {
 					if (member) {
 						return res
 							.status(400)
-							.send({ success: false, msg: "Member already added" })
+							.send({ success: false, msg: 'Member already added' })
 					}
 					const newProjectMember = new ProjectMembers({
 						projectId: req.params.projectId,
@@ -232,7 +232,7 @@ exports.addMember = function(req, res) {
 						if (err) {
 							return res
 								.status(400)
-								.send({ success: false, msg: "Unable to add Member" })
+								.send({ success: false, msg: 'Unable to add Member' })
 						} else {
 							Project.update(
 								{ _id: req.params.projectId },
@@ -241,7 +241,7 @@ exports.addMember = function(req, res) {
 								if (err) {
 									return res.status(400).send({
 										success: false,
-										msg: "Cannot Append Member",
+										msg: 'Cannot Append Member',
 										error: err
 									})
 								}
@@ -252,13 +252,13 @@ exports.addMember = function(req, res) {
 									if (err) {
 										return res.status(400).send({
 											success: false,
-											msg: "Cannot Append Project",
+											msg: 'Cannot Append Project',
 											error: err
 										})
 									}
 									res.json({
 										success: true,
-										msg: "Project member added successfully!",
+										msg: 'Project member added successfully!',
 										body: member
 									})
 								})
@@ -269,7 +269,7 @@ exports.addMember = function(req, res) {
 			)
 		})
 	} else {
-		return res.status(400).send({ success: false, msg: "Invalid Params" })
+		return res.status(400).send({ success: false, msg: 'Invalid Params' })
 	}
 }
 
@@ -279,12 +279,12 @@ exports.removeMember = function(req, res) {
 			if (err) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Something went wrong", error: err })
+					.send({ success: false, msg: 'Something went wrong', error: err })
 			}
 			if (!user) {
 				return res
 					.status(400)
-					.send({ success: false, msg: "Unable to find Member" })
+					.send({ success: false, msg: 'Unable to find Member' })
 			}
 			ProjectMembers.findOne(
 				{
@@ -295,7 +295,7 @@ exports.removeMember = function(req, res) {
 					if (err) {
 						return res.status(400).send({
 							success: false,
-							msg: "Error in findind member",
+							msg: 'Error in findind member',
 							error: err
 						})
 					}
@@ -306,7 +306,7 @@ exports.removeMember = function(req, res) {
 						if (err) {
 							return res.status(400).send({
 								success: false,
-								msg: "Cannot delete Member",
+								msg: 'Cannot delete Member',
 								error: err
 							})
 						}
@@ -314,13 +314,13 @@ exports.removeMember = function(req, res) {
 							if (err) {
 								return res.status(400).send({
 									success: false,
-									msg: "Something went wrong",
+									msg: 'Something went wrong',
 									error: err
 								})
 							}
 							return res.status(200).send({
 								success: true,
-								msg: "Member deleted successfully"
+								msg: 'Member deleted successfully'
 							})
 						})
 					})
@@ -328,7 +328,7 @@ exports.removeMember = function(req, res) {
 			)
 		})
 	} else {
-		return res.status(400).send({ success: false, msg: "Invalid Params" })
+		return res.status(400).send({ success: false, msg: 'Invalid Params' })
 	}
 }
 
@@ -337,7 +337,7 @@ exports.searchProject = function(req, res) {
 		Project.find(
 			{
 				user: req.user._id,
-				projectName: { $regex: req.params.query, $options: "i" }
+				projectName: { $regex: req.params.query, $options: 'i' }
 			},
 			function(err, project) {
 				if (err) return console.log(err)
@@ -348,6 +348,6 @@ exports.searchProject = function(req, res) {
 			}
 		)
 	} else {
-		return res.status(400).send({ success: false, msg: "Invalid Params" })
+		return res.status(400).send({ success: false, msg: 'Invalid Params' })
 	}
 }

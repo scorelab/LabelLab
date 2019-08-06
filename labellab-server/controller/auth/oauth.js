@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-require("dotenv").config()
+require('dotenv').config()
 
-const jwt = require("jwt-simple")
-const secret = require("../../config/jwtSecret").jwtSecret
+const jwt = require('jwt-simple')
+const secret = require('../../config/jwtSecret').jwtSecret
 
 function createtoken(user) {
 	const timestamp = new Date().getTime()
@@ -10,5 +10,5 @@ function createtoken(user) {
 }
 
 module.exports.signin = function signin(req, res, next) {
-	res.render("authenticated.ejs", { token: createtoken(req.user) })
+	res.render('authenticated.ejs', { token: createtoken(req.user) })
 }

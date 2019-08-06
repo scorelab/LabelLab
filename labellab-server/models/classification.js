@@ -1,9 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const ClassificationSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "User"
+		ref: 'User'
 	},
 	imageUrl: {
 		type: String,
@@ -20,4 +20,4 @@ const ClassificationSchema = new mongoose.Schema({
 	}
 })
 
-module.exports = mongoose.model("Classification", ClassificationSchema)
+module.exports = mongoose.model('Classification', ClassificationSchema)
