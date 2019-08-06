@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Card, Placeholder } from "semantic-ui-react";
+import React, { Component } from 'react'
+import { Card, Placeholder } from 'semantic-ui-react'
 
 class CardLoader extends Component {
   render() {
@@ -54,7 +54,7 @@ class CardLoader extends Component {
           </Card.Content>
         </Card>
       </React.Fragment>
-    );
+    )
   }
 }
-export default CardLoader;
+export default CardLoader

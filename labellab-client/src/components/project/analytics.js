@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 class AnalyticsIndex extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
+    super(props)
+    this.state = {}
   }
   render() {
-    return <div>Project Analytics</div>;
+    return <div>Project Analytics</div>
   }
 }
 const mapStateToProps = state => {
-  return {};
-};
+  return {}
+}
 
 const mapDispatchToProps = dispatch => {
-  return {};
-};
+  return {}
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AnalyticsIndex);
+)(AnalyticsIndex)

@@ -6,63 +6,63 @@ import {
   UPDATE_PROJECT_REQUEST,
   UPDATE_PROJECT_SUCCESS,
   TOKEN_TYPE
-} from "../../constants/index";
+} from '../../constants/index'
 
-import FetchApi from "../../utils/FetchAPI";
-import { getToken } from "../../utils/token";
+import FetchApi from '../../utils/FetchAPI'
+import { getToken } from '../../utils/token'
 
-const token = getToken(TOKEN_TYPE);
+const token = getToken(TOKEN_TYPE)
 
 export const initProject = (data, callback) => {
   return dispatch => {
-    dispatch(request());
-    FetchApi("POST", "/api/v1/project/create", data, getToken(TOKEN_TYPE))
+    dispatch(request())
+    FetchApi('POST', '/api/v1/project/create', data, getToken(TOKEN_TYPE))
       .then(res => {
-        dispatch(success(res.data.body));
-        callback(res.data.body._id);
+        dispatch(success(res.data.body))
+        callback(res.data.body._id)
       })
       .catch(err => {
         if (err.response) {
           err.response.data
             ? dispatch(failure(err.response.data.msg))
-            : dispatch(failure(err.response.statusText, null));
+            : dispatch(failure(err.response.statusText, null))
         }
-      });
-  };
+      })
+  }
   function request() {
-    return { type: INITIALIZE_PROJECT_REQUEST };
+    return { type: INITIALIZE_PROJECT_REQUEST }
   }
   function success(data) {
-    return { type: INITIALIZE_PROJECT_SUCCESS, payload: data };
+    return { type: INITIALIZE_PROJECT_SUCCESS, payload: data }
   }
   function failure(error) {
-    return { type: INITIALIZE_PROJECT_FAILURE, payload: error };
+    return { type: INITIALIZE_PROJECT_FAILURE, payload: error }
   }
-};
+}
 
 export const updateProject = (data, projectId, callback) => {
   return dispatch => {
-    dispatch(request());
-    FetchApi("PUT", "/api/v1/project/update/" + projectId, data, token)
+    dispatch(request())
+    FetchApi('PUT', '/api/v1/project/update/' + projectId, data, token)
       .then(res => {
-        dispatch(success());
-        callback();
+        dispatch(success())
+        callback()
       })
       .catch(err => {
         if (err.response) {
           err.response.data
             ? dispatch(failure(err.response.data.msg))
-            : dispatch(failure(err.response.statusText, null));
+            : dispatch(failure(err.response.statusText, null))
         }
-      });
-  };
+      })
+  }
   function request() {
-    return { type: UPDATE_PROJECT_REQUEST };
+    return { type: UPDATE_PROJECT_REQUEST }
   }
   function success(data) {
-    return { type: UPDATE_PROJECT_SUCCESS };
+    return { type: UPDATE_PROJECT_SUCCESS }
   }
   function failure(error) {
-    return { type: UPDATE_PROJECT_FAILURE, payload: error };
+    return { type: UPDATE_PROJECT_FAILURE, payload: error }
   }
-};
+}

@@ -2,20 +2,20 @@ import {
   SEARCH_PROJECTS,
   SEARCH_PROJECTS_FAILURE,
   TOKEN_TYPE
-} from "../../constants/index";
+} from '../../constants/index'
 
-import FetchApi from "../../utils/FetchAPI";
-import { getToken } from "../../utils/token";
+import FetchApi from '../../utils/FetchAPI'
+import { getToken } from '../../utils/token'
 
-const token = getToken(TOKEN_TYPE);
+const token = getToken(TOKEN_TYPE)
 export const getSearchProjects = query => {
   return dispatch => {
     if (!query) {
-      query = "null";
+      query = 'null'
     }
-    FetchApi("GET", "/api/v1/project/search/" + query, null, token)
+    FetchApi('GET', '/api/v1/project/search/' + query, null, token)
       .then(response => {
-        dispatch(success(response.data.body));
+        dispatch(success(response.data.body))
       })
       .catch(err => {
         if (err.response) {
@@ -23,14 +23,14 @@ export const getSearchProjects = query => {
             ? dispatch(
                 failure(err.response.data.msg, err.response.data.err_field)
               )
-            : dispatch(failure(err.response.statusText, null));
+            : dispatch(failure(err.response.statusText, null))
         }
-      });
-  };
+      })
+  }
   function success(data) {
-    return { type: SEARCH_PROJECTS, payload: data };
+    return { type: SEARCH_PROJECTS, payload: data }
   }
   function failure(error) {
-    return { type: SEARCH_PROJECTS_FAILURE, payload: error };
+    return { type: SEARCH_PROJECTS_FAILURE, payload: error }
   }
-};
+}

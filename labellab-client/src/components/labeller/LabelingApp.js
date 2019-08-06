@@ -1,20 +1,20 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 // import Hotkeys from 'react-hot-keys';
-import update from "immutability-helper";
+import update from 'immutability-helper'
 
-import "semantic-ui-css/semantic.min.css";
+import 'semantic-ui-css/semantic.min.css'
 
-import Canvas from "./Canvas";
+import Canvas from './Canvas'
 // import HotkeysPanel from './HotkeysPanel';
-import Sidebar from "./Sidebar";
+import Sidebar from './Sidebar'
 // import { PathToolbar, MakePredictionToolbar } from './CanvasToolbar';
 // import Reference from './Reference';
-import "./css/LabelingApp.css";
+import './css/LabelingApp.css'
 
-import { genId, colors } from "./utils";
+import { genId, colors } from './utils'
 // import { computeTrace } from "./tracing";
-import { withHistory } from "./LabelingAppHistoryHOC";
-import { withLoadImageData } from "./LoadImageDataHOC";
+import { withHistory } from './LabelingAppHistoryHOC'
+import { withLoadImageData } from './LoadImageDataHOC'
 
 /*
  type Figure = {
@@ -26,10 +26,10 @@ import { withLoadImageData } from "./LoadImageDataHOC";
 
 class LabelingApp extends Component {
   constructor(props) {
-    super(props);
-    const { labels } = props;
-    const toggles = {};
-    labels.map(label => (toggles[label.id] = true));
+    super(props)
+    const { labels } = props
+    const toggles = {}
+    labels.map(label => (toggles[label.id] = true))
 
     this.state = {
       selected: null,
@@ -40,14 +40,14 @@ class LabelingApp extends Component {
       // UI
       reassigning: { status: false, type: null },
       hotkeysPanel: false
-    };
+    }
 
-    this.canvasRef = React.createRef();
+    this.canvasRef = React.createRef()
   }
 
   handleSelected = selected => {
-    if (selected === this.state.selected) return;
-    const { pushState } = this.props;
+    if (selected === this.state.selected) return
+    const { pushState } = this.props
 
     if (!selected) {
       pushState(
@@ -55,15 +55,15 @@ class LabelingApp extends Component {
           unfinishedFigure: null
         }),
         () => this.setState({ selected })
-      );
-      return;
+      )
+      return
     }
 
-    const { labels } = this.props;
+    const { labels } = this.props
 
-    const labelIdx = labels.findIndex(label => label.id === selected);
-    const type = labels[labelIdx].type;
-    const color = colors[labelIdx];
+    const labelIdx = labels.findIndex(label => label.id === selected)
+    const type = labels[labelIdx].type
+    const color = colors[labelIdx]
 
     pushState(
       state => ({
@@ -75,32 +75,32 @@ class LabelingApp extends Component {
         }
       }),
       () => this.setState({ selected })
-    );
-  };
+    )
+  }
 
   handleSelectionChange = figureId => {
     if (figureId) {
-      this.setState({ selectedFigureId: figureId });
+      this.setState({ selectedFigureId: figureId })
     } else {
       this.setState({
         reassigning: { status: false, type: null },
         selectedFigureId: null
-      });
+      })
     }
-  };
+  }
 
   handleChange = (eventType, figure, newLabelId) => {
-    if (!figure.color) return;
+    if (!figure.color) return
     // const { labels, figures, pushState, height, width, imageData } = this.props;
-    const { labels, figures, pushState } = this.props;
+    const { labels, figures, pushState } = this.props
     const label =
-      figure.color === "gray"
-        ? { id: "__temp" }
-        : labels[colors.indexOf(figure.color)];
-    const idx = (figures[label.id] || []).findIndex(f => f.id === figure.id);
+      figure.color === 'gray'
+        ? { id: '__temp' }
+        : labels[colors.indexOf(figure.color)]
+    const idx = (figures[label.id] || []).findIndex(f => f.id === figure.id)
 
     switch (eventType) {
-      case "new":
+      case 'new':
         pushState(
           state => ({
             figures: update(state.figures, {
@@ -120,8 +120,8 @@ class LabelingApp extends Component {
             this.setState({
               selected: null
             })
-        );
-        break;
+        )
+        break
 
       // case "replace":
       //   pushState(state => {
@@ -161,31 +161,31 @@ class LabelingApp extends Component {
       //   });
       // break;
 
-      case "delete":
+      case 'delete':
         pushState(state => ({
           figures: update(state.figures, {
             [label.id]: {
               $splice: [[idx, 1]]
             }
           })
-        }));
-        break;
+        }))
+        break
 
-      case "unfinished":
+      case 'unfinished':
         pushState(
           state => ({ unfinishedFigure: figure }),
           () => {
-            const { unfinishedFigure } = this.props;
-            const { type, points } = unfinishedFigure;
-            if (type === "bbox" && points.length >= 2) {
-              this.handleChange("new", unfinishedFigure);
+            const { unfinishedFigure } = this.props
+            const { type, points } = unfinishedFigure
+            if (type === 'bbox' && points.length >= 2) {
+              this.handleChange('new', unfinishedFigure)
             }
           }
-        );
-        break;
+        )
+        break
 
-      case "recolor":
-        if (label.id === newLabelId) return;
+      case 'recolor':
+        if (label.id === newLabelId) return
         pushState(state => ({
           figures: update(state.figures, {
             [label.id]: {
@@ -202,13 +202,13 @@ class LabelingApp extends Component {
               ]
             }
           })
-        }));
-        break;
+        }))
+        break
 
       default:
-        throw new Error("unknown event type " + eventType);
+        throw new Error('unknown event type ' + eventType)
     }
-  };
+  }
 
   render() {
     const {
@@ -226,14 +226,14 @@ class LabelingApp extends Component {
       width,
       models,
       makePrediction
-    } = this.props;
+    } = this.props
     const {
       selected,
       // selectedFigureId,
       reassigning,
-      toggles,
+      toggles
       // hotkeysPanel
-    } = this.state;
+    } = this.state
 
     const forwardedProps = {
       onBack,
@@ -241,24 +241,24 @@ class LabelingApp extends Component {
       onSubmit,
       models,
       makePrediction
-    };
+    }
     const sidebarProps = reassigning.status
       ? {
-          title: "Select the new label",
+          title: 'Select the new label',
           selected: null,
           onSelect: selected => {
-            const figure = this.canvasRef.current.getSelectedFigure();
+            const figure = this.canvasRef.current.getSelectedFigure()
             if (figure) {
-              this.handleChange("recolor", figure, selected);
+              this.handleChange('recolor', figure, selected)
             }
 
-            this.setState({ reassigning: { status: false, type: null } });
+            this.setState({ reassigning: { status: false, type: null } })
           },
           filter: label => label.type === reassigning.type,
           labelData: figures
         }
       : {
-          title: "Labeling",
+          title: 'Labeling',
           selected,
           onSelect: this.handleSelected,
           toggles,
@@ -274,14 +274,14 @@ class LabelingApp extends Component {
               figures: update(figures, { [labelId]: { $set: newValue } })
             })),
           labelData: figures
-        };
+        }
     // let selectedFigure = null;
-    const allFigures = [];
+    const allFigures = []
     labels.forEach((label, i) => {
       figures[label.id].forEach(figure => {
         if (
           toggles[label.id] &&
-          (label.type === "bbox" || label.type === "polygon")
+          (label.type === 'bbox' || label.type === 'polygon')
         ) {
           allFigures.push({
             color: colors[i],
@@ -289,33 +289,33 @@ class LabelingApp extends Component {
             id: figure.id,
             type: figure.type,
             tracingOptions: figure.tracingOptions
-          });
+          })
 
           // if (figure.id === selectedFigureId) {
           //   selectedFigure = { ...figure, color: colors[i] };
           // }
         }
-      });
-    });
+      })
+    })
     figures.__temp.forEach(figure => {
       allFigures.push({
-        color: "gray",
+        color: 'gray',
         ...figure
-      });
-    });
+      })
+    })
     return (
       <div
-        style={{ display: "flex", height: "100vh", flexDirection: "column" }}
+        style={{ display: 'flex', height: '100vh', flexDirection: 'column' }}
       >
-        <div style={{ display: "flex", flex: 1, height: "100%" }}>
+        <div style={{ display: 'flex', flex: 1, height: '100%' }}>
           <Sidebar
             labels={labels}
             {...sidebarProps}
             {...forwardedProps}
             style={{ flex: 1, maxWidth: 300 }}
           />
-          <div style={{ flex: 4, display: "flex", flexDirection: "column" }}>
-            <div style={{ position: "relative", height: "100%" }}>
+          <div style={{ flex: 4, display: 'flex', flexDirection: 'column' }}>
+            <div style={{ position: 'relative', height: '100%' }}>
               <Canvas
                 url={imageUrl}
                 height={height}
@@ -334,8 +334,8 @@ class LabelingApp extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default withLoadImageData(withHistory(LabelingApp));
+export default withLoadImageData(withHistory(LabelingApp))

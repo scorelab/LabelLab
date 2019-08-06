@@ -1,27 +1,27 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { logout } from "../../actions/index";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { logout } from '../../actions/index'
 class Logout extends Component {
   componentDidMount() {
-    this.props.logout(this.callback);
+    this.props.logout(this.callback)
   }
   callback = () => {
-    this.props.history.push("/login");
-  };
+    this.props.history.push('/login')
+  }
   render() {
-    return <></>;
+    return <></>
   }
 }
 
 const mapActionToProps = dispatch => {
   return {
     logout: callback => {
-      return dispatch(logout(callback));
+      return dispatch(logout(callback))
     }
-  };
-};
+  }
+}
 
 export default connect(
   null,
   mapActionToProps
-)(Logout);
+)(Logout)

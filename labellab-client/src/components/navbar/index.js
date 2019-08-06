@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { Image, Header, Dropdown } from "semantic-ui-react";
-import { connect } from "react-redux";
-import "./css/navbar.css";
-import Searchbar from "./searchbar";
+import React, { Component } from 'react'
+import { Image, Header, Dropdown } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import './css/navbar.css'
+import Searchbar from './searchbar'
 class Navbar extends Component {
   handleClick = () => {
-    this.props.history.push("/logout");
-  };
+    this.props.history.push('/logout')
+  }
   render() {
-    const { history, user, isfetching } = this.props;
+    const { history, user, isfetching } = this.props
     return (
       <div className="navbar">
         <div className="startnav">
@@ -29,7 +29,7 @@ class Navbar extends Component {
                 <Image
                   centered
                   src={
-                    user.profileImage === ""
+                    user.profileImage === ''
                       ? `${user.thumbnail}`
                       : `${user.profileImage}?${Date.now()}`
                   }
@@ -51,21 +51,21 @@ class Navbar extends Component {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = state => {
   return {
     isfetching: state.user.userActions.isfetching
-  };
-};
+  }
+}
 
 const mapActionToProps = dispatch => {
-  return {};
-};
+  return {}
+}
 
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(Navbar);
+)(Navbar)

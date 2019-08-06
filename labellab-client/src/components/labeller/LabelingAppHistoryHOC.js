@@ -1,74 +1,73 @@
-import React, { Component } from "react";
-import update from "immutability-helper";
+import React, { Component } from 'react'
+import update from 'immutability-helper'
 
 export function withHistory(Comp) {
   return class HistoryLayer extends Component {
     constructor(props) {
-      super(props);
+      super(props)
       console.log(props)
-      const { labelData, labels } = props;
-      let figures = {};
+      const { labelData, labels } = props
+      let figures = {}
 
-      labels.map(label => (figures[label.id] = []));
-      figures.__temp = [];
+      labels.map(label => (figures[label.id] = []))
+      figures.__temp = []
       Object.keys(labelData).forEach(key => {
-        figures[key] = (figures[key] || []).concat(labelData[key]);
-      });
-      figures = this.flipY(figures);
+        figures[key] = (figures[key] || []).concat(labelData[key])
+      })
+      figures = this.flipY(figures)
       this.state = {
         figures, // mapping from label name to a list of Figure structures
         unfinishedFigure: null,
         figuresHistory: [],
         unfinishedFigureHistory: []
-      };
+      }
     }
 
     flipY = figures => {
       // flip the y-coordinate
-      const f = {};
+      const f = {}
       Object.keys(figures).forEach(label => {
         f[label] = figures[label].map(figure => {
-          if (figure.type !== "polygon" && figure.type !== "bbox")
-            return figure;
+          if (figure.type !== 'polygon' && figure.type !== 'bbox') return figure
 
-          let tracingOptions;
+          let tracingOptions
           if (figure.tracingOptions && figure.tracingOptions.enabled) {
             tracingOptions = {
               ...figure.tracingOptions,
               trace: this.transformPoints(figure.tracingOptions.trace)
-            };
+            }
           } else {
-            tracingOptions = figure.tracingOptions;
+            tracingOptions = figure.tracingOptions
           }
 
           return {
             ...figure,
             points: this.transformPoints(figure.points),
             tracingOptions
-          };
-        });
-      });
-      return f;
-    };
+          }
+        })
+      })
+      return f
+    }
 
     transformPoints = points => {
-      const { height } = this.props;
+      const { height } = this.props
       return points.map(({ lat, lng }) => ({
         lat: height - lat,
         lng
-      }));
-    };
+      }))
+    }
 
     componentDidUpdate(prevProps, prevState) {
-      const { onLabelChange, height, width } = this.props;
-      const { figures } = this.state;
+      const { onLabelChange, height, width } = this.props
+      const { figures } = this.state
 
       if (figures !== prevState.figures) {
         onLabelChange({
           labels: this.flipY(figures),
           height,
           width
-        });
+        })
       }
     }
 
@@ -84,23 +83,23 @@ export function withHistory(Comp) {
           ...stateChange(state)
         }),
         cb
-      );
-    };
+      )
+    }
 
     popState = () => {
       this.setState(state => {
-        let { figuresHistory, unfinishedFigureHistory } = state;
+        let { figuresHistory, unfinishedFigureHistory } = state
         if (!figuresHistory.length) {
-          return {};
+          return {}
         }
 
-        figuresHistory = figuresHistory.slice();
-        unfinishedFigureHistory = unfinishedFigureHistory.slice();
-        const figures = figuresHistory.pop();
-        let unfinishedFigure = unfinishedFigureHistory.pop();
+        figuresHistory = figuresHistory.slice()
+        unfinishedFigureHistory = unfinishedFigureHistory.slice()
+        const figures = figuresHistory.pop()
+        let unfinishedFigure = unfinishedFigureHistory.pop()
 
         if (unfinishedFigure && !unfinishedFigure.points.length) {
-          unfinishedFigure = null;
+          unfinishedFigure = null
         }
 
         return {
@@ -108,20 +107,20 @@ export function withHistory(Comp) {
           unfinishedFigure,
           figuresHistory,
           unfinishedFigureHistory
-        };
-      });
-    };
+        }
+      })
+    }
 
     render() {
-      const { props, state, pushState, popState } = this;
-      const { figures, unfinishedFigure } = state;
+      const { props, state, pushState, popState } = this
+      const { figures, unfinishedFigure } = state
       const passedProps = {
         pushState,
         popState,
         figures,
         unfinishedFigure
-      };
-      return <Comp {...passedProps} {...props} />;
+      }
+      return <Comp {...passedProps} {...props} />
     }
-  };
+  }
 }

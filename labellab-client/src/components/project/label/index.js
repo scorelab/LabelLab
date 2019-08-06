@@ -1,68 +1,68 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Dimmer, Loader, Button, Form, Icon } from "semantic-ui-react";
-import { fetchLabels, createLabel, deleteLabel } from "../../../actions/index";
-import LabelItem from "./labelItem.js";
-import "../css/labelItem.css";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Dimmer, Loader, Button, Form, Icon } from 'semantic-ui-react'
+import { fetchLabels, createLabel, deleteLabel } from '../../../actions/index'
+import LabelItem from './labelItem.js'
+import '../css/labelItem.css'
 
 const options = [
-  { key: "bbox", text: "Draw a bounding box", value: "bbox" },
-  { key: "polygon", text: "Draw a polygon figure", value: "polygon" }
-];
+  { key: 'bbox', text: 'Draw a bounding box', value: 'bbox' },
+  { key: 'polygon', text: 'Draw a polygon figure', value: 'polygon' }
+]
 
 class LabelIndex extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       showform: false,
-      name: "New Label",
-      type: "bbox"
-    };
+      name: 'New Label',
+      type: 'bbox'
+    }
   }
   componentDidMount() {
-    const { fetchLabels, match } = this.props;
-    fetchLabels(match.params.projectId);
+    const { fetchLabels, match } = this.props
+    fetchLabels(match.params.projectId)
   }
   toggleForm = () => {
     this.setState({
       showform: true
-    });
-  };
+    })
+  }
   onChange = (name, data) => {
     this.setState({
       [name]: data
-    });
-  };
+    })
+  }
   handleSubmit = e => {
-    const { project, createLabel } = this.props;
-    e.preventDefault();
+    const { project, createLabel } = this.props
+    e.preventDefault()
     let data = {
       name: this.state.name,
       type: this.state.type,
       projectId: project.projectId
-    };
-    createLabel(data, this.callback);
-  };
+    }
+    createLabel(data, this.callback)
+  }
   callback = () => {
-    const { project, fetchLabels } = this.props;
+    const { project, fetchLabels } = this.props
     this.setState({
       showform: false,
-      name: "New Label",
-      type: "bbox"
-    });
-    fetchLabels(project.projectId);
-  };
+      name: 'New Label',
+      type: 'bbox'
+    })
+    fetchLabels(project.projectId)
+  }
   handleDelete = value => {
-    const { project, deleteLabel, fetchLabels } = this.props;
-    deleteLabel(value._id, fetchLabels(project.projectId));
-  };
+    const { project, deleteLabel, fetchLabels } = this.props
+    deleteLabel(value._id, fetchLabels(project.projectId))
+  }
   render() {
     const value = {
-      name: "New Label",
-      type: "bbox"
-    };
-    const { actions, labels } = this.props;
-    const { showform } = this.state;
+      name: 'New Label',
+      type: 'bbox'
+    }
+    const { actions, labels } = this.props
+    const { showform } = this.state
     return (
       <div>
         {actions.isfetching ? (
@@ -121,7 +121,7 @@ class LabelIndex extends Component {
           </Form>
         ) : null}
       </div>
-    );
+    )
   }
 }
 const mapStateToProps = state => {
@@ -129,24 +129,24 @@ const mapStateToProps = state => {
     project: state.projects.currentProject,
     actions: state.labels.labelActions,
     labels: state.labels.labels
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchLabels: projectId => {
-      return dispatch(fetchLabels(projectId));
+      return dispatch(fetchLabels(projectId))
     },
     createLabel: (data, callback) => {
-      return dispatch(createLabel(data, callback));
+      return dispatch(createLabel(data, callback))
     },
     deleteLabel: (labelId, callback) => {
-      return dispatch(deleteLabel(labelId, callback));
+      return dispatch(deleteLabel(labelId, callback))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LabelIndex);
+)(LabelIndex)

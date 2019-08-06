@@ -1,27 +1,27 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Image, Header, Dropdown, Icon } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { hasToken } from "../../utils/token";
-import { fetchUser } from "../../actions/index";
-import { TOKEN_TYPE } from "../../constants/index";
-import "./css/navbar.css";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { Image, Header, Dropdown, Icon } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { hasToken } from '../../utils/token'
+import { fetchUser } from '../../actions/index'
+import { TOKEN_TYPE } from '../../constants/index'
+import './css/navbar.css'
 class ProjectNavbar extends Component {
   componentDidMount() {
     if (hasToken(TOKEN_TYPE)) {
-      this.props.fetchUser();
+      this.props.fetchUser()
     } else {
-      this.props.history.push("/login");
+      this.props.history.push('/login')
     }
   }
   pushRouter = () => {
-    this.props.history.push("/");
-  };
+    this.props.history.push('/')
+  }
   handleClick = () => {
-    this.props.history.push("/logout");
-  };
+    this.props.history.push('/logout')
+  }
   render() {
-    const { title, isfetching, user } = this.props;
+    const { title, isfetching, user } = this.props
     return (
       <div className="navbar">
         <div className="startnav">
@@ -48,7 +48,7 @@ class ProjectNavbar extends Component {
                   <Image
                     centered
                     src={
-                      user.profileImage === ""
+                      user.profileImage === ''
                         ? `${user.thumbnail}`
                         : `${user.profileImage}?${Date.now()}`
                     }
@@ -71,7 +71,7 @@ class ProjectNavbar extends Component {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -79,18 +79,18 @@ const mapStateToProps = state => {
   return {
     user: state.user.userDetails,
     isfetching: state.user.userActions.isfetching
-  };
-};
+  }
+}
 
 const mapActionToProps = dispatch => {
   return {
     fetchUser: () => {
-      return dispatch(fetchUser());
+      return dispatch(fetchUser())
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(ProjectNavbar);
+)(ProjectNavbar)

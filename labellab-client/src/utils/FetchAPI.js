@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios'
 
 const FetchApi = (method, url, params, TokenValue) => {
-  if (process.env.REACT_APP_SERVER_ENVIORNMENT === "dev") {
-    url = process.env.REACT_APP_HOST + process.env.REACT_APP_SERVER_PORT + url;
+  if (process.env.REACT_APP_SERVER_ENVIORNMENT === 'dev') {
+    url = process.env.REACT_APP_HOST + process.env.REACT_APP_SERVER_PORT + url
   }
   return new Promise((resolve, reject) => {
     if (TokenValue) {
@@ -11,23 +11,23 @@ const FetchApi = (method, url, params, TokenValue) => {
         url: url,
         data: params,
         headers: {
-          Authorization: "Bearer " + TokenValue
+          Authorization: 'Bearer ' + TokenValue
         },
-        responseType: "json"
+        responseType: 'json'
       })
         .then(res => resolve(res))
-        .catch(err => reject(err));
+        .catch(err => reject(err))
     } else {
       axios({
         method: method,
         url: url,
         data: params,
-        responseType: "json"
+        responseType: 'json'
       })
         .then(res => resolve(res))
-        .catch(err => reject(err));
+        .catch(err => reject(err))
     }
-  });
-};
+  })
+}
 
-export default FetchApi;
+export default FetchApi

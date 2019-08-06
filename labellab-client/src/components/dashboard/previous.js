@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { Card } from "semantic-ui-react";
-import { fetchAllProject } from "../../actions/index";
-import CardLoader from "../../utils/cardLoader";
-import "./css/previous.css";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { Card } from 'semantic-ui-react'
+import { fetchAllProject } from '../../actions/index'
+import CardLoader from '../../utils/cardLoader'
+import './css/previous.css'
 
 class PreviousProject extends Component {
   componentDidMount() {
-    this.props.fetchAllProject();
+    this.props.fetchAllProject()
   }
   handleClick = id => {
     this.props.history.push({
-      pathname: "/project/" + id + "/team"
-    });
-  };
+      pathname: '/project/' + id + '/team'
+    })
+  }
   render() {
-    const { actions, projects } = this.props;
+    const { actions, projects } = this.props
     return (
       <div className="previous-card-parent">
         <Card.Group itemsPerRow={3}>
@@ -40,27 +40,27 @@ class PreviousProject extends Component {
           )}
         </Card.Group>
       </div>
-    );
+    )
   }
 }
 const mapStateToProps = state => {
   return {
     projects: state.projects.allProjects,
     actions: state.projects.projectActions
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchAllProject: () => {
-      return dispatch(fetchAllProject());
+      return dispatch(fetchAllProject())
     }
-  };
-};
+  }
+}
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
   )(PreviousProject)
-);
+)
