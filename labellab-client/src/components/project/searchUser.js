@@ -1,45 +1,45 @@
-import _ from "lodash";
-import React, { Component } from "react";
-import { Search } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { getSearchUser } from "../../actions/index";
-import "./css/searchUser.css";
+import _ from 'lodash'
+import React, { Component } from 'react'
+import { Search } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { getSearchUser } from '../../actions/index'
+import './css/searchUser.css'
 
 class SearchUser extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isLoading: false,
-      value: "",
+      value: '',
       results: []
-    };
+    }
   }
   componentWillMount() {
-    this.resetComponent();
+    this.resetComponent()
   }
   resetComponent = () =>
-    this.setState({ isLoading: false, value: "", results: [] });
+    this.setState({ isLoading: false, value: '', results: [] })
 
   handleResultSelect = (e, { result }) => {
-    this.setState({ value: result.email });
-  };
+    this.setState({ value: result.email })
+  }
 
   handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value });
-    this.props.searchUser(value.trim());
+    this.setState({ isLoading: true, value })
+    this.props.searchUser(value.trim())
     setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent();
+      if (this.state.value.length < 1) return this.resetComponent()
       this.setState({
         isLoading: false
-      });
-    }, 300);
-  };
+      })
+    }, 300)
+  }
 
   generateResults = () => {
-    const { search } = this.props;
-    let results = [];
+    const { search } = this.props
+    let results = []
     if (search == null) {
-      return results;
+      return results
     }
 
     search.map((user, index) =>
@@ -52,12 +52,12 @@ class SearchUser extends Component {
             id: user._id
           })
         : null
-    );
+    )
 
-    return results;
-  };
+    return results
+  }
   render() {
-    const { isLoading, value } = this.state;
+    const { isLoading, value } = this.state
 
     return (
       <Search
@@ -73,25 +73,25 @@ class SearchUser extends Component {
         placeholder="Search members.."
         minCharacters={1}
       />
-    );
+    )
   }
 }
 
 const mapStateToProps = state => {
   return {
     search: state.searchUser
-  };
-};
+  }
+}
 
 const mapActionToProps = dispatch => {
   return {
     searchUser: query => {
-      return dispatch(getSearchUser(query));
+      return dispatch(getSearchUser(query))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(SearchUser);
+)(SearchUser)

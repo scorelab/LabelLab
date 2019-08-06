@@ -1,30 +1,30 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Menu } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { fetchProject } from "../../actions/index";
-import "./css/sidebar.css";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { fetchProject } from '../../actions/index'
+import './css/sidebar.css'
 
 class ProjectSidebar extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      activeItem: ""
-    };
+      activeItem: ''
+    }
   }
   componentDidMount() {
     this.setState({
       activeItem: window.location.pathname.substring(34)
-    });
+    })
   }
   imageCallback = () => {
-    const { fetchProject, project } = this.props;
-    fetchProject(project.projectId);
-  };
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+    const { fetchProject, project } = this.props
+    fetchProject(project.projectId)
+  }
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   render() {
-    const { project } = this.props;
-    const { activeItem } = this.state;
+    const { project } = this.props
+    const { activeItem } = this.state
     return (
       <div className="sidebar-parent">
         <div className="sidebar-menu-parent">
@@ -33,7 +33,7 @@ class ProjectSidebar extends Component {
               as={Link}
               to={`/project/${project.projectId}/team`}
               name="team"
-              active={activeItem === "team"}
+              active={activeItem === 'team'}
               onClick={this.handleItemClick}
             >
               Project Team
@@ -43,7 +43,7 @@ class ProjectSidebar extends Component {
               as={Link}
               to={`/project/${project.projectId}/images`}
               name="images"
-              active={activeItem === "images"}
+              active={activeItem === 'images'}
               onClick={this.handleItemClick}
             >
               Project Images
@@ -53,7 +53,7 @@ class ProjectSidebar extends Component {
               as={Link}
               to={`/project/${project.projectId}/analytics`}
               name="analytics"
-              active={activeItem === "analytics"}
+              active={activeItem === 'analytics'}
               onClick={this.handleItemClick}
             >
               Project Analytics
@@ -62,7 +62,7 @@ class ProjectSidebar extends Component {
               as={Link}
               to={`/project/${project.projectId}/labels`}
               name="labels"
-              active={activeItem === "labels"}
+              active={activeItem === 'labels'}
               onClick={this.handleItemClick}
             >
               Project Labels
@@ -70,24 +70,24 @@ class ProjectSidebar extends Component {
           </Menu>
         </div>
       </div>
-    );
+    )
   }
 }
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchProject: data => {
-      return dispatch(fetchProject(data));
+      return dispatch(fetchProject(data))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProjectSidebar);
+)(ProjectSidebar)

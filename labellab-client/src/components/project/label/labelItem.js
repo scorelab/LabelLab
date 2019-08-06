@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Form, Button, Icon } from "semantic-ui-react";
-import "../css/labelItem.css";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Form, Button, Icon } from 'semantic-ui-react'
+import '../css/labelItem.css'
 
 const options = [
-  { key: "bbox", text: "Draw a bounding box", value: "bbox" },
-  { key: "polygon", text: "Draw a polygon figure", value: "polygon" }
-];
+  { key: 'bbox', text: 'Draw a bounding box', value: 'bbox' },
+  { key: 'polygon', text: 'Draw a polygon figure', value: 'polygon' }
+]
 
 class LabelItem extends Component {
   render() {
-    const { value, onChange, onDelete } = this.props;
+    const { value, onChange, onDelete } = this.props
     return (
       <div className="form-card-parent">
         <Form className="form-card flex">
@@ -45,11 +45,11 @@ class LabelItem extends Component {
           </div>
         </Form>
       </div>
-    );
+    )
   }
 }
 
 export default connect(
   null,
   null
-)(LabelItem);
+)(LabelItem)

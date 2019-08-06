@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import {
   Card,
   Image,
@@ -9,80 +9,73 @@ import {
   Menu,
   Dimmer,
   Loader
-} from "semantic-ui-react";
-import Navbar from "../navbar/project";
+} from 'semantic-ui-react'
+import Navbar from '../navbar/project'
 import {
   fetchUser,
   uploadImage,
   fetchAllProject,
   fetchCount
-} from "../../actions/index";
-import { hasToken } from "../../utils/token";
-import { TOKEN_TYPE } from "../../constants/index";
-import CardLoader from "../../utils/cardLoader";
-import "./css/profile.css";
+} from '../../actions/index'
+import { hasToken } from '../../utils/token'
+import { TOKEN_TYPE } from '../../constants/index'
+import CardLoader from '../../utils/cardLoader'
+import './css/profile.css'
 class Profile extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      file: "",
-      image: ""
-    };
+      file: '',
+      image: ''
+    }
   }
   componentDidMount() {
-    const { history, fetchUser, fetchAllProject, fetchCount } = this.props;
+    const { history, fetchUser, fetchAllProject, fetchCount } = this.props
     if (hasToken(TOKEN_TYPE)) {
-      fetchUser();
-      fetchAllProject();
-      fetchCount();
+      fetchUser()
+      fetchAllProject()
+      fetchCount()
     } else {
-      history.push("/login");
+      history.push('/login')
     }
   }
   handleImageChange = e => {
-    e.preventDefault();
-    let reader = new FileReader();
-    let file = e.target.files[0];
+    e.preventDefault()
+    let reader = new FileReader()
+    let file = e.target.files[0]
     reader.onloadend = () => {
       this.setState({
         image: reader.result,
         file: file
-      });
-      this.onSubmit(e);
-    };
-    reader.readAsDataURL(file);
-  };
+      })
+      this.onSubmit(e)
+    }
+    reader.readAsDataURL(file)
+  }
   onSubmit = e => {
-    let { file, image } = this.state;
+    let { file, image } = this.state
     if (file && file.size > 101200) {
       this.setState({
-        max_size_error: "max sized reached"
-      });
+        max_size_error: 'max sized reached'
+      })
     } else {
       let data = {
         image: image,
         format: file.type
-      };
-      this.props.uploadImage(data, this.imageCallback);
+      }
+      this.props.uploadImage(data, this.imageCallback)
     }
-  };
+  }
   handleClick = id => {
     this.props.history.push({
-      pathname: "/project/" + id + "/team"
-    });
-  };
+      pathname: '/project/' + id + '/team'
+    })
+  }
   imageCallback = () => {
-    this.props.fetchUser();
-  };
+    this.props.fetchUser()
+  }
   render() {
-    const {
-      user,
-      history,
-      isfetching,
-      profile,
-      actions,
-      projects
-    } = this.props;
+    const { user, history, isfetching, profile, actions, projects } = this.props
     return (
       <div>
         <Navbar title="Profile" history={history} />
@@ -97,7 +90,7 @@ class Profile extends Component {
                 <Image
                   centered
                   src={
-                    user.profile_image === ""
+                    user.profile_image === ''
                       ? `${user.thumbnail}`
                       : `${user.profile_image}?${Date.now()}`
                   }
@@ -176,7 +169,7 @@ class Profile extends Component {
           </div>
         </Container>
       </div>
-    );
+    )
   }
 }
 const mapStateToProps = state => {
@@ -186,27 +179,27 @@ const mapStateToProps = state => {
     isfetching: state.user.userActions.isfetching,
     projects: state.projects.allProjects,
     actions: state.projects.projectActions
-  };
-};
+  }
+}
 
 const mapActionToProps = dispatch => {
   return {
     fetchUser: () => {
-      return dispatch(fetchUser());
+      return dispatch(fetchUser())
     },
     fetchAllProject: () => {
-      return dispatch(fetchAllProject());
+      return dispatch(fetchAllProject())
     },
     fetchCount: () => {
-      return dispatch(fetchCount());
+      return dispatch(fetchCount())
     },
     uploadImage: (data, callback) => {
-      return dispatch(uploadImage(data, callback));
+      return dispatch(uploadImage(data, callback))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(Profile);
+)(Profile)

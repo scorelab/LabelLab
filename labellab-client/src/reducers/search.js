@@ -1,12 +1,12 @@
-import { SEARCH_PROJECTS, SEARCH_PROJECTS_FAILURE } from "../constants/index";
+import { SEARCH_PROJECTS, SEARCH_PROJECTS_FAILURE } from '../constants/index'
 const searchProjects = (state = [], action) => {
   switch (action.type) {
     case SEARCH_PROJECTS:
-      return action.payload;
+      return action.payload
     case SEARCH_PROJECTS_FAILURE:
-      return action.payload;
+      return action.payload
     default:
-      return state;
+      return state
   }
-};
-export default searchProjects;
+}
+export default searchProjects

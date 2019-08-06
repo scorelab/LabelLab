@@ -12,129 +12,121 @@ import {
   DELETE_LABEL_REQUEST,
   DELETE_LABEL_SUCCESS,
   TOKEN_TYPE
-} from "../constants/index";
+} from '../constants/index'
 
-import FetchApi from "../utils/FetchAPI";
-import { getToken } from "../utils/token";
+import FetchApi from '../utils/FetchAPI'
+import { getToken } from '../utils/token'
 
-const token = getToken(TOKEN_TYPE);
+const token = getToken(TOKEN_TYPE)
 
 export const fetchLabels = (projectId, callback) => {
   return dispatch => {
-    dispatch(request());
-    FetchApi("GET", "/api/v1/label/" + projectId + "/get", null, token)
+    dispatch(request())
+    FetchApi('GET', '/api/v1/label/' + projectId + '/get', null, token)
       .then(res => {
-        dispatch(success(res.data.body));
-        callback();
+        dispatch(success(res.data.body))
+        callback()
       })
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg)
-              )
-            : dispatch(failure(err.response.statusText, null));
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
         }
-      });
-  };
+      })
+  }
   function request() {
-    return { type: FETCH_LABEL_REQUEST };
+    return { type: FETCH_LABEL_REQUEST }
   }
   function success(data) {
-    return { type: FETCH_LABEL_SUCCESS, payload: data };
+    return { type: FETCH_LABEL_SUCCESS, payload: data }
   }
   function failure(error) {
-    return { type: FETCH_LABEL_FAILURE, payload: error };
+    return { type: FETCH_LABEL_FAILURE, payload: error }
   }
-};
+}
 
 export const createLabel = (data, callback) => {
   return dispatch => {
-    dispatch(request());
+    dispatch(request())
     FetchApi(
-      "POST",
-      "/api/v1/label/" + data.projectId + "/create",
+      'POST',
+      '/api/v1/label/' + data.projectId + '/create',
       { label: data },
       token
     )
       .then(res => {
-        dispatch(success());
-        callback();
+        dispatch(success())
+        callback()
       })
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg)
-              )
-            : dispatch(failure(err.response.statusText, null));
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
         }
-      });
-  };
+      })
+  }
   function request() {
-    return { type: CREATE_LABEL_REQUEST };
+    return { type: CREATE_LABEL_REQUEST }
   }
   function success() {
-    return { type: CREATE_LABEL_SUCCESS };
+    return { type: CREATE_LABEL_SUCCESS }
   }
   function failure(error) {
-    return { type: CREATE_LABEL_FAILURE, payload: error };
+    return { type: CREATE_LABEL_FAILURE, payload: error }
   }
-};
+}
 
 export const updateLabels = (image_id, labelData) => {
   return dispatch => {
-    dispatch(request());
-    FetchApi("PUT", "/api/v1/image/" + image_id + "/update", labelData, token)
+    dispatch(request())
+    FetchApi('PUT', '/api/v1/image/' + image_id + '/update', labelData, token)
       .then(res => {
-        dispatch(success());
+        dispatch(success())
       })
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg)
-              )
-            : dispatch(failure(err.response.statusText, null));
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
         }
-      });
-  };
+      })
+  }
   function request() {
-    return { type: UPDATE_LABEL_REQUEST };
+    return { type: UPDATE_LABEL_REQUEST }
   }
   function success() {
-    return { type: UPDATE_LABEL_SUCCESS };
+    return { type: UPDATE_LABEL_SUCCESS }
   }
   function failure(error) {
-    return { type: UPDATE_LABEL_FAILURE, payload: error };
+    return { type: UPDATE_LABEL_FAILURE, payload: error }
   }
-};
+}
 
 export const deleteLabel = (label_id, callback) => {
   return dispatch => {
-    dispatch(request());
-    FetchApi("DELETE", "/api/v1/label/" + label_id + "/delete", null, token)
+    dispatch(request())
+    FetchApi('DELETE', '/api/v1/label/' + label_id + '/delete', null, token)
       .then(res => {
-        dispatch(success());
-        callback();
+        dispatch(success())
+        callback()
       })
       .catch(err => {
         if (err.response) {
           err.response.data
-            ? dispatch(
-                failure(err.response.data.msg)
-              )
-            : dispatch(failure(err.response.statusText, null));
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
         }
-      });
-  };
+      })
+  }
   function request() {
-    return { type: DELETE_LABEL_REQUEST };
+    return { type: DELETE_LABEL_REQUEST }
   }
   function success() {
-    return { type: DELETE_LABEL_SUCCESS };
+    return { type: DELETE_LABEL_SUCCESS }
   }
   function failure(error) {
-    return { type: DELETE_LABEL_FAILURE, payload: error };
+    return { type: DELETE_LABEL_FAILURE, payload: error }
   }
-};
+}

@@ -1,48 +1,48 @@
-import _ from "lodash";
-import React, { Component } from "react";
-import { Search } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { getSearchProjects } from "../../actions/index";
-import "./css/searchbar.css";
+import _ from 'lodash'
+import React, { Component } from 'react'
+import { Search } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { getSearchProjects } from '../../actions/index'
+import './css/searchbar.css'
 
 class SearchProject extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isLoading: false,
-      value: "",
+      value: '',
       results: []
-    };
+    }
   }
   componentWillMount() {
-    this.resetComponent();
+    this.resetComponent()
   }
   resetComponent = () =>
-    this.setState({ isLoading: false, value: "", results: [] });
+    this.setState({ isLoading: false, value: '', results: [] })
 
   handleResultSelect = (e, { result }) => {
-    this.setState({ value: result.title });
+    this.setState({ value: result.title })
     this.props.history.push({
-      pathname: "/project/" + result.id + "/team"
-    });
-  };
+      pathname: '/project/' + result.id + '/team'
+    })
+  }
 
   handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value });
-    this.props.searchProject(value.trim());
+    this.setState({ isLoading: true, value })
+    this.props.searchProject(value.trim())
     setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent();
+      if (this.state.value.length < 1) return this.resetComponent()
       this.setState({
         isLoading: false
-      });
-    }, 300);
-  };
+      })
+    }, 300)
+  }
 
   generateResults = () => {
-    const { search } = this.props;
-    let results = [];
+    const { search } = this.props
+    let results = []
     if (search == null) {
-      return results;
+      return results
     }
 
     search.map((project, index) =>
@@ -54,12 +54,12 @@ class SearchProject extends Component {
             id: project._id
           })
         : null
-    );
+    )
 
-    return results;
-  };
+    return results
+  }
   render() {
-    const { isLoading, value } = this.state;
+    const { isLoading, value } = this.state
 
     return (
       <Search
@@ -75,25 +75,25 @@ class SearchProject extends Component {
         placeholder="Search"
         minCharacters={1}
       />
-    );
+    )
   }
 }
 
 const mapStateToProps = state => {
   return {
     search: state.searchProjects
-  };
-};
+  }
+}
 
 const mapActionToProps = dispatch => {
   return {
     searchProject: query => {
-      return dispatch(getSearchProjects(query));
+      return dispatch(getSearchProjects(query))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(SearchProject);
+)(SearchProject)

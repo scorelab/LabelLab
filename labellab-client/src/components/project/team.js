@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Container,
   Table,
@@ -10,54 +10,54 @@ import {
   Dimmer,
   Loader,
   Message
-} from "semantic-ui-react";
-import { addMember, fetchProject, memberDelete } from "../../actions";
-import SearchUser from "./searchUser.js";
-import "./css/team.css";
+} from 'semantic-ui-react'
+import { addMember, fetchProject, memberDelete } from '../../actions'
+import SearchUser from './searchUser.js'
+import './css/team.css'
 
 class TeamIndex extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       open: false,
-      memberEmail: ""
-    };
+      memberEmail: ''
+    }
   }
   handleAddMember = () => {
     this.setState({
       open: !this.state.open
-    });
-  };
+    })
+  }
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
-    });
-  };
+    })
+  }
   handleMemberSubmit = () => {
-    const { project, addMember } = this.props;
-    const { memberEmail } = this.state;
+    const { project, addMember } = this.props
+    const { memberEmail } = this.state
     this.setState({
       check: true
-    });
+    })
     let data = {
       memberEmail: memberEmail,
       projectId: project.projectId
-    };
-    addMember(data, this.fetchProjectCallback);
-    this.close();
-  };
-  close = () => this.setState({ open: false });
+    }
+    addMember(data, this.fetchProjectCallback)
+    this.close()
+  }
+  close = () => this.setState({ open: false })
   handleDelete = email => {
-    const { memberDelete, project } = this.props;
-    memberDelete(email, project.projectId, this.fetchProjectCallback);
-  };
+    const { memberDelete, project } = this.props
+    memberDelete(email, project.projectId, this.fetchProjectCallback)
+  }
   fetchProjectCallback = () => {
-    const { fetchProject, project } = this.props;
-    fetchProject(project.projectId);
-  };
+    const { fetchProject, project } = this.props
+    fetchProject(project.projectId)
+  }
   render() {
-    const { project, actions, history } = this.props;
-    const { open } = this.state;
+    const { project, actions, history } = this.props
+    const { open } = this.state
     return (
       <Container>
         {actions.errors ? (
@@ -111,7 +111,7 @@ class TeamIndex extends Component {
                   </Table.Cell>
 
                   <Table.Cell collapsing>
-                    {member.role !== "Admin" ? (
+                    {member.role !== 'Admin' ? (
                       <Icon
                         className="team-remove-user-icon"
                         name="user delete"
@@ -135,31 +135,31 @@ class TeamIndex extends Component {
           </Button>
         </div>
       </Container>
-    );
+    )
   }
 }
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,
     actions: state.projects.projectActions
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
     addMember: (data, callback) => {
-      return dispatch(addMember(data, callback));
+      return dispatch(addMember(data, callback))
     },
     fetchProject: data => {
-      return dispatch(fetchProject(data));
+      return dispatch(fetchProject(data))
     },
     memberDelete: (email, projectId, callback) => {
-      return dispatch(memberDelete(email, projectId, callback));
+      return dispatch(memberDelete(email, projectId, callback))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TeamIndex);
+)(TeamIndex)

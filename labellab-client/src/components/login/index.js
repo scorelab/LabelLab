@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 // import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import {
   Input,
   Button,
@@ -10,68 +10,68 @@ import {
   Header,
   Dimmer,
   Loader
-} from "semantic-ui-react";
-import validateInput from "../../utils/validation";
-import { login } from "../../actions/index";
-import googleIcon from "../../static/icons/search.svg";
-import githubIcon from "../../static/icons/github-logo.svg";
-import { hasToken } from "../../utils/token";
-import { TOKEN_TYPE } from "../../constants/index";
-import "./css/login.css";
+} from 'semantic-ui-react'
+import validateInput from '../../utils/validation'
+import { login } from '../../actions/index'
+import googleIcon from '../../static/icons/search.svg'
+import githubIcon from '../../static/icons/github-logo.svg'
+import { hasToken } from '../../utils/token'
+import { TOKEN_TYPE } from '../../constants/index'
+import './css/login.css'
 
 class LoginIndex extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      username: "",
-      password: "",
-      errors: ""
-    };
+      username: '',
+      password: '',
+      errors: ''
+    }
   }
   componentDidMount() {
     if (hasToken(TOKEN_TYPE)) {
-      this.props.history.push("/");
+      this.props.history.push('/')
     }
   }
   onChange = e => {
-    const name = e.target.name;
-    let value = e.target.value;
+    const name = e.target.name
+    let value = e.target.value
     this.setState({
       [name]: value,
-      errors: ""
-    });
-  };
+      errors: ''
+    })
+  }
 
   handleSubmit = e => {
-    e.preventDefault();
-    let { username, password } = this.state;
+    e.preventDefault()
+    let { username, password } = this.state
     if (username) {
-      username = username.trim();
+      username = username.trim()
     }
     if (password) {
-      password = password.trim();
+      password = password.trim()
     }
-    const checkPass = validateInput(password, "password");
+    const checkPass = validateInput(password, 'password')
     if (checkPass.isValid) {
-      this.props.login(username, password, this.callback);
+      this.props.login(username, password, this.callback)
     } else {
       this.setState({
         errors: checkPass.errors.password
-      });
+      })
     }
-  };
+  }
   callback = () => {
-    const { location, history } = this.props;
+    const { location, history } = this.props
     location &&
     location.state &&
     location.state.from &&
     location.state.from.pathname
       ? history.push(location.state.from.pathname)
-      : history.push("/");
-  };
+      : history.push('/')
+  }
   render() {
-    const { isAuthenticating } = this.props;
-    const { username, password, errors } = this.state;
+    const { isAuthenticating } = this.props
+    const { username, password, errors } = this.state
     return (
       <div className="login-grand-parent">
         {isAuthenticating ? (
@@ -145,25 +145,25 @@ class LoginIndex extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = state => {
   return {
     isAuthenticating: state.auth.isAuthenticating
-  };
-};
+  }
+}
 
 const mapActionToProps = dispatch => {
   return {
     login: (username, password, callback) => {
-      return dispatch(login(username, password, callback));
+      return dispatch(login(username, password, callback))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(LoginIndex);
+)(LoginIndex)

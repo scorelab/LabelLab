@@ -1,131 +1,128 @@
-import React, { Component } from "react";
-import { CRS } from "leaflet";
-import { Map, ImageOverlay, ZoomControl } from "react-leaflet";
-import Control from "react-leaflet-control";
-import Hotkeys from "react-hot-keys";
-import update from "immutability-helper";
-import { Link } from "react-router-dom";
-import "leaflet-path-drag";
+import React, { Component } from 'react'
+import { CRS } from 'leaflet'
+import { Map, ImageOverlay, ZoomControl } from 'react-leaflet'
+import Control from 'react-leaflet-control'
+import Hotkeys from 'react-hot-keys'
+import update from 'immutability-helper'
+import { Link } from 'react-router-dom'
+import 'leaflet-path-drag'
 
-import "leaflet/dist/leaflet.css";
+import 'leaflet/dist/leaflet.css'
 
-import { Icon } from "semantic-ui-react";
+import { Icon } from 'semantic-ui-react'
 
-import { BBoxFigure, PolygonFigure } from "./Figure";
+import { BBoxFigure, PolygonFigure } from './Figure'
 
-import { convertPoint, lighten, colorMapping } from "./utils";
-import { withBounds, maxZoom } from "./CalcBoundsHOC";
+import { convertPoint, lighten, colorMapping } from './utils'
+import { withBounds, maxZoom } from './CalcBoundsHOC'
 
 class Canvas extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
 
     this.state = {
       zoom: -1,
       selectedFigureId: null,
       cursorPos: { lat: 0, lng: 0 }
-    };
-    this.prevSelectedFigure = null;
-    this.skipNextClickEvent = false;
+    }
+    this.prevSelectedFigure = null
+    this.skipNextClickEvent = false
 
-    this.mapRef = React.createRef();
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.mapRef = React.createRef()
+    this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentDidUpdate(prevProps) {
-    const { onSelectionChange } = this.props;
-    const { selectedFigureId } = this.state;
+    const { onSelectionChange } = this.props
+    const { selectedFigureId } = this.state
 
     if (this.prevSelectedFigureId !== selectedFigureId && onSelectionChange) {
-      this.prevSelectedFigureId = selectedFigureId;
-      onSelectionChange(selectedFigureId);
+      this.prevSelectedFigureId = selectedFigureId
+      onSelectionChange(selectedFigureId)
     }
   }
 
   getSelectedFigure() {
-    const { selectedFigureId } = this.state;
-    const { figures } = this.props;
-    return figures.find(f => f.id === selectedFigureId);
+    const { selectedFigureId } = this.state
+    const { figures } = this.props
+    return figures.find(f => f.id === selectedFigureId)
   }
 
   handleChange(eventType, { point, pos, figure, points }) {
-    const { onChange, unfinishedFigure } = this.props;
-    const drawing = !!unfinishedFigure;
+    const { onChange, unfinishedFigure } = this.props
+    const drawing = !!unfinishedFigure
 
     switch (eventType) {
-      case "add":
+      case 'add':
         if (drawing) {
-          let newState = unfinishedFigure.points;
-          newState = update(newState, { $push: [point] });
+          let newState = unfinishedFigure.points
+          newState = update(newState, { $push: [point] })
 
           onChange(
-            "unfinished",
+            'unfinished',
             update(unfinishedFigure, {
               points: {
                 $set: newState
               }
             })
-          );
+          )
         } else {
           onChange(
-            "replace",
+            'replace',
             update(figure, { points: { $splice: [[pos, 0, point]] } })
-          );
+          )
         }
-        break;
+        break
 
-      case "end":
-        const f = unfinishedFigure;
-        onChange("new", f);
-        break;
+      case 'end':
+        const f = unfinishedFigure
+        onChange('new', f)
+        break
 
-      case "move":
+      case 'move':
         onChange(
-          "replace",
+          'replace',
           update(figure, { points: { $splice: [[pos, 1, point]] } })
-        );
-        break;
+        )
+        break
 
-      case "replace":
-        onChange("replace", update(figure, { points: { $set: points } }));
-        break;
+      case 'replace':
+        onChange('replace', update(figure, { points: { $set: points } }))
+        break
 
-      case "remove":
-        onChange(
-          "replace",
-          update(figure, { points: { $splice: [[pos, 1]] } })
-        );
-        break;
+      case 'remove':
+        onChange('replace', update(figure, { points: { $splice: [[pos, 1]] } }))
+        break
 
       default:
-        throw new Error("unknown event type " + eventType);
+        throw new Error('unknown event type ' + eventType)
     }
   }
 
   handleClick(e) {
-    const { unfinishedFigure } = this.props;
-    const drawing = !!unfinishedFigure;
+    const { unfinishedFigure } = this.props
+    const drawing = !!unfinishedFigure
 
     if (this.skipNextClickEvent) {
       // a hack, for whatever reason it is really hard to stop event propagation in leaflet
-      this.skipNextClickEvent = false;
-      return;
+      this.skipNextClickEvent = false
+      return
     }
 
     if (drawing) {
-      this.handleChange("add", { point: convertPoint(e.latlng) });
-      return;
+      this.handleChange('add', { point: convertPoint(e.latlng) })
+      return
     }
 
     if (!drawing) {
-      this.setState({ selectedFigureId: null });
-      return;
+      this.setState({ selectedFigureId: null })
+      return
     }
   }
 
   renderFigure(figure, options) {
-    const Comp = figure.type === "bbox" ? BBoxFigure : PolygonFigure;
+    const Comp = figure.type === 'bbox' ? BBoxFigure : PolygonFigure
 
     return (
       <Comp
@@ -134,7 +131,7 @@ class Canvas extends Component {
         options={options}
         skipNextClick={() => (this.skipNextClickEvent = true)}
       />
-    );
+    )
   }
 
   render() {
@@ -148,15 +145,15 @@ class Canvas extends Component {
       onChange,
       onReassignment,
       style
-    } = this.props;
-    const { zoom, selectedFigureId, cursorPos } = this.state;
+    } = this.props
+    const { zoom, selectedFigureId, cursorPos } = this.state
 
-    const drawing = !!unfinishedFigure;
+    const drawing = !!unfinishedFigure
 
     const calcDistance = (p1, p2) => {
-      const map = this.mapRef.current.leafletElement;
-      return map.latLngToLayerPoint(p1).distanceTo(map.latLngToLayerPoint(p2));
-    };
+      const map = this.mapRef.current.leafletElement
+      return map.latLngToLayerPoint(p1).distanceTo(map.latLngToLayerPoint(p2))
+    }
 
     const unfinishedDrawingDOM = drawing
       ? this.renderFigure(unfinishedFigure, {
@@ -168,12 +165,12 @@ class Canvas extends Component {
           calcDistance,
           newPoint: cursorPos
         })
-      : null;
+      : null
 
     const getColor = f =>
       f.tracingOptions && f.tracingOptions.enabled
         ? lighten(colorMapping[f.color], 80)
-        : colorMapping[f.color];
+        : colorMapping[f.color]
     const figuresDOM = figures.map((f, i) =>
       this.renderFigure(f, {
         editing: selectedFigureId === f.id && !drawing,
@@ -186,7 +183,7 @@ class Canvas extends Component {
         onChange: this.handleChange,
         calcDistance
       })
-    );
+    )
 
     const hotkeysDOM = (
       <Hotkeys
@@ -194,76 +191,76 @@ class Canvas extends Component {
         onKeyDown={key => {
           const tagName = document.activeElement
             ? document.activeElement.tagName.toLowerCase()
-            : null;
-          if (["input", "textarea"].includes(tagName)) {
-            return false;
+            : null
+          if (['input', 'textarea'].includes(tagName)) {
+            return false
           }
           if (drawing) {
-            if (key === "f") {
-              const { type, points } = unfinishedFigure;
-              if (type === "polygon" && points.length >= 3) {
-                this.handleChange("end", {});
+            if (key === 'f') {
+              const { type, points } = unfinishedFigure
+              if (type === 'polygon' && points.length >= 3) {
+                this.handleChange('end', {})
               }
             }
           } else {
-            if (key === "c") {
+            if (key === 'c') {
               if (selectedFigureId && this.getSelectedFigure()) {
-                onReassignment(this.getSelectedFigure().type);
+                onReassignment(this.getSelectedFigure().type)
               }
-            } else if (key === "backspace" || key === "del") {
+            } else if (key === 'backspace' || key === 'del') {
               if (selectedFigureId && this.getSelectedFigure()) {
-                onChange("delete", this.getSelectedFigure());
+                onChange('delete', this.getSelectedFigure())
               }
             }
           }
 
-          const map = this.mapRef.current.leafletElement;
-          if (key === "left") {
-            map.panBy([80, 0]);
+          const map = this.mapRef.current.leafletElement
+          if (key === 'left') {
+            map.panBy([80, 0])
           }
-          if (key === "right") {
-            map.panBy([-80, 0]);
+          if (key === 'right') {
+            map.panBy([-80, 0])
           }
-          if (key === "up") {
-            map.panBy([0, 80]);
+          if (key === 'up') {
+            map.panBy([0, 80])
           }
-          if (key === "down") {
-            map.panBy([0, -80]);
+          if (key === 'down') {
+            map.panBy([0, -80])
           }
-          if (key === "=") {
-            map.setZoom(map.getZoom() + 1);
+          if (key === '=') {
+            map.setZoom(map.getZoom() + 1)
           }
-          if (key === "-") {
-            map.setZoom(map.getZoom() - 1);
+          if (key === '-') {
+            map.setZoom(map.getZoom() - 1)
           }
         }}
       />
-    );
+    )
 
-    let renderedTrace = null;
-    const selectedFigure = this.getSelectedFigure();
-    if (selectedFigure && selectedFigure.type === "polygon") {
+    let renderedTrace = null
+    const selectedFigure = this.getSelectedFigure()
+    if (selectedFigure && selectedFigure.type === 'polygon') {
       const trace = selectedFigure.tracingOptions
         ? selectedFigure.tracingOptions.trace || []
-        : [];
+        : []
       const figure = {
-        id: "trace",
-        type: "line",
+        id: 'trace',
+        type: 'line',
         points: trace
-      };
+      }
       const traceOptions = {
         editing: false,
         finished: true,
         color: colorMapping[selectedFigure.color]
-      };
-      renderedTrace = <PolygonFigure figure={figure} options={traceOptions} />;
+      }
+      renderedTrace = <PolygonFigure figure={figure} options={traceOptions} />
     }
 
     return (
       <div
         style={{
-          cursor: drawing ? "crosshair" : "grab",
-          height: "100%",
+          cursor: drawing ? 'crosshair' : 'grab',
+          height: '100%',
           ...style
         }}
       >
@@ -290,11 +287,11 @@ class Canvas extends Component {
               role="button"
               title="Zoom reset"
               onClick={() => {
-                const map = this.mapRef.current.leafletElement;
-                map.setView(map.options.center, map.options.zoom);
+                const map = this.mapRef.current.leafletElement
+                map.setView(map.options.center, map.options.zoom)
               }}
             >
-              <Icon name="redo" fitted style={{ fontSize: "1.2em" }} />
+              <Icon name="redo" fitted style={{ fontSize: '1.2em' }} />
             </Link>
           </Control>
           <ImageOverlay url={url} bounds={bounds} />
@@ -304,8 +301,8 @@ class Canvas extends Component {
           {hotkeysDOM}
         </Map>
       </div>
-    );
+    )
   }
 }
 
-export default withBounds(Canvas);
+export default withBounds(Canvas)

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from 'react'
 import {
   Header,
   List,
@@ -8,12 +8,12 @@ import {
   Form,
   Checkbox,
   Radio,
-  Select,
-} from 'semantic-ui-react';
-import { shortcuts, colors } from './utils';
-import Hotkeys from 'react-hot-keys';
+  Select
+} from 'semantic-ui-react'
+import { shortcuts, colors } from './utils'
+import Hotkeys from 'react-hot-keys'
 
-const headerIconStyle = { fontSize: '0.8em', float: 'right' };
+const headerIconStyle = { fontSize: '0.8em', float: 'right' }
 export default class Sidebar extends PureComponent {
   render() {
     const {
@@ -32,8 +32,8 @@ export default class Sidebar extends PureComponent {
       labelData,
       onFormChange,
       models,
-      makePrediction,
-    } = this.props;
+      makePrediction
+    } = this.props
 
     const hotkeysButton = openHotkeys ? (
       <Icon
@@ -42,10 +42,10 @@ export default class Sidebar extends PureComponent {
         style={headerIconStyle}
         onClick={openHotkeys}
       />
-    ) : null;
+    ) : null
 
     const getSelectHandler = ({ type, id }) =>
-      type === 'bbox' || type === 'polygon' ? () => onSelect(id) : null;
+      type === 'bbox' || type === 'polygon' ? () => onSelect(id) : null
     return (
       <div
         style={{
@@ -54,7 +54,7 @@ export default class Sidebar extends PureComponent {
           padding: '1em 0.5em',
           borderRight: '1px solid #ccc',
           height: '100%',
-          ...style,
+          ...style
         }}
       >
         <Header size="large" style={{ flex: '0 0 auto' }}>
@@ -75,7 +75,7 @@ export default class Sidebar extends PureComponent {
               labelData: labelData[label.id],
               onFormChange,
               models,
-              makePrediction,
+              makePrediction
             })
           )}
           <Hotkeys keyName="esc" onKeyDown={() => onSelect(null)} />
@@ -91,22 +91,22 @@ export default class Sidebar extends PureComponent {
           </Button>
         </div>
       </div>
-    );
+    )
   }
 }
 
 const iconMapping = {
   bbox: 'object ungroup outline',
-  polygon: 'pencil alternate',
-};
+  polygon: 'pencil alternate'
+}
 
 const typeHidable = {
   bbox: true,
   polygon: true,
   text: false,
   select: false,
-  'select-one': false,
-};
+  'select-one': false
+}
 function ListItem({
   shortcut,
   label,
@@ -119,9 +119,9 @@ function ListItem({
   labelData,
   onFormChange,
   models,
-  makePrediction,
+  makePrediction
 }) {
-  const icons = [];
+  const icons = []
 
   if (onToggle && typeHidable[label.type]) {
     icons.push(
@@ -130,32 +130,32 @@ function ListItem({
         icon={isToggled ? 'eye' : 'eye slash'}
         style={{ padding: 5 }}
         onClick={e => {
-          onToggle(label);
-          e.stopPropagation();
+          onToggle(label)
+          e.stopPropagation()
         }}
       />
-    );
+    )
   }
 
-  const iconType = iconMapping[label.type];
+  const iconType = iconMapping[label.type]
   const figureIcon = iconType ? (
     <Icon
       key="type-icon"
       name={iconType}
       style={{ opacity: 0.5, display: 'inline-block', marginLeft: 5 }}
     />
-  ) : null;
+  ) : null
 
   function genSublist(label) {
-    const sublistStyle = { fontSize: '12px' };
+    const sublistStyle = { fontSize: '12px' }
     if (label.type === 'text') {
       const filteredModels = (models || []).filter(
         ({ type }) => type === 'object_classification'
-      );
+      )
       const options = filteredModels.map(({ id, name }) => ({
         value: id,
-        text: name,
-      }));
+        text: name
+      }))
       const fillInDOM =
         filteredModels.length > 0 ? (
           <div>
@@ -164,13 +164,13 @@ function ListItem({
               options={options}
               placeholder="Select a model"
               onChange={async (e, { value }) => {
-                const m = models.find(({ id }) => id === value);
-                const text = (await makePrediction(m)).join(', ');
-                onFormChange(label.id, [text]);
+                const m = models.find(({ id }) => id === value)
+                const text = (await makePrediction(m)).join(', ')
+                onFormChange(label.id, [text])
               }}
             />
           </div>
-        ) : null;
+        ) : null
       return (
         <List style={sublistStyle}>
           <List.Item>
@@ -185,11 +185,11 @@ function ListItem({
             </Form>
           </List.Item>
         </List>
-      );
+      )
     }
 
     if (label.type === 'select') {
-      const { options } = label;
+      const { options } = label
       const handleChange = function(option) {
         return (e, { checked }) =>
           onFormChange(
@@ -197,8 +197,8 @@ function ListItem({
             checked
               ? labelData.concat([option])
               : labelData.filter(x => x !== option)
-          );
-      };
+          )
+      }
 
       const items = options.map(option => (
         <List.Item key={option}>
@@ -208,12 +208,12 @@ function ListItem({
             onChange={handleChange(option)}
           />
         </List.Item>
-      ));
-      return <List style={sublistStyle}>{items}</List>;
+      ))
+      return <List style={sublistStyle}>{items}</List>
     }
 
     if (label.type === 'select-one') {
-      const { options } = label;
+      const { options } = label
       const items = options.map(option => (
         <List.Item key={option}>
           <Radio
@@ -222,11 +222,11 @@ function ListItem({
             onChange={(e, { checked }) => onFormChange(label.id, [option])}
           />
         </List.Item>
-      ));
-      return <List style={sublistStyle}>{items}</List>;
+      ))
+      return <List style={sublistStyle}>{items}</List>
     }
 
-    return null;
+    return null
   }
 
   return (
@@ -250,5 +250,5 @@ function ListItem({
         {genSublist(label)}
       </Hotkeys>
     </List.Item>
-  );
+  )
 }

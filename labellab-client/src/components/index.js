@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Dashboard from "./dashboard/index";
-import Logout from "./logout/index";
-import Login from "./login/index";
-import PrivateRoute from "../utils/pR";
-import Register from "./register/index";
-import Profile from "./profile/index";
-import Labeller from "./labeller/index";
-import Project from "./project/index";
-import Redirect from "./redirect.js";
+import React, { Component } from 'react'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Dashboard from './dashboard/index'
+import Logout from './logout/index'
+import Login from './login/index'
+import PrivateRoute from '../utils/pR'
+import Register from './register/index'
+import Profile from './profile/index'
+import Labeller from './labeller/index'
+import Project from './project/index'
+import Redirect from './redirect.js'
 
 class App extends Component {
   render() {
-    const { match } = this.props;
+    const { match } = this.props
     return (
       <BrowserRouter>
         <React.Fragment>
@@ -38,8 +38,8 @@ class App extends Component {
           </Switch>
         </React.Fragment>
       </BrowserRouter>
-    );
+    )
   }
 }
 
-export default App;
+export default App

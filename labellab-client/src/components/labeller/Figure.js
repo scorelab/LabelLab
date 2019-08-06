@@ -1,17 +1,17 @@
-import React, { Component, Fragment } from 'react';
-import { Polyline, Polygon, CircleMarker } from 'react-leaflet';
+import React, { Component, Fragment } from 'react'
+import { Polyline, Polygon, CircleMarker } from 'react-leaflet'
 
 class Figure extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       dragging: false,
-      draggedPoint: null,
-    };
+      draggedPoint: null
+    }
   }
   // abstract
   calculateGuides() {
-    return [];
+    return []
   }
 
   // abstract
@@ -22,22 +22,22 @@ class Figure extends Component {
 
   // abstract
   makeExtraElements() {
-    return null;
+    return null
   }
 
   // abstract
   leafletComponent() {
-    return Polygon;
+    return Polygon
   }
 
   // abstract
   getRenderPoints(points) {
-    return points;
+    return points
   }
 
   makeGuides() {
-    const guides = this.calculateGuides();
-    const { color } = this.props.options;
+    const guides = this.calculateGuides()
+    const { color } = this.props.options
     return guides.map((pos, i) => (
       <Polyline
         key={i}
@@ -46,16 +46,16 @@ class Figure extends Component {
         opacity={0.7}
         dashArray="5"
       />
-    ));
+    ))
   }
 
   hasFill() {
-    return true;
+    return true
   }
 
   render() {
-    const { figure, options, skipNextClick } = this.props;
-    const { id, points } = figure;
+    const { figure, options, skipNextClick } = this.props
+    const { id, points } = figure
     const {
       editing,
       finished,
@@ -63,23 +63,23 @@ class Figure extends Component {
       color,
       vertexColor,
       interactive,
-      onSelect,
-    } = options;
-    const { draggedPoint } = this.state;
+      onSelect
+    } = options
+    const { draggedPoint } = this.state
 
-    const renderPoints = this.getRenderPoints(points);
+    const renderPoints = this.getRenderPoints(points)
 
-    const dashArray = editing ? '10' : '1';
+    const dashArray = editing ? '10' : '1'
 
-    const lineColor = editing && sketch ? color : vertexColor || color;
-    const fillColor = editing && sketch ? 'rgba(0,0,0,0)' : color;
-    const weight = editing && sketch ? 2 : 3;
+    const lineColor = editing && sketch ? color : vertexColor || color
+    const fillColor = editing && sketch ? 'rgba(0,0,0,0)' : color
+    const weight = editing && sketch ? 2 : 3
 
-    const classes = ['vertex'];
-    if (editing) classes.push('editing');
-    if (finished) classes.push('finished');
+    const classes = ['vertex']
+    if (editing) classes.push('editing')
+    if (finished) classes.push('finished')
 
-    const vcolor = vertexColor || color;
+    const vcolor = vertexColor || color
     const vertices = renderPoints.map((pos, i) => (
       <CircleMarker
         className={classes.concat(!i ? ['first'] : []).join(' ')}
@@ -92,13 +92,13 @@ class Figure extends Component {
         draggable={editing}
         onDrag={e => {
           this.setState({
-            draggedPoint: { point: e.target.getLatLng(), index: i },
-          });
+            draggedPoint: { point: e.target.getLatLng(), index: i }
+          })
         }}
         onDragstart={e => this.setState({ dragging: true })}
         onDragend={e => {
-          this.onPointMoved(e.target.getLatLng(), i);
-          this.setState({ dragging: false, draggedPoint: null });
+          this.onPointMoved(e.target.getLatLng(), i)
+          this.setState({ dragging: false, draggedPoint: null })
         }}
       >
         <CircleMarker
@@ -113,10 +113,10 @@ class Figure extends Component {
           }
         />
       </CircleMarker>
-    ));
+    ))
 
-    const guideLines = this.makeGuides();
-    const PolyComp = this.leafletComponent();
+    const guideLines = this.makeGuides()
+    const PolyComp = this.leafletComponent()
 
     return (
       <Fragment key={id}>
@@ -131,8 +131,8 @@ class Figure extends Component {
           interactive={id !== 'trace'} // always set interactive to true, to avoid bugs in leaflet-react
           onClick={() => {
             if (interactive) {
-              onSelect();
-              skipNextClick();
+              onSelect()
+              skipNextClick()
             }
           }}
         />
@@ -140,57 +140,57 @@ class Figure extends Component {
         {this.makeExtraElements()}
         {!finished || editing ? vertices : null}
       </Fragment>
-    );
+    )
   }
 }
 
 export class PolygonFigure extends Figure {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.onPointClick = this.onPointClick.bind(this);
+    this.onPointClick = this.onPointClick.bind(this)
   }
 
   leafletComponent() {
     const {
-      options: { finished },
-    } = this.props;
-    return finished ? Polygon : Polyline;
+      options: { finished }
+    } = this.props
+    return finished ? Polygon : Polyline
   }
 
   calculateGuides() {
-    const { figure, options } = this.props;
-    const { points } = figure;
-    const { newPoint, finished } = options;
-    const { draggedPoint } = this.state;
+    const { figure, options } = this.props
+    const { points } = figure
+    const { newPoint, finished } = options
+    const { draggedPoint } = this.state
 
-    const guides = [];
+    const guides = []
     if (draggedPoint) {
-      const { point, index } = draggedPoint;
-      const { length } = points;
+      const { point, index } = draggedPoint
+      const { length } = points
       guides.push(
         [point, points[(index + 1) % length]],
         [point, points[(index - 1 + length) % length]]
-      );
+      )
     }
 
     const additionalGuides =
       !finished && points.length > 0
         ? [[points[points.length - 1], newPoint]]
-        : [];
+        : []
 
-    return guides.concat(additionalGuides);
+    return guides.concat(additionalGuides)
   }
 
   makeExtraElements() {
-    const { figure, options, skipNextClick } = this.props;
-    const { id, points } = figure;
-    const { editing, finished, calcDistance, onChange } = options;
+    const { figure, options, skipNextClick } = this.props
+    const { id, points } = figure
+    const { editing, finished, calcDistance, onChange } = options
 
-    const { dragging } = this.state;
+    const { dragging } = this.state
 
     if (!finished || !editing || dragging) {
-      return [];
+      return []
     }
 
     const midPoints = points
@@ -205,8 +205,8 @@ export class PolygonFigure extends Figure {
           opacity={0.0}
           fillOpacity={0.0}
           onMousedown={e => {
-            onChange('add', { point: midPoint(a, b), pos: i + 1, figure });
-            skipNextClick();
+            onChange('add', { point: midPoint(a, b), pos: i + 1, figure })
+            skipNextClick()
           }}
         >
           <CircleMarker
@@ -218,109 +218,109 @@ export class PolygonFigure extends Figure {
             center={midPoint(a, b)}
           />
         </CircleMarker>
-      ));
+      ))
 
-    return midPoints;
+    return midPoints
   }
 
   onPointMoved(point, index) {
     const {
       figure,
-      options: { onChange },
-    } = this.props;
-    onChange('move', { point, pos: index, figure });
+      options: { onChange }
+    } = this.props
+    onChange('move', { point, pos: index, figure })
   }
 
   onPointClick(i) {
-    const { figure, options, skipNextClick } = this.props;
-    const { points } = figure;
-    const { finished, editing, onChange } = options;
+    const { figure, options, skipNextClick } = this.props
+    const { points } = figure
+    const { finished, editing, onChange } = options
 
     if (!finished && i === 0) {
       if (points.length >= 3) {
-        onChange('end', {});
+        onChange('end', {})
       }
-      skipNextClick();
-      return false;
+      skipNextClick()
+      return false
     }
 
     if (finished && editing) {
       if (points.length > 3) {
-        onChange('remove', { pos: i, figure });
+        onChange('remove', { pos: i, figure })
       }
-      skipNextClick();
-      return false;
+      skipNextClick()
+      return false
     }
   }
 }
 
 export class BBoxFigure extends Figure {
   calculateGuides() {
-    const { figure, options } = this.props;
-    const { points } = figure;
-    const { newPoint, finished } = options;
-    const { draggedPoint } = this.state;
+    const { figure, options } = this.props
+    const { points } = figure
+    const { newPoint, finished } = options
+    const { draggedPoint } = this.state
 
     if (draggedPoint) {
-      const renderPoints = this.getRenderPoints(points);
-      const { point, index } = draggedPoint;
-      const oppPoint = renderPoints[(index + 2) % renderPoints.length];
-      const sidePoint1 = { lat: oppPoint.lat, lng: point.lng };
-      const sidePoint2 = { lat: point.lat, lng: oppPoint.lng };
+      const renderPoints = this.getRenderPoints(points)
+      const { point, index } = draggedPoint
+      const oppPoint = renderPoints[(index + 2) % renderPoints.length]
+      const sidePoint1 = { lat: oppPoint.lat, lng: point.lng }
+      const sidePoint2 = { lat: point.lat, lng: oppPoint.lng }
       return [
         [point, sidePoint1],
         [sidePoint1, oppPoint],
         [point, sidePoint2],
-        [sidePoint2, oppPoint],
-      ];
+        [sidePoint2, oppPoint]
+      ]
     }
 
     if (!finished && points.length > 0) {
-      const renderPoints = this.getRenderPoints([points[0], newPoint]);
+      const renderPoints = this.getRenderPoints([points[0], newPoint])
       return [
         [renderPoints[0], renderPoints[1]],
         [renderPoints[1], renderPoints[2]],
         [renderPoints[2], renderPoints[3]],
-        [renderPoints[3], renderPoints[0]],
-      ];
+        [renderPoints[3], renderPoints[0]]
+      ]
     }
 
-    return [];
+    return []
   }
 
   getRenderPoints(points) {
-    const [p1, p2] = points;
+    const [p1, p2] = points
     if (!p1) {
-      return [];
+      return []
     }
     if (!p2) {
-      return [p1];
+      return [p1]
     }
 
     return [
       { lat: p1.lat, lng: p1.lng },
       { lat: p1.lat, lng: p2.lng },
       { lat: p2.lat, lng: p2.lng },
-      { lat: p2.lat, lng: p1.lng },
-    ];
+      { lat: p2.lat, lng: p1.lng }
+    ]
   }
 
   onPointMoved(point, index) {
     const {
       figure,
-      options: { onChange },
-    } = this.props;
+      options: { onChange }
+    } = this.props
     if (index === 0 || index === 2) {
-      onChange('move', { point, pos: index / 2, figure });
+      onChange('move', { point, pos: index / 2, figure })
     } else {
-      const [p1, p2] = figure.points;
+      const [p1, p2] = figure.points
 
       const points =
         index === 1
           ? [{ lat: point.lat, lng: p1.lng }, { lat: p2.lat, lng: point.lng }]
-          : [{ lat: p1.lat, lng: point.lng }, { lat: point.lat, lng: p2.lng }];
+          : [{ lat: p1.lat, lng: point.lng }, { lat: point.lat, lng: p2.lng }]
 
-      onChange('replace', { points, figure });
+      onChange('replace', { points, figure })
     }
   }
 }
@@ -328,6 +328,6 @@ export class BBoxFigure extends Figure {
 function midPoint(p1, p2) {
   return {
     lat: (p1.lat + p2.lat) / 2,
-    lng: (p1.lng + p2.lng) / 2,
-  };
+    lng: (p1.lng + p2.lng) / 2
+  }
 }

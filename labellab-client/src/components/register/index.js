@@ -1,33 +1,33 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Message, Button, Form, Icon } from "semantic-ui-react";
-import { userRegister } from "../../actions/index";
-import register from "./css/register.css";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Message, Button, Form, Icon } from 'semantic-ui-react'
+import { userRegister } from '../../actions/index'
+import register from './css/register.css'
 
 class RegisterIndex extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      name: "",
-      username: "",
-      email: "",
-      password: "",
-      password2: "",
+      name: '',
+      username: '',
+      email: '',
+      password: '',
+      password2: '',
       submitted: false
-    };
+    }
   }
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
-    });
-  };
+    })
+  }
   handleSubmit = e => {
-    e.preventDefault();
-    const { name, username, email, password, password2 } = this.state;
-    const { history, setProfile } = this.props;
+    e.preventDefault()
+    const { name, username, email, password, password2 } = this.state
+    const { history, setProfile } = this.props
     this.setState({
       submitted: true
-    });
+    })
     if (name && username && email && password && password2) {
       if (password === password2) {
         let data = {
@@ -36,28 +36,21 @@ class RegisterIndex extends Component {
           email: email,
           password: password,
           password2: password2
-        };
+        }
         setProfile(data, () => {
-          history.push("/login");
-        });
+          history.push('/login')
+        })
       } else {
         this.setState({
-          password2Err: "Both password are not equal"
-        });
+          password2Err: 'Both password are not equal'
+        })
       }
     }
-  };
+  }
 
   render() {
-    const { errField, statusText, isRegistering } = this.props;
-    const {
-      name,
-      username,
-      email,
-      password,
-      password2,
-      submitted
-    } = this.state;
+    const { errField, statusText, isRegistering } = this.props
+    const { name, username, email, password, password2, submitted } = this.state
     return (
       <div>
         <Message
@@ -67,7 +60,7 @@ class RegisterIndex extends Component {
         />
         <Form onSubmit={this.handleSubmit} className="attached fluid segment">
           <Form.Input
-            error={errField === "name" || (submitted && name === "")}
+            error={errField === 'name' || (submitted && name === '')}
             onChange={this.onChange}
             fluid
             name="name"
@@ -80,11 +73,11 @@ class RegisterIndex extends Component {
               Name field cannot be empty
             </div>
           )}
-          {statusText && errField === "name" && (
+          {statusText && errField === 'name' && (
             <div className={register.errorText}>{statusText}</div>
           )}
           <Form.Input
-            error={errField === "email" || (submitted && email === "")}
+            error={errField === 'email' || (submitted && email === '')}
             onChange={this.onChange}
             name="email"
             label="Email"
@@ -96,11 +89,11 @@ class RegisterIndex extends Component {
               Email field cannot be empty
             </div>
           )}
-          {statusText && errField === "email" && (
+          {statusText && errField === 'email' && (
             <div className="register-error-text">{statusText}</div>
           )}
           <Form.Input
-            error={errField === "username" || (submitted && username === "")}
+            error={errField === 'username' || (submitted && username === '')}
             onChange={this.onChange}
             name="username"
             label="Username"
@@ -112,11 +105,11 @@ class RegisterIndex extends Component {
               Username field cannot be empty
             </div>
           )}
-          {statusText && errField === "username" && (
+          {statusText && errField === 'username' && (
             <div className="register-error-text">{statusText}</div>
           )}
           <Form.Input
-            error={errField === "password" || (submitted && password === "")}
+            error={errField === 'password' || (submitted && password === '')}
             onChange={this.onChange}
             name="password"
             label="Password"
@@ -128,11 +121,11 @@ class RegisterIndex extends Component {
               Password field cannot be empty
             </div>
           )}
-          {statusText && errField === "password" && (
+          {statusText && errField === 'password' && (
             <div className="register-error-text">{statusText}</div>
           )}
           <Form.Input
-            error={errField === "password2" || (submitted && password2 === "")}
+            error={errField === 'password2' || (submitted && password2 === '')}
             onChange={this.onChange}
             name="password2"
             label="Confirm Password"
@@ -149,7 +142,7 @@ class RegisterIndex extends Component {
               Both password are not equal!
             </div>
           )}
-          {statusText && errField === "password2" && (
+          {statusText && errField === 'password2' && (
             <div className="register-error-text">{statusText}</div>
           )}
           <Button loading={isRegistering} color="blue">
@@ -161,7 +154,7 @@ class RegisterIndex extends Component {
           Already signed up?&nbsp;<a href="/login">Login here</a>&nbsp;instead.
         </Message>
       </div>
-    );
+    )
   }
 }
 
@@ -170,18 +163,18 @@ const mapStateToProps = state => {
     isRegistering: state.register.isRegistering,
     statusText: state.register.statusText,
     errField: state.register.errField
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
     setProfile: (data, callback) => {
-      dispatch(userRegister(data, callback));
+      dispatch(userRegister(data, callback))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RegisterIndex);
+)(RegisterIndex)

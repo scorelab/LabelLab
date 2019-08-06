@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import AppIndex from "./components/index";
-import "./App.css";
+import React, { Component } from 'react'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import AppIndex from './components/index'
+import './App.css'
 
 export default class App extends Component {
   render() {
@@ -11,6 +11,6 @@ export default class App extends Component {
           <Route path="/" component={AppIndex} />
         </Switch>
       </BrowserRouter>
-    );
+    )
   }
 }

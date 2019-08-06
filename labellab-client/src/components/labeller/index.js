@@ -1,44 +1,44 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Loader, Dimmer, Modal, Button } from "semantic-ui-react";
-import DocumentMeta from "react-document-meta";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { Loader, Dimmer, Modal, Button } from 'semantic-ui-react'
+import DocumentMeta from 'react-document-meta'
 import {
   fetchLabels,
   updateLabels,
   fetchProjectImage,
   fetchProject,
   setNextPrev
-} from "../../actions/index";
-import LabelingApp from "./LabelingApp.js";
+} from '../../actions/index'
+import LabelingApp from './LabelingApp.js'
 
 class LabelingLoader extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       project: null,
       image: null,
       isLoaded: false,
       error: null
-    };
+    }
   }
   componentDidMount() {
-    const { match, fetchLabels, fetchProject, fetchProjectImage } = this.props;
-    fetchLabels(match.params.projectId);
-    fetchProject(match.params.projectId, this.setImageState);
-    fetchProjectImage(match.params.imageId);
+    const { match, fetchLabels, fetchProject, fetchProjectImage } = this.props
+    fetchLabels(match.params.projectId)
+    fetchProject(match.params.projectId, this.setImageState)
+    fetchProjectImage(match.params.imageId)
   }
   componentDidUpdate(prevProps) {
-    const { match, fetchLabels, fetchProject, fetchProjectImage } = this.props;
+    const { match, fetchLabels, fetchProject, fetchProjectImage } = this.props
     if (prevProps.match.params.image_id !== match.params.image_id) {
-      fetchLabels(match.params.projectId);
-      fetchProject(match.params.imageId, this.setImageState);
-      fetchProjectImage(match.params.imageId);
+      fetchLabels(match.params.projectId)
+      fetchProject(match.params.imageId, this.setImageState)
+      fetchProjectImage(match.params.imageId)
     }
   }
   setImageState = () => {
-    const { match, setNextPrev, allImages } = this.props;
-    const len = allImages && allImages.length;
+    const { match, setNextPrev, allImages } = this.props
+    const len = allImages && allImages.length
     allImages &&
       allImages.map((image, index) =>
         image._id === match.params.imageId
@@ -48,11 +48,11 @@ class LabelingLoader extends Component {
               : setNextPrev(allImages[index + 1], {})
             : setNextPrev(allImages[index + 1], allImages[index - 1])
           : null
-      );
-  };
+      )
+  }
   pushUpdate(labelData) {
-    const { match, updateLabels } = this.props;
-    updateLabels(match.params.imageId, labelData);
+    const { match, updateLabels } = this.props
+    updateLabels(match.params.imageId, labelData)
   }
   render() {
     const {
@@ -64,18 +64,18 @@ class LabelingLoader extends Component {
       labelActions,
       imageActions,
       lab
-    } = this.props;
+    } = this.props
     const props = {
       onBack: () => {
-        history.push(`/labeller/${match.params.projectId}/${prev._id}`);
+        history.push(`/labeller/${match.params.projectId}/${prev._id}`)
       },
       onSkip: () => {
-        history.push(`/labeller/${match.params.projectId}/${next._id}`);
+        history.push(`/labeller/${match.params.projectId}/${next._id}`)
       },
       onLabelChange: this.pushUpdate.bind(this)
-    };
+    }
     console.log(image)
-    const title = image && image.imageName;
+    const title = image && image.imageName
     return (
       <DocumentMeta title={title}>
         {labelActions.isfetching &&
@@ -114,7 +114,7 @@ class LabelingLoader extends Component {
           </Modal>
         )}
       </DocumentMeta>
-    );
+    )
   }
 }
 
@@ -127,30 +127,30 @@ const mapStateToProps = state => {
     allImages: state.projects.currentProject.images,
     next: state.images.nextImage,
     prev: state.images.prevImage
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchProject: (imageId, callback) => {
-      return dispatch(fetchProject(imageId, callback));
+      return dispatch(fetchProject(imageId, callback))
     },
     fetchLabels: projectId => {
-      return dispatch(fetchLabels(projectId));
+      return dispatch(fetchLabels(projectId))
     },
     fetchProjectImage: imageId => {
-      return dispatch(fetchProjectImage(imageId));
+      return dispatch(fetchProjectImage(imageId))
     },
     updateLabels: (imageId, labelData) => {
-      return dispatch(updateLabels(imageId, labelData));
+      return dispatch(updateLabels(imageId, labelData))
     },
     setNextPrev: (next, prev) => {
-      return dispatch(setNextPrev(next, prev));
+      return dispatch(setNextPrev(next, prev))
     }
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LabelingLoader);
+)(LabelingLoader)
