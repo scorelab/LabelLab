@@ -4,8 +4,9 @@ import 'dart:math';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
-import 'package:labellab_mobile/screen/project/label_tool/label_selection.dart';
+import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_state.dart';
+import 'package:labellab_mobile/util/util.dart';
 
 class LabelToolBloc {
   Repository _repository = Repository();
@@ -18,17 +19,17 @@ class LabelToolBloc {
   Image _image;
   List<Label> _labels = [];
   bool _isLoading = false;
+  SelectionOffset _selectionOffset = SelectionOffset.zero;
 
   LabelToolBloc(this.projectId, this.imageId) {
     _loadImageAndLabels();
   }
 
   void _loadImageAndLabels() {
-    if (_isLoading) return;
-    _isLoading = true;
     _setState(LabelToolState.loading(selections: _selections));
     final getImage = _repository.getImage(imageId).then((image) {
       _image = image;
+      if (image.labels != null) _selections = image.labels;
     });
     final getLabels = _repository.getLabels(projectId).then((labels) {
       this._labels = labels;
@@ -37,6 +38,10 @@ class LabelToolBloc {
       _setState(
           LabelToolState.loaded(_labels, _image, selections: _selections));
     });
+  }
+
+  void setCanvasSelectionOffset(SelectionOffset offset) {
+    _selectionOffset = offset;
   }
 
   void selectLabel(Label label) {
@@ -92,6 +97,39 @@ class LabelToolBloc {
     _selections.remove(selection);
     _setState(LabelToolState.drawingSelection(_selections, _image,
         currentSelection: _currentSelection, labels: _labels));
+  }
+
+  void uploadSelections() {
+    print("Uploading selections");
+    if (_isLoading) return;
+    _isLoading = true;
+    print("Not pending");
+    _setState(LabelToolState.saving(_selections, _image, labels: _labels));
+
+    // Scale and remove offset from unadjusted images
+    final adjustedSelections = _selections.map((selection) {
+      if (selection.isAdjusted) return selection;
+      final adjustedPoints = selection.points.map((point) {
+        return Point((point.x - _selectionOffset.dx) * _selectionOffset.scale,
+            (point.y - _selectionOffset.dy) * _selectionOffset.scale);
+      }).toList();
+      return LabelSelection.adjusted(
+          selection.label, adjustedPoints, selection.color);
+    }).toList();
+
+    _repository.updateImage(_image, adjustedSelections).then((res) {
+      _isLoading = false;
+      if (res.success) {
+        _setState(LabelToolState.success(_selections, _image, labels: _labels));
+      } else {
+        _setState(LabelToolState.error(res.msg, _selections, _image,
+            labels: _labels));
+      }
+    }).catchError((err) {
+      _isLoading = false;
+      _setState(LabelToolState.error(err.toString(), _selections, _image,
+          labels: _labels));
+    });
   }
 
   // State stream

@@ -1,12 +1,13 @@
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
-import 'package:labellab_mobile/screen/project/label_tool/label_selection.dart';
+import 'package:labellab_mobile/model/label_selection.dart';
 
 class LabelToolState {
   List<LabelSelection> selections;
   LabelSelection currentSelection;
   Image image;
   List<Label> labels;
+  String error;
   bool isLoading = false;
   bool isSaving = false;
   bool isSuccess = false;
@@ -33,4 +34,6 @@ class LabelToolState {
   LabelToolState.success(this.selections, this.image, {this.labels}) {
     isSuccess = true;
   }
+
+  LabelToolState.error(this.error, this.selections, this.image, {this.labels});
 }

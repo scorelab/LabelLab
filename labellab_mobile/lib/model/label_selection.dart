@@ -5,13 +5,29 @@ import 'package:random_color/random_color.dart';
 
 class LabelSelection {
   final Label label;
-  final List<Point> points = [];
+  final List<Point> points;
   final Color color;
+  final bool isAdjusted;
 
   LabelSelection(this.label)
-      : color = RandomColor().randomColor(
+      : points = [],
+        color = RandomColor().randomColor(
           colorBrightness: ColorBrightness.light,
-        );
+        ),
+        isAdjusted = false;
+
+  LabelSelection.adjusted(this.label, this.points, this.color)
+      : isAdjusted = true;
+
+  LabelSelection.fromJson(dynamic json)
+      : label = Label.fromJson(json),
+        points = (json["points"] as List).map((label) {
+          return Point<double>(label["lat"], label["lng"]);
+        }).toList(),
+        color = RandomColor().randomColor(
+          colorBrightness: ColorBrightness.light,
+        ),
+        isAdjusted = true;
 
   void setStartPoint(Point point) {
     points.clear();
@@ -35,5 +51,16 @@ class LabelSelection {
 
   void removePoint(Point point) {
     points.remove(point);
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = label.toMap();
+    map["points"] = points.map((point) {
+      return {
+        "lat": point.x,
+        "lng": point.y,
+      };
+    }).toList();
+    return map;
   }
 }

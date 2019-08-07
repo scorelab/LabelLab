@@ -1,9 +1,11 @@
-import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/label_selection.dart';
 
 class Image {
   String id;
   String imageUrl;
-  List<Label> labels;
+  double width;
+  double height;
+  List<LabelSelection> labels;
   DateTime createdAt;
 
   Image({this.imageUrl, this.labels});
@@ -11,8 +13,11 @@ class Image {
   Image.fromJson(dynamic json, {String imageEndpoint}) {
     id = json["_id"];
     imageUrl = (imageEndpoint != null ? imageEndpoint : "") + json["imageUrl"];
-    if (json["labelled"] != null && json["labelled"])
-      labels = (json["label"] as List).map((label) => Label.fromJson(label));
+    width = double.parse(json["width"].toString());
+    height = double.parse(json["height"].toString());
+    if (json["labelData"] != null)
+      labels = (json["labelData"] as List)
+          .map((label) => LabelSelection.fromJson(label)).toList();
     createdAt = DateTime.parse(json["createdAt"]);
   }
 }
