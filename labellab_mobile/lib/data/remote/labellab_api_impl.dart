@@ -11,6 +11,7 @@ import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -292,6 +293,27 @@ class LabelLabAPIImpl extends LabelLabAPI {
       } else {
         throw Exception("Request unsuccessfull");
       }
+    });
+  }
+
+  @override
+  Future<ApiResponse> updateImage(
+      String token, Image image, List<LabelSelection> selections) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    final data = {
+      "labels": selections.map((selection) {
+        return selection.toMap();
+      }).toList(),
+      "width": image.width,
+      "height": image.height,
+    };
+    return _dio
+        .put(API_URL + ENDPOINT_IMAGE + "/${image.id}/update",
+            options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
     });
   }
 

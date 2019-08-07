@@ -8,6 +8,7 @@ import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -36,6 +37,7 @@ abstract class LabelLabAPI {
   // Image
   Future<ApiResponse> uploadImage(String token, String projectId, UploadImage image);
   Future<Image> getImage(String token, String imageId);
+  Future<ApiResponse> updateImage(String token, Image image, List<LabelSelection> selections);
   Future<ApiResponse> deleteImage(String token, String imageId);
 
   // Label
