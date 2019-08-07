@@ -19,6 +19,7 @@
     "fs": "0.0.1-security",
     "g": "^2.0.1",
     "http-errors": "~1.6.3",
+    "image-size": "^0.7.4",
     "is-empty": "^1.2.0",
     "jade": "~1.11.0",
     "jwt-simple": "^0.5.6",
