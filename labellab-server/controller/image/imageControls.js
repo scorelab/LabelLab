@@ -160,7 +160,7 @@ exports.updateLabels = function(req, res) {
 }
 
 exports.deleteImage = function(req, res) {
-	if (req && req.params && req.params.projectId && req.params.imageId) {
+	if (req && req.params && req.params.imageId) {
 		Image.findOneAndDelete({
 			_id: req.params.imageId
 		}).exec(function(err, image) {
