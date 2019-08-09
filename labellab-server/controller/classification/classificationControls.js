@@ -87,7 +87,7 @@ exports.fetchClassification = function(req, res) {
 }
 
 exports.fetchClassificationId = function(req, res) {
-	if (req && req.params && req.params.classification_id) {
+	if (req && req.params && req.params.classificationId) {
 		Classification.find({
 			_id: req.params.classificationId
 		})
