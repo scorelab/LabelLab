@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/common/label_selection_list.dart';
+import 'package:labellab_mobile/screen/project/common/label_selection_painter.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
@@ -56,14 +58,31 @@ class ProjectViewImageScreen extends StatelessWidget {
       ProjectViewImageState _state = snapshot.data;
       return Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _state.isLoading ? LinearProgressIndicator() : Container(),
           _state.error != null ? Text(_state.error) : Container(),
           _state.image != null
-              ? Image(
-                  image: CachedNetworkImageProvider(_state.image.imageUrl),
-                  fit: BoxFit.contain,
+              ? LabelSelectionList(_state.image.labels, false)
+              : Container(),
+          _state.image != null
+              ? Expanded(
+                  child: Container(
+                    decoration: new BoxDecoration(
+                      image: _state.image != null
+                          ? DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                  _state.image.imageUrl))
+                          : null,
+                    ),
+                    child: CustomPaint(
+                      size: Size.infinite,
+                      painter: LabelSelectionPainter(
+                        _state.image.labels,
+                        null,
+                        _state.image,
+                      ),
+                    ),
+                  ),
                 )
               : Container(),
         ],
