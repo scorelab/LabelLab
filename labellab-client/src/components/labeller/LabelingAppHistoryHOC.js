@@ -5,7 +5,6 @@ export function withHistory(Comp) {
   return class HistoryLayer extends Component {
     constructor(props) {
       super(props)
-      console.log(props)
       const { labelData, labels } = props
       let figures = {}
 
