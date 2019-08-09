@@ -7,7 +7,7 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
-import 'package:labellab_mobile/screen/project/detail/project._detail_bloc.dart';
+import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
@@ -67,7 +67,10 @@ class ProjectDetailScreen extends StatelessWidget {
                               _state.project.images.length > 8
                                   ? FlatButton(
                                       child: Text("More"),
-                                      onPressed: () {},
+                                      onPressed: () => _gotoMoreImagesScreen(
+                                        context,
+                                        _state.project.id,
+                                      ),
                                     )
                                   : Container(),
                             ],
@@ -323,6 +326,14 @@ class ProjectDetailScreen extends StatelessWidget {
   void _gotoAddMemberScreen(BuildContext context, Project project) {
     Application.router
         .navigateTo(context, "/project/${project.id}/add")
+        .whenComplete(() {
+      Provider.of<ProjectDetailBloc>(context).refresh();
+    });
+  }
+
+  void _gotoMoreImagesScreen(BuildContext context, String projectId) {
+    Application.router
+        .navigateTo(context, "/project/$projectId/images")
         .whenComplete(() {
       Provider.of<ProjectDetailBloc>(context).refresh();
     });
