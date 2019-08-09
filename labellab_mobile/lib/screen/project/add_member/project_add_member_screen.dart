@@ -19,7 +19,7 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add member"),
-        elevation: 2,
+        elevation: 0,
       ),
       body: StreamBuilder<ProjectAddMemberState>(
         stream: Provider.of<ProjectAddMemberBloc>(context).state,

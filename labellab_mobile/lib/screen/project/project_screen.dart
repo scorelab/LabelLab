@@ -5,6 +5,7 @@ import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_item.dart';
 import 'package:labellab_mobile/screen/project/project_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
+import 'package:labellab_mobile/widgets/empty_placeholder.dart';
 import 'package:provider/provider.dart';
 
 class ProjectScreen extends StatelessWidget {
@@ -14,13 +15,14 @@ class ProjectScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Projects"),
         centerTitle: true,
-        elevation: 2,
+        elevation: 0,
       ),
       body: StreamBuilder(
         stream: Provider.of<ProjectBloc>(context).projects,
+        initialData: ProjectState.loading(),
         builder: (context, AsyncSnapshot<ProjectState> snapshot) {
-          if (snapshot.hasData) {
-            final ProjectState state = snapshot.data;
+          final ProjectState state = snapshot.data;
+          if (state.projects != null && state.projects.isNotEmpty) {
             return RefreshIndicator(
               onRefresh: () async {
                 Provider.of<ProjectBloc>(context).refresh();
@@ -61,13 +63,17 @@ class ProjectScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Text("No data");
+            return EmptyPlaceholder(
+                description: "Your projects will appear here");
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "project_add_tag",
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         onPressed: () => _gotoAddProject(context),
       ),
     );

@@ -22,7 +22,7 @@ class LabelLabApp extends StatelessWidget {
       child: MaterialApp(
         title: 'LabelLab',
         theme: ThemeData(
-          primaryColor: Color(0xfff5f5f5),
+          primaryColor: Theme.of(context).canvasColor,
           primaryColorLight: Color(0xffffffff),
           primaryColorDark: Color(0xffc2c2c2),
           accentColor: Color(0xff00a89f),

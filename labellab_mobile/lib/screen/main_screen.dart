@@ -5,6 +5,7 @@ import 'package:labellab_mobile/screen/home/home_screen.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_screen.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
+import 'package:page_view_indicator/page_view_indicator.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
     initialPage: 1,
     keepPage: true,
   );
+  final pageIndexNotifier = ValueNotifier<int>(1);
 
   @override
   Widget build(BuildContext context) {
@@ -24,37 +26,72 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context) => _pageController,
       child: Consumer<AuthState>(
         builder: (context, AuthState authState, widget) {
-          if (authState.user != null) {
-            return PageView(
-              controller: _pageController,
-              children: <Widget>[
-                Provider<HistoryBloc>(
-                  builder: (context) => HistoryBloc(),
-                  dispose: (context, bloc) => bloc.dispose(),
-                  child: HistoryScreen(),
+          return Stack(
+            children: <Widget>[
+              authState.user != null
+                  ? PageView(
+                      onPageChanged: (index) => pageIndexNotifier.value = index,
+                      controller: _pageController,
+                      children: <Widget>[
+                        Provider<HistoryBloc>(
+                          builder: (context) => HistoryBloc(),
+                          dispose: (context, bloc) => bloc.dispose(),
+                          child: HistoryScreen(),
+                        ),
+                        HomeScreen(),
+                        Provider<ProjectBloc>(
+                          builder: (context) => ProjectBloc(),
+                          dispose: (context, bloc) => bloc.dispose(),
+                          child: ProjectScreen(),
+                        ),
+                      ],
+                    )
+                  : PageView(
+                      onPageChanged: (index) => pageIndexNotifier.value = index,
+                      controller: _pageController,
+                      children: <Widget>[
+                        Provider<HistoryBloc>(
+                          builder: (context) => HistoryBloc(),
+                          dispose: (context, bloc) => bloc.dispose(),
+                          child: HistoryScreen(),
+                        ),
+                        HomeScreen(),
+                      ],
+                    ),
+              Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: _buildPageIndicator(
+                  context,
+                  authState.user != null ? 3 : 2,
                 ),
-                HomeScreen(),
-                Provider<ProjectBloc>(
-                  builder: (context) => ProjectBloc(),
-                  dispose: (context, bloc) => bloc.dispose(),
-                  child: ProjectScreen(),
-                ),
-              ],
-            );
-          } else {
-            return PageView(
-              controller: _pageController,
-              children: <Widget>[
-                Provider<HistoryBloc>(
-                  builder: (context) => HistoryBloc(),
-                  dispose: (context, bloc) => bloc.dispose(),
-                  child: HistoryScreen(),
-                ),
-                HomeScreen(),
-              ],
-            );
-          }
+              )
+            ],
+          );
         },
+      ),
+    );
+  }
+
+  Widget _buildPageIndicator(BuildContext context, int length) {
+    return SafeArea(
+      child: PageViewIndicator(
+        indicatorPadding: EdgeInsets.symmetric(horizontal: 4),
+        pageIndexNotifier: pageIndexNotifier,
+        length: length,
+        normalBuilder: (animationController, index) => Circle(
+          size: 4.0,
+          color: Colors.black87,
+        ),
+        highlightedBuilder: (animationController, index) => ScaleTransition(
+          scale: CurvedAnimation(
+            parent: animationController,
+            curve: Curves.ease,
+          ),
+          child: Circle(
+            size: 6.0,
+            color: Colors.black,
+          ),
+        ),
       ),
     );
   }

@@ -14,6 +14,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
+        elevation: 0,
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (int value) {
@@ -28,15 +29,15 @@ class ProfileScreen extends StatelessWidget {
               }
             },
             itemBuilder: (context) => [
-                  PopupMenuItem<int>(
-                    child: Text("Change picture"),
-                    value: 0,
-                  ),
-                  PopupMenuItem<int>(
-                    child: Text("Logout"),
-                    value: 1,
-                  ),
-                ],
+              PopupMenuItem<int>(
+                child: Text("Change picture"),
+                value: 0,
+              ),
+              PopupMenuItem<int>(
+                child: Text("Logout"),
+                value: 1,
+              ),
+            ],
           ),
         ],
       ),
@@ -117,26 +118,30 @@ class ProfileScreen extends StatelessWidget {
 
   void _showChangePictureMethodSelect(BuildContext pageContext) {
     showDialog(
-        context: pageContext,
-        builder: (context) => AlertDialog(
-              title: Text("Choose method"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.camera),
-                    title: Text("Camera"),
-                    onTap: () => _showImagePicker(context, ImageSource.camera),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.photo_library),
-                    title: Text("Gallery"),
-                    onTap: () =>
-                        _showImagePicker(pageContext, ImageSource.gallery),
-                  ),
-                ],
-              ),
-            ));
+      context: pageContext,
+      builder: (context) => AlertDialog(
+        title: Text("Choose method"),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        elevation: 8,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.camera),
+              title: Text("Camera"),
+              onTap: () => _showImagePicker(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text("Gallery"),
+              onTap: () => _showImagePicker(pageContext, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showImagePicker(BuildContext context, ImageSource source) {

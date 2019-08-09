@@ -38,7 +38,6 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
       appBar: AppBar(
         title: Text(_editing ? "Edit project" : "Add project"),
         elevation: 0,
-        backgroundColor: Theme.of(context).canvasColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

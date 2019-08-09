@@ -26,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text(""),
         elevation: 0,
-        backgroundColor: Theme.of(context).canvasColor,
       ),
       body: Theme(
         data: Theme.of(context)

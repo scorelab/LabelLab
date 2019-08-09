@@ -4,6 +4,8 @@ import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/history/history_bloc.dart';
 import 'package:labellab_mobile/screen/history/history_item.dart';
 import 'package:labellab_mobile/screen/history/history_state.dart';
+import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
+import 'package:labellab_mobile/widgets/empty_placeholder.dart';
 import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatelessWidget {
@@ -13,13 +15,15 @@ class HistoryScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("History"),
         centerTitle: true,
-        elevation: 2,
+        elevation: 0,
       ),
       body: StreamBuilder(
         stream: Provider.of<HistoryBloc>(context).classifications,
+        initialData: HistoryState.loading(),
         builder: (context, AsyncSnapshot<HistoryState> snapshot) {
-          if (snapshot.hasData) {
-            final HistoryState state = snapshot.data;
+          final HistoryState state = snapshot.data;
+          if (state.classifications != null &&
+              state.classifications.isNotEmpty) {
             return RefreshIndicator(
               onRefresh: () async {
                 Provider.of<HistoryBloc>(context).refresh();
@@ -57,7 +61,9 @@ class HistoryScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Text("No data");
+            return EmptyPlaceholder(
+              description: "Your past classifications will appear here",
+            );
           }
         },
       ),
@@ -67,36 +73,25 @@ class HistoryScreen extends StatelessWidget {
   void _showOnDeleteAlert(
       BuildContext baseContext, Classification classification) {
     showDialog(
-        context: baseContext,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Delete"),
-            content: Text("Are you sure?"),
-            actions: <Widget>[
-              ButtonBar(
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("No"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text("Yes"),
-                    onPressed: () {
-                      Provider.of<HistoryBloc>(baseContext)
-                          .delete(classification.id);
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              )
-            ],
-          );
-        });
+      context: baseContext,
+      builder: (context) {
+        return DeleteConfirmDialog(
+          name: "",
+          onCancel: () {
+            Navigator.pop(context);
+          },
+          onConfirm: () {
+            Provider.of<HistoryBloc>(baseContext).delete(classification.id);
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
   }
 
   void _gotoClassification(BuildContext context, String id) {
-    Application.router.navigateTo(context, "/classification/$id");
+    Application.router.navigateTo(context, "/classification/$id").then((_) {
+      Provider.of<HistoryBloc>(context).refresh();
+    });
   }
 }

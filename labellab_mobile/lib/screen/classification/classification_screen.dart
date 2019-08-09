@@ -5,6 +5,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
 import 'package:labellab_mobile/screen/classification/classification_state.dart';
+import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
 class ClassificationScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class ClassificationScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Classfication"),
         centerTitle: true,
-        elevation: 2,
+        elevation: 0,
         actions: <Widget>[
           PopupMenuButton<int>(
             onSelected: (selected) {
@@ -73,10 +74,13 @@ class ClassificationScreen extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image(
-              image: CachedNetworkImageProvider(classification.imageUrl),
-              fit: BoxFit.cover,
+            child: Container(
               height: 320,
+              color: Colors.black12,
+              child: Image(
+                image: CachedNetworkImageProvider(classification.imageUrl),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -108,31 +112,18 @@ class ClassificationScreen extends StatelessWidget {
     showDialog(
         context: baseContext,
         builder: (context) {
-          return AlertDialog(
-            title: Text("Delete"),
-            content: Text("Are you sure?"),
-            actions: <Widget>[
-              ButtonBar(
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("No"),
-                    onPressed: () {
-                      Navigator.pop(context, false);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text("Yes"),
-                    onPressed: () {
-                      Provider.of<ClassificationBloc>(baseContext).delete();
-                      Navigator.pop(context, true);
-                    },
-                  ),
-                ],
-              )
-            ],
+          return DeleteConfirmDialog(
+            name: "",
+            onCancel: () {
+              Navigator.pop(context, false);
+            },
+            onConfirm: () {
+              Provider.of<ClassificationBloc>(baseContext).delete();
+              Navigator.pop(context, true);
+            },
           );
         }).then((isDeleted) {
-      Application.router.pop(baseContext);
+      if (isDeleted != null && isDeleted) Application.router.pop(baseContext);
     });
   }
 }

@@ -20,6 +20,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text("Upload Image"),
+              elevation: 0,
             ),
             body: _buildBody(context, snapshot),
             floatingActionButton: snapshot.data.images.length > 0
@@ -124,26 +125,30 @@ class ProjectUploadImageScreen extends StatelessWidget {
 
   void _showChangePictureMethodSelect(BuildContext pageContext) {
     showDialog(
-        context: pageContext,
-        builder: (context) => AlertDialog(
-              title: Text("Choose method"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.camera),
-                    title: Text("Camera"),
-                    onTap: () => _showImagePicker(context, ImageSource.camera),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.photo_library),
-                    title: Text("Gallery"),
-                    onTap: () =>
-                        _showImagePicker(pageContext, ImageSource.gallery),
-                  ),
-                ],
-              ),
-            ));
+      context: pageContext,
+      builder: (context) => AlertDialog(
+        title: Text("Choose method"),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        elevation: 8,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.camera),
+              title: Text("Camera"),
+              onTap: () => _showImagePicker(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text("Gallery"),
+              onTap: () => _showImagePicker(pageContext, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showImagePicker(BuildContext context, ImageSource source) {
