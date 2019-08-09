@@ -12,6 +12,7 @@ class Routes {
   static const editProject = "/project/edit/:id";
   static const detailProject = "/project/detail/:id";
   static const addMemberProject = "/project/:id/add";
+  static const moreImagesProject = "/project/:id/images";
 
   // Image
   static const uploadImage = "/project/:project_id/upload";
@@ -32,6 +33,7 @@ class Routes {
     router.define(editProject, handler: editProjectHandler, transitionType: TransitionType.native);
     router.define(detailProject, handler: detailProjectHandler, transitionType: TransitionType.native);
     router.define(addMemberProject, handler: addMemberProjectHandler, transitionType: TransitionType.native);
+    router.define(moreImagesProject, handler: moreImagesProjectHandler, transitionType: TransitionType.native);
     router.define(uploadImage, handler: uploadImageHandler, transitionType: TransitionType.native);
     router.define(viewImage, handler: viewImageHandler, transitionType: TransitionType.native);
     router.define(labelImage, handler: labelImageHandler, transitionType: TransitionType.native);

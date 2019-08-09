@@ -11,7 +11,7 @@ import 'package:labellab_mobile/screen/profile/profile_screen.dart';
 import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.dart';
 import 'package:labellab_mobile/screen/project/add_member/project_add_member_bloc.dart';
 import 'package:labellab_mobile/screen/project/add_member/project_add_member_screen.dart';
-import 'package:labellab_mobile/screen/project/detail/project._detail_bloc.dart';
+import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_screen.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_screen.dart';
@@ -19,6 +19,8 @@ import 'package:labellab_mobile/screen/project/upload_image/project_upload_image
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_screen.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_screen.dart';
+import 'package:labellab_mobile/screen/project/view_more_images/project_more_images_bloc.dart';
+import 'package:labellab_mobile/screen/project/view_more_images/project_more_images_screen.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -71,6 +73,15 @@ var addMemberProjectHandler = Handler(
     builder: (context) => ProjectAddMemberBloc(params['id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectAddMemberScreen(),
+  );
+});
+
+var moreImagesProjectHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ProjectMoreImagesBloc>(
+    builder: (context) => ProjectMoreImagesBloc(params['id'].first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ProjectMoreImagesScreen(),
   );
 });
 
