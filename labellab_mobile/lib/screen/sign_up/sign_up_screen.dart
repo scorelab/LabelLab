@@ -23,7 +23,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         title: Text(""),
         elevation: 0,
-        backgroundColor: Theme.of(context).canvasColor,
       ),
       body: Theme(
         data: Theme.of(context)

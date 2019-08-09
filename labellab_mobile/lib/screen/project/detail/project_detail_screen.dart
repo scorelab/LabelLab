@@ -29,6 +29,8 @@ class ProjectDetailScreen extends StatelessWidget {
                 elevation: 2,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: EdgeInsets.only(bottom: 24),
+                  centerTitle: true,
                   title: Text(
                     _state.project != null ? _state.project.name : "",
                   ),
@@ -52,29 +54,25 @@ class ProjectDetailScreen extends StatelessWidget {
                         _state.project.description != null
                             ? _buildInfo(context, _state.project.description)
                             : Container(),
-                        _state.project.images != null &&
-                                _state.project.images.length > 0
-                            ? Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 8, left: 16, right: 16),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Images",
-                                      style: Theme.of(context).textTheme.title,
-                                    ),
-                                    _state.project.images.length > 8
-                                        ? FlatButton(
-                                            child: Text("More"),
-                                            onPressed: () {},
-                                          )
-                                        : Container(),
-                                  ],
-                                ),
-                              )
-                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8, left: 16, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Images",
+                                style: Theme.of(context).textTheme.title,
+                              ),
+                              _state.project.images.length > 8
+                                  ? FlatButton(
+                                      child: Text("More"),
+                                      onPressed: () {},
+                                    )
+                                  : Container(),
+                            ],
+                          ),
+                        ),
                       ]),
                     )
                   : SliverFillRemaining(),
@@ -103,7 +101,10 @@ class ProjectDetailScreen extends StatelessWidget {
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.file_upload),
+            child: Icon(
+              Icons.file_upload,
+              color: Colors.white,
+            ),
             onPressed: () => _state.project != null
                 ? _gotoUploadImage(context, _state.project.id)
                 : null,
@@ -166,33 +167,42 @@ class ProjectDetailScreen extends StatelessWidget {
 
   Widget _buildImages(
       BuildContext context, String projectId, List<LabelLab.Image> images) {
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      sliver: SliverGrid.count(
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        crossAxisCount: 4,
-        children: images.take(8).map((image) {
-          return InkWell(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: 64,
-                height: 64,
-                color: Colors.black12,
-                child: Image(
-                  image: CachedNetworkImageProvider(
-                    image.imageUrl,
+    return images.length > 0
+        ? SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            sliver: SliverGrid.count(
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              crossAxisCount: 4,
+              children: images.take(8).map((image) {
+                return InkWell(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      width: 64,
+                      height: 64,
+                      color: Colors.black12,
+                      child: Image(
+                        image: CachedNetworkImageProvider(
+                          image.imageUrl,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  onTap: () => _gotoViewImage(context, projectId, image.id),
+                );
+              }).toList(),
             ),
-            onTap: () => _gotoViewImage(context, projectId, image.id),
+          )
+        : SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _buildErrorPlaceholder(context, "No images yet"),
+              ]),
+            ),
           );
-        }).toList(),
-      ),
-    );
   }
 
   Widget _buildLabels(
@@ -215,19 +225,22 @@ class ProjectDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          Wrap(
-            spacing: 8,
-            children: labels.map((label) {
-              return InkWell(
-                child: Chip(
-                  label: Text(label.name),
-                  deleteIcon: Icon(Icons.cancel),
-                  onDeleted: () => _showLabelDeleteConfirmation(context, label),
-                ),
-                onTap: () => _showAddEditLabelModel(context, label),
-              );
-            }).toList(),
-          ),
+          labels.length > 0
+              ? Wrap(
+                  spacing: 8,
+                  children: labels.map((label) {
+                    return InkWell(
+                      child: Chip(
+                        label: Text(label.name),
+                        deleteIcon: Icon(Icons.cancel),
+                        onDeleted: () =>
+                            _showLabelDeleteConfirmation(context, label),
+                      ),
+                      onTap: () => _showAddEditLabelModel(context, label),
+                    );
+                  }).toList(),
+                )
+              : _buildErrorPlaceholder(context, "No labels yet"),
         ]),
       ),
     );
@@ -261,6 +274,25 @@ class ProjectDetailScreen extends StatelessWidget {
           );
         }).toList(),
       ),
+    );
+  }
+
+  Widget _buildErrorPlaceholder(BuildContext context, String description) {
+    return Row(
+      children: <Widget>[
+        Icon(
+          Icons.error,
+          size: 28,
+          color: Colors.black45,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Text(
+          description,
+          style: TextStyle(color: Colors.black45),
+        ),
+      ],
     );
   }
 
@@ -310,7 +342,7 @@ class ProjectDetailScreen extends StatelessWidget {
             },
           );
         }).then((success) {
-      if (success) {
+      if (success != null && success) {
         Navigator.pop(baseContext);
       }
     });

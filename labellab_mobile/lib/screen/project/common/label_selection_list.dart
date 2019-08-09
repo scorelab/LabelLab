@@ -12,7 +12,7 @@ class LabelSelectionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (selections.length > 0) {
+    if (selections != null && selections.length > 0) {
       return Container(
         alignment: Alignment.centerLeft,
         height: 54,

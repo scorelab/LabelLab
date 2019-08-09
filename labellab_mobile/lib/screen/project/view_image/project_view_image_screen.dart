@@ -23,7 +23,10 @@ class ProjectViewImageScreen extends StatelessWidget {
           ),
           body: _buildBody(context, snapshot),
           floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.label),
+            child: Icon(
+              Icons.label,
+              color: Colors.white,
+            ),
             onPressed: () =>
                 _gotoLabelImageScreen(context, snapshot.data.image.id),
           ),

@@ -11,6 +11,10 @@ class DeleteConfirmDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Delete $name"),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      elevation: 8,
       content: Text("This can't be undone. Are you sure?"),
       actions: <Widget>[
         FlatButton(

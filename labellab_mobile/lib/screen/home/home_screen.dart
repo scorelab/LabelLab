@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
+          _buildGradient(),
           Positioned(
             top: 0,
             left: 0,
@@ -43,6 +44,22 @@ class HomeScreen extends StatelessWidget {
             child: _buildUserDetails(context),
           )
         ],
+      ),
+    );
+  }
+
+  Widget _buildGradient() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          stops: [0.1, 0.9],
+          colors: [
+            Colors.teal[800].withAlpha(100),
+            Colors.teal[400].withAlpha(40),
+          ],
+        ),
       ),
     );
   }

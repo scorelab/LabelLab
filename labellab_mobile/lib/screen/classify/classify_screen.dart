@@ -30,10 +30,9 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Classify",
+          "Classifing",
         ),
         centerTitle: true,
-        backgroundColor: Theme.of(context).canvasColor,
         elevation: 0,
       ),
       body: StreamBuilder<ClassifyState>(

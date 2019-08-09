@@ -49,7 +49,8 @@ class ProjectUploadImageBloc {
     }).doOnError((err) {
       print(err);
       _isUploading = false;
-      _stateController.add(ProjectUploadImageState.error(err.toString(), images: _images));
+      _stateController
+          .add(ProjectUploadImageState.error(err.toString(), images: _images));
     }).listen((response) {
       print(response.msg);
     });
@@ -62,7 +63,7 @@ class ProjectUploadImageBloc {
   Stream<ProjectUploadImageState> get state => _stateController.stream;
 
   void dispose() {
-    _uploadProgress.cancel();
+    if (_uploadProgress != null) _uploadProgress.cancel();
     _stateController.close();
   }
 }
