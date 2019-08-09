@@ -1,5 +1,5 @@
 let fs = require('fs')
-let sizeOfImage = require('image-size');
+let sizeOfImage = require('image-size')
 const Image = require('../../models/image')
 const Project = require('../../models/project')
 
@@ -14,7 +14,7 @@ exports.postImage = function(req, res) {
 		req.body.imageName &&
 		req.body.format
 	) {
-		const {image,imageName,format,projectId} = req.body
+		const { image, imageName, format, projectId } = req.body
 		let data = {
 			id: req.user.id,
 			image: image,
@@ -24,7 +24,7 @@ exports.postImage = function(req, res) {
 		}
 		let baseImg = data.image.split(',')[1]
 		let binaryData = new Buffer(baseImg, 'base64')
-    var dimensions = sizeOfImage(binaryData)
+		var dimensions = sizeOfImage(binaryData)
 		let ext = data.format.split('/')[1]
 		let updateData = { imageUrl: `${data.id}${Date.now()}.${ext}` }
 		fs.writeFile(
@@ -38,8 +38,8 @@ exports.postImage = function(req, res) {
 						project: projectId,
 						imageUrl: updateData.imageUrl,
 						imageName: data.imageName,
-            width: dimensions.width,
-            height: dimensions.height
+						width: dimensions.width,
+						height: dimensions.height
 					})
 					newImage.save(function(err, image) {
 						if (err) {

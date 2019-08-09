@@ -179,7 +179,6 @@ const columnStyles = [
 
 const Row = ({ image, projectId, style, onDelete, imageId }) => (
   <Table.Row style={{ ...style, display: 'flex' }}>
-    {console.log(image)}
     <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
     <Table.Cell style={columnStyles[1]}>
       <Link

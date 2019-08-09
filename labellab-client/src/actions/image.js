@@ -49,7 +49,6 @@ export const fetchProjectImage = (imageId, callback) => {
     dispatch(request())
     FetchApi('GET', '/api/v1/image/' + imageId + '/get', null, token)
       .then(res => {
-        console.log(res.data.body)
         dispatch(success(res.data.body))
         callback()
       })
@@ -75,12 +74,7 @@ export const fetchProjectImage = (imageId, callback) => {
 export const deleteImage = (imageId, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi(
-      'DELETE',
-      '/api/v1/image/' + projectId + '/delete/' + imageId,
-      null,
-      token
-    )
+    FetchApi('DELETE', '/api/v1/image/' + imageId + '/delete', null, token)
       .then(res => {
         dispatch(success())
         callback()
@@ -110,7 +104,6 @@ export const setNextPrev = (next, prev) => {
       next: next,
       prev: prev
     }
-    console.log(data)
     dispatch(request(data))
   }
   function request(data) {
