@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/common/label_selection_list.dart';
+import 'package:labellab_mobile/screen/project/common/label_selection_painter.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_state.dart';
 import 'package:labellab_mobile/util/util.dart';
@@ -42,64 +43,15 @@ class LabelToolScreen extends StatelessWidget {
         state.isLoading || state.isSaving
             ? LinearProgressIndicator()
             : Container(),
-        _buildSelections(context, state.selections),
+        LabelSelectionList(
+          state.selections,
+          true,
+          onDeleted: (selection) {
+            Provider.of<LabelToolBloc>(context).removeSelection(selection);
+          },
+        ),
         state.image != null
-            ? Expanded(
-                child: GestureDetector(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      image: state.image != null
-                          ? DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                  state.image.imageUrl))
-                          : null,
-                    ),
-                    child: CustomPaint(
-                      size: Size.infinite,
-                      painter: Painter(
-                          state.selections, state.currentSelection, state.image,
-                          sizeCallback: (Size size) {
-                        final SelectionOffset offset =
-                            calculateImageOffset(state.image, size);
-                        Provider.of<LabelToolBloc>(context)
-                            .setCanvasSelectionOffset(offset);
-                      }),
-                    ),
-                  ),
-                  onPanStart: state.currentSelection != null &&
-                          state.currentSelection.label.type ==
-                              LabelType.RECTANGLE
-                      ? (event) {
-                          Provider.of<LabelToolBloc>(context)
-                              .startCurrentSelection(
-                            Point(
-                                event.localPosition.dx, event.localPosition.dy),
-                          );
-                        }
-                      : null,
-                  onPanUpdate: state.currentSelection != null &&
-                          state.currentSelection.label.type ==
-                              LabelType.RECTANGLE
-                      ? (event) {
-                          Provider.of<LabelToolBloc>(context)
-                              .updateCurrentSelection(
-                            Point(
-                                event.localPosition.dx, event.localPosition.dy),
-                          );
-                        }
-                      : null,
-                  onTapUp: state.currentSelection != null &&
-                          state.currentSelection.label.type == LabelType.POLYGON
-                      ? (event) {
-                          Provider.of<LabelToolBloc>(context)
-                              .appendToCurrentSelection(
-                            Point(
-                                event.localPosition.dx, event.localPosition.dy),
-                          );
-                        }
-                      : null,
-                ),
-              )
+            ? _buildDrawingTool(context, state)
             : Expanded(
                 child: Container(),
               ),
@@ -122,36 +74,55 @@ class LabelToolScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSelections(
-      BuildContext context, List<LabelSelection> selections) {
-    if (selections.length > 0) {
-      return Container(
-        alignment: Alignment.centerLeft,
-        height: 54,
-        padding: EdgeInsets.only(right: 8),
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: selections.map((selection) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Chip(
-                label: Text(selection.label.name),
-                backgroundColor: selection.color,
-                deleteIcon: Icon(Icons.cancel),
-                onDeleted: () {
-                  Provider.of<LabelToolBloc>(context)
-                      .removeSelection(selection);
-                },
-              ),
-            );
-          }).toList(),
+  Widget _buildDrawingTool(BuildContext context, LabelToolState state) {
+    return Expanded(
+      child: GestureDetector(
+        child: Container(
+          decoration: new BoxDecoration(
+            image: state.image != null
+                ? DecorationImage(
+                    image: CachedNetworkImageProvider(state.image.imageUrl),
+                  )
+                : null,
+          ),
+          child: CustomPaint(
+            size: Size.infinite,
+            painter: LabelSelectionPainter(
+                state.selections, state.currentSelection, state.image,
+                sizeCallback: (Size size) {
+              final SelectionOffset offset =
+                  calculateImageOffset(state.image, size);
+              Provider.of<LabelToolBloc>(context)
+                  .setCanvasSelectionOffset(offset);
+            }),
+          ),
         ),
-      );
-    } else {
-      return Container(
-        height: 54,
-      );
-    }
+        onPanStart: state.currentSelection != null &&
+                state.currentSelection.label.type == LabelType.RECTANGLE
+            ? (event) {
+                Provider.of<LabelToolBloc>(context).startCurrentSelection(
+                  Point(event.localPosition.dx, event.localPosition.dy),
+                );
+              }
+            : null,
+        onPanUpdate: state.currentSelection != null &&
+                state.currentSelection.label.type == LabelType.RECTANGLE
+            ? (event) {
+                Provider.of<LabelToolBloc>(context).updateCurrentSelection(
+                  Point(event.localPosition.dx, event.localPosition.dy),
+                );
+              }
+            : null,
+        onTapUp: state.currentSelection != null &&
+                state.currentSelection.label.type == LabelType.POLYGON
+            ? (event) {
+                Provider.of<LabelToolBloc>(context).appendToCurrentSelection(
+                  Point(event.localPosition.dx, event.localPosition.dy),
+                );
+              }
+            : null,
+      ),
+    );
   }
 
   Widget _buildMainActions(BuildContext context, LabelToolState state) {
@@ -246,79 +217,5 @@ class LabelToolScreen extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-typedef void SizeCallback(Size size);
-
-class Painter extends CustomPainter {
-  final List<LabelSelection> labelSelections;
-  final LabelSelection current;
-  final LabelLab.Image image;
-  final SizeCallback sizeCallback;
-  Size _size;
-
-  Painter(this.labelSelections, this.current, this.image, {this.sizeCallback});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (sizeCallback != null) {
-      if (_size == null || _size != size) {
-        _size = size;
-        sizeCallback(_size);
-      }
-    }
-
-    final SelectionOffset selectionOffset = calculateImageOffset(image, size);
-
-    for (var labelSelection in labelSelections) {
-      drawPath(canvas, labelSelection.color, labelSelection.points,
-          offset: labelSelection.isAdjusted
-              ? selectionOffset
-              : SelectionOffset.zero,
-          withVertices: false);
-    }
-    if (current != null) {
-      drawPath(canvas, Colors.blue, current.points);
-    }
-  }
-
-  @override
-  bool shouldRepaint(Painter oldDelegate) => true;
-
-  void drawPath(Canvas canvas, Color color, List<Point> points,
-      {SelectionOffset offset = SelectionOffset.zero,
-      bool withVertices = true}) {
-    if (points.length > 0) {
-      final paint = Paint();
-      final paintStroke = Paint();
-
-      paint.color = color;
-      paintStroke.color = color;
-      paintStroke.style = PaintingStyle.stroke;
-      paintStroke.strokeWidth = 4;
-
-      final path = Path();
-      if (withVertices) {
-        for (var point in points) {
-          canvas.drawCircle(
-              Offset(point.x / offset.scale + offset.dx,
-                  point.y / offset.scale + offset.dy),
-              6,
-              paint);
-        }
-      }
-
-      path.moveTo(points[0].x / offset.scale + offset.dx,
-          points[0].y / offset.scale + offset.dy);
-      for (var point in points) {
-        path.lineTo(point.x / offset.scale + offset.dx,
-            point.y / offset.scale + offset.dy);
-      }
-      path.lineTo(points[0].x / offset.scale + offset.dx,
-          points[0].y / offset.scale + offset.dy);
-
-      canvas.drawPath(path, paintStroke);
-    }
   }
 }
