@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { logout } from '../../actions/index'
 class Logout extends Component {
   componentDidMount() {
@@ -11,6 +12,11 @@ class Logout extends Component {
   render() {
     return <></>
   }
+}
+
+Logout.propTypes = {
+  history: PropTypes.object,
+  logout: PropTypes.func
 }
 
 const mapActionToProps = dispatch => {

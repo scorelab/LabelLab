@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { Card } from 'semantic-ui-react'
 import { fetchAllProject } from '../../actions/index'
@@ -43,6 +44,14 @@ class PreviousProject extends Component {
     )
   }
 }
+
+PreviousProject.propTypes = {
+  projects: PropTypes.array,
+  actions: PropTypes.object,
+  fetchAllProject: PropTypes.func,
+  history: PropTypes.object
+}
+
 const mapStateToProps = state => {
   return {
     projects: state.projects.allProjects,

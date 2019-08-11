@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { fetchProject } from '../../actions/index'
 import './css/sidebar.css'
 
@@ -73,6 +74,13 @@ class ProjectSidebar extends Component {
     )
   }
 }
+
+ProjectSidebar.propTypes = {
+  project: PropTypes.object,
+  history: PropTypes.object,
+  fetchProject: PropTypes.func
+}
+
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject

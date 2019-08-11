@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Image, Header, Dropdown, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { hasToken } from '../../utils/token'
 import { fetchUser } from '../../actions/index'
 import { TOKEN_TYPE } from '../../constants/index'
@@ -73,6 +74,14 @@ class ProjectNavbar extends Component {
       </div>
     )
   }
+}
+
+ProjectNavbar.propTypes = {
+  isfetching: PropTypes.bool,
+  history: PropTypes.object,
+  user: PropTypes.object,
+  fetchUser: PropTypes.func,
+  title: PropTypes.string
 }
 
 const mapStateToProps = state => {

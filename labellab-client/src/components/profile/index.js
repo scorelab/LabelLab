@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import {
   Card,
@@ -152,7 +153,10 @@ class Profile extends Component {
                 {!actions.isfetching ? (
                   projects[0] &&
                   projects.map((project, index) => (
-                    <Card onClick={() => this.handleClick(project._id)}>
+                    <Card
+                      key={index}
+                      onClick={() => this.handleClick(project._id)}
+                    >
                       <Card.Content
                         className="card-headers"
                         header={project.projectName}
@@ -172,6 +176,20 @@ class Profile extends Component {
     )
   }
 }
+
+Profile.propTypes = {
+  user: PropTypes.object,
+  profile: PropTypes.object,
+  isfetching: PropTypes.bool,
+  projects: PropTypes.array,
+  actions: PropTypes.object,
+  history: PropTypes.object,
+  fetchAllProject: PropTypes.func,
+  fetchCount: PropTypes.func,
+  fetchUser: PropTypes.func,
+  uploadImage: PropTypes.func
+}
+
 const mapStateToProps = state => {
   return {
     user: state.user.userDetails,
