@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import {
   Header,
   Icon,
@@ -91,6 +92,15 @@ class ProjectDescriptionIndex extends Component {
     )
   }
 }
+
+ProjectDescriptionIndex.propTypes = {
+  project: PropTypes.object,
+  actions: PropTypes.object,
+  history: PropTypes.object,
+  fetchProject: PropTypes.func,
+  updateProject: PropTypes.func
+}
+
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,

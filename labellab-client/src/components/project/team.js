@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import {
   Container,
   Table,
@@ -138,6 +139,17 @@ class TeamIndex extends Component {
     )
   }
 }
+
+TeamIndex.propTypes = {
+  project: PropTypes.object,
+  actions: PropTypes.object,
+  history: PropTypes.object,
+  fetchProject: PropTypes.func,
+  match: PropTypes.object,
+  memberDelete: PropTypes.func,
+  addMember: PropTypes.func
+}
+
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,

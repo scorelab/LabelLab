@@ -10,6 +10,7 @@ import {
   Icon
 } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import {
   logout,
   uploadImage,
@@ -163,6 +164,19 @@ class Dashboard extends Component {
       </div>
     )
   }
+}
+
+Dashboard.propTypes = {
+  user: PropTypes.object.isRequired,
+  isfetching: PropTypes.bool,
+  errors: PropTypes.string,
+  isinitializing: PropTypes.bool,
+  history: PropTypes.object,
+  logout: PropTypes.func,
+  fetchAllProject: PropTypes.func,
+  fetchUser: PropTypes.func,
+  uploadImage: PropTypes.func,
+  initProject: PropTypes.func
 }
 
 const mapStateToProps = state => {

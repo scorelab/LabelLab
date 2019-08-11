@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Message, Button, Form, Icon } from 'semantic-ui-react'
 import { userRegister } from '../../actions/index'
 import register from './css/register.css'
@@ -156,6 +157,14 @@ class RegisterIndex extends Component {
       </div>
     )
   }
+}
+
+RegisterIndex.propTypes = {
+  isRegistering: PropTypes.bool,
+  statusText: PropTypes.string,
+  errField: PropTypes.string,
+  history: PropTypes.object,
+  setProfile: PropTypes.func
 }
 
 const mapStateToProps = state => {

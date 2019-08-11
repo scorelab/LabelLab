@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import {
@@ -140,13 +140,20 @@ class LoginIndex extends Component {
             </form>
           </div>
           <div className="login-create-account">
-            Don't have an account?
+            Don&apos;t have an account?
             <Link to="/register">Create Account</Link>
           </div>
         </div>
       </div>
     )
   }
+}
+
+LoginIndex.propTypes = {
+  isAuthenticating: PropTypes.bool,
+  login: PropTypes.func,
+  history: PropTypes.object,
+  location: PropTypes.object
 }
 
 const mapStateToProps = state => {

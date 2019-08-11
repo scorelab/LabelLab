@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Table, Button, Form, Dimmer, Loader } from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
@@ -145,6 +146,16 @@ class ImagesIndex extends Component {
     )
   }
 }
+
+ImagesIndex.propTypes = {
+  project: PropTypes.object,
+  imageActions: PropTypes.object,
+  history: PropTypes.object,
+  fetchProject: PropTypes.func,
+  submitImage: PropTypes.func,
+  deleteImage: PropTypes.func
+}
+
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,

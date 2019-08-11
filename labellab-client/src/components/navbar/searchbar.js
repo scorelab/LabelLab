@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Search } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { getSearchProjects } from '../../actions/index'
@@ -77,6 +78,12 @@ class SearchProject extends Component {
       />
     )
   }
+}
+
+SearchProject.propTypes = {
+  searchProject: PropTypes.func,
+  search: PropTypes.object,
+  history: PropTypes.object
 }
 
 const mapStateToProps = state => {

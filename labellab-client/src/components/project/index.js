@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Switch } from 'react-router-dom'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { fetchProject } from '../../actions/index'
 import PrivateRoute from '../../utils/pR'
 import Sidebar from './sidebar'
@@ -69,6 +70,15 @@ class ProjectIndex extends Component {
     )
   }
 }
+
+ProjectIndex.propTypes = {
+  projects: PropTypes.object,
+  actions: PropTypes.object,
+  history: PropTypes.object,
+  fetchProject: PropTypes.func,
+  match: PropTypes.object
+}
+
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,

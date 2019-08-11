@@ -2,6 +2,7 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import { Search } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { getSearchUser } from '../../actions/index'
 import './css/searchUser.css'
 
@@ -75,6 +76,11 @@ class SearchUser extends Component {
       />
     )
   }
+}
+
+SearchUser.propTypes = {
+  search: PropTypes.object,
+  searchUser: PropTypes.func
 }
 
 const mapStateToProps = state => {

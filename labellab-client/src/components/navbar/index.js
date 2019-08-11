@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Image, Header, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import './css/navbar.css'
 import Searchbar from './searchbar'
 class Navbar extends Component {
@@ -55,17 +56,19 @@ class Navbar extends Component {
   }
 }
 
+Navbar.propTypes = {
+  isfetching: PropTypes.bool,
+  history: PropTypes.object,
+  user: PropTypes.object
+}
+
 const mapStateToProps = state => {
   return {
     isfetching: state.user.userActions.isfetching
   }
 }
 
-const mapActionToProps = dispatch => {
-  return {}
-}
-
 export default connect(
   mapStateToProps,
-  mapActionToProps
+  null
 )(Navbar)
