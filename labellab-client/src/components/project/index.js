@@ -3,7 +3,7 @@ import { Switch } from 'react-router-dom'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { fetchProject } from '../../actions/index'
+import { fetchProject, getTimeLabel } from '../../actions/index'
 import PrivateRoute from '../../utils/pR'
 import Sidebar from './sidebar'
 import ProjectNavbar from '../navbar/project'
@@ -20,8 +20,9 @@ class ProjectIndex extends Component {
     this.state = {}
   }
   componentDidMount() {
-    const { match, fetchProject } = this.props
+    const { match, fetchProject, fetchTimeLabel } = this.props
     fetchProject(match.params.projectId)
+    fetchTimeLabel(match.params.projectId)
   }
   render() {
     const { match, actions, history } = this.props
@@ -76,6 +77,7 @@ ProjectIndex.propTypes = {
   actions: PropTypes.object,
   history: PropTypes.object,
   fetchProject: PropTypes.func,
+  fetchTimeLabel: PropTypes.func,
   match: PropTypes.object
 }
 
@@ -90,6 +92,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchProject: data => {
       return dispatch(fetchProject(data))
+    },
+    fetchTimeLabel: projectId => {
+      return dispatch(getTimeLabel(projectId))
     }
   }
 }

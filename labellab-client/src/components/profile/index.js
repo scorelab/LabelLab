@@ -91,9 +91,9 @@ class Profile extends Component {
                 <Image
                   centered
                   src={
-                    user.profile_image === ''
+                    user.profileImage === ''
                       ? `${user.thumbnail}`
-                      : `${user.profile_image}?${Date.now()}`
+                      : `${user.profileImage}?${Date.now()}`
                   }
                   size="medium"
                 />
