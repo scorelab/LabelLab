@@ -7,6 +7,7 @@ exports.createLabel = function(req, res) {
 	if (req && req.body && req.body.label && req.params.projectId) {
 		const { label } = req.body
 		const newLabel = new Label({
+			project: req.params.projectId,
 			id: makeid(8),
 			type: label.type,
 			name: label.name

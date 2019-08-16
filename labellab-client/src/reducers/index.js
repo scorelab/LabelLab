@@ -7,6 +7,7 @@ import image from './image'
 import label from './label'
 import searchProjects from './search'
 import searchUser from './searchUser'
+import analytics from './analytics'
 
 const rootReducers = combineReducers({
   auth: auth,
@@ -16,7 +17,8 @@ const rootReducers = combineReducers({
   images: image,
   labels: label,
   searchProjects: searchProjects,
-  searchUser: searchUser
+  searchUser: searchUser,
+  analytics
 })
 
 export default rootReducers

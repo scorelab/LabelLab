@@ -14,6 +14,10 @@ var LabelSchema = new mongoose.Schema({
 	},
 	type: {
 		type: String
+	},
+	createdAt: {
+		type: Date,
+		default: Date.now
 	}
 })
 

@@ -72,7 +72,7 @@ export const uploadImage = (data, callback) => {
 export const fetchCount = () => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/users/fetch_count', null, getToken(TOKEN_TYPE))
+    FetchApi('GET', '/api/v1/users/fetchCount', null, getToken(TOKEN_TYPE))
       .then(res => {
         dispatch(success(res.data.body))
       })
