@@ -113,7 +113,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<User> searchUser(String token, String email) {
+  Future<List<User>> searchUser(String token, String email) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
@@ -122,8 +122,9 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return User.fromJson(response.data['body'],
-            imageEndpoint: STATIC_IMAGE_URL);
+        return (response.data['body'] as List)
+            .map((user) => User.fromJson(user, imageEndpoint: STATIC_IMAGE_URL))
+            .toList();
       } else {
         throw Exception("Request unsuccessfull");
       }

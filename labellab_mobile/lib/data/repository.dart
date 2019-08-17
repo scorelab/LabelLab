@@ -92,7 +92,7 @@ class Repository {
     });
   }
 
-  Future<User> searchUser(String email) {
+  Future<List<User>> searchUser(String email) {
     if (accessToken == null) return Future(null);
     return _api.searchUser(accessToken, email);
   }

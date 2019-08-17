@@ -29,7 +29,6 @@ class ProjectDetailScreen extends StatelessWidget {
                 elevation: 2,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.only(bottom: 24),
                   centerTitle: true,
                   title: Text(
                     _state.project != null ? _state.project.name : "",
@@ -251,31 +250,34 @@ class ProjectDetailScreen extends StatelessWidget {
 
   Widget _buildMembers(BuildContext context, List<Member> members) {
     final User _currentUser = Provider.of<AuthState>(context).user;
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        members.map((member) {
-          return ListTile(
-            title: Text(member.member.name),
-            subtitle: Text(member.member.email),
-            trailing: _currentUser.id != member.member.id
-                ? PopupMenuButton<int>(
-                    onSelected: (value) {
-                      if (value == 0) {
-                        _showRemoveMemberConfirmation(context, member.member);
-                      }
-                    },
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          value: 0,
-                          child: Text("Remove"),
-                        )
-                      ];
-                    },
-                  )
-                : null,
-          );
-        }).toList(),
+    return SliverPadding(
+      padding: EdgeInsets.only(bottom: 72),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          members.map((member) {
+            return ListTile(
+              title: Text(member.member.name),
+              subtitle: Text(member.member.email),
+              trailing: _currentUser.id != member.member.id
+                  ? PopupMenuButton<int>(
+                      onSelected: (value) {
+                        if (value == 0) {
+                          _showRemoveMemberConfirmation(context, member.member);
+                        }
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Text("Remove"),
+                          )
+                        ];
+                      },
+                    )
+                  : null,
+            );
+          }).toList(),
+        ),
       ),
     );
   }
