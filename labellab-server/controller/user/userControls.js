@@ -49,7 +49,6 @@ exports.searchUser = function(req, res) {
 	if (req && req.params && req.params.query) {
 		User.find(
 			{
-				_id: req.user._id,
 				email: { $regex: req.params.query, $options: 'i' }
 			},
 			function(err, user) {
