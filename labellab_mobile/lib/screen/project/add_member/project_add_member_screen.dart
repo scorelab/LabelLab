@@ -34,6 +34,11 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                _state.isLoading
+                    ? LinearProgressIndicator()
+                    : Container(
+                        height: 6,
+                      ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -44,6 +49,7 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
                         keyboardType: TextInputType.emailAddress,
                         labelText: "Email",
                         onSubmit: _searchUser,
+                        onChange: _searchUser,
                       ),
                       SizedBox(height: 8),
                       RaisedButton(
@@ -54,36 +60,34 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: _state.isLoading
-                            ? Text("Searching...")
-                            : Text("Search"),
-                        onPressed: _state.isLoading
-                            ? null
-                            : () => _searchUser(_controller.text),
+                        child: Text("Search"),
+                        onPressed: () => _searchUser(_controller.text),
                       ),
                     ],
                   ),
                 ),
-                _state.user != null
+                _state.users != null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          "Results",
+                          style: Theme.of(context).textTheme.subtitle,
+                        ),
+                      )
+                    : Container(),
+                _state.users != null
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text(
-                              "Results",
-                              style: Theme.of(context).textTheme.subtitle,
-                            ),
-                          ),
-                          ListTile(
-                            title: Text(_state.user.name),
-                            subtitle: Text(_state.user.email),
+                        children: _state.users.map((user) {
+                          return ListTile(
+                            title: Text(user.name),
+                            subtitle: Text(user.email),
                             onTap: () {
                               Provider.of<ProjectAddMemberBloc>(context)
-                                  .addMember(_state.user.email);
+                                  .addMember(user.email);
                             },
-                          ),
-                        ],
+                          );
+                        }).toList(),
                       )
                     : Container(),
               ],

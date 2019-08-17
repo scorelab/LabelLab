@@ -5,20 +5,21 @@ class ProjectAddMemberState {
   bool fetchSuccess = false;
   bool setSuccess = false;
   String error;
-  User user;
+  List<User> users;
 
   ProjectAddMemberState.initial();
-  ProjectAddMemberState.loading({this.user}) {
+  
+  ProjectAddMemberState.loading({this.users}) {
     isLoading = true;
   }
 
-  ProjectAddMemberState.error(this.error, {this.user});
+  ProjectAddMemberState.error(this.error, {this.users});
 
-  ProjectAddMemberState.successFetch(this.user) {
+  ProjectAddMemberState.successFetch(this.users) {
     this.fetchSuccess = true;
   }
 
-  ProjectAddMemberState.successSet(this.user) {
+  ProjectAddMemberState.successSet(this.users) {
     this.fetchSuccess = true;
     this.setSuccess = true;
   }

@@ -22,7 +22,7 @@ abstract class LabelLabAPI {
 
   // Profile
   Future<User> usersInfo(String token);
-  Future<User> searchUser(String token, String email);
+  Future<List<User>> searchUser(String token, String email);
   Future<ApiResponse> uploadUserImage(String token, File image);
 
   // Project
