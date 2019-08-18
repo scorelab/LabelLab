@@ -76,51 +76,82 @@ class LabelToolScreen extends StatelessWidget {
 
   Widget _buildDrawingTool(BuildContext context, LabelToolState state) {
     return Expanded(
-      child: GestureDetector(
-        child: Container(
-          decoration: new BoxDecoration(
-            image: state.image != null
-                ? DecorationImage(
-                    image: CachedNetworkImageProvider(state.image.imageUrl),
-                  )
+      child: Stack(
+        children: <Widget>[
+          GestureDetector(
+            child: Container(
+              decoration: new BoxDecoration(
+                image: state.image != null
+                    ? DecorationImage(
+                        image: CachedNetworkImageProvider(state.image.imageUrl),
+                      )
+                    : null,
+              ),
+              child: CustomPaint(
+                size: Size.infinite,
+                painter: LabelSelectionPainter(
+                    state.selections, state.currentSelection, state.image,
+                    sizeCallback: (Size size) {
+                  final SelectionOffset offset =
+                      calculateImageOffset(state.image, size);
+                  Provider.of<LabelToolBloc>(context)
+                      .setCanvasSelectionOffset(offset);
+                }),
+              ),
+            ),
+            onPanStart: state.currentSelection != null &&
+                    state.currentSelection.label.type == LabelType.RECTANGLE
+                ? (event) {
+                    Provider.of<LabelToolBloc>(context).startCurrentSelection(
+                      Point(event.localPosition.dx, event.localPosition.dy),
+                    );
+                  }
+                : null,
+            onPanUpdate: state.currentSelection != null &&
+                    state.currentSelection.label.type == LabelType.RECTANGLE
+                ? (event) {
+                    Provider.of<LabelToolBloc>(context).updateCurrentSelection(
+                      Point(event.localPosition.dx, event.localPosition.dy),
+                    );
+                  }
+                : null,
+            onTapUp: state.currentSelection != null &&
+                    state.currentSelection.label.type == LabelType.POLYGON
+                ? (event) {
+                    Provider.of<LabelToolBloc>(context)
+                        .appendToCurrentSelection(
+                      Point(event.localPosition.dx, event.localPosition.dy),
+                    );
+                  }
                 : null,
           ),
-          child: CustomPaint(
-            size: Size.infinite,
-            painter: LabelSelectionPainter(
-                state.selections, state.currentSelection, state.image,
-                sizeCallback: (Size size) {
-              final SelectionOffset offset =
-                  calculateImageOffset(state.image, size);
-              Provider.of<LabelToolBloc>(context)
-                  .setCanvasSelectionOffset(offset);
-            }),
-          ),
-        ),
-        onPanStart: state.currentSelection != null &&
-                state.currentSelection.label.type == LabelType.RECTANGLE
-            ? (event) {
-                Provider.of<LabelToolBloc>(context).startCurrentSelection(
-                  Point(event.localPosition.dx, event.localPosition.dy),
-                );
-              }
-            : null,
-        onPanUpdate: state.currentSelection != null &&
-                state.currentSelection.label.type == LabelType.RECTANGLE
-            ? (event) {
-                Provider.of<LabelToolBloc>(context).updateCurrentSelection(
-                  Point(event.localPosition.dx, event.localPosition.dy),
-                );
-              }
-            : null,
-        onTapUp: state.currentSelection != null &&
-                state.currentSelection.label.type == LabelType.POLYGON
-            ? (event) {
-                Provider.of<LabelToolBloc>(context).appendToCurrentSelection(
-                  Point(event.localPosition.dx, event.localPosition.dy),
-                );
-              }
-            : null,
+          state.currentSelection != null
+              ? Positioned(
+                  left: 16,
+                  bottom: 0,
+                  child: Row(
+                    children: <Widget>[
+                      Chip(
+                        backgroundColor: Colors.blue,
+                        label: Text(
+                          state.currentSelection.label.name,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        state.currentSelection.label.type == LabelType.POLYGON
+                            ? "Tap to draw a polygon"
+                            : "Touch and drag to draw a rectangle",
+                        style: TextStyle(color: Colors.black45),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+        ],
       ),
     );
   }
@@ -188,16 +219,20 @@ class LabelToolScreen extends StatelessWidget {
     showModalBottomSheet(
       context: baseContext,
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("Select label", style: Theme.of(context).textTheme.title),
-              SizedBox(
-                height: 8,
-              ),
-              state.labels == null
+        return ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text("Select label",
+                  style: Theme.of(context).textTheme.title),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: state.labels == null
                   ? LinearProgressIndicator()
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,8 +247,8 @@ class LabelToolScreen extends StatelessWidget {
                         );
                       }).toList(),
                     ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
