@@ -21,6 +21,7 @@ import {
 import { hasToken } from '../../utils/token'
 import { TOKEN_TYPE } from '../../constants/index'
 import CardLoader from '../../utils/cardLoader'
+import Edit from './edit'
 import './css/profile.css'
 class Profile extends Component {
   constructor(props) {
@@ -81,96 +82,97 @@ class Profile extends Component {
       <div>
         <Navbar title="Profile" history={history} />
         <Container>
-          <div className="profile-first">
-            <div className="profile-first-leftbar">
-              {isfetching ? (
-                <Dimmer active>
-                  <Loader indeterminate>Preparing Files</Loader>
-                </Dimmer>
-              ) : user ? (
-                <Image
-                  centered
-                  src={
-                    user.profileImage === ''
-                      ? `${user.thumbnail}`
-                      : `${user.profileImage}?${Date.now()}`
-                  }
-                  size="small"
-                />
-              ) : null}
-              <div className="profile-image-change-button">
-                <input
-                  type="file"
-                  onChange={this.handleImageChange}
-                  className="profile-file-input"
-                  id="profile-embedpollfileinput"
-                />
-                <label
-                  htmlFor="profile-embedpollfileinput"
-                  className="ui medium primary left floated button custom-margin"
-                >
-                  Edit
-                </label>
-              </div>
-            </div>
-            <div className="profile-first-rightbar">
-              <Header as="h4" content={user.email} />
-              <Header as="h4" content={user.username} />
-              <div className="profile-rightbar-child">
-                <div>
-                  <Header as="h5" content="Total Projects" />
-                  {profile.totalProjects}
-                </div>
-                <div>
-                  <Header as="h5" content="Total Images" />
-                  {profile.totalImages}
-                </div>
-                <div>
-                  <Header as="h5" content="Total Labels" />
-                  {profile.totalLabels}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="project-second">
-            <div className="project-second-leftbar">
-              <Menu vertical>
-                <Menu.Item as={Link} to="" name="projects">
-                  Projects
-                </Menu.Item>
-
-                <Menu.Item as={Link} to="" name="analytics">
-                  Analytics
-                </Menu.Item>
-
-                <Menu.Item as={Link} to="" name="summary">
-                  Summary
-                </Menu.Item>
-              </Menu>
-            </div>
-            <div className="project-second-rightbar">
-              <Card.Group itemsPerRow={3}>
-                {!actions.isfetching ? (
-                  projects[0] &&
-                  projects.map((project, index) => (
-                    <Card
-                      key={index}
-                      onClick={() => this.handleClick(project._id)}
+          {!isfetching ? (
+            <React.Fragment>
+              <div className="profile-first">
+                <div className="profile-first-leftbar">
+                  <Image
+                    centered
+                    src={
+                      user.profileImage === ''
+                        ? `${user.thumbnail}`
+                        : `${user.profileImage}?${Date.now()}`
+                    }
+                    size="medium"
+                  />
+                  <div>
+                    <input
+                      type="file"
+                      onChange={this.handleImageChange}
+                      className="profile-file-input"
+                      id="profile-embedpollfileinput"
+                    />
+                    <label
+                      htmlFor="profile-embedpollfileinput"
+                      className="ui medium primary left floated button custom-margin"
                     >
-                      <Card.Content
-                        className="card-headers"
-                        header={project.projectName}
-                      />
-                      <Card.Content description="Image Labelling App" />
-                      <Card.Content extra />
-                    </Card>
-                  ))
-                ) : (
-                  <CardLoader />
-                )}
-              </Card.Group>
-            </div>
-          </div>
+                      Change Profile Image
+                    </label>
+                  </div>
+                </div>
+                <div className="profile-first-rightbar">
+                  <Edit />
+                  <div className="profile-rightbar-child">
+                    <div>
+                      <Header as="h5" content="Total Projects" />
+                      {profile.totalProjects}
+                    </div>
+                    <div>
+                      <Header as="h5" content="Total Images" />
+                      {profile.totalImages}
+                    </div>
+                    <div>
+                      <Header as="h5" content="Total Labels" />
+                      {profile.totalLWabels}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="project-second">
+                <div className="project-second-leftbar">
+                  <Menu vertical>
+                    <Menu.Item as={Link} to="" name="projects">
+                      Projects
+                    </Menu.Item>
+
+                    <Menu.Item as={Link} to="" name="analytics">
+                      Analytics
+                    </Menu.Item>
+
+                    <Menu.Item as={Link} to="" name="summary">
+                      Summary
+                    </Menu.Item>
+                  </Menu>
+                </div>
+                <div className="project-second-rightbar">
+                  <Card.Group itemsPerRow={3}>
+                    {!actions.isfetching ? (
+                      projects[0] &&
+                      projects.map((project, index) => (
+                        <Card
+                          key={index}
+                          onClick={() => this.handleClick(project._id)}
+                        >
+                          <Card.Content
+                            className="card-headers"
+                            header={project.projectName}
+                          />
+                          <Card.Content description="Image Labelling App" />
+                          <Card.Content extra />
+                        </Card>
+                      ))
+                    ) : (
+                      <CardLoader />
+                    )}
+                  </Card.Group>
+                </div>
+              </div>
+            </React.Fragment>
+          ) : (
+            <Dimmer active>
+              <Loader indeterminate>Loading..</Loader>
+            </Dimmer>
+          )}
         </Container>
       </div>
     )

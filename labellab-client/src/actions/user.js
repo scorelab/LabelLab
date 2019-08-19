@@ -10,6 +10,8 @@ import {
   FETCH_COUNT_SUCCESS,
   SEARCH_USER,
   SEARCH_USER_FAILURE,
+  EDIT_USER_INFO,
+  EDIT_USER_INFO_FAILURE,
   TOKEN_TYPE
 } from '../constants/index'
 
@@ -119,5 +121,30 @@ export const getSearchUser = query => {
   }
   function failure(error) {
     return { type: SEARCH_USER_FAILURE, payload: error }
+  }
+}
+
+export const editUser = (data, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('PUT', '/api/v1/users/edit', data, token)
+      .then(response => {
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: EDIT_USER_INFO }
+  }
+  function failure(error) {
+    return { type: EDIT_USER_INFO_FAILURE, payload: error }
   }
 }

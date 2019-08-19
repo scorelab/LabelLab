@@ -10,6 +10,10 @@ const userControls = require('../../controller/user/userControls')
 // To fetch user information
 router.get('/info', requireAuth, userControls.userInfo)
 
+// PUT method
+// To fetch user information
+router.put('/edit', requireAuth, userControls.editInfo)
+
 // GET method
 // To fetch user information of a given user
 router.get('/search/:query', requireAuth, userControls.searchUser)
