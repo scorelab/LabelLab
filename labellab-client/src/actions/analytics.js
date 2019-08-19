@@ -8,8 +8,6 @@ import {
 import FetchApi from '../utils/FetchAPI'
 import { getToken } from '../utils/token'
 
-const token = getToken(TOKEN_TYPE)
-
 export const getTimeLabel = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
@@ -17,7 +15,7 @@ export const getTimeLabel = (projectId, callback) => {
       'GET',
       '/api/v1/analytics/' + projectId + '/timeLabel/get',
       null,
-      token
+      getToken(TOKEN_TYPE)
     )
       .then(res => {
         dispatch(success(res.data.body))

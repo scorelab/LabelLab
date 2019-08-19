@@ -2,6 +2,11 @@
   display: flex;
   width: 100%;
 }
+.profile-image-change-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5em;
+}
 .profile-first-leftbar {
   width: 30%;
   padding: 1em;

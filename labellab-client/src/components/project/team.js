@@ -56,8 +56,13 @@ class TeamIndex extends Component {
     const { fetchProject, project } = this.props
     fetchProject(project.projectId)
   }
+  updateState = data => {
+    this.setState({
+      memberEmail: data
+    })
+  }
   render() {
-    const { project, actions, history } = this.props
+    const { project, actions, history, user } = this.props
     const { open } = this.state
     return (
       <Container>
@@ -82,7 +87,7 @@ class TeamIndex extends Component {
             <p>Enter Member email:</p>
           </Modal.Content>
           <Modal.Actions>
-            <SearchUser history={history} />
+            <SearchUser history={history} updateState={this.updateState} />
             <Button
               positive
               onClick={this.handleMemberSubmit}
@@ -112,7 +117,7 @@ class TeamIndex extends Component {
                   </Table.Cell>
 
                   <Table.Cell collapsing>
-                    {member.role !== 'Admin' ? (
+                    {member.role !== 'Admin' && member.email !== user.email ? (
                       <Icon
                         className="team-remove-user-icon"
                         name="user delete"
@@ -141,6 +146,7 @@ class TeamIndex extends Component {
 }
 
 TeamIndex.propTypes = {
+  user: PropTypes.object,
   project: PropTypes.object,
   actions: PropTypes.object,
   history: PropTypes.object,
@@ -152,6 +158,7 @@ TeamIndex.propTypes = {
 
 const mapStateToProps = state => {
   return {
+    user: state.user,
     project: state.projects.currentProject,
     actions: state.projects.projectActions
   }

@@ -21,9 +21,9 @@ class ProjectDescriptionIndex extends Component {
       desc: ''
     }
   }
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
     const { project } = this.props
-    if (project.currentProject) {
+    if (prevProps.project !== project) {
       this.setState({
         desc: project.projectDescription
       })
@@ -55,7 +55,7 @@ class ProjectDescriptionIndex extends Component {
     })
   }
   render() {
-    const { actions, project } = this.props
+    const { actions } = this.props
     const { edit, desc } = this.state
     return (
       <div className="projectDesc-parent">
@@ -68,7 +68,7 @@ class ProjectDescriptionIndex extends Component {
           <Header content="Project Description" as="h4" />
           <Icon name="pencil alternate" onClick={this.handleUpdate} />
         </div>
-        {edit && desc ? (
+        {edit ? (
           <Form>
             <TextArea
               placeholder="Write some project description"
@@ -85,9 +85,7 @@ class ProjectDescriptionIndex extends Component {
             </Button>
           </Form>
         ) : null}
-        {!edit && project && project.projectDescription
-          ? project.projectDescription
-          : null}
+        {!edit && desc ? desc : null}
       </div>
     )
   }

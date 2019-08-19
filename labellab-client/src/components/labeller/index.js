@@ -106,9 +106,7 @@ class LabelingLoader extends Component {
     const title = image && image.imageName
     return (
       <DocumentMeta title={title}>
-        {labelActions.isfetching ||
-        labelActions.isupdating ||
-        imageActions.isfetching ? (
+        {labelActions.isfetching || imageActions.isfetching ? (
           <Dimmer active>
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>

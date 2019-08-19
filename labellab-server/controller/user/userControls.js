@@ -21,35 +21,11 @@ exports.userInfo = function(req, res) {
 		})
 }
 
-// exports.searchUser = function(req, res) {
-// 	if (req && req.query && req.query.email) {
-// 		User.findOne({
-// 			email: req.query.email
-// 		})
-// 			.select(
-// 				"name email thumbnail googleId githubId username profileImage project"
-// 			)
-// 			.exec(function(err, user) {
-// 				if (err) {
-// 					return res.status(400).send({
-// 						success: false,
-// 						msg: "Unable to connect to database. Please try again.",
-// 						error: err
-// 					})
-// 				}
-// 				if (!user) {
-// 					return res.status(400).send({ success: false, msg: "User not found" })
-// 				} else {
-// 					return res.json({ success: true, msg: "User Data Found", body: user })
-// 				}
-// 			})
-// 	}
-// }
 exports.searchUser = function(req, res) {
 	if (req && req.params && req.params.query) {
 		User.find(
 			{
-				email: { $regex: req.params.query, $options: 'i' }
+				email: { $regex: req.params.query, $options: 'i', $ne: req.user.email }
 			},
 			function(err, user) {
 				if (err) return console.log(err)
