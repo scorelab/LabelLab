@@ -21,6 +21,29 @@ exports.userInfo = function(req, res) {
 		})
 }
 
+exports.editInfo = function(req, res) {
+	User.findOneAndUpdate(
+		{
+			email: req.user.email
+		},
+		req.body,
+		{ new: true }
+	).exec(function(err, user) {
+		if (err) {
+			return res.status(400).send({
+				success: false,
+				msg: 'Unable to connect to database. Please try again.',
+				error: err
+			})
+		}
+		if (!user) {
+			return res.status(400).send({ success: false, msg: 'User not updated' })
+		} else {
+			return res.json({ success: true, msg: 'User updated!', body: user })
+		}
+	})
+}
+
 exports.searchUser = function(req, res) {
 	if (req && req.params && req.params.query) {
 		User.find(
