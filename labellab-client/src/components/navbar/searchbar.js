@@ -82,7 +82,7 @@ class SearchProject extends Component {
 
 SearchProject.propTypes = {
   searchProject: PropTypes.func,
-  search: PropTypes.object,
+  search: PropTypes.array,
   history: PropTypes.object
 }
 

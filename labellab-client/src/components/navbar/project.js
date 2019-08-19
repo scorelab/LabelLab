@@ -62,7 +62,9 @@ class ProjectNavbar extends Component {
             <li>
               <Dropdown>
                 <Dropdown.Menu>
-                  <Dropdown.Item text="Settings" />
+                  <Dropdown.Item>
+                    <Link to="/profile">Profile</Link>
+                  </Dropdown.Item>
                   <Dropdown.Item as="label" onClick={this.handleClick}>
                     Logout
                   </Dropdown.Item>

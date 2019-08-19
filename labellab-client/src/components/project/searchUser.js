@@ -22,7 +22,8 @@ class SearchUser extends Component {
     this.setState({ isLoading: false, value: '', results: [] })
 
   handleResultSelect = (e, { result }) => {
-    this.setState({ value: result.email })
+    const { updateState } = this.props
+    this.setState({ value: result.email }, updateState(result.email))
   }
 
   handleSearchChange = (e, { value }) => {
@@ -79,7 +80,8 @@ class SearchUser extends Component {
 }
 
 SearchUser.propTypes = {
-  search: PropTypes.object,
+  updateState: PropTypes.func,
+  search: PropTypes.array,
   searchUser: PropTypes.func
 }
 

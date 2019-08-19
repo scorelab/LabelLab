@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Image, Header, Dropdown } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import './css/navbar.css'
@@ -42,7 +43,9 @@ class Navbar extends Component {
             <li>
               <Dropdown>
                 <Dropdown.Menu>
-                  <Dropdown.Item text="Settings" />
+                  <Dropdown.Item>
+                    <Link to="/profile">Profile</Link>
+                  </Dropdown.Item>
                   <Dropdown.Item as="label" onClick={this.handleClick}>
                     Logout
                   </Dropdown.Item>

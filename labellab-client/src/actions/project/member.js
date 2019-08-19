@@ -46,7 +46,7 @@ export const memberDelete = (email, projectId, callback) => {
     FetchApi(
       'POST',
       '/api/v1/project/remove/' + projectId,
-      { member_email: email },
+      { memberEmail: email },
       token
     )
       .then(res => {
