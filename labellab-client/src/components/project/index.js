@@ -1,18 +1,51 @@
 import React, { Component } from 'react'
 import { Switch } from 'react-router-dom'
+import Loadable from 'react-loadable'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { fetchProject, getTimeLabel } from '../../actions/index'
-import PrivateRoute from '../../utils/pR'
-import Sidebar from './sidebar'
-import ProjectNavbar from '../navbar/project'
-import Images from './images'
-import Analytics from './analytics'
-import ProjectDescription from './projectDesc'
-import Team from './team'
-import Labels from './label/index'
+import Load from '../loading/index'
 import './css/index.css'
+
+const Loading = ({ error }) => {
+  if (error) return <div>Error loading component</div>
+  else return <Load />
+}
+
+const PrivateRoute = Loadable({
+  loader: () => import('../../utils/pR'),
+  loading: Loading
+})
+
+const Sidebar = Loadable({
+  loader: () => import('./sidebar'),
+  loading: Loading
+})
+const ProjectNavbar = Loadable({
+  loader: () => import('../navbar/project'),
+  loading: Loading
+})
+const Images = Loadable({
+  loader: () => import('./images'),
+  loading: Loading
+})
+const Analytics = Loadable({
+  loader: () => import('./analytics'),
+  loading: Loading
+})
+const ProjectDescription = Loadable({
+  loader: () => import('./projectDesc'),
+  loading: Loading
+})
+const Team = Loadable({
+  loader: () => import('./team'),
+  loading: Loading
+})
+const Labels = Loadable({
+  loader: () => import('./label/index'),
+  loading: Loading
+})
 
 class ProjectIndex extends Component {
   constructor(props) {

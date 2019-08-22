@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-// import { Dimmer, Loader } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 import { Bar } from 'react-chartjs-2'
 import './css/analytics.css'
 class AnalyticsIndex extends Component {
@@ -9,6 +9,7 @@ class AnalyticsIndex extends Component {
     const { analytics, isfetching } = this.props
     return (
       <div className="project-analytics-parent">
+        <Header content="Time-Label relationship" />
         {isfetching ? null : <Bar data={analytics} />}
       </div>
     )
