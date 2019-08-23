@@ -49,7 +49,7 @@ export const fetchUser = () => {
 export const uploadImage = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/users/upload_image', data, token)
+    FetchApi('POST', '/api/v1/users/uploadImage', data, token)
       .then(() => {
         dispatch(success())
         callback('true')

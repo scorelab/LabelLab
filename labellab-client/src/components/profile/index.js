@@ -93,9 +93,9 @@ class Profile extends Component {
                         ? `${user.thumbnail}`
                         : `${user.profileImage}?${Date.now()}`
                     }
-                    size="medium"
+                    size="small"
                   />
-                  <div>
+                  <div className="profile-edit-button">
                     <input
                       type="file"
                       onChange={this.handleImageChange}
@@ -106,7 +106,7 @@ class Profile extends Component {
                       htmlFor="profile-embedpollfileinput"
                       className="ui medium primary left floated button custom-margin"
                     >
-                      Change Profile Image
+                      Edit
                     </label>
                   </div>
                 </div>
@@ -123,7 +123,7 @@ class Profile extends Component {
                     </div>
                     <div>
                       <Header as="h5" content="Total Labels" />
-                      {profile.totalLWabels}
+                      {profile.totalLabels}
                     </div>
                   </div>
                 </div>
