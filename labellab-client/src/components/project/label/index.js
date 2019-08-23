@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Dimmer, Loader, Button, Form, Icon } from 'semantic-ui-react'
 import { fetchLabels, createLabel, deleteLabel } from '../../../actions/index'
 import LabelItem from './labelItem.js'
@@ -18,10 +19,6 @@ class LabelIndex extends Component {
       name: 'New Label',
       type: 'bbox'
     }
-  }
-  componentDidMount() {
-    const { fetchLabels, match } = this.props
-    fetchLabels(match.params.projectId)
   }
   toggleForm = () => {
     this.setState({
@@ -65,12 +62,6 @@ class LabelIndex extends Component {
     const { showform } = this.state
     return (
       <div>
-        {actions.isfetching ? (
-          <Dimmer active={actions.isfetching}>
-            <Loader indeterminate>Have some patience :)</Loader>
-          </Dimmer>
-        ) : null}
-
         {actions.isdeleting ? (
           <Dimmer active>
             <Loader indeterminate>Removing Label :)</Loader>
@@ -124,6 +115,17 @@ class LabelIndex extends Component {
     )
   }
 }
+
+LabelIndex.propTypes = {
+  match: PropTypes.object,
+  project: PropTypes.object,
+  actions: PropTypes.object,
+  labels: PropTypes.array,
+  fetchLabels: PropTypes.func,
+  createLabel: PropTypes.func,
+  deleteLabel: PropTypes.func
+}
+
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,

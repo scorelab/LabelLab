@@ -4,7 +4,7 @@ import Loadable from 'react-loadable'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { fetchProject, getTimeLabel } from '../../actions/index'
+import { fetchProject, getTimeLabel, fetchLabels } from '../../actions/index'
 import Load from '../loading/index'
 import './css/index.css'
 
@@ -53,15 +53,16 @@ class ProjectIndex extends Component {
     this.state = {}
   }
   componentDidMount() {
-    const { match, fetchProject, fetchTimeLabel } = this.props
+    const { match, fetchProject, fetchTimeLabel, fetchLabels } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
+    fetchLabels(match.params.projectId)
   }
   render() {
-    const { match, actions, history } = this.props
+    const { match, actions, history, actionsLabel } = this.props
     return (
       <React.Fragment>
-        {actions.isfetching ? (
+        {actions.isfetching || actionsLabel.isfetching ? (
           <Dimmer active>
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
@@ -111,18 +112,24 @@ ProjectIndex.propTypes = {
   history: PropTypes.object,
   fetchProject: PropTypes.func,
   fetchTimeLabel: PropTypes.func,
-  match: PropTypes.object
+  match: PropTypes.object,
+  actionsLabel: PropTypes.object,
+  fetchLabels: PropTypes.func
 }
 
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,
-    actions: state.projects.projectActions
+    actions: state.projects.projectActions,
+    actionsLabel: state.labels.labelActions
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
+    fetchLabels: projectId => {
+      return dispatch(fetchLabels(projectId))
+    },
     fetchProject: data => {
       return dispatch(fetchProject(data))
     },
