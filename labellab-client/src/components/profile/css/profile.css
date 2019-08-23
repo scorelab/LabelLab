@@ -18,7 +18,9 @@
   padding: 1em;
 }
 .profile-rightbar-child {
+  margin-top: 1.5em;
   display: flex;
+  justify-content: space-between;
 }
 .project-second {
   display: flex;
@@ -40,4 +42,9 @@
   position: absolute;
   z-index: -1;
   margin: 10px;
+}
+.profile-edit-button{
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5em;
 }

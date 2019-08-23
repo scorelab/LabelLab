@@ -117,7 +117,8 @@ class TeamIndex extends Component {
                   </Table.Cell>
 
                   <Table.Cell collapsing>
-                    {member.role !== 'Admin' && member.email !== user.email ? (
+                    {member.role !== 'Admin' &&
+                    member.member.email !== user.userDetails.email ? (
                       <Icon
                         className="team-remove-user-icon"
                         name="user delete"
