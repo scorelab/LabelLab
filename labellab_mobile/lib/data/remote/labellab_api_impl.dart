@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:labellab_mobile/config.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/data/remote/dto/register_response.dart';
@@ -23,7 +24,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   LabelLabAPIImpl() : _dio = Dio();
 
   /// BASE_URL - Change according to current labellab server
-  static const String BASE_URL = "http://35.226.216.33:3000/";
+  static const String BASE_URL = API_BASE_URL;
 
   static const String API_URL = BASE_URL + "api/v1/";
   static const String STATIC_CLASSIFICATION_URL =
