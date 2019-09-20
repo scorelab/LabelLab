@@ -334,16 +334,18 @@ exports.removeMember = function(req, res) {
 
 exports.searchProject = function(req, res) {
 	if (req && req.params && req.params.query) {
+		console.log(req.user._id)
 		Project.find(
 			{
 				user: req.user._id,
-				projectName: { $regex: req.params.query, $options: 'i' }
+				projectName: { $regex: req.params.query }
 			},
 			function(err, project) {
 				if (err) return console.log(err)
 				res.json({
 					success: true,
-					body: project
+					body: project,
+					user: req.user._id
 				})
 			}
 		)
