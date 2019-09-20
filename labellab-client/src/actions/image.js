@@ -8,19 +8,15 @@ import {
   FETCH_IMAGE_FAILURE,
   FETCH_IMAGE_REQUEST,
   FETCH_IMAGE_SUCCESS,
-  SET_IMAGE_STATE,
-  TOKEN_TYPE
+  SET_IMAGE_STATE
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
-import { getToken } from '../utils/token'
-
-const token = getToken(TOKEN_TYPE)
 
 export const submitImage = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/image/' + data.projectId + '/create', data, token)
+    FetchApi('POST', '/api/v1/image/' + data.projectId + '/create', data, true)
       .then(res => {
         dispatch(success(res.data.body))
         callback()
@@ -47,7 +43,7 @@ export const submitImage = (data, callback) => {
 export const fetchProjectImage = (imageId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/image/' + imageId + '/get', null, token)
+    FetchApi('GET', '/api/v1/image/' + imageId + '/get', null, true)
       .then(res => {
         dispatch(success(res.data.body))
         callback()
@@ -74,7 +70,7 @@ export const fetchProjectImage = (imageId, callback) => {
 export const deleteImage = (imageId, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('DELETE', '/api/v1/image/' + imageId + '/delete', null, token)
+    FetchApi('DELETE', '/api/v1/image/' + imageId + '/delete', null, true)
       .then(res => {
         dispatch(success())
         callback()

@@ -4,19 +4,15 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_ALL_FAILURE,
   FETCH_PROJECT_ALL_REQUEST,
-  FETCH_PROJECT_ALL_SUCCESS,
-  TOKEN_TYPE
+  FETCH_PROJECT_ALL_SUCCESS
 } from '../../constants/index'
 
 import FetchApi from '../../utils/FetchAPI'
-import { getToken } from '../../utils/token'
-
-const token = getToken(TOKEN_TYPE)
 
 export const fetchAllProject = () => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/project/get/', null, getToken(TOKEN_TYPE))
+    FetchApi('GET', '/api/v1/project/get/', null, true)
       .then(res => {
         dispatch(success(res.data.body))
       })
@@ -42,7 +38,7 @@ export const fetchAllProject = () => {
 export const fetchProject = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/project/get/' + data, null, token)
+    FetchApi('GET', '/api/v1/project/get/' + data, null, true)
       .then(res => {
         dispatch(success(res.data.body))
         callback()

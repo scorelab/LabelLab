@@ -1,19 +1,13 @@
-import {
-  SEARCH_PROJECTS,
-  SEARCH_PROJECTS_FAILURE,
-  TOKEN_TYPE
-} from '../../constants/index'
+import { SEARCH_PROJECTS, SEARCH_PROJECTS_FAILURE } from '../../constants/index'
 
 import FetchApi from '../../utils/FetchAPI'
-import { getToken } from '../../utils/token'
 
-const token = getToken(TOKEN_TYPE)
 export const getSearchProjects = query => {
   return dispatch => {
     if (!query) {
       query = 'null'
     }
-    FetchApi('GET', '/api/v1/project/search/' + query, null, token)
+    FetchApi('GET', '/api/v1/project/search/' + query, null, true)
       .then(response => {
         dispatch(success(response.data.body))
       })

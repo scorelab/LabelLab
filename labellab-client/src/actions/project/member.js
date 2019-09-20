@@ -4,19 +4,15 @@ import {
   ADD_MEMBER_SUCCESS,
   DELETE_MEMBER_FAILURE,
   DELETE_MEMBER_REQUEST,
-  DELETE_MEMBER_SUCCESS,
-  TOKEN_TYPE
+  DELETE_MEMBER_SUCCESS
 } from '../../constants/index'
 
 import FetchApi from '../../utils/FetchAPI'
-import { getToken } from '../../utils/token'
-
-const token = getToken(TOKEN_TYPE)
 
 export const addMember = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/project/add/' + data.projectId, data, token)
+    FetchApi('POST', '/api/v1/project/add/' + data.projectId, data, true)
       .then(res => {
         dispatch(success())
         callback()
@@ -47,7 +43,7 @@ export const memberDelete = (email, projectId, callback) => {
       'POST',
       '/api/v1/project/remove/' + projectId,
       { memberEmail: email },
-      token
+      true
     )
       .then(res => {
         dispatch(success())

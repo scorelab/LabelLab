@@ -1,12 +1,10 @@
 import {
   ANALYTICS_TIME_LABEL_FAILURE,
   ANALYTICS_TIME_LABEL_REQUEST,
-  ANALYTICS_TIME_LABEL_SUCCESS,
-  TOKEN_TYPE
+  ANALYTICS_TIME_LABEL_SUCCESS
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
-import { getToken } from '../utils/token'
 
 export const getTimeLabel = (projectId, callback) => {
   return dispatch => {
@@ -15,7 +13,7 @@ export const getTimeLabel = (projectId, callback) => {
       'GET',
       '/api/v1/analytics/' + projectId + '/timeLabel/get',
       null,
-      getToken(TOKEN_TYPE)
+      true
     )
       .then(res => {
         dispatch(success(res.data.body))
