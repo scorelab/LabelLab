@@ -11,19 +11,15 @@ import {
   SEARCH_USER,
   SEARCH_USER_FAILURE,
   EDIT_USER_INFO,
-  EDIT_USER_INFO_FAILURE,
-  TOKEN_TYPE
+  EDIT_USER_INFO_FAILURE
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
-import { getToken } from '../utils/token'
-
-const token = getToken(TOKEN_TYPE)
 
 export const fetchUser = () => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/users/info', null, getToken(TOKEN_TYPE))
+    FetchApi('GET', '/api/v1/users/info', null, true)
       .then(res => {
         dispatch(success(res.data.body))
       })
@@ -49,7 +45,7 @@ export const fetchUser = () => {
 export const uploadImage = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/users/uploadImage', data, token)
+    FetchApi('POST', '/api/v1/users/uploadImage', data, true)
       .then(() => {
         dispatch(success())
         callback('true')
@@ -74,7 +70,7 @@ export const uploadImage = (data, callback) => {
 export const fetchCount = () => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/users/fetchCount', null, getToken(TOKEN_TYPE))
+    FetchApi('GET', '/api/v1/users/fetchCount', null, true)
       .then(res => {
         dispatch(success(res.data.body))
       })
@@ -102,7 +98,7 @@ export const getSearchUser = query => {
     if (!query) {
       query = 'null'
     }
-    FetchApi('GET', '/api/v1/users/search/' + query, null, token)
+    FetchApi('GET', '/api/v1/users/search/' + query, null, true)
       .then(response => {
         dispatch(success(response.data.body))
       })
@@ -127,7 +123,7 @@ export const getSearchUser = query => {
 export const editUser = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('PUT', '/api/v1/users/edit', data, token)
+    FetchApi('PUT', '/api/v1/users/edit', data, true)
       .then(response => {
         callback()
       })

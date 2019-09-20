@@ -10,19 +10,15 @@ import {
   UPDATE_LABEL_SUCCESS,
   DELETE_LABEL_FAILURE,
   DELETE_LABEL_REQUEST,
-  DELETE_LABEL_SUCCESS,
-  TOKEN_TYPE
+  DELETE_LABEL_SUCCESS
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
-import { getToken } from '../utils/token'
-
-const token = getToken(TOKEN_TYPE)
 
 export const fetchLabels = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/label/' + projectId + '/get', null, token)
+    FetchApi('GET', '/api/v1/label/' + projectId + '/get', null, true)
       .then(res => {
         dispatch(success(res.data.body))
         callback()
@@ -53,7 +49,7 @@ export const createLabel = (data, callback) => {
       'POST',
       '/api/v1/label/' + data.projectId + '/create',
       { label: data },
-      token
+      true
     )
       .then(res => {
         dispatch(success())
@@ -81,7 +77,7 @@ export const createLabel = (data, callback) => {
 export const updateLabels = (image_id, labelData) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('PUT', '/api/v1/image/' + image_id + '/update', labelData, token)
+    FetchApi('PUT', '/api/v1/image/' + image_id + '/update', labelData, true)
       .then(res => {
         dispatch(success())
       })
@@ -107,7 +103,7 @@ export const updateLabels = (image_id, labelData) => {
 export const deleteLabel = (label_id, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('DELETE', '/api/v1/label/' + label_id + '/delete', null, token)
+    FetchApi('DELETE', '/api/v1/label/' + label_id + '/delete', null, true)
       .then(res => {
         dispatch(success())
         callback()

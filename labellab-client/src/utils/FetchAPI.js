@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { getToken } from './token'
+import { TOKEN_VALUE } from '../constants/index'
 
 const FetchApi = (method, url, params, TokenValue) => {
   if (process.env.REACT_APP_SERVER_ENVIORNMENT === 'dev') {
@@ -11,7 +13,7 @@ const FetchApi = (method, url, params, TokenValue) => {
         url: url,
         data: params,
         headers: {
-          Authorization: 'Bearer ' + TokenValue
+          Authorization: 'Bearer ' + getToken(TOKEN_VALUE)
         },
         responseType: 'json'
       })

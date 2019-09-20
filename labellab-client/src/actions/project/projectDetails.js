@@ -4,19 +4,15 @@ import {
   INITIALIZE_PROJECT_SUCCESS,
   UPDATE_PROJECT_FAILURE,
   UPDATE_PROJECT_REQUEST,
-  UPDATE_PROJECT_SUCCESS,
-  TOKEN_TYPE
+  UPDATE_PROJECT_SUCCESS
 } from '../../constants/index'
 
 import FetchApi from '../../utils/FetchAPI'
-import { getToken } from '../../utils/token'
-
-const token = getToken(TOKEN_TYPE)
 
 export const initProject = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/project/create', data, getToken(TOKEN_TYPE))
+    FetchApi('POST', '/api/v1/project/create', data, true)
       .then(res => {
         dispatch(success(res.data.body))
         callback(res.data.body._id)
@@ -43,7 +39,7 @@ export const initProject = (data, callback) => {
 export const updateProject = (data, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('PUT', '/api/v1/project/update/' + projectId, data, token)
+    FetchApi('PUT', '/api/v1/project/update/' + projectId, data, true)
       .then(res => {
         dispatch(success())
         callback()
