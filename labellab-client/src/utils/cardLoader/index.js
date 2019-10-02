@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Card, Placeholder } from 'semantic-ui-react'
+import './card-loader.css'
 
 class CardLoader extends Component {
   render() {
     return (
       <React.Fragment>
         <Card>
-          <Placeholder style={{ height: 125 }}>
+          <Placeholder className="card-loader-height">
             <Placeholder.Image square />
           </Placeholder>
           <Card.Content>
@@ -22,7 +23,7 @@ class CardLoader extends Component {
           </Card.Content>
         </Card>
         <Card>
-          <Placeholder style={{ height: 125 }}>
+          <Placeholder className="card-loader-height">
             <Placeholder.Image square />
           </Placeholder>
           <Card.Content>
@@ -38,7 +39,7 @@ class CardLoader extends Component {
           </Card.Content>
         </Card>
         <Card>
-          <Placeholder style={{ height: 125 }}>
+          <Placeholder className="card-loader-height">
             <Placeholder.Image square />
           </Placeholder>
           <Card.Content>
