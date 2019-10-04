@@ -73,7 +73,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       return LoginResponse(response.data);
     }).catchError((err) {
-      print("Sex");
+      print(err);
     });
   }
 

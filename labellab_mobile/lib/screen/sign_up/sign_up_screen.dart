@@ -140,16 +140,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  String _validateName(String username) {
-    if (username.isEmpty) {
+  String _validateName(String name) {
+    if (name.isEmpty) {
       return "Name can't be empty";
     }
     return null;
   }
 
-  String _validateEmail(String username) {
-    if (username.isEmpty) {
+  String _validateEmail(String email) {
+    if (email.isEmpty) {
       return "Email can't be empty";
+    }
+    if (!RegExp(
+            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+        .hasMatch(email)) {
+      return "Invalid email";
     }
     return null;
   }
