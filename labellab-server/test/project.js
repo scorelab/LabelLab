@@ -6,7 +6,7 @@ let chaiHttp = require('chai-http')
 var Project = require('../models/project')
 var User = require('../models/user')
 let server = require('../app')
-let config = require('../config/travis')
+let config = require('../config/test')
 
 const userInfo = {
 	name: 'name',
@@ -147,7 +147,8 @@ describe('Project tests', async () => {
 					expect(data.body).to.have.property('success', true)
 					expect(data.body).to.have.property('msg')
 					expect(data.body).to.have.property('body')
-					expect(data.body.body).to.have.an('array')
+					expect(data.body.body).to.have.property('project')
+					expect(data.body.body.project).to.have.an('array')
 					done()
 				}
 			})
