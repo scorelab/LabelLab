@@ -22,7 +22,7 @@ Run npm install in labellab-client folder.
 
 Use two terminals, one for labellab-server and the other for labellab-client.
 
-Run the Node server in the labellab-server folder:
+Run the Node server in the labellab-client folder:
     
 `$ npm start`
 
