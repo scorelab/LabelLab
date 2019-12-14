@@ -1,4 +1,5 @@
 const jwt = require('jwt-simple')
+const bcrypt = require('bcryptjs');
 const config = require('../../config/jwtSecret')
 // Load input validation
 const validateRegisterInput = require('../../utils/authValidations')
@@ -30,8 +31,13 @@ exports.userRegister = function(req, res, next) {
 			email: email,
 			password: password
 		})
-		newUser
-			.save()
+		
+        bcrypt.genSalt(10, (err, salt)=>{
+           bcrypt.hash(newuser.password,salt, (err, hash)=>{
+           newUser.password = hash;
+            newUser.save(); 
+               });
+            })
 			.then(user => res.json({ user, msg: 'You are successfully registered!' }))
 			.catch(err => console.log(err))
 	})
