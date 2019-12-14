@@ -33,7 +33,7 @@ exports.userRegister = function(req, res, next) {
 		})
 		
         bcrypt.genSalt(10, (err, salt)=>{
-           bcrypt.hash(newuser.password,salt, (err, hash)=>{
+           bcrypt.hash(newUser.password,salt, (err, hash)=>{
            newUser.password = hash;
             newUser.save(); 
                });
