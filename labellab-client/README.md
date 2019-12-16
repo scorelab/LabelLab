@@ -66,3 +66,41 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+# LabelLab Web App
+#### Using LabelLab Web app - 
+Step 1: Login via google/GitHub or via filling out the information
+
+Step 2:  You will be on the dashboard and will be able to view all of your old projects or even build a new one.
+
+You can even search for the projects in the upper search bar
+
+
+If you want to look at an old project...after clicking at a certain project. You will be able to look at the members of that and the role of the member. You can choose among Members/Images/Analytics/Labels in the left bar. 
+
+### Starting a New Project-
+
+1 ) You can create a new project by clicking start a new project button in the dashboard where you will have to fill out the name of the project and then the app will prepare some files making the project for you.
+
+2) After setting up the project you can add the project members and their respective roles by adding their emails.
+
+### Adding Images
+
+1 ) By selecting Project Images in the left bar you will be able to add images. 
+2 ) You will be able to choose the images from your system and submit the images on the app.
+
+### Creating a New Label
+
+You can make multiple new labels by typing the name of the label. Furthermore, selecting the label type for eg a polygon sphere, etc.
+
+## Using Path Tracking Feature
+
+1 . Go to the project images in the sidebar
+2 . Click edit on any of the pics you have uploaded
+3 . You can zoom in and zoom out as the way you like 
+4 . Choose the pencil in the left in front of the name of your labels
+5 . Choose the path you want to track as shown below according to each label you created.
+6. After submitting the image you can go to project analytics and see the time label relationship
+
+
+
