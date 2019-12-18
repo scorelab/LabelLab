@@ -35,11 +35,11 @@ exports.userRegister = function(req, res, next) {
         bcrypt.genSalt(10, (err, salt)=>{
            bcrypt.hash(newUser.password,salt, (err, hash)=>{
            newUser.password = hash;
-            newUser.save(); 
+			newUser.save()
+			.then(user => res.json({ user, msg: 'You are successfully registered!' }))
+            .catch(err => console.log(err));
                });
             })
-			.then(user => res.json({ user, msg: 'You are successfully registered!' }))
-			.catch(err => console.log(err))
 	})
 }
 
