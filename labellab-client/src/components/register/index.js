@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Message, Button, Form, Icon } from 'semantic-ui-react'
 import { userRegister } from '../../actions/index'
 import register from './css/register.css'
+import validateInput from '../../utils/validation'
 
 class RegisterIndex extends Component {
   constructor(props) {
@@ -30,20 +31,28 @@ class RegisterIndex extends Component {
       submitted: true
     })
     if (name && username && email && password && password2) {
-      if (password === password2) {
-        let data = {
-          name: name,
-          username: username,
-          email: email,
-          password: password,
-          password2: password2
+      const checkPass = validateInput(password, 'password')
+      if (checkPass.isValid) {
+        if (password === password2) {
+          let data = {
+            name: name,
+            username: username,
+            email: email,
+            password: password,
+            password2: password2
+          }
+          setProfile(data, () => {
+            history.push('/login')
+          })
+        } else {
+          this.setState({
+            password2Err: 'Both password are not equal',
+            errors: null
+          })
         }
-        setProfile(data, () => {
-          history.push('/login')
-        })
       } else {
         this.setState({
-          password2Err: 'Both password are not equal'
+          errors: checkPass.errors.password
         })
       }
     }
@@ -51,7 +60,15 @@ class RegisterIndex extends Component {
 
   render() {
     const { errField, statusText, isRegistering } = this.props
-    const { name, username, email, password, password2, submitted } = this.state
+    const {
+      name,
+      username,
+      email,
+      password,
+      password2,
+      submitted,
+      errors
+    } = this.state
     return (
       <div>
         <Message
@@ -146,6 +163,7 @@ class RegisterIndex extends Component {
           {statusText && errField === 'password2' && (
             <div className="register-error-text">{statusText}</div>
           )}
+          {errors && <div className="register-error-text">{errors}</div>}
           <Button loading={isRegistering} color="blue">
             Submit
           </Button>
