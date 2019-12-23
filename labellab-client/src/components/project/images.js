@@ -16,13 +16,15 @@ class ImagesIndex extends Component {
       imageName: '',
       projectId: '',
       showform: false,
-      format: ''
+      format: '',
+      maxSizeError: '',
     }
   }
   handleImageChange = e => {
     e.preventDefault()
     let reader = new FileReader()
     let file = e.target.files[0]
+   
     reader.onloadend = () => {
       this.setState({
         image: reader.result,
@@ -38,6 +40,10 @@ class ImagesIndex extends Component {
     e.preventDefault()
     const { project, fetchProject, submitImage } = this.props
     const { imageName, image, format } = this.state
+    if (this.state.file && this.state.file.size > 101200) {
+      this.setState({
+        maxSizeError: 'max sized reached'
+      })}else{
     let data = {
       imageName: imageName,
       image: image,
@@ -50,6 +56,7 @@ class ImagesIndex extends Component {
       })
       fetchProject(project.projectId)
     })
+  }
   }
   handleDelete = imageId => {
     const { deleteImage, project, fetchProject } = this.props
@@ -103,8 +110,9 @@ class ImagesIndex extends Component {
             <Button loading={imageActions.isposting} type="submit">
               Submit
             </Button>
+            {this.state.maxSizeError? <div className="max-size-error">The size of the file should not be greater than 101Kb!</div>:null}
           </Form>
-        ) : null}
+       ) : null}
         <Table
           celled
           style={{ display: 'flex', flexDirection: 'column', height: 600 }}
