@@ -26,7 +26,7 @@ class ProjectNavbar extends Component {
     return (
       <div className="navbar">
         <div className="startnav">
-          <div className="title" onClick={this.pushRouter}>
+          <div className="project-nav-title" onClick={this.pushRouter}>
             <Link to="/">
               <Icon name="arrow left" />
               Dashboard

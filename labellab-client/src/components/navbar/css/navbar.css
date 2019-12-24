@@ -4,6 +4,7 @@
   background-color: #ffffff;
   z-index: 3;
   justify-content: space-between;
+  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2);
 }
 
 .navbar ul {
@@ -60,6 +61,16 @@
   width: 18px;
   position: relative;
   transition: background 0.2s ease-out;
+}
+
+.project-nav-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 0 0 0 1em;
+  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .navbar .menu-icon .nav-icon:before {
