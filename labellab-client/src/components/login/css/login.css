@@ -27,6 +27,10 @@
     max-width: 15vw;
 }
 
+.login-icons {
+    width: 45px;
+}
+
 .loginField{
     width: 100%;
 }
