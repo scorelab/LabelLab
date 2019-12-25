@@ -92,7 +92,7 @@ class LoginIndex extends Component {
                   `/api/v1/auth/google`
                 }
               >
-                <Image size="mini" src={googleIcon} />
+                <Image size="huge" src={googleIcon} />
               </a>
             </div>
             <div>
@@ -103,7 +103,7 @@ class LoginIndex extends Component {
                   `/api/v1/auth/github`
                 }
               >
-                <Image size="mini" src={githubIcon} />
+                <Image size="huge" src={githubIcon} />
               </a>
             </div>
           </div>
@@ -140,7 +140,7 @@ class LoginIndex extends Component {
             </form>
           </div>
           <div className="login-create-account">
-            Don&apos;t have an account?
+            Don&apos;t have an account?&nbsp;
             <Link to="/register">Create Account</Link>
           </div>
         </div>
