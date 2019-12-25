@@ -338,7 +338,7 @@ exports.searchProject = function(req, res) {
 		Project.find(
 			{
 				user: req.user._id,
-				projectName: { $regex: req.params.query }
+				projectName: { $regex: req.params.query, $options: 'i' }
 			},
 			function(err, project) {
 				if (err) return console.log(err)
