@@ -25,7 +25,7 @@
     "jwt-simple": "^0.5.6",
     "mongoose": "^5.5.11",
     "morgan": "~1.9.1",
-    "npm": "^6.10.0",
+    "npm": "^6.13.4",
     "passport": "^0.4.0",
     "passport-github": "^1.1.0",
     "passport-google-oauth": "^2.0.0",
