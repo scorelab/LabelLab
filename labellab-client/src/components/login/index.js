@@ -87,7 +87,7 @@ class LoginIndex extends Component {
             <div>
               <a
                 href={
-                  process.env.REACT_APP_HOST +':'+
+                  process.env.REACT_APP_HOST +
                   process.env.REACT_APP_SERVER_PORT +
                   `/api/v1/auth/google`
                 }
@@ -98,7 +98,7 @@ class LoginIndex extends Component {
             <div>
               <a
                 href={
-                  process.env.REACT_APP_HOST +':'+
+                  process.env.REACT_APP_HOST +
                   process.env.REACT_APP_SERVER_PORT +
                   `/api/v1/auth/github`
                 }
