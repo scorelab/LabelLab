@@ -194,7 +194,7 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
     <Table.Cell style={columnStyles[1]}>
       <Link
         to={
-          process.env.REACT_APP_HOST +':'+
+          process.env.REACT_APP_HOST +
           process.env.REACT_APP_SERVER_PORT +
           `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
