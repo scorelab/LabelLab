@@ -13,8 +13,9 @@ let mongoURI
 if (travis) {
 	mongoURI = 'mongodb://travis:test@localhost:27017/mydb_test'
 } else if (dbHost && dbName && dbCluster && dbUser && dbPass) {
-	mongoURI = '' + dbHost + '://' + dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
-} else {
+	mongoURI = 'mongodb+srv://adi:adi9891255973@adi-ocz5j.mongodb.net/test?retryWrites=true&w=majority'
+}
+ else {
 	mongoURI = ''
 }
 
