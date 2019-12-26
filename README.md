@@ -4,10 +4,7 @@
 ## What is the aim of Lablellab?
   
   
-_Label lab is an image labeling tool designed for researchers. It is an open-source project, so basically using Machine learning it helps in labeling the real-world objects._
-## Technical Requirements
-
-This appication is avialiable across all platforms.
+_Label lab is an image labeling tool designed for researchers. It is an open-source project, It uses a machine learning model to label objects._
 
 ## How to Setup
 
@@ -54,17 +51,17 @@ for iOS or run the flutter application flutter run . A device with USB debugging
 
 
 
-## HOW TO CREATE A NEW PROJECT 
+## How to create a new project 
 
 - Upon sign in u will be guided to a page where there will be a option to click photo or upload through gallery .
 - On swiping from left to right you can see history OR  your past classification.
 - On swiping from right to left you can see your projects
 - To create a project tap on the add project icon on right bottom
   add project screen will appear asking credentials i.e project name & description
-- Upon filling the credentials click “create “ button
-- Project will be created and you will be directed to “ projects “ menu.
+- Upon filling the credentials click `create` button
+- Project will be created and you will be directed to " projects " menu.
 
-## HOW TO ADD IMAGES TO PROJECT 
+## How to add images to project 
 
 - Open your project from project menu screen.
 - You will be shown details about your project.
@@ -72,16 +69,16 @@ for iOS or run the flutter application flutter run . A device with USB debugging
 - You will asked to upload image via camera or gallery . choose your preferred option.
 - Image will be uploaded.
 
-##  HOW TO LABEL IMAGES 
+##  How to label images 
 
 - Open your project from project menu screen.
 - You will be shown details about your project
 - Click on “ +add” button on the right side of the labels
-- Add label name then select “create”
+- Add label name then select `create`
 - Then from images select or upload an image
 - Then open the image and select “+” then select the desired label .
 
-##  HOW TO ORGANISE LABEL 
+##  How to organise label 
 
 - Always try to label ( rectangle) label for bigger category i.e animals , books , furniture etc.
 label ( polygon) labels for smaller category i.e elephant , r.d sharma mathematics , chair etc .
