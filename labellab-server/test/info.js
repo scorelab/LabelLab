@@ -2,7 +2,7 @@ module.exports={
     userInfo:{
         name: 'name',
         username: 'username',
-        email: 'gmail@gmail.com',
+        email: 'email@gmail.com',
         password: 'password',
         password2: 'password',
         thumbnail:'thumbnail',
