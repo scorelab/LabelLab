@@ -10,7 +10,7 @@ let config = require('../config/test')
 const Info = require('./info')
 
 const projectInfo = {
-		projectName: 'projectName'
+		projectName: 'projectName1'
 	}
 var token = ''
 var createdUserId = ''
@@ -42,21 +42,21 @@ describe('User tests', async () => {
 
 	after(async () => {
 		await Project.deleteOne({
-				projectName: projectInfo.projectName
-				}).exec(function(err) {
-					if (err) {
-						console.log(err)
-					}
-					process.exit(0)
+						projectName: projectInfo.projectName
+					}).exec(function(err) {
+						if (err) {
+							console.log(err)
+						}
+						process.exit(0)
 					})
-		await User.deleteOne({
-			email: Info.userInfo.email
-		}).exec(function(err) {
-			if (err) {
-				console.log(err)
-			}
-			process.exit(0)
-		})
+					await User.deleteOne({
+						email: Info.userInfo.email
+					}).exec(function(err) {
+						if (err) {
+							console.log(err)
+						}
+						process.exit(0)
+					})
 	})
 
 	it('User Register', done => {
