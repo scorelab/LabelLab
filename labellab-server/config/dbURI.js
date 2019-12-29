@@ -13,9 +13,6 @@ let mongoURI
 if(dbName && dbUser && dbPass){
 	mongoURI = 'mongodb://'+ dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
 }
-else if(dbName && !dbUser && !dbPass){
-	mongoURI = 'mongodb://' + dbHost + ':' + dbPort + '/' + dbName
-}
 else{
 	mongoURI = ''
 }
