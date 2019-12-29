@@ -162,7 +162,7 @@ class Profile extends Component {
                             className="card-headers"
                             header={project.projectName}
                           />
-                          <Card.Content description="Image Labelling App" />
+                          <Card.Content description={project.projectDescription} />
                           <Card.Content extra />
                         </Card>
                       ))
