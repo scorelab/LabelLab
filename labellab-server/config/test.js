@@ -17,7 +17,8 @@ if (travis) {
 	mongoURI = 'mongodb://travis:test@localhost:27017/mydb_test'
 } else if (dbHost && dbName && dbCluster && dbUser && dbPass) {
 	mongoURI = '' + dbHost + '://' + dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
-} else {
+}
+ else {
 	mongoURI = ''
 }
 
