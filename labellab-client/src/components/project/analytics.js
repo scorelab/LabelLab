@@ -3,8 +3,13 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Header } from 'semantic-ui-react'
 import { Bar, Pie } from 'react-chartjs-2'
+import {getTimeLabel} from '../../actions/index'
 import './css/analytics.css'
 class AnalyticsIndex extends Component {
+  componentDidMount(){
+    const { match, fetchTimeLabel} = this.props
+    fetchTimeLabel(match.params.projectId)
+  }
   render() {
     const { timeData, countData, isfetching } = this.props
     return (
@@ -36,7 +41,9 @@ class AnalyticsIndex extends Component {
 
 AnalyticsIndex.propTypes = {
   analytics: PropTypes.object,
-  isfetching: PropTypes.bool
+  isfetching: PropTypes.bool,
+  match: PropTypes.object,
+  fetchTimeLabel: PropTypes.func,
 }
 
 const mapStateToProps = state => {
@@ -46,8 +53,14 @@ const mapStateToProps = state => {
     isfetching: state.analytics.isfetching
   }
 }
-
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTimeLabel: projectId => {
+      return dispatch(getTimeLabel(projectId))
+    }
+  }
+}
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(AnalyticsIndex)
