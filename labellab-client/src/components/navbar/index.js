@@ -11,10 +11,68 @@ class Navbar extends Component {
   }
   render() {
     const { history, user, isfetching } = this.props
+
+    return (
+      <header className="navbar">
+        <div className="main-nav-title">LABELLAB</div>
+        <input type="checkbox" className="menu-btn" id="menu-btn" />
+        <label htmlFor="menu-btn" className="menu-icon">
+          <span className="nav-icon"></span>
+        </label>
+        <ul className="dropdown-menu">
+          <li className="searchBar">
+            <Searchbar history={history} />
+          </li>
+          <li className="subnavbar">
+            <Link to="/profile">
+              <Header
+                className="username"
+                textAlign="center"
+                as="h5"
+                content={user.username}
+              />
+              {isfetching ? (
+                <h4>LOADING</h4>
+              ) : user ? (
+                <Image
+                  className="profilepic"
+                  centered
+                  src={
+                    user.profileImage === ''
+                      ? `${user.thumbnail}`
+                      : `${user.profileImage}?${Date.now()}`
+                  }
+                  size="mini"
+                  circular
+                />
+              ) : null}
+            </Link>
+            <Dropdown className="dropdown">
+              <Dropdown.Menu>
+                <Dropdown.Item>
+                  <Link to="/profile">Profile</Link>
+                </Dropdown.Item>
+                <Dropdown.Item as="label" onClick={this.handleClick}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </li>
+          <li>
+            <h4 className="logout">Logout</h4>
+          </li>
+        </ul>
+      </header>
+    )
+    /**
     return (
       <div className="navbar">
         <div className="startnav">
           <div className="main-nav-title">LABELLAB</div>
+          <input type="checkbox" className="menu-btn" />
+          <label htmlFor="menu-btn" className="menu-icon">
+            <span className="nav-icon"></span>
+          </label>
           <div className="searchBar">
             <Searchbar history={history} />
           </div>
@@ -55,7 +113,7 @@ class Navbar extends Component {
           </ul>
         </div>
       </div>
-    )
+    )*/
   }
 }
 
@@ -71,7 +129,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(Navbar)
+export default connect(mapStateToProps, null)(Navbar)
