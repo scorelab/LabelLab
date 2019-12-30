@@ -64,56 +64,6 @@ class Navbar extends Component {
         </ul>
       </header>
     )
-    /**
-    return (
-      <div className="navbar">
-        <div className="startnav">
-          <div className="main-nav-title">LABELLAB</div>
-          <input type="checkbox" className="menu-btn" />
-          <label htmlFor="menu-btn" className="menu-icon">
-            <span className="nav-icon"></span>
-          </label>
-          <div className="searchBar">
-            <Searchbar history={history} />
-          </div>
-        </div>
-        <div className="subnavbar">
-          <ul>
-            <li>
-              <Header textAlign="center" as="h5" content={user.username} />
-            </li>
-            <li>
-              {isfetching ? (
-                <h4>LOADING</h4>
-              ) : user ? (
-                <Image
-                  centered
-                  src={
-                    user.profileImage === ''
-                      ? `${user.thumbnail}`
-                      : `${user.profileImage}?${Date.now()}`
-                  }
-                  size="mini"
-                  circular
-                />
-              ) : null}
-            </li>
-            <li>
-              <Dropdown>
-                <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <Link to="/profile">Profile</Link>
-                  </Dropdown.Item>
-                  <Dropdown.Item as="label" onClick={this.handleClick}>
-                    Logout
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </li>
-          </ul>
-        </div>
-      </div>
-    )*/
   }
 }
 
