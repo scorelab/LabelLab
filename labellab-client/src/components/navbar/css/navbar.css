@@ -1,5 +1,5 @@
 .navbar {
-  position: fixed;
+  position: relative;
   width: 100%;
   background-color: #ffffff;
   z-index: 3;
@@ -135,8 +135,9 @@
     background-color: #ffffff;
     display: flex;
     flex-wrap: wrap;
-    z-index: 2;
+    z-index: 1;
     align-items: center;
+    position: relative;
   }
 
   .navbar .subnavbar .dropdown {
@@ -145,12 +146,12 @@
 
   .main-nav-title {
     display: flex;
-    width: 10%;
+    width: 5%;
   }
 
   .dropdown-menu {
     display: flex;
-    width: 90%;
+    width: 95%;
     align-items: center;
   }
 
