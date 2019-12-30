@@ -28,7 +28,6 @@ export default class Sidebar extends PureComponent {
       openHotkeys,
       onBack,
       onSkip,
-      onSubmit,
       labelData,
       onFormChange,
       models,
@@ -85,9 +84,6 @@ export default class Sidebar extends PureComponent {
           <span style={{ flex: 1 }} />
           <Button secondary onClick={onSkip}>
             Skip
-          </Button>
-          <Button primary onClick={onSubmit}>
-            Submit
           </Button>
         </div>
       </div>
