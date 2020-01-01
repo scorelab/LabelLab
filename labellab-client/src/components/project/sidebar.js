@@ -29,13 +29,13 @@ class ProjectSidebar extends Component {
   }
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   handleDeleteProject = () => {
+    this.handleClose()
     this.props.deleteProject(
       this.props.project.projectId,
       this.fetchAllProjectCallback
     )
   }
   fetchAllProjectCallback = () => {
-    this.handleClose()
     fetchAllProject()
     this.props.history.push({
       pathname: '/'
