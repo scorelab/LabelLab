@@ -1,7 +1,9 @@
 .sidebar-parent {
   width: 25%;
   display: flex;
+  align-items: center;
   flex-direction: column;
+  justify-content: space-between;
 }
 .profile-first-leftbar {
   margin: 1em;
@@ -16,4 +18,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+.delete-project-button {
+  width: 80%;
 }
