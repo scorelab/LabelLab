@@ -25,6 +25,7 @@ const initialState = {
     isinitializing: false,
     isadding: false,
     isdeleting: false,
+    isdeletingproject: false,
     errors: '',
     msg: ''
   },
@@ -162,14 +163,14 @@ const project = (state = initialState, action) => {
       return {
         ...state,
         projectActions: {
-          isdeleting: true
+          isdeletingproject: true
         }
       }
     case DELETE_PROJECT_FAILURE:
       return {
         ...state,
         projectActions: {
-          isdeleting: false,
+          isdeletingproject: false,
           errors: action.payload
         }
       }
@@ -177,7 +178,7 @@ const project = (state = initialState, action) => {
       return {
         ...state,
         projectActions: {
-          isdeleting: true,
+          isdeletingproject: false,
           msg: 'Project removed successfully'
         }
       }
