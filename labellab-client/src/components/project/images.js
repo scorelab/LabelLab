@@ -29,7 +29,7 @@ class ImagesIndex extends Component {
         file: file,
         format: file.type,
         imageName: file.name,
-        showform: true
+        showform: !this.state.showform
       })
     }
     reader.readAsDataURL(file)
@@ -60,6 +60,17 @@ class ImagesIndex extends Component {
     const value = e.target.value
     this.setState({ [name]: value })
   }
+  removeImage = ()=>{
+    this.setState({
+      image: '',
+      file: '',
+      imageName: '',
+      showform:  !this.state.showform,
+      format: ''
+    })
+  }
+ 
+
   render() {
     const { imageActions, project } = this.props
     const { showform, imageName } = this.state
@@ -103,6 +114,9 @@ class ImagesIndex extends Component {
             <Button loading={imageActions.isposting} type="submit">
               Submit
             </Button>
+             <Button onClick={this.removeImage} type="delete">
+              Remove
+            </Button> 
           </Form>
         ) : null}
         <Table
@@ -194,7 +208,7 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
     <Table.Cell style={columnStyles[1]}>
       <Link
         to={
-          process.env.REACT_APP_HOST +
+          process.env.REACT_APP_HOST +':'+
           process.env.REACT_APP_SERVER_PORT +
           `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
