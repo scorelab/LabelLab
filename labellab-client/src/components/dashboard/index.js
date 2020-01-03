@@ -33,7 +33,8 @@ class Dashboard extends Component {
       image: '',
       open: false,
       maxSizeError: '',
-      projectName: ''
+      projectName: '',
+      projectDescription: ''
     }
   }
   componentDidMount() {
@@ -104,7 +105,10 @@ class Dashboard extends Component {
   }
   handleProjectSubmit = () => {
     this.props.initProject(
-      { projectName: this.state.projectName },
+      {
+        projectName: this.state.projectName,
+        projectDescription: this.state.projectDescription
+      },
       this.projectCallback
     )
     this.close()
@@ -127,22 +131,34 @@ class Dashboard extends Component {
           <Dimmer active={isinitializing}>
             <Loader indeterminate>Preparing Files</Loader>
           </Dimmer>
-          <Modal size="small" open={open} onClose={this.close}>
-            <Modal.Content>
-              <p>Enter Project Name:</p>
-            </Modal.Content>
+          <Modal size="tiny" open={open} onClose={this.close}>
+            <Modal.Header>
+              <p>Enter Project Details</p>
+            </Modal.Header>
             <Modal.Actions>
-              <Input
-                name="projectName"
-                onChange={this.handleChange}
-                type="text"
-                placeholder="Project name"
-              />
-              <Button
-                positive
-                onClick={this.handleProjectSubmit}
-                content="Create Project"
-              />
+              <div className="modal-actions">
+                <Input
+                  name="projectName"
+                  onChange={this.handleChange}
+                  type="text"
+                  placeholder="Project Name"
+                  label="Name"
+                />
+                <Input
+                  name="projectDescription"
+                  onChange={this.handleChange}
+                  type="text"
+                  placeholder="Project Description"
+                  label="Description"
+                />
+                <div>
+                  <Button
+                    positive
+                    onClick={this.handleProjectSubmit}
+                    content="Create Project"
+                  />
+                </div>
+              </div>
             </Modal.Actions>
           </Modal>
           <div className="create-project-button">
@@ -206,7 +222,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Dashboard)
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
