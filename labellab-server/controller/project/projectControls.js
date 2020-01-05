@@ -1,6 +1,8 @@
 let User = require('../../models/user')
 let Project = require('../../models/project')
 let ProjectMembers = require('../../models/projectMembers')
+let Image = require('../../models/image')
+let Label = require('../../models/label')
 
 exports.projectInfo = function(req, res) {
 	User.findOne({
@@ -188,6 +190,43 @@ exports.deleteProject = function(req, res) {
 					.status(400)
 					.send({ success: false, msg: 'Project not found' })
 			}
+
+			Image.deleteMany({
+				project: req.params.id
+			  }).exec(function(err, image) {
+				if (err) {
+				  return res.status(400).send({
+					success: false,
+					msg: 'Unable to connect to database. Please try again.',
+					error: err
+				  })
+				}
+			  })
+		
+			  Label.deleteMany({
+				project: req.params.id
+			  }).exec(function(err, image) {
+				if (err) {
+				  return res.status(400).send({
+					success: false,
+					msg: 'Unable to connect to database. Please try again.',
+					error: err
+				  })
+				}
+			  })
+		
+			  ProjectMembers.deleteMany({
+				projectId: req.params.id
+			  }).exec(function(err, image) {
+				if (err) {
+				  return res.status(400).send({
+					success: false,
+					msg: 'Unable to connect to database. Please try again.',
+					error: err
+				  })
+				}
+			  })
+
 			res.json({
 				success: true,
 				msg: 'Project deleted successfully!',
