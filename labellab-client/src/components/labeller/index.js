@@ -192,7 +192,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LabelingLoader)
+export default connect(mapStateToProps, mapDispatchToProps)(LabelingLoader)
