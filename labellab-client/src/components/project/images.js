@@ -60,16 +60,15 @@ class ImagesIndex extends Component {
     const value = e.target.value
     this.setState({ [name]: value })
   }
-  removeImage = ()=>{
+  removeImage = () => {
     this.setState({
       image: '',
       file: '',
       imageName: '',
-      showform:  !this.state.showform,
+      showform: !this.state.showform,
       format: ''
     })
   }
- 
 
   render() {
     const { imageActions, project } = this.props
@@ -114,9 +113,9 @@ class ImagesIndex extends Component {
             <Button loading={imageActions.isposting} type="submit">
               Submit
             </Button>
-             <Button onClick={this.removeImage} type="delete">
+            <Button onClick={this.removeImage} type="delete">
               Remove
-            </Button> 
+            </Button>
           </Form>
         ) : null}
         <Table
@@ -191,10 +190,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ImagesIndex)
+export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
 
 const columnStyles = [
   { flex: '0 0 80px', lineHeight: '32px' },
@@ -206,15 +202,17 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
   <Table.Row style={{ ...style, display: 'flex' }}>
     <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
     <Table.Cell style={columnStyles[1]}>
-      <Link
-        to={
-          process.env.REACT_APP_HOST +':'+
+      <a
+        href={
+          'http://' +
+          process.env.REACT_APP_HOST +
+          ':' +
           process.env.REACT_APP_SERVER_PORT +
           `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
       >
         {image.imageName}
-      </Link>
+      </a>
     </Table.Cell>
     <Table.Cell style={columnStyles[2]}>
       <div>
