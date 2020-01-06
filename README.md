@@ -40,7 +40,7 @@ Run npm install in labellab-server folder.
 First you need to create a `.env` file in both labellab-server folder and labellab-client folder and fill it with the template provided in the file `.env.example` which is present in both the folders.<br/> <br/>
 For client side `.env` file:
 ```
-REACT_APP_HOST=localhost
+REACT_APP_HOST=http://localhost:
 REACT_APP_SERVER_ENVIORNMENT=dev
 REACT_APP_SERVER_PORT=4000
 ```
