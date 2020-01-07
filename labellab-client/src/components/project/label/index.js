@@ -1,8 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Dimmer, Loader, Button, Form, Icon } from 'semantic-ui-react'
-import { fetchLabels, createLabel, deleteLabel, updateALabel } from '../../../actions/index'
+import {
+  Dimmer,
+  Loader,
+  Button,
+  Container,
+  Icon,
+  Table,
+  Header,
+  Modal,
+  Input,
+  Select
+} from 'semantic-ui-react'
+import {
+  fetchLabels,
+  createLabel,
+  deleteLabel,
+  updateALabel
+} from '../../../actions/index'
 import LabelItem from './labelItem.js'
 import '../css/labelItem.css'
 
@@ -21,9 +37,9 @@ class LabelIndex extends Component {
     }
   }
   toggleForm = () => {
-    this.setState({
-      showform: true
-    })
+    this.setState(prevState => ({
+      showform: !prevState.showform
+    }))
   }
   onChange = (name, data) => {
     this.setState({
@@ -49,15 +65,14 @@ class LabelIndex extends Component {
     })
     fetchLabels(project.projectId)
   }
-  onUpdate = value =>{
+  onUpdate = value => {
     const { updateALabel } = this.props
     let data = {
       name: this.state.name,
-      type: this.state.type,
+      type: this.state.type
     }
-    updateALabel(value.id , data ,this.callback)
+    updateALabel(value.id, data, this.callback)
   }
-
 
   handleDelete = value => {
     const { project, deleteLabel, fetchLabels } = this.props
@@ -71,52 +86,79 @@ class LabelIndex extends Component {
     const { actions, labels } = this.props
     const { showform } = this.state
     return (
-      <div>
+      <Container>
         {actions.isdeleting ? (
           <Dimmer active>
             <Loader indeterminate>Removing Label :)</Loader>
           </Dimmer>
         ) : null}
-        {labels !== undefined &&
-          labels.map((label, index) => (
-            <LabelItem
-              value={label}
-              key={index}
-              onChange={this.onChange}
-              onDelete={this.handleDelete}
-              onUpdate={this.onUpdate}
-            />
-          ))}
-        
-        {showform ? (
-          <div className="form-card-parent">
-            <Form className="form-card flex" onSubmit={this.handleSubmit}>
-              <div className="form-card-child">
-                <Form.Field
-                  placeholder="Label name"
-                  control="input"
-                  defaultValue={value.name}
-                  className="form-card-child-field"
-                  onChange={e => this.onChange(e.target.name, e.target.value)}
-                  name="name"
-                />
-                <Form.Select
-                  label="Label type"
+        <Button onClick={this.toggleForm} positive>
+          Add Label
+        </Button>
+        {labels !== undefined && (
+          <Table color="green" celled padded striped>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell singleLine>S. No.</Table.HeaderCell>
+                <Table.HeaderCell>Label</Table.HeaderCell>
+                <Table.HeaderCell>Type</Table.HeaderCell>
+                <Table.HeaderCell />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {labels.map((label, index) => (
+                <LabelItem
+                  index={index}
+                  label={label}
                   options={options}
-                  defaultValue={value.type}
-                  onChange={(e, change) =>
-                    this.onChange(change.name, change.value)
-                  }
-                  style={{ maxWidth: 400 }}
-                  name="type"
+                  onChange={this.onChange}
+                  onDelete={this.handleDelete}
+                  onUpdate={this.onUpdate}
                 />
-                <Button type="submit">Create</Button>
+              ))}
+            </Table.Body>
+          </Table>
+        )}
+
+        <Modal
+          size="small"
+          open={this.state.showform}
+          onClose={this.toggleForm}
+        >
+          <Modal.Header>
+            <p>Enter Label Details</p>
+          </Modal.Header>
+          <Modal.Actions>
+            <div className="modal-actions">
+              <Input
+                name="name"
+                type="text"
+                label="Name"
+                placeholder="Label name..."
+                defaultValue={value.name}
+                onChange={e => this.onChange(e.target.name, e.target.value)}
+              />
+              <Select
+                label="Type"
+                options={options}
+                defaultValue={value.type}
+                onChange={(e, change) =>
+                  this.onChange(change.name, change.value)
+                }
+                name="type"
+              />
+              <div>
+                <Button
+                  positive
+                  onClick={this.handleSubmit}
+                  content="Add Label"
+                />
               </div>
-            </Form>
-          </div>
-        ) : null}
-        <Button className="create-label" onClick={this.toggleForm}>Create new Label</Button>
-      </div>
+            </div>
+          </Modal.Actions>
+        </Modal>
+      </Container>
     )
   }
 }
@@ -129,7 +171,7 @@ LabelIndex.propTypes = {
   fetchLabels: PropTypes.func,
   createLabel: PropTypes.func,
   deleteLabel: PropTypes.func,
-  updateALabel: PropTypes.func,
+  updateALabel: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -157,7 +199,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LabelIndex)
+export default connect(mapStateToProps, mapDispatchToProps)(LabelIndex)
