@@ -16,6 +16,19 @@ before_script:
 script:
   - cd labellab-server/
   - npm install && npm test
+  - cd ../labellab-client/
+  - npm install && npm test
+  - npm run build
 
 after_script:
   - docker-compose down
+
+deploy:    
+  provider: pages
+  local_dir: labellab-client/build
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep_history: true
+  on:
+    branch: master
+
