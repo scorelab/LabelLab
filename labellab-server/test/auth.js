@@ -5,7 +5,7 @@ let chaiHttp = require('chai-http')
 
 var User = require('../models/user')
 let server = require('../app')
-let config = require('../config/test')
+let conn = require('../config/test')
 
 const info = {
 	name: 'name',
@@ -19,31 +19,16 @@ chai.use(chaiHttp)
 
 describe('Authentication tests', async () => {
 	before(function(done) {
-		mongoose
-			.connect(config.mongoURI, {
-				promiseLibrary: require('bluebird'),
-				useNewUrlParser: true
-			})
-			.then(() => console.log('Test MongoDb connected successfully!'))
-			.catch(err => console.error(err))
-		const db = mongoose.connection
-		db.on('error', console.error.bind(console, 'connection error'))
-		db.once('open', function() {
-			done()
-		})
+		conn.connect()
+		.then(() => done())
+		.catch((err) => done(err));
 	})
 
-	after(async () => {
-		await User.deleteOne({
-			email: info.email
-		}).exec(function(err) {
-			if (err) {
-				console.log(err)
-			}
-			process.exit(0)
-		})
+	after((done) => {
+		conn.close()
+		.then(() => done())
+		.catch((err) => done(err));
 	})
-
 	it('User Register', done => {
 		chai
 			.request(server)
