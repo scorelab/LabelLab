@@ -17,11 +17,32 @@ Run npm install in labellab-client folder.
  cd labellab-client/
  npm install
  ```
+ 
+#### Set up MongoDB Backend
+
+Run npm install in labellab-server folder.
+
+```
+ cd labellab-server/
+ npm install
+ ```
     
 #### How to Use
 
-
-Use two terminals, one for labellab-server and the other for labellab-client.
+Use two terminals, one for labellab-server and the other for labellab-client. <br/> <br/>
+First you need to create a `.env` file in both labellab-server folder and labellab-client folder and fill it with the template provided in the file `.env.example` which is present in both the folders.<br/> <br/>
+For client side `.env` file:
+```
+REACT_APP_HOST=localhost
+REACT_APP_SERVER_ENVIORNMENT=dev
+REACT_APP_SERVER_PORT=4000
+```
+For server side `.env` file:
+```
+HOST=localhost
+PORT=4000
+```
+`JWT_SECRET` can be any word your choice. For the next 5 fields visit `mlab.com` and create a MongoDB database and find a URI of your database and fill the values accordingly.<br/><br/>
 
 Run the Node server in the labellab-server folder:
     
