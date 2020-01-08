@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www",
+    "client": "cd ../labellab-client && npm start",
+    "server": "nodemon ./bin/www",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "lint": "./node_modules/.bin/eslint --quiet --fix ./",
     "test": "mocha --timeout 120000"
   },
@@ -38,6 +40,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "concurrently": "^5.0.2",
     "eslint": "^5.16.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.1"
