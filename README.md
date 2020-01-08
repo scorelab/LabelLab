@@ -29,7 +29,6 @@ Run npm install in labellab-server folder.
     
 #### How to Use
 
-Use two terminals, one for labellab-server and the other for labellab-client. <br/> <br/>
 First you need to create a `.env` file in both labellab-server folder and labellab-client folder and fill it with the template provided in the file `.env.example` which is present in both the folders.<br/> <br/>
 For client side `.env` file:
 ```
@@ -43,20 +42,21 @@ HOST=localhost
 PORT=4000
 ```
 `JWT_SECRET` can be any word your choice. For the next 5 fields visit `mlab.com` and create a MongoDB database and find a URI of your database and fill the values accordingly.<br/><br/>
+Both the front-end and the back-end can be run from the __labellab-server__ folder using the terminal:
 
-Run the Node server in the labellab-server folder:
-    
-`$ npm start`
-
-Run the Nodemon server in the labellab-server folder:
-
+1. To run both the client and server with a single command, run the following:   
 `$ npm run dev`
 
+2. To run the server separately:    
+`$ npm run server`
+
+> The server can also be run using `$ npm start`
+
+3. To run the client separately:    
+`$ npm run client`
+
+
 > **NOTE**: Before starting the server create a file named `.env` same as `.env.example` and add your **OAUTH** and **DATABASE** credentials in the file.
-
-start the npm server in labellab-client directory.
-
-`npm start`
 
 And use [localhost:3000](https://) to browse.
 
