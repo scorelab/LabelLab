@@ -1,0 +1,49 @@
+LabelLab Mobile APP
+
+LabelLab is the image analysing platform and classification platform. The application will allow the users to upload batches of images and will be classifying with labels. It will also have the features to run classification against a trained model. LabelLab also has a user project management component as well as image analysing component. 
+
+How to set up the LabelLab Application? 
+Ans.  Step 1. Clone the repository by typing
+git clone https://github.com/scorelab/Labellab.git
+Step 2. Setting up the react server. Run npm install in LabelLab - client folder. 
+cd labellab-client/npm install 
+
+How to create a new project with LabelLab? 
+Ans. Step 1 Open the dashboard window of the application. 
+Step 2 Click on add new project button. 
+Step 3 Type your project name in the opened dialogue box. 
+Step 4 Now add your project members name, their roles and emails. 
+Step 5 Your new project is now added. 
+
+How to add images in LabelLab Application? 
+Ans. Step 1 Click on the project images button. 
+Step 2 Now, choose the image files from your machine which want to add on your project. 
+Step 3 Click on the  add image button.
+
+How to add labels to the images on LabelLab Application? 
+Ans. Step 1 Select images which you want to label. 
+Step 2 You can create new labels by typing the names of the label. 
+Step 3 You can use default labels, clicking on them and select. 
+Step 4 Click on add label. 
+
+How use LabelLab Mobile Application? 
+Ans. Firstly Run the Node server in the labellab-server directory (if not already done):
+
+ npm start
+
+ In a new terminal navigate to labellab_mobile      directory.
+
+Configure the lib/config.dart using the format provided in lib/config_example.dart.
+
+Application needs google-services.json issue from firebase to run google sign in option.To obtain the file,
+
+Sign in to https://console.firebase.google.com/.
+Click Add Project and necessary information about the project.
+Agree to the terms and click Create Project.
+After creating the project, click Add Firebase to your android app.
+Go to project location and open android/app/src/main/AndroidManifest.xml.Copy the package name(org.scorelab.labellab_mobile) and paste in the package name field
+Get the SHA1 fingerprint by following the instruction and paste it in the SHA1 fingerprint field.
+Click next and download the google-services.json.
+paste the file in location android/app/ folder.
+Build flutter the application. 
+
