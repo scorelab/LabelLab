@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: false, limit: '4mb' }))
 app.use(cookieParser())
 app.set('/views', path.join(__dirname, 'views'))
 app.engine('html', require('ejs').renderFile)
-app.set('view engine', 'html')
+app.set('view engine', 'ejs')
 
 app.use('/static', express.static(path.join(__dirname, 'public')))
 
