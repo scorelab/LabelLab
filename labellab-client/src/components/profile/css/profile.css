@@ -48,3 +48,75 @@
   justify-content: center;
   margin-top: 1.5em;
 }
+@media only screen and (max-width: 993px) {
+  .project-second-rightbar {
+    width: 70%;
+    padding: 1em;
+    margin-left:2vw;
+  }
+}
+
+@media only screen and (max-width: 761px) {
+  .project-second-rightbar {
+    width: 70%;
+    padding: 1em;
+    margin-left:2vw;
+  }
+  .ui.vertical.menu {
+    width: 11rem;
+}
+}
+@media only screen and (max-width: 521px) {
+  .project-second-rightbar {
+    width: 70%;
+    padding: 1em;
+    margin-left:4vw;
+  }
+  .ui.vertical.menu {
+    width: 10rem;
+}
+}
+@media only screen and (max-width: 500px) {
+  .project-second-rightbar {
+    width: 70%;
+    padding: 1em;
+    margin-left: 4vw;
+  }
+  .ui.vertical.menu {
+    width: 10rem;
+}
+.ui.three.cards>.card {
+  width: 21vw ;
+  margin-left: 1em;
+  margin-right: 1em;
+  height: 7.6rem;
+  font-size: 14px;
+}
+.item{
+  height: 2.5rem;
+}
+.ui.vertical.menu {
+  width: 6rem;
+    height: 7.8rem;
+    font-size: 11px;
+}
+.project-second-leftbar {
+  width: 30%;
+    padding: 1em;
+}
+}
+@media only screen and (max-width: 263px) {
+  .ui.three.cards>.card {width: 26vw;
+    margin-left: 0.7em;
+    margin-right: 1em;
+    height: 7.6rem;
+    font-size: 10px;
+  }
+  .project-second-rightbar {
+    width: 70%;
+    padding: 1em;
+    margin-left: 8vw;
+    margin-top: 0.4rem;
+  }
+ 
+}
