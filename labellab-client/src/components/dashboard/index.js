@@ -34,7 +34,8 @@ class Dashboard extends Component {
       open: false,
       maxSizeError: '',
       projectName: '',
-      projectDescription: ''
+      projectDescription: '',
+      invalidDetails: true
     }
   }
   componentDidMount() {
@@ -101,6 +102,16 @@ class Dashboard extends Component {
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
+    }, () => {
+      if(this.state.projectName === '') {
+        this.setState({
+          invalidDetails: true
+        })
+      } else {
+        this.setState({
+          invalidDetails: false
+        })
+      }
     })
   }
   handleProjectSubmit = () => {
@@ -141,7 +152,7 @@ class Dashboard extends Component {
                   name="projectName"
                   onChange={this.handleChange}
                   type="text"
-                  placeholder="Project Name"
+                  placeholder="* Project Name"
                   label="Name"
                 />
                 <Input
@@ -156,6 +167,7 @@ class Dashboard extends Component {
                     positive
                     onClick={this.handleProjectSubmit}
                     content="Create Project"
+                    disabled={this.state.invalidDetails ? true : false}
                   />
                 </div>
               </div>
