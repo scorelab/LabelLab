@@ -35,8 +35,13 @@ function connect() {
   });
 }
 
-function close() {
-  return mongoose.disconnect();
+async function close() {
+  mongoose.connections.forEach(async (con) => {
+    await con.close();
+  })
+  await mockgoose.mongodHelper.mongoBin.childProcess.kill();
+  await mockgoose.helper.reset();
+  await mongoose.disconnect();
 }
 
 module.exports = { connect, close };

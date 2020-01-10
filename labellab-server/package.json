@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "lint": "./node_modules/.bin/eslint --quiet --fix ./",
-    "test": "mocha --timeout 10000"
+    "test": "mocha --timeout 120000"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
