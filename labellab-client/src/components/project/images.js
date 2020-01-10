@@ -16,7 +16,8 @@ class ImagesIndex extends Component {
       imageName: '',
       projectId: '',
       showform: false,
-      format: ''
+      format: '',
+      showerror:false
     }
   }
   handleImageChange = e => {
@@ -24,12 +25,14 @@ class ImagesIndex extends Component {
     let reader = new FileReader()
     let file = e.target.files[0]
     reader.onloadend = () => {
+      if(file.type!=='image/png'||'image/jpg'||'image/jpeg'||'image/svg'){
+        this.setState({showerror:true})
+      }
       this.setState({
         image: reader.result,
         file: file,
         format: file.type,
         imageName: file.name,
-        showform: !this.state.showform
       })
     }
     reader.readAsDataURL(file)
@@ -44,12 +47,18 @@ class ImagesIndex extends Component {
       projectId: project.projectId,
       format: format
     }
-    submitImage(data, () => {
-      this.setState({
-        showform: false
-      })
-      fetchProject(project.projectId)
+    submitImage(data, async() => {
+     await fetchProject(project.projectId)
+     this.setState({
+      image: '',
+      file: '',
+      imageName: '',
+      projectId: '',
+      showform: false,
+      format: ''
     })
+    })
+  
   }
   handleDelete = imageId => {
     const { deleteImage, project, fetchProject } = this.props
@@ -90,6 +99,7 @@ class ImagesIndex extends Component {
           <label
             htmlFor="image-embedpollfileinput"
             className="ui medium primary left floated button custom-margin"
+            onClick={()=>{this.setState({showform:!this.state.showform})}}
           >
             Add Image
           </label>
@@ -110,6 +120,7 @@ class ImagesIndex extends Component {
                 placeholder="Image Name"
               />
             </Form.Field>
+            {this.state.showerror?<div className="file_error">The file is not an image</div>:null}
             <Button loading={imageActions.isposting} type="submit">
               Submit
             </Button>
@@ -204,7 +215,6 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
     <Table.Cell style={columnStyles[1]}>
       <a
         href={
-          'http://' +
           process.env.REACT_APP_HOST +
           ':' +
           process.env.REACT_APP_SERVER_PORT +

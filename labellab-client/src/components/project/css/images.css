@@ -47,3 +47,7 @@
   flex: 1;
   outline: 0;
 }
+.file_error{
+  color:red;
+  margin-bottom:1rem;
+}
