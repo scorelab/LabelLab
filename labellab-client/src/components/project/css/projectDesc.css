@@ -23,3 +23,39 @@
   color: white !important;
   margin-top: 1em !important; 
 }
+
+@media only screen and (max-width: 1550px) {
+  div.project-non-side-section{
+    margin-right: 10rem;
+    margin-left: 5rem;
+    max-width: 60%;
+  }
+  div.sidebar-parent{
+    margin-left: 5rem;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  div.project-non-side-section{
+    max-width: 50%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  button.ui.negative.button.delete-project-button{
+    margin: 2rem;
+    padding-right: 4.5rem;
+  }
+  div.project-non-side-section{
+    height: 30px;
+    position: absolute;
+    margin-top: 22rem;
+    margin-left: 0px;
+  }
+  div.project-main{
+    margin-left: 30%;
+  }
+  div.ui.container{
+    margin-left: 0px;
+  }
+}
