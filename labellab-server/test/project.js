@@ -36,10 +36,9 @@ describe('Project tests', async () => {
 		.catch((err) => done(err));
 	})
 
-	after((done) => {
-		conn.close()
-		.then(() => done())
-		.catch((err) => done(err));
+	after(async() => {
+		await conn.close()
+		process.exit(0)
 	})
 	it('User Register', done => {
 		chai

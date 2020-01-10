@@ -24,10 +24,8 @@ describe('Authentication tests', async () => {
 		.catch((err) => done(err));
 	})
 
-	after((done) => {
-		conn.close()
-		.then(() => done())
-		.catch((err) => done(err));
+	after(async () => {
+		await conn.close()
 	})
 	it('User Register', done => {
 		chai
