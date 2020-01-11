@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 5), ()=>   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => SecondRoute()),
+    MaterialPageRoute(builder: (context) => LabelLabApp()),
   ));
   }
 
