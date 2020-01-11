@@ -83,7 +83,7 @@ export const updateLabels = (image_id, labelData) => {
     dispatch(request())
     FetchApi('PUT', '/api/v1/image/' + image_id + '/update', labelData, true)
       .then(res => {
-        dispatch(success(res.data.image))
+        dispatch(success())
       })
       .catch(err => {
         if (err.response) {
@@ -96,8 +96,8 @@ export const updateLabels = (image_id, labelData) => {
   function request() {
     return { type: UPDATE_LABEL_REQUEST }
   }
-  function success(data) {
-    return { type: UPDATE_LABEL_SUCCESS, payload: data }
+  function success() {
+    return { type: UPDATE_LABEL_SUCCESS }
   }
   function failure(error) {
     return { type: UPDATE_LABEL_FAILURE, payload: error }
@@ -109,6 +109,7 @@ export const updateALabel = (label_id, labelData ,callback) => {
     dispatch(request())
     FetchApi('PUT', '/api/v1/label/' + label_id + '/update', labelData, true)
       .then(res => {
+        dispatch(success())
         callback()
       })
       .catch(err => {
@@ -122,8 +123,8 @@ export const updateALabel = (label_id, labelData ,callback) => {
   function request() {
     return { type: UPDATE_A_LABEL_REQUEST }
   }
-  function success(data) {
-    return { type: UPDATE_A_LABEL_SUCCESS, payload: data }
+  function success() {
+    return { type: UPDATE_A_LABEL_SUCCESS }
   }
   function failure(error) {
     return { type: UPDATE_A_LABEL_FAILURE, payload: error }

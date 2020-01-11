@@ -51,7 +51,6 @@ class LabelIndex extends Component {
   }
   onUpdate = value =>{
     const { updateALabel } = this.props
-    console.log(this.state.name,this.state.type,value.id)
     let data = {
       name: this.state.name,
       type: this.state.type,
