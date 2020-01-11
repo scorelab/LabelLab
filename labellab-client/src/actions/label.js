@@ -10,7 +10,11 @@ import {
   UPDATE_LABEL_SUCCESS,
   DELETE_LABEL_FAILURE,
   DELETE_LABEL_REQUEST,
-  DELETE_LABEL_SUCCESS
+  DELETE_LABEL_SUCCESS,
+  UPDATE_A_LABEL_REQUEST,
+  UPDATE_A_LABEL_SUCCESS,
+  UPDATE_A_LABEL_FAILURE
+
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -79,7 +83,7 @@ export const updateLabels = (image_id, labelData) => {
     dispatch(request())
     FetchApi('PUT', '/api/v1/image/' + image_id + '/update', labelData, true)
       .then(res => {
-        dispatch(success())
+        dispatch(success(res.data.image))
       })
       .catch(err => {
         if (err.response) {
@@ -92,11 +96,37 @@ export const updateLabels = (image_id, labelData) => {
   function request() {
     return { type: UPDATE_LABEL_REQUEST }
   }
-  function success() {
-    return { type: UPDATE_LABEL_SUCCESS }
+  function success(data) {
+    return { type: UPDATE_LABEL_SUCCESS, payload: data }
   }
   function failure(error) {
     return { type: UPDATE_LABEL_FAILURE, payload: error }
+  }
+}
+
+export const updateALabel = (label_id, labelData ,callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('PUT', '/api/v1/label/' + label_id + '/update', labelData, true)
+      .then(res => {
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: UPDATE_A_LABEL_REQUEST }
+  }
+  function success(data) {
+    return { type: UPDATE_A_LABEL_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: UPDATE_A_LABEL_FAILURE, payload: error }
   }
 }
 
