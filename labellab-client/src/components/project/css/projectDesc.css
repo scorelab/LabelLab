@@ -11,17 +11,16 @@
 .projectDesc-header .pencil:hover {
   cursor: pointer;
 }
-.projectDesc-labeller-button {
-  margin: 1em 0;
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.projectDesc-labeller-button button {
-  background-color: #00a89f !important;
-  color: white !important;
-}
-.projectDesc-submit{
-  background-color: #00a89f !important;
-  color: white !important;
-  margin-top: 1em !important; 
+
+.modal-actions > div {
+  padding-bottom: 1.5em;
+  padding-top: 1.5em;
 }
 
 @media only screen and (max-width: 1550px) {

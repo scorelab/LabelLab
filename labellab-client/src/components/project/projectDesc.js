@@ -4,11 +4,11 @@ import PropTypes from 'prop-types'
 import {
   Header,
   Icon,
-  TextArea,
-  Form,
+  Input,
   Button,
   Dimmer,
-  Loader
+  Loader,
+  Modal
 } from 'semantic-ui-react'
 import { updateProject, fetchProject } from '../../actions/index'
 import './css/projectDesc.css'
@@ -44,10 +44,13 @@ class ProjectDescriptionIndex extends Component {
   }
   callback = () => {
     const { project, fetchProject } = this.props
+    this.close();
+    fetchProject(project.projectId)
+  }
+  close = () => {
     this.setState({
       edit: false
     })
-    fetchProject(project.projectId)
   }
   handleChange = e => {
     this.setState({
@@ -69,21 +72,30 @@ class ProjectDescriptionIndex extends Component {
           <Icon name="pencil alternate" onClick={this.handleUpdate} />
         </div>
         {edit ? (
-          <Form>
-            <TextArea
-              placeholder="Write some project description"
-              value={desc}
-              onChange={this.handleChange}
-              name="desc"
-            />
-            <Button
-              className="projectDesc-submit"
-              floated="right"
-              onClick={this.handleSubmit}
-            >
-              Submit
-            </Button>
-          </Form>
+          <Modal size="small" open={this.state.edit} onClose={this.close}>
+            <Modal.Header>
+              <p>Enter Project Description</p>
+            </Modal.Header>
+            <Modal.Actions>
+              <div className="modal-actions">
+                <Input
+                  name="desc"
+                  type="text"
+                  label="Description"
+                  placeholder="Description..."
+                  defaultValue={this.state.desc}
+                  onChange={this.handleChange}
+                />
+                <div>
+                  <Button
+                    positive
+                    onClick={this.handleSubmit}
+                    content="Submit"
+                  />
+                </div>
+              </div>            
+            </Modal.Actions>
+          </Modal>
         ) : null}
         {!edit && desc ? desc : null}
       </div>
