@@ -17,7 +17,7 @@ Run npm install in labellab-client folder.
  npm install
  ```
     
-#### How to Use
+#### Setup Process
 
 
 Use two terminals, one for labellab-server and the other for labellab-client.
@@ -72,3 +72,38 @@ or run the flutter application
 `flutter run`
 
 > **NOTE**: A device with USB debugging enabled or virtual device is required
+
+
+# Using the Web App
+After setting up the project using the above requisite steps, you can now start using the project.
+
+### Initial Setup
+Visit the address that has been provided to you after running `npm start` in the client directory.
+
+### Creating a project
+Sign up for an account and log in. Upon a successful login, you will be taken to a dashboard. In this dashboard, click "Create a New Project" to create a project.
+![chrome_p17eb1aa5f](https://user-images.githubusercontent.com/29003194/72292484-79964a00-361f-11ea-81be-dc517e5bda04.png)
+After clicking this button, you will be prompted to enter a project name:
+![chrome_D5m1qmwmSC](https://user-images.githubusercontent.com/29003194/72292510-887cfc80-361f-11ea-86a6-28596a82a506.png)
+Enter any name and press "Submit".
+After doing this, you have successfully created a project and can now start working!
+
+## Adding Images
+Adding images is quite simple. After you have created a project, open the project and view the "Project Images" tab. Within this tab, you can click the "Add Image" button:
+![chrome_VxpZND4O1D](https://user-images.githubusercontent.com/29003194/72292608-b82c0480-361f-11ea-9961-e4b4054c7986.png)
+You will then be presented with your operating system's file browser to which you can select a file to be uploaded.
+After this, you can give your file a name. When you are done, press the "Submit" button:
+![chrome_nMHAQ7aHd9](https://user-images.githubusercontent.com/29003194/72292661-d560d300-361f-11ea-9d08-4616665bb8ec.png)
+Your file should now appear in the table:
+![chrome_eI2N0N7HTV](https://user-images.githubusercontent.com/29003194/72292706-ead5fd00-361f-11ea-9ef6-a9377fb5e737.png)
+
+## Adding Labels
+Adding labels can be done in the "Project Labels" tab. Upon visiting this tab, you can add a label by clicking "Create a new Label":
+![chrome_8dwRubFir5](https://user-images.githubusercontent.com/29003194/72292785-1e188c00-3620-11ea-937c-df24b4b07db1.png)
+You will then be prompted with a form allowing you to enter a label name and type. Click "Create" when you are done:
+![chrome_aF6PwRYE1u](https://user-images.githubusercontent.com/29003194/72292856-41433b80-3620-11ea-90f2-77447b012bcb.png)
+After this, you should see your label appear in the table:
+![chrome_PcXmWOpows](https://user-images.githubusercontent.com/29003194/72292927-5e780a00-3620-11ea-8076-5d0301f802e3.png)
+
+
+
