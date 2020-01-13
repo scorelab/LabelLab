@@ -65,6 +65,7 @@ And use [localhost:3000](https://) to browse.
 
 #### How to Use (Mobile)
 
+![screenshot](labellab_mobile/screenshots.png)
 
 Run the Node server in the labellab-server directory (if not already done):
 
