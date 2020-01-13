@@ -64,6 +64,8 @@ And use [localhost:3000](https://) to browse.
 > **NOTE**: This version is only supporting for Chrome and Firefox browser. And make sure to instal the extension -> Redux Dev Tools in chrome extension library.
 
 #### How to Use (Mobile)
+![Alt text](https://i.imgur.com/tKvv1Bh.png)
+
 Run the Node server in the labellab-server directory (if not already done):
 
 `npm start`
