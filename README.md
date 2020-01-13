@@ -1,5 +1,14 @@
 # LabelLab
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/API-16%2B-green.svg)](https://android-arsenal.com/api?level=16)
+
 LabelLab is an image analyzing and classification platform. The application should allow users to upload batches of images and classify them with labels. It will also have the features to run classifications against a trained model. LabelLab also has a user project management component as well as an image analyzing component.
+
+#### Apache 2.0 Licence
+
+Apache 2.0. See the [LICENSE][3] file for details.
+ 
 
 ## User Guide
 
