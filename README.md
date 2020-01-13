@@ -7,7 +7,7 @@ LabelLab is an image analyzing and classification platform. The application shou
 
 #### Apache 2.0 Licence
 
-Apache 2.0. See the [LICENSE][../blob/master/LICENSE] file for details.
+Apache 2.0. See the [LICENSE](https://github.com/scorelab/LabelLab/blob/master/LICENSE) file for details.
  
 
 ## User Guide
