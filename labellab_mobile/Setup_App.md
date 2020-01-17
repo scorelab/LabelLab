@@ -54,9 +54,9 @@ You can even search for the projects in the upper search bar
 
 ## Adding Images
 
-1. By selecting Project Images in the left bar you will be able to add images. 
+1. By selecting Project Images or clicking an image you will be able to add images. 
 
-2. You will be able to choose the images from your system and submit the images on the app.
+2. You will be able to choose the images from your app too and submit the images on the app.
 
 ## Creating a New Label
 
