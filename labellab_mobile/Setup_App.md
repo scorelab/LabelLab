@@ -66,6 +66,11 @@ You can make multiple new labels by typing the name of the label. Furthermore, s
 
 After clicking at a certain project. You will be able to look at the members of that and the role of the member. You can choose among Members/Images/Analytics/Labels in the left bar. 
 
+## Demo Video
+
+Here is a Demo Video of our finalised mobile app to see how to use it
+https://www.youtube.com/watch?v=9UG7UEyQans
+
 
 
 
