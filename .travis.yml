@@ -19,3 +19,13 @@ script:
 
 after_script:
   - docker-compose down
+  
+  deploy:    
+  provider: pages
+  local_dir: labellab-client/build
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  
+  keep_history: true
+  on:
+    branch: master
+
