@@ -105,9 +105,9 @@ exports.deleteLabel = function(req, res) {
 					error: err
 				})
 			}
-			Project.findOneAndUpdate(
-				{ _id: label._id },
-				{ $pull: { labels: req.params.label_id } }
+			Project.update(
+				{ _id: label.project },
+				{ $pull: { labels: label._id } }
 			).exec(function(err, project) {
 				if (err) {
 					return res.status(400).send({
