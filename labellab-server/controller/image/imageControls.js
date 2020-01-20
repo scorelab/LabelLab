@@ -12,72 +12,77 @@ exports.postImage = function(req, res) {
     req.body &&
     req.params &&
     req.params.projectId &&
-    req.body.image &&
+    req.body.images &&
     req.body.projectId &&
-    req.body.imageName &&
+    req.body.imageNames &&
     req.body.format
   ) {
-    const { image, imageName, format, projectId } = req.body
-    let data = {
-      id: req.user.id,
-      image: image,
-      imageName: imageName,
-      format: format,
-      project: req.params.projectId
-    }
-    let baseImg = data.image.split(',')[1]
-    let binaryData = new Buffer(baseImg, 'base64')
-    var dimensions = sizeOfImage(binaryData)
-    let ext = data.format.split('/')[1]
-    let updateData = { imageUrl: `${data.id}${Date.now()}.${ext}` }
-    fs.writeFile(
-      `./public/uploads/${updateData.imageUrl}`,
-      binaryData,
-      async err => {
-        if (err) {
-          return res.status(400).send({ success: false, msg: err })
-        } else {
-          const newImage = new Image({
-            project: projectId,
-            imageUrl: updateData.imageUrl,
-            imageName: data.imageName,
-            width: dimensions.width,
-            height: dimensions.height
-          })
-          newImage.save(function(err, image) {
-            if (err) {
-              return res
-                .status(400)
-                .send({ success: false, msg: 'Unable to Add Image' })
-            } else if (image._id) {
-              Project.updateOne(
-                { _id: req.body.projectId },
-                { $addToSet: { image: image._id } }
-              ).exec(function(err, project) {
-                if (err) {
-                  return res.status(400).send({
-                    success: false,
-                    msg: 'Cannot Append image',
-                    error: err
-                  })
-                }
-                return res.json({
-                  success: true,
-                  msg: 'Image Successfully Posted',
+    const { images, imageNames, format, projectId } = req.body
+    var firstImage = images[0]
+    for (var i = 0; i < images.length; i++) {
+      var image = images[i]
+      var imageName = imageNames[i]
+      let data = {
+        id: req.user.id,
+        image: image,
+        imageName: imageName,
+        format: format,
+        project: req.params.projectId
+      }
+      let baseImg = data.image.split(',')[1]
+      let binaryData = new Buffer(baseImg, 'base64')
+      var dimensions = sizeOfImage(binaryData)
+      let ext = data.format.split('/')[1]
+      let updateData = { imageUrl: `${data.id}${Date.now()}.${ext}` }
+      fs.writeFile(
+        `./public/uploads/${updateData.imageUrl}`,
+        binaryData,
+        async err => {
+          if (err) {
+            return res.status(400).send({ success: false, msg: err })
+          } else {
+            const newImage = new Image({
+              project: projectId,
+              imageUrl: updateData.imageUrl,
+              imageName: data.imageName,
+              width: dimensions.width,
+              height: dimensions.height
+            })
+            newImage.save(function(err, image) {
+              if (err) {
+                return res
+                  .status(400)
+                  .send({ success: false, msg: 'Unable to Add Image' })
+              } else if (image._id) {
+                Project.updateOne(
+                  { _id: req.body.projectId },
+                  { $addToSet: { image: image._id } }
+                ).exec(function(err, project) {
+                  if (err) {
+                    return res.status(400).send({
+                      success: false,
+                      msg: 'Cannot Append image',
+                      error: err
+                    })
+                  }
+                })
+              } else {
+                return res.status(400).send({
+                  success: false,
+                  msg: 'Image ID Not Found',
                   body: image
                 })
-              })
-            } else {
-              return res.status(400).send({
-                success: false,
-                msg: 'Image ID Not Found',
-                body: image
-              })
-            }
-          })
+              }
+            })
+          }
         }
-      }
-    )
+      )
+    }
+    return res.json({
+      success: true,
+      msg: 'Images Successfully Posted',
+      body: firstImage
+    })
   } else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 

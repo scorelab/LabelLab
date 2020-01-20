@@ -11,9 +11,9 @@ class ImagesIndex extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      image: '',
+      images: [],
       file: '',
-      imageName: '',
+      imageNames: [],
       projectId: '',
       showform: false,
       format: ''
@@ -21,32 +21,38 @@ class ImagesIndex extends Component {
   }
   handleImageChange = e => {
     e.preventDefault()
-    let reader = new FileReader()
-    let file = e.target.files[0]
-    reader.onloadend = () => {
-      this.setState({
-        image: reader.result,
-        file: file,
-        format: file.type,
-        imageName: file.name,
-        showform: !this.state.showform
-      })
-    }
-    reader.readAsDataURL(file)
+    let files = e.target.files
+    Array.from(files).forEach(file => {
+      let reader = new FileReader()
+      reader.onloadend = () => {
+        this.setState(prevState => ({
+          images: [...prevState.images, reader.result],
+          file: file,
+          format: file.type,
+          imageNames: [...prevState.imageNames, file.name]
+        }))
+      }
+      reader.readAsDataURL(file)
+    })
+    this.setState({
+      showform: !this.state.showform
+    })
   }
   handleSubmit = e => {
     e.preventDefault()
     const { project, fetchProject, submitImage } = this.props
-    const { imageName, image, format } = this.state
+    const { imageNames, images, format } = this.state
     let data = {
-      imageName: imageName,
-      image: image,
+      imageNames: imageNames,
+      images: images,
       projectId: project.projectId,
       format: format
     }
     submitImage(data, () => {
       this.setState({
-        showform: false
+        showform: false,
+        images: [],
+        imageNames: []
       })
       fetchProject(project.projectId)
     })
@@ -55,16 +61,15 @@ class ImagesIndex extends Component {
     const { deleteImage, project, fetchProject } = this.props
     deleteImage(imageId, project.projectId, fetchProject(project.projectId))
   }
-  handleChange = e => {
-    const name = e.target.name
+  handleNameChange = e => {
     const value = e.target.value
-    this.setState({ [name]: value })
+    this.setState({ imageNames: [value] })
   }
   removeImage = () => {
     this.setState({
-      image: '',
+      images: [],
       file: '',
-      imageName: '',
+      imageNames: [],
       showform: !this.state.showform,
       format: ''
     })
@@ -83,6 +88,7 @@ class ImagesIndex extends Component {
         <div>
           <input
             type="file"
+            multiple
             onChange={this.handleImageChange}
             className="image-file-input"
             id="image-embedpollfileinput"
@@ -101,20 +107,23 @@ class ImagesIndex extends Component {
             encType="multiple/form-data"
             onSubmit={this.handleSubmit}
           >
-            <Form.Field>
-              <label>Image Name</label>
-              <input
-                name="imageName"
-                value={imageName}
-                onChange={this.handleChange}
-                placeholder="Image Name"
-              />
-            </Form.Field>
+            {this.state.images.length == 1 && (
+              <Form.Field>
+                <label>Image Name</label>
+                <input
+                  name="imageName"
+                  value={imageName}
+                  onChange={this.handleNameChange}
+                  placeholder="Image Name"
+                />
+              </Form.Field>
+            )}
+
             <Button loading={imageActions.isposting} type="submit">
               Submit
             </Button>
             <Button onClick={this.removeImage} type="delete">
-              Remove
+              Cancel
             </Button>
           </Form>
         ) : null}
