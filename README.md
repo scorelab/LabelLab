@@ -15,8 +15,8 @@ Run npm install in labellab-client folder.
 ```
  cd labellab-client/
  npm install
- ```
-    
+```
+
 #### How to Use
 
 
@@ -72,3 +72,8 @@ or run the flutter application
 `flutter run`
 
 > **NOTE**: A device with USB debugging enabled or virtual device is required
+
+
+| Main Screen                                                  | Sign In Screen                                               | History Screen                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![chrome_JWPoDOltlY_pixel_really_blue_portrait](https://user-images.githubusercontent.com/29003194/72705535-baafc200-3b29-11ea-9868-6877baee2e56.png) | ![chrome_O5erfUTBEm_pixel_really_blue_portrait](https://user-images.githubusercontent.com/29003194/72705536-baafc200-3b29-11ea-95c0-2494eef54571.png) | ![chrome_osu4sCMmUo_pixel_really_blue_portrait](https://user-images.githubusercontent.com/29003194/72705537-baafc200-3b29-11ea-9511-206f90534ae8.png) |
