@@ -16,6 +16,4 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 ## Screenshots
-![ss_01](lib/screenshots/app_ss_01.jpg)
-![ss_02](lib/screenshots/app_ss_02.jpg)
-![ss_03](lib/screenshots/app_ss_03.jpg)
+<img src="lib/screenshots/app_ss_01.jpg" width="180px" height="360px"> <img src="lib/screenshots/app_ss_02.jpg" width="180px" height="360px"> <img src="lib/screenshots/app_ss_03.jpg" width="180px" height="360px">
