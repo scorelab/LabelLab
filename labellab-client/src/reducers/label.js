@@ -10,7 +10,10 @@ import {
   UPDATE_LABEL_SUCCESS,
   DELETE_LABEL_FAILURE,
   DELETE_LABEL_REQUEST,
-  DELETE_LABEL_SUCCESS
+  DELETE_LABEL_SUCCESS,
+  UPDATE_A_LABEL_REQUEST,
+  UPDATE_A_LABEL_SUCCESS,
+  UPDATE_A_LABEL_FAILURE
 } from '../constants/index'
 
 const initialState = {
@@ -91,9 +94,30 @@ const user = (state = initialState, action) => {
         ...state,
         labelActions: {
           isupdating: false
+        },
+      }
+      case UPDATE_A_LABEL_REQUEST:
+      return {
+        ...state,
+        labelActions: {
+          isupdating: true
         }
       }
-
+    case UPDATE_A_LABEL_FAILURE:
+      return {
+        ...state,
+        labelActions: {
+          isupdating: false,
+          error: 'Something went wrong!'
+        }
+      }
+    case UPDATE_A_LABEL_SUCCESS:
+      return {
+        ...state,
+        labelActions: {
+          isupdating: false
+        },
+      }
     case DELETE_LABEL_REQUEST:
       return {
         ...state,

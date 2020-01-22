@@ -1,5 +1,13 @@
 # LabelLab
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/API-16%2B-green.svg)](https://android-arsenal.com/api?level=16)
+
 LabelLab is an image analyzing and classification platform. The application should allow users to upload batches of images and classify them with labels. It will also have the features to run classifications against a trained model. LabelLab also has a user project management component as well as an image analyzing component.
+
+#### Apache 2.0 Licence
+
+Apache 2.0. See the [LICENSE](https://github.com/scorelab/LabelLab/blob/master/LICENSE) file for details.
 
 ## User Guide
 
@@ -29,7 +37,6 @@ Run npm install in labellab-server folder.
     
 #### How to Use
 
-Use two terminals, one for labellab-server and the other for labellab-client. <br/> <br/>
 First you need to create a `.env` file in both labellab-server folder and labellab-client folder and fill it with the template provided in the file `.env.example` which is present in both the folders.<br/> <br/>
 For client side `.env` file:
 ```
@@ -43,20 +50,21 @@ HOST=localhost
 PORT=4000
 ```
 `JWT_SECRET` can be any word your choice. For the next 5 fields visit `mlab.com` and create a MongoDB database and find a URI of your database and fill the values accordingly.<br/><br/>
+Both the front-end and the back-end can be run from the __labellab-server__ folder using the terminal:
 
-Run the Node server in the labellab-server folder:
-    
-`$ npm start`
-
-Run the Nodemon server in the labellab-server folder:
-
+1. To run both the client and server with a single command, run the following:   
 `$ npm run dev`
 
+2. To run the server separately:    
+`$ npm run server`
+
+> The server can also be run using `$ npm start`
+
+3. To run the client separately:    
+`$ npm run client`
+
+
 > **NOTE**: Before starting the server create a file named `.env` same as `.env.example` and add your **OAUTH** and **DATABASE** credentials in the file.
-
-start the npm server in labellab-client directory.
-
-`npm start`
 
 And use [localhost:3000](https://) to browse.
 
