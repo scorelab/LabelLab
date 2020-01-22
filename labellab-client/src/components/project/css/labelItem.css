@@ -1,5 +1,6 @@
 .form-card-parent {
   margin-top: 0.7em;
+  margin-right: 1em;
   padding: 1em;
   border: solid 1px #efefef;
   background: white;
@@ -22,4 +23,8 @@
 .form-card-child-field {
   padding: 3;
   font-size: 24;
+  max-width: 400px;
+}
+.create-label {
+  margin-top: 1.5em !important;
 }

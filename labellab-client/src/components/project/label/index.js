@@ -87,41 +87,35 @@ class LabelIndex extends Component {
               onUpdate={this.onUpdate}
             />
           ))}
-        <Button onClick={this.toggleForm}>Create new Label</Button>
+        
         {showform ? (
-          <Form className="form-card flex" onSubmit={this.handleSubmit}>
-            <div className="form-card-child">
-              <Form.Field
-                placeholder="Label name"
-                control="input"
-                defaultValue={value.name}
-                className="form-card-child-field"
-                onChange={e => this.onChange(e.target.name, e.target.value)}
-                name="name"
-              />
-              <Form.Select
-                label="Label type"
-                options={options}
-                defaultValue={value.type}
-                onChange={(e, change) =>
-                  this.onChange(change.name, change.value)
-                }
-                style={{ maxWidth: 400 }}
-                name="type"
-              />
-            </div>
-            <div className="form-button-parent">
-              <Button
-                type="button"
-                className="form-button-itself"
-                onClick={this.onChange}
-              >
-                <Icon name="trash" />
-              </Button>
-            </div>
-            <Button type="submit">Create</Button>
-          </Form>
+          <div className="form-card-parent">
+            <Form className="form-card flex" onSubmit={this.handleSubmit}>
+              <div className="form-card-child">
+                <Form.Field
+                  placeholder="Label name"
+                  control="input"
+                  defaultValue={value.name}
+                  className="form-card-child-field"
+                  onChange={e => this.onChange(e.target.name, e.target.value)}
+                  name="name"
+                />
+                <Form.Select
+                  label="Label type"
+                  options={options}
+                  defaultValue={value.type}
+                  onChange={(e, change) =>
+                    this.onChange(change.name, change.value)
+                  }
+                  style={{ maxWidth: 400 }}
+                  name="type"
+                />
+                <Button type="submit">Create</Button>
+              </div>
+            </Form>
+          </div>
         ) : null}
+        <Button className="create-label" onClick={this.toggleForm}>Create new Label</Button>
       </div>
     )
   }
