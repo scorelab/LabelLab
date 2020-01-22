@@ -12,6 +12,7 @@ let path = require('path')
 
 var indexRouter = require('./routes/routes')
 let config = require('./config/dbURI')
+const { handleError } = require('./utils/error')
 
 var app = express()
 
@@ -49,15 +50,15 @@ mongoose
 	.catch(err => console.error(err))
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	next(createError(404))
 })
 
 // error handler
-app.use(function(err, req, res, next) {
-	// set locals, only providing error in development
-	res.locals.message = err.message
-	res.locals.error = req.app.get('env') === 'development' ? err : {}
+app.use(function (err, req, res, next) {
+
+	//Calling handle error funtion imported from utils error.js
+	handleError(err, res);
 
 	// render the error page
 	res.status(err.status || 500)
