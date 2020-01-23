@@ -23,3 +23,18 @@
   padding: 3;
   font-size: 24;
 }
+@media only screen and (max-width: 892px){
+  .form-button-parent{
+    flex: auto;;
+  }
+  .ui.button.form-button-itself{
+    margin-bottom: 2.9em;
+  }
+}
+@media only screen and (max-width: 645px){
+ 
+  .form-card-parent{
+    width: 322px;
+    margin-left: -4em;
+  }
+}
