@@ -76,6 +76,7 @@ class LabelingLoader extends Component {
   }
   pushUpdate(labelData) {
     const { match, updateLabels } = this.props
+    labelData.projectId = match.params.projectId
     updateLabels(match.params.imageId, labelData)
   }
   render() {

@@ -4,7 +4,12 @@ import Loadable from 'react-loadable'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { fetchProject, getTimeLabel, fetchLabels } from '../../actions/index'
+import {
+  fetchProject,
+  getTimeLabel,
+  getLabelCount,
+  fetchLabels
+} from '../../actions/index'
 import Load from '../loading/index'
 import './css/index.css'
 
@@ -53,10 +58,17 @@ class ProjectIndex extends Component {
     this.state = {}
   }
   componentDidMount() {
-    const { match, fetchProject, fetchTimeLabel, fetchLabels } = this.props
+    const {
+      match,
+      fetchProject,
+      fetchTimeLabel,
+      fetchLabels,
+      fetchLabelCount
+    } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
     fetchLabels(match.params.projectId)
+    fetchLabelCount(match.params.projectId)
   }
   render() {
     const { match, actions, history, actionsLabel } = this.props
@@ -135,6 +147,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchTimeLabel: projectId => {
       return dispatch(getTimeLabel(projectId))
+    },
+    fetchLabelCount: projectId => {
+      return dispatch(getLabelCount(projectId))
     }
   }
 }
