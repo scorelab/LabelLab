@@ -1,0 +1,9 @@
+{
+  "name": "labellab",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd labellab-server && npm install && cd ../labellab-client && npm install && npm run build",
+    "start": "cd labellab-server && npm start"
+  }
+}

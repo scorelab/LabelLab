@@ -9,13 +9,15 @@ var dbPass = process.env.DB_PASSWORD
 
 let mongoURI
 
-if(dbName && dbUser && dbPass){
-	mongoURI = '' + dbHost + '://'+ dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
-}
-else{
-	mongoURI = ''
+if (dbName && dbUser && dbPass) {
+  mongoURI =
+    '' + dbHost + '://' + dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
+} else if (process.env.MONGODB_URI) {
+  mongoURI = process.env.MONGODB_URI
+} else {
+  mongoURI = ''
 }
 
 module.exports = {
-	mongoURI: mongoURI
+  mongoURI: mongoURI,
 }
