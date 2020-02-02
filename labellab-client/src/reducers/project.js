@@ -13,7 +13,10 @@ import {
   ADD_MEMBER_SUCCESS,
   DELETE_MEMBER_FAILURE,
   DELETE_MEMBER_REQUEST,
-  DELETE_MEMBER_SUCCESS
+  DELETE_MEMBER_SUCCESS,
+  DELETE_PROJECT_FAILURE,
+  DELETE_PROJECT_REQUEST,
+  DELETE_PROJECT_SUCCESS
 } from '../constants/index'
 const initialState = {
   projectActions: {
@@ -22,6 +25,7 @@ const initialState = {
     isinitializing: false,
     isadding: false,
     isdeleting: false,
+    isdeletingproject: false,
     errors: '',
     msg: ''
   },
@@ -153,6 +157,29 @@ const project = (state = initialState, action) => {
         projectActions: {
           isdeleting: false,
           msg: 'Member removed successfully'
+        }
+      }
+    case DELETE_PROJECT_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isdeletingproject: true
+        }
+      }
+    case DELETE_PROJECT_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isdeletingproject: false,
+          errors: action.payload
+        }
+      }
+    case DELETE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isdeletingproject: false,
+          msg: 'Project removed successfully'
         }
       }
     default:

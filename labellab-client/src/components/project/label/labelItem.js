@@ -10,7 +10,7 @@ const options = [
 
 class LabelItem extends Component {
   render() {
-    const { value, onChange, onDelete } = this.props
+    const { value, onChange, onDelete, onUpdate } = this.props
     return (
       <div className="form-card-parent">
         <Form className="form-card flex">
@@ -21,7 +21,9 @@ class LabelItem extends Component {
               defaultValue={value.name}
               className="form-card-child-field"
               onChange={e =>
-                onChange(value, { ...value, name: e.target.value })
+                {
+                onChange("name",e.target.value)
+                }
               }
             />
             <Form.Select
@@ -29,7 +31,7 @@ class LabelItem extends Component {
               options={options}
               defaultValue={value.type}
               onChange={(e, change) =>
-                onChange(value, { ...value, type: change.value })
+                onChange("type", change.value )
               }
               style={{ maxWidth: 400 }}
             />
@@ -41,6 +43,13 @@ class LabelItem extends Component {
               onClick={() => onDelete(value)}
             >
               <Icon name="trash" />
+            </Button>
+            <Button
+              type="button"
+              className="form-button-itself"
+              onClick={() => onUpdate(value)}
+            >
+              Update
             </Button>
           </div>
         </Form>

@@ -1,3 +1,12 @@
+@media only screen and (max-width: 600px) {
+    .login-parent {
+        width: 80% !important;
+    }
+    .loginSubmit {
+        width: 100% !important;
+    }
+  }
+
 .login-grand-parent{
     display: flex;
     flex-direction: column;
@@ -9,15 +18,21 @@
     margin-left: auto;
     margin-right: auto;
 }
-.login-oauth-icon{
+.login-oauth-icon {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
 }
-.login-oauth-icon div{
-    padding: 1em 1.5em;
+
+.login-oauth-icon div {
+    max-width: 15vw;
 }
+
+.login-icons {
+    width: 45px;
+}
+
 .loginField{
-    width: 75%;
+    width: 100%;
 }
 .login-form-label{
     margin: 1em 0 !important;

@@ -84,7 +84,7 @@ class LoginIndex extends Component {
             Login in LabelLab!
           </Header>
           <div className="login-oauth-icon">
-            <div>
+            <div className="login-icons">
               <a
                 href={
                   process.env.REACT_APP_HOST +
@@ -92,10 +92,10 @@ class LoginIndex extends Component {
                   `/api/v1/auth/google`
                 }
               >
-                <Image size="mini" src={googleIcon} />
+                <Image src={googleIcon} />
               </a>
             </div>
-            <div>
+            <div className="login-icons">
               <a
                 href={
                   process.env.REACT_APP_HOST +
@@ -103,7 +103,7 @@ class LoginIndex extends Component {
                   `/api/v1/auth/github`
                 }
               >
-                <Image size="mini" src={githubIcon} />
+                <Image src={githubIcon} />
               </a>
             </div>
           </div>
@@ -140,7 +140,7 @@ class LoginIndex extends Component {
             </form>
           </div>
           <div className="login-create-account">
-            Don&apos;t have an account?
+            Don&apos;t have an account?&nbsp;
             <Link to="/register">Create Account</Link>
           </div>
         </div>

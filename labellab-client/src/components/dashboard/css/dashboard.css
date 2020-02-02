@@ -1,9 +1,25 @@
-.dashboard-parent{
-    height: 100% !important;
-    width: 100%;
-    background: #e5e5e5;
-    min-height: 100vh !important;
+.dashboard-parent {
+  height: 100% !important;
+  width: 100%;
+  background: #e5e5e5;
+  min-height: 100vh !important;
 }
-.create-project-button{
-    padding: 2em 0;
+.create-project-button {
+  padding: 2em 0;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-actions > div {
+  padding-top: 1.5em;
+}
+
+.modal-actions:last-child {
+  display: block;
+  text-align: center;
+  padding-bottom: 1.5em;
 }

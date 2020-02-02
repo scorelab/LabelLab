@@ -11,24 +11,31 @@ class Navbar extends Component {
   }
   render() {
     const { history, user, isfetching } = this.props
+
     return (
-      <div className="navbar">
-        <div className="startnav">
-          <div className="main-nav-title">LABELLAB</div>
-          <div className="searchBar">
+      <header className="navbar">
+        <div className="main-nav-title">LABELLAB</div>
+        <input type="checkbox" className="menu-btn" id="menu-btn" />
+        <label htmlFor="menu-btn" className="menu-icon">
+          <span className="nav-icon"></span>
+        </label>
+        <ul className="dropdown-menu">
+          <li className="searchBar">
             <Searchbar history={history} />
-          </div>
-        </div>
-        <div className="subnavbar">
-          <ul>
-            <li>
-              <Header textAlign="center" as="h5" content={user.username} />
-            </li>
-            <li>
+          </li>
+          <li className="subnavbar">
+            <Link to="/profile">
+              <Header
+                className="username"
+                textAlign="center"
+                as="h5"
+                content={user.username}
+              />
               {isfetching ? (
                 <h4>LOADING</h4>
               ) : user ? (
                 <Image
+                  className="profilepic"
                   centered
                   src={
                     user.profileImage === ''
@@ -39,22 +46,23 @@ class Navbar extends Component {
                   circular
                 />
               ) : null}
-            </li>
-            <li>
-              <Dropdown>
-                <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <Link to="/profile">Profile</Link>
-                  </Dropdown.Item>
-                  <Dropdown.Item as="label" onClick={this.handleClick}>
-                    Logout
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </li>
-          </ul>
-        </div>
-      </div>
+            </Link>
+            <Dropdown className="dropdown">
+              <Dropdown.Menu>
+                <Dropdown.Item>
+                  <Link to="/profile">Profile</Link>
+                </Dropdown.Item>
+                <Dropdown.Item as="label" onClick={this.handleClick}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </li>
+          <li>
+            <h4 className="logout">Logout</h4>
+          </li>
+        </ul>
+      </header>
     )
   }
 }
@@ -71,7 +79,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(Navbar)
+export default connect(mapStateToProps, null)(Navbar)

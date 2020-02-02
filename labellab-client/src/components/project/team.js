@@ -82,6 +82,11 @@ class TeamIndex extends Component {
             <Loader indeterminate>Removing member :(</Loader>
           </Dimmer>
         ) : null}
+        {actions.isdeletingproject ? (
+          <Dimmer active={actions.isdeletingproject}>
+            <Loader indeterminate>Deleting project :(</Loader>
+          </Dimmer>
+        ) : null}
         <Modal size="small" open={open} onClose={this.close}>
           <Modal.Content>
             <p>Enter Member email:</p>
@@ -179,7 +184,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TeamIndex)
+export default connect(mapStateToProps, mapDispatchToProps)(TeamIndex)

@@ -9,7 +9,8 @@ import {
   Container,
   Menu,
   Dimmer,
-  Loader
+  Loader,
+  Dropdown
 } from 'semantic-ui-react'
 import Navbar from '../navbar/project'
 import {
@@ -139,10 +140,17 @@ class Profile extends Component {
                     <Menu.Item as={Link} to="" name="projects">
                       Projects
                     </Menu.Item>
-
-                    <Menu.Item as={Link} to="" name="analytics">
-                      Analytics
-                    </Menu.Item>
+                    <Dropdown item text='Project Analytics'>
+                      <Dropdown.Menu>
+                        {
+                          this.props.projects.map(project=>
+                            <Dropdown.Item as={Link} to={'/project/'+project._id+'/analytics'}>
+                            {project.projectName}
+                            </Dropdown.Item>
+                          )
+                        }
+                      </Dropdown.Menu>
+                    </Dropdown>
 
                     <Menu.Item as={Link} to="" name="summary">
                       Summary
@@ -162,7 +170,7 @@ class Profile extends Component {
                             className="card-headers"
                             header={project.projectName}
                           />
-                          <Card.Content description="Image Labelling App" />
+                          <Card.Content description={project.projectDescription} />
                           <Card.Content extra />
                         </Card>
                       ))

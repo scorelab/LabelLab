@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Dimmer, Loader, Button, Form, Icon } from 'semantic-ui-react'
-import { fetchLabels, createLabel, deleteLabel } from '../../../actions/index'
+import { fetchLabels, createLabel, deleteLabel, updateALabel } from '../../../actions/index'
 import LabelItem from './labelItem.js'
 import '../css/labelItem.css'
 
@@ -49,6 +49,16 @@ class LabelIndex extends Component {
     })
     fetchLabels(project.projectId)
   }
+  onUpdate = value =>{
+    const { updateALabel } = this.props
+    let data = {
+      name: this.state.name,
+      type: this.state.type,
+    }
+    updateALabel(value.id , data ,this.callback)
+  }
+
+
   handleDelete = value => {
     const { project, deleteLabel, fetchLabels } = this.props
     deleteLabel(value._id, fetchLabels(project.projectId))
@@ -74,43 +84,38 @@ class LabelIndex extends Component {
               key={index}
               onChange={this.onChange}
               onDelete={this.handleDelete}
+              onUpdate={this.onUpdate}
             />
           ))}
-        <Button onClick={this.toggleForm}>Create new Label</Button>
+        
         {showform ? (
-          <Form className="form-card flex" onSubmit={this.handleSubmit}>
-            <div className="form-card-child">
-              <Form.Field
-                placeholder="Label name"
-                control="input"
-                defaultValue={value.name}
-                className="form-card-child-field"
-                onChange={e => this.onChange(e.target.name, e.target.value)}
-                name="name"
-              />
-              <Form.Select
-                label="Label type"
-                options={options}
-                defaultValue={value.type}
-                onChange={(e, change) =>
-                  this.onChange(change.name, change.value)
-                }
-                style={{ maxWidth: 400 }}
-                name="type"
-              />
-            </div>
-            <div className="form-button-parent">
-              <Button
-                type="button"
-                className="form-button-itself"
-                onClick={this.onChange}
-              >
-                <Icon name="trash" />
-              </Button>
-            </div>
-            <Button type="submit">Create</Button>
-          </Form>
+          <div className="form-card-parent">
+            <Form className="form-card flex" onSubmit={this.handleSubmit}>
+              <div className="form-card-child">
+                <Form.Field
+                  placeholder="Label name"
+                  control="input"
+                  defaultValue={value.name}
+                  className="form-card-child-field"
+                  onChange={e => this.onChange(e.target.name, e.target.value)}
+                  name="name"
+                />
+                <Form.Select
+                  label="Label type"
+                  options={options}
+                  defaultValue={value.type}
+                  onChange={(e, change) =>
+                    this.onChange(change.name, change.value)
+                  }
+                  style={{ maxWidth: 400 }}
+                  name="type"
+                />
+                <Button type="submit">Create</Button>
+              </div>
+            </Form>
+          </div>
         ) : null}
+        <Button className="create-label" onClick={this.toggleForm}>Create new Label</Button>
       </div>
     )
   }
@@ -123,7 +128,8 @@ LabelIndex.propTypes = {
   labels: PropTypes.array,
   fetchLabels: PropTypes.func,
   createLabel: PropTypes.func,
-  deleteLabel: PropTypes.func
+  deleteLabel: PropTypes.func,
+  updateALabel: PropTypes.func,
 }
 
 const mapStateToProps = state => {
@@ -144,6 +150,9 @@ const mapDispatchToProps = dispatch => {
     },
     deleteLabel: (labelId, callback) => {
       return dispatch(deleteLabel(labelId, callback))
+    },
+    updateALabel: (labelId, labelData, callback) => {
+      return dispatch(updateALabel(labelId, labelData, callback))
     }
   }
 }
