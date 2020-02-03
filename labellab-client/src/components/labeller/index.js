@@ -120,6 +120,7 @@ class LabelingLoader extends Component {
               process.env.REACT_APP_SERVER_PORT +
               `/static/uploads/${image.imageUrl}?${Date.now()}`
             }
+            projectUrl={`/project/${match.params.projectId}/images`}
             demo={false}
             {...props}
           />
@@ -192,7 +193,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LabelingLoader)
+export default connect(mapStateToProps, mapDispatchToProps)(LabelingLoader)
