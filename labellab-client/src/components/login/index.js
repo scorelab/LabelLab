@@ -25,13 +25,16 @@ class LoginIndex extends Component {
     this.state = {
       username: '',
       password: '',
-      errors: ''
+      errors: '',
     }
   }
   componentDidMount() {
     if (hasToken(TOKEN_TYPE)) {
       this.props.history.push('/')
     }
+  }
+  componentWillReceiveProps(nextProps){
+    this.setState({errors: nextProps.auth.error });
   }
   onChange = e => {
     const name = e.target.name
@@ -70,7 +73,8 @@ class LoginIndex extends Component {
       : history.push('/')
   }
   render() {
-    const { isAuthenticating } = this.props
+    const { auth } = this.props
+    const { isAuthenticating } = auth
     const { username, password, errors } = this.state
     return (
       <div className="login-grand-parent">
@@ -133,6 +137,15 @@ class LoginIndex extends Component {
                 value={password}
                 onChange={this.onChange}
               />
+              <div className="row">
+                <div className="col-md-4"></div>
+                <div className="col-md-4">
+                  {errors ? (
+                    <p className="lead text-center text" style={{"color":"red"}}>Incorrect credentials!</p>
+                  ): null }
+                </div>
+                <div className="col-md-4"></div>
+              </div>
               <div className="forgotPassword">
                 <Link to="#">Forgot Password?</Link>
               </div>
@@ -158,7 +171,7 @@ LoginIndex.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticating: state.auth.isAuthenticating
+    auth: state.auth
   }
 }
 
