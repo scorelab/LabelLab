@@ -8,6 +8,12 @@ const validateLoginInput = require('../../utils/authValidations')
 // Load User model
 const User = require('../../models/user')
 
+const crypto = require('crypto')
+
+const nodemailer = require('nodemailer');
+
+const bcrypt = require('bcryptjs')
+
 // @desc Register user
 // @access Public
 exports.userRegister = function(req, res, next) {
@@ -101,3 +107,101 @@ exports.googleUserCreate = function(req, res, next) {
 			})
 	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
+
+exports.resetPassword = function (req, res, next) {
+	if (
+		req &&
+		req.body &&
+		req.body.email
+	) {
+	const email = req.body.email
+	User.findOne({email: email})
+		.then(function (user) {
+			console.log(user)
+		if (!user) {
+			return res
+			.status(400)
+			.json({ msg: 'No Email Found', errField: 'email' })
+		}else{
+		token = crypto.randomBytes(32).toString('hex') //creating the token to be sent to the forgot password form 
+
+        bcrypt.genSalt(10, (err, salt) => {
+
+		bcrypt.hash(token, salt, function (err, hash) {//hashing the password to store in the db node.js
+		if (err) throw err
+		User.findOneAndUpdate({ email: email},{
+			$set:{
+				resetPasswordToken: hash,
+			    resetPasswordExpires: Date.now() + 3600000,
+			}})
+			.then(function (item) {
+			if (!item)
+				return res.status(404).send({ success: false, msg: 'Failed to update the User collection' })
+			const transporter = nodemailer.createTransport({
+				service: 'gmail',
+				auth: {
+					user: `${process.env.EMAIL_ADDRESS}`,
+					pass: `${process.env.EMAIL_PASSWORD}`,
+				}});
+
+			const mailOptions = {
+				from: `${process.env.EMAIL_ADDRESS}`,
+				to: `${user.email}`,
+				subject: 'Link To Reset Password',
+				text:
+					'You are receiving this because you have requested the reset of the password for your LabelLab account.\n\n'
+					+ 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
+					+ `http://localhost:3000/reset/${token}\n\n`
+					+ 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+				};
+
+			console.log('sending mail');
+
+			transporter.sendMail(mailOptions, (err, response) => {
+				if (err) {
+					return console.error('there was an error: ', err);
+				} else {
+					console.log('here is the res: ', response);
+					res.status(200).json('recovery email sent');
+				}
+			});
+		  })
+		})
+	  })
+	}})
+  }
+}
+
+exports.resetPasswordAuthenticate = function(req, res, next){
+	if (req && 
+		req.params && 
+		req.params.email && 
+		req.params.token
+	) {
+	const { token } = req.params
+	const { email } = req.params
+
+    User.findOne({ email: email }).then((user) => {
+      if (user == null) {
+        res.status(404).send({ success: false, msg: 'No user found' });
+      } else {
+	bcrypt.compare(token, user.resetPasswordToken, function(err, res) {
+		if (res){
+			if(user.resetPasswordExpires>Date.now()){
+			res.status(200).send({
+				username: user.username,
+				message: 'password reset link a-ok',
+				})
+			}else{
+				return response.json({success: false, message: 'Token Expired'});
+			}
+		}else{
+			return response.json({success: false, message: 'passwords do not match'});
+		}})
+      }
+    });
+  }else{
+	res.status(400).send({ success: false, msg: 'Invalid Data' })
+  }
+}
+

@@ -46,5 +46,8 @@ router.get(
 		OAuthlogin(req, res, next)
 	}
 )
+router.post('/reset-password', authController.resetPassword)
+
+router.get('/reset-password/:email/:token', authController.resetPasswordAuthenticate)
 
 module.exports = router

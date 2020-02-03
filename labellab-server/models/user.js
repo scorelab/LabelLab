@@ -40,6 +40,14 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		default: ''
 	},
+	resetPasswordToken:{
+		type: String,
+		required: false
+	},
+	resetPasswordExpires:{
+		type: Date,
+		required: false
+	},
 	project: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
