@@ -15,7 +15,7 @@ class SearchUser extends Component {
       results: []
     }
   }
-  componentWillMount() {
+  componentDidMount() {
     this.resetComponent()
   }
   resetComponent = () =>
@@ -99,7 +99,4 @@ const mapActionToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapActionToProps
-)(SearchUser)
+export default connect(mapStateToProps, mapActionToProps)(SearchUser)
