@@ -15,7 +15,7 @@ class SearchProject extends Component {
       results: []
     }
   }
-  componentWillMount() {
+  componentDidMount() {
     this.resetComponent()
   }
   resetComponent = () =>
