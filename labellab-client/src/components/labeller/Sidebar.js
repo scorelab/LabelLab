@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react'
 import { shortcuts, colors } from './utils'
 import Hotkeys from 'react-hot-keys'
+import EditModal from './EditModal'
 
 const headerIconStyle = { fontSize: '0.8em', float: 'right' }
 export default class Sidebar extends PureComponent {
@@ -130,6 +131,9 @@ function ListItem({
           e.stopPropagation()
         }}
       />
+    )
+    icons.push(
+      <EditModal key='edit-modal' label={label}/>
     )
   }
 

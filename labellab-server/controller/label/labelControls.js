@@ -41,12 +41,17 @@ exports.createLabel = function(req, res) {
 
 exports.updateLabel = function(req, res) {
 	if (req && req.body && req.params.labelId) {
-		let data = req.body
+		let data = req.body.label
 		Label.findOneAndUpdate(
 			{
-				id: req.params.labelId
+				_id: req.params.labelId
 			},
-			data,
+			{
+				$set: {
+					name: data.name,
+					type: data.type
+				}
+			},
 			{ new: true }
 		).exec(function(err, label) {
 			if (err) {

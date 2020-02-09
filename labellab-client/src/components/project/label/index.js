@@ -1,24 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import {
-  Dimmer,
-  Loader,
-  Button,
-  Container,
-  Icon,
-  Table,
-  Header,
-  Modal,
-  Input,
-  Select
-} from 'semantic-ui-react'
-import {
-  fetchLabels,
-  createLabel,
-  deleteLabel,
-  updateALabel
-} from '../../../actions/index'
+import { Dimmer, Loader, Button, Form } from 'semantic-ui-react'
+import { fetchLabels, createLabel, deleteLabel, editLabel } from '../../../actions/index'
 import LabelItem from './labelItem.js'
 import '../css/labelItem.css'
 
@@ -37,9 +21,9 @@ class LabelIndex extends Component {
     }
   }
   toggleForm = () => {
-    this.setState(prevState => ({
-      showform: !prevState.showform
-    }))
+    this.setState({
+      showform: true
+    })
   }
   onChange = (name, data) => {
     this.setState({
@@ -65,15 +49,15 @@ class LabelIndex extends Component {
     })
     fetchLabels(project.projectId)
   }
-  onUpdate = value => {
-    const { updateALabel } = this.props
-    let data = {
-      name: this.state.name,
-      type: this.state.type
+  handleUpdate = value => {
+    const { project, editLabel, fetchLabels } = this.props
+    const data = {
+      name: value.name,
+      type: value.type,
+      projectId: value.project
     }
-    updateALabel(value.id, data, this.callback)
+    editLabel(value._id, data, fetchLabels(project.projectId))
   }
-
   handleDelete = value => {
     const { project, deleteLabel, fetchLabels } = this.props
     deleteLabel(value._id, fetchLabels(project.projectId))
@@ -86,80 +70,57 @@ class LabelIndex extends Component {
     const { actions, labels } = this.props
     const { showform } = this.state
     return (
-      <Container>
+      <div>
         {actions.isdeleting ? (
           <Dimmer active>
             <Loader indeterminate>Removing Label :)</Loader>
           </Dimmer>
         ) : null}
-        <Button onClick={this.toggleForm} positive>
-          Add Label
-        </Button>
-        {labels !== undefined && (
-          <Table color="green" celled padded striped>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell singleLine>S. No.</Table.HeaderCell>
-                <Table.HeaderCell>Label</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
-                <Table.HeaderCell />
-              </Table.Row>
-            </Table.Header>
-
-            <Table.Body>
-              {labels.map((label, index) => (
-                <LabelItem
-                  key={label._id}
-                  index={index}
-                  label={label}
+        {actions.isupdating ? (
+          <Dimmer active>
+            <Loader indeterminate>Updating Label :)</Loader>
+          </Dimmer>
+        ) : null}
+        {labels !== undefined &&
+          labels.map((label, index) => (
+            <LabelItem
+              value={label}
+              key={index}
+              onChange={this.onChange}
+              onUpdate={this.handleUpdate}
+              onDelete={this.handleDelete}
+            />
+          ))}
+        
+        {showform ? (
+          <div className="form-card-parent">
+            <Form className="form-card flex" onSubmit={this.handleSubmit}>
+              <div className="form-card-child">
+                <Form.Field
+                  placeholder="Label name"
+                  control="input"
+                  defaultValue={value.name}
+                  className="form-card-child-field"
+                  onChange={e => this.onChange(e.target.name, e.target.value)}
+                  name="name"
+                />
+                <Form.Select
+                  label="Label type"
                   options={options}
-                  onChange={this.onChange}
-                  onDelete={this.handleDelete}
-                  onUpdate={this.onUpdate}
+                  defaultValue={value.type}
+                  onChange={(e, change) =>
+                    this.onChange(change.name, change.value)
+                  }
+                  style={{ maxWidth: 400 }}
+                  name="type"
                 />
-              ))}
-            </Table.Body>
-          </Table>
-        )}
-
-        <Modal
-          size="small"
-          open={this.state.showform}
-          onClose={this.toggleForm}
-        >
-          <Modal.Header>
-            <p>Enter Label Details</p>
-          </Modal.Header>
-          <Modal.Actions>
-            <div className="modal-actions">
-              <Input
-                name="name"
-                type="text"
-                label="Name"
-                placeholder="Label name..."
-                defaultValue={value.name}
-                onChange={e => this.onChange(e.target.name, e.target.value)}
-              />
-              <Select
-                label="Type"
-                options={options}
-                defaultValue={value.type}
-                onChange={(e, change) =>
-                  this.onChange(change.name, change.value)
-                }
-                name="type"
-              />
-              <div>
-                <Button
-                  positive
-                  onClick={this.handleSubmit}
-                  content="Add Label"
-                />
+                <Button type="submit">Create</Button>
               </div>
-            </div>
-          </Modal.Actions>
-        </Modal>
-      </Container>
+            </Form>
+          </div>
+        ) : null}
+        <Button className="create-label" onClick={this.toggleForm}>Create new Label</Button>
+      </div>
     )
   }
 }
@@ -172,7 +133,7 @@ LabelIndex.propTypes = {
   fetchLabels: PropTypes.func,
   createLabel: PropTypes.func,
   deleteLabel: PropTypes.func,
-  updateALabel: PropTypes.func
+  editLabel: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -194,10 +155,13 @@ const mapDispatchToProps = dispatch => {
     deleteLabel: (labelId, callback) => {
       return dispatch(deleteLabel(labelId, callback))
     },
-    updateALabel: (labelId, labelData, callback) => {
-      return dispatch(updateALabel(labelId, labelData, callback))
+    editLabel: (labelId, data, callback) => {
+      return dispatch(editLabel(labelId, data, callback))
     }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LabelIndex)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LabelIndex)

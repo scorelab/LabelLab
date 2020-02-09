@@ -157,3 +157,35 @@ export const deleteLabel = (label_id, callback) => {
     return { type: DELETE_LABEL_FAILURE, payload: error }
   }
 }
+
+export const editLabel = (label_id, data, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi(
+      'PUT', 
+      '/api/v1/label/' + label_id + '/update', 
+      { label: data }, 
+      true
+    )
+      .then(res => {
+        dispatch(success())
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: UPDATE_LABEL_REQUEST }
+  }
+  function success() {
+    return { type: UPDATE_LABEL_SUCCESS }
+  }
+  function failure(error) {
+    return { type: UPDATE_LABEL_FAILURE, payload: error }
+  }
+}
