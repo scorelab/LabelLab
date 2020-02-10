@@ -48,6 +48,8 @@ router.get(
 )
 router.post('/reset-password', authController.resetPassword)
 
-router.get('/reset-password/:email/:token', authController.resetPasswordAuthenticate)
+router.get('/reset-password/:user_id/:token', authController.resetPasswordAuthenticate)
+
+router.put('/update-password', authController.updatePassword)
 
 module.exports = router
