@@ -3,7 +3,16 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  SEND_EMAIL_REQUEST,
+  SENT_EMAIL_SUCCESS,
+  EMAIL_SENT_FAILURE,
+  VERIFY_TOKEN_REQUEST,
+  VERIFY_TOKEN_SUCCESS,
+  VERIFY_TOKEN_FAILURE,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PASSWORD_SUCCESS,
+  UPDATE_PASSWORD_FAILURE
 } from '../constants/index'
 
 const initialState = {
@@ -11,10 +20,16 @@ const initialState = {
   isAuthenticating: false,
   statusText: '',
   details: {
-    email: ''
+    email: '',
+    username:''
   },
   error: false,
-  errField: ''
+  errField: '',
+  isLoading:false,
+  emailRecievedMessage:'',
+  verifyTokenMessage:'',
+  passwordUpdatedMessage:'',
+  verificationError:null
 }
 
 const auth = (state = initialState, action) => {
@@ -58,6 +73,64 @@ const auth = (state = initialState, action) => {
         details: {
           email: ''
         }
+      }
+    case SEND_EMAIL_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      }
+    case SENT_EMAIL_SUCCESS:
+      return {
+        ...state,
+        isLoading:false,
+        emailRecievedMessage:action.payload
+      }
+    case EMAIL_SENT_FAILURE:
+      return {
+        ...state,
+        isLoading:false,
+        emailRecievedMessage:action.payload
+      }
+    case VERIFY_TOKEN_REQUEST:
+      return {
+        ...state,
+        isLoading:true,
+      }
+    case VERIFY_TOKEN_SUCCESS:
+      return {
+        ...state,
+        isLoading:false,
+        details: {
+          email: action.payload.email,
+          username: action.payload.username
+        },
+        verifyTokenMessage:action.payload.msg,
+        verificationError:action.payload.msg === 'password reset link a-ok'? false:true
+      }
+    case VERIFY_TOKEN_FAILURE:
+      return {
+        ...state,
+        isLoading:false,
+        verifyTokenMessage:action.payload,
+        verificationError: true
+      }
+    case UPDATE_PASSWORD_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      }
+    case UPDATE_PASSWORD_SUCCESS:
+    console.log(action.payload)
+      return {
+        ...state,
+        isLoading:false,
+        passwordUpdatedMessage:action.payload.msg
+      }
+    case UPDATE_PASSWORD_FAILURE:
+      return {
+        ...state,
+        isLoading:false,
+        passwordUpdatedMessage:action.payload
       }
     default:
       return state

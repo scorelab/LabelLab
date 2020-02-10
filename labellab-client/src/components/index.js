@@ -53,6 +53,16 @@ const Redirect = Loadable({
   loading: Loading
 })
 
+const ForgotPassword = Loadable({
+  loader: () => import('../components/login/ForgotPassword'),
+  loading: Loading
+})
+
+const ResetPassword = Loadable({
+  loader: () => import('../components/login/ResetPassword'),
+  loading: Loading
+})
+
 class App extends Component {
   render() {
     return (
@@ -63,6 +73,8 @@ class App extends Component {
             <Route path={`/logout`} component={Logout} />
             <Route path={`/login`} component={Login} />
             <Route path={`/register`} component={Register} />
+            <Route path={`/forgotpassword`} component={ForgotPassword} />
+            <Route path={`/reset/:user_id/:token`} component={ResetPassword} />
             <PrivateRoute exact path={`/`} component={Dashboard} />
             <PrivateRoute exact path={`/profile`} component={Profile} />
             <PrivateRoute

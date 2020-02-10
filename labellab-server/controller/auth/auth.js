@@ -117,11 +117,10 @@ exports.resetPassword = function (req, res, next) {
 	const email = req.body.email
 	User.findOne({email: email})
 		.then(function (user) {
-			console.log(user)
 		if (!user) {
 			return res
 			.status(400)
-			.json({ msg: 'No Email Found', errField: 'email' })
+			.json({ msg: 'Email not found', errField: 'email' })
 		}else{
 		token = crypto.randomBytes(32).toString('hex') //creating the token to be sent to the forgot password form 
 
@@ -143,7 +142,6 @@ exports.resetPassword = function (req, res, next) {
 					user: `${process.env.EMAIL_ADDRESS}`,
 					pass: `${process.env.EMAIL_PASSWORD}`,
 				}});
-
 			const mailOptions = {
 				from: `${process.env.EMAIL_ADDRESS}`,
 				to: `${user.email}`,
@@ -151,15 +149,13 @@ exports.resetPassword = function (req, res, next) {
 				text:
 					'You are receiving this because you have requested the reset of the password for your LabelLab account.\n\n'
 					+ 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
-					+ `http://localhost:3000/reset/${token}\n\n`
+					+ `http://localhost:3000/reset/${user._id}/${token}\n\n`
 					+ 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
 				};
 
-			console.log('sending mail');
-
 			transporter.sendMail(mailOptions, (err, response) => {
 				if (err) {
-					return console.error('there was an error: ', err);
+					return res.status(400).json({ msg: 'Email not found', errField: 'email' })
 				} else {
 					console.log('here is the res: ', response);
 					res.status(200).json('recovery email sent');
@@ -175,33 +171,78 @@ exports.resetPassword = function (req, res, next) {
 exports.resetPasswordAuthenticate = function(req, res, next){
 	if (req && 
 		req.params && 
-		req.params.email && 
+		req.params.user_id && 
 		req.params.token
 	) {
 	const { token } = req.params
-	const { email } = req.params
+	const id = req.params.user_id
 
-    User.findOne({ email: email }).then((user) => {
-      if (user == null) {
-        res.status(404).send({ success: false, msg: 'No user found' });
+	User.findOne({ 
+		_id: id, 
+		resetPasswordExpires: {
+		$gt : Date.now()
+	  }, 
+	}).then((user) => {
+      if (user === null) {
+        res.status(404).json({ success: false, msg: 'No user found' });
       } else {
-	bcrypt.compare(token, user.resetPasswordToken, function(err, res) {
-		if (res){
-			if(user.resetPasswordExpires>Date.now()){
-			res.status(200).send({
+	bcrypt.compare(token, user.resetPasswordToken, function(err, response) {
+		if (response){
+			res.status(200).json({
 				username: user.username,
-				message: 'password reset link a-ok',
-				})
-			}else{
-				return response.json({success: false, message: 'Token Expired'});
-			}
+				email:user.email,
+				msg: 'password reset link a-ok',
+			})
 		}else{
-			return response.json({success: false, message: 'passwords do not match'});
+			return res.json({success: false, msg: 'Token Invalid'});
 		}})
       }
     });
   }else{
-	res.status(400).send({ success: false, msg: 'Invalid Data' })
+	res.status(400).json({ success: false, msg: 'Invalid Data' })
   }
+}
+
+exports.updatePassword = function(req, res, next){
+	if(
+		req &&
+		req.body &&
+		req.body.email &&
+		req.body.username &&
+		req.body.password &&
+		req.body.resetPasswordToken 
+	  ){  
+		  User.findOne({
+		  username: req.body.username,
+		  email:req.body.email,
+		  resetPasswordExpires: {
+			$gt : Date.now()
+		  },
+	  }).then(user => {
+		if (user == null) {
+		  res.status(403).json({msg:'password reset link is invalid or has expired'});
+		} else if (user != null) {
+			bcrypt.compare(req.body.resetPasswordToken, user.resetPasswordToken, function(err, response) {
+				if (response){
+				bcrypt.genSalt(10,(err,salt)=>{
+					bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
+					if (err) throw err
+					User.findOneAndUpdate({
+					email:req.body.email,
+					username:req.body.username},{
+					$set:{
+					password: hashedPassword,
+					resetPasswordToken: null,
+					resetPasswordExpires: null,
+				}}).then(() => {
+					res.status(200).json({ msg: 'password updated' });
+				});
+				})})
+					}})
+				}else{
+					return res.json({success: false, msg: 'Token Invalid'});
+				}})
+	  }
+		  
 }
 
