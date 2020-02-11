@@ -29,7 +29,8 @@ const initialState = {
   emailRecievedMessage:'',
   verifyTokenMessage:'',
   passwordUpdatedMessage:'',
-  verificationError:null
+  verificationError:null,
+  isEmailSending:false
 }
 
 const auth = (state = initialState, action) => {
@@ -77,18 +78,18 @@ const auth = (state = initialState, action) => {
     case SEND_EMAIL_REQUEST:
       return {
         ...state,
-        isLoading: true
+        isEmailSending: true
       }
     case SENT_EMAIL_SUCCESS:
       return {
         ...state,
-        isLoading:false,
+        isEmailSending:false,
         emailRecievedMessage:action.payload
       }
     case EMAIL_SENT_FAILURE:
       return {
         ...state,
-        isLoading:false,
+        isEmailSending:false,
         emailRecievedMessage:action.payload
       }
     case VERIFY_TOKEN_REQUEST:
