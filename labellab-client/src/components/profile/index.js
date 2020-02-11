@@ -110,6 +110,11 @@ class Profile extends Component {
                       Edit
                     </label>
                   </div>
+                  {
+                    this.state.max_size_error?
+                   <div className="image_size_error">Max size of the profile pic should be 101Kb</div>
+                    :null
+                  }
                 </div>
                 <div className="profile-first-rightbar">
                   <Edit />

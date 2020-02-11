@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { Table, Button, Form, Dimmer, Loader } from 'semantic-ui-react'
+import { Table, Button, Form, Dimmer, Loader, Icon } from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
 import { submitImage, deleteImage, fetchProject } from '../../actions/index'
 import './css/images.css'
@@ -16,7 +16,8 @@ class ImagesIndex extends Component {
       imageNames: [],
       projectId: '',
       showform: false,
-      format: ''
+      format: '',
+      maxSizeError: '',
     }
   }
   handleImageChange = e => {
@@ -41,7 +42,11 @@ class ImagesIndex extends Component {
   handleSubmit = e => {
     e.preventDefault()
     const { project, fetchProject, submitImage } = this.props
-    const { imageNames, images, format } = this.state
+    const { imageName, image, format } = this.state
+    if (this.state.file && this.state.file.size > 101200) {
+      this.setState({
+        maxSizeError: 'max sized reached'
+      })}else{
     let data = {
       imageNames: imageNames,
       images: images,
@@ -56,6 +61,7 @@ class ImagesIndex extends Component {
       })
       fetchProject(project.projectId)
     })
+  }
   }
   handleDelete = imageId => {
     const { deleteImage, project, fetchProject } = this.props
@@ -125,8 +131,9 @@ class ImagesIndex extends Component {
             <Button onClick={this.removeImage} type="delete">
               Cancel
             </Button>
+            {this.state.maxSizeError? <div className="max-size-error">The size of the file should not be greater than 101Kb!</div>:null}
           </Form>
-        ) : null}
+       ) : null}
         <Table
           celled
           style={{ display: 'flex', flexDirection: 'column', height: 600 }}
@@ -209,7 +216,10 @@ const columnStyles = [
 
 const Row = ({ image, projectId, style, onDelete, imageId }) => (
   <Table.Row style={{ ...style, display: 'flex' }}>
-    <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
+    <Table.Cell style={columnStyles[0]}>
+      {imageId + 1}
+      {image.labelled ? <Icon name="checkmark green"></Icon> : null}
+    </Table.Cell>
     <Table.Cell style={columnStyles[1]}>
       <a
         href={

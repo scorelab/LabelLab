@@ -44,6 +44,6 @@
     "concurrently": "^5.0.2",
     "eslint": "^5.16.0",
     "mocha": "^6.1.4",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.4"
   }
 }

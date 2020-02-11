@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       LabelTextFormField(
                         labelText: "Email",
                         onSaved: (String value) {
-                          _user.email = value;
+                          _user.email = value.trim();
                         },
                         validator: _validateEmail,
                       ),
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return "Email can't be empty";
     } else if (!RegExp(
             r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-        .hasMatch(email)) {
+        .hasMatch(email.trim())) {
       return "Invalid email";
     }
     return null;

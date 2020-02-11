@@ -97,7 +97,7 @@ The application needs `google-services.json` file issued from Firebase to operat
 3. Agree to the terms and click **Create Project**.
 4. After creating the project, click **Add Firebase to your android app**.
 5. Go to project location and open `android/app/src/main/AndroidManifest.xml`. Copy the package name(**org.scorelab.labellab_mobile**) and paste in the package name field
-6. Get the **SHA1 fingerprint** by following the instruction and paste it in the SHA1 fingerprint field.
+6. Get the **SHA1 fingerprint** by following the instructions ( https://developers.google.com/android/guides/client-auth ) and paste it in the SHA1 fingerprint field.
 7. Click next and download the `google-services.json`.
 8. Paste the file in location `android/app/` folder.
 

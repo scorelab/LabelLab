@@ -48,6 +48,12 @@
   justify-content: center;
   margin-top: 1.5em;
 }
+.image_size_error{
+  color:red;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 1rem;
+}
 @media only screen and (max-width: 993px) {
   .project-second-rightbar {
     width: 70%;
@@ -120,3 +126,4 @@
   }
  
 }
+

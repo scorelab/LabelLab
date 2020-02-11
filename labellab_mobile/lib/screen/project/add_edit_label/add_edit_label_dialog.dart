@@ -40,52 +40,54 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
         borderRadius: BorderRadius.circular(16),
       ),
       elevation: 8,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          LabelTextField(
-            controller: _nameController,
-            labelText: "Label name",
-            textCapitalization: TextCapitalization.words,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text("Type"),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.all(0),
-            leading: Radio(
-              value: 0,
-              groupValue: _type,
-              onChanged: (_) {
-                setState(() {
-                  _type = 0;
-                });
-              },
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            LabelTextField(
+              controller: _nameController,
+              labelText: "Label name",
+              textCapitalization: TextCapitalization.words,
             ),
-            title: Text("Rectangle"),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.all(0),
-            leading: Radio(
-              value: 1,
-              groupValue: _type,
-              onChanged: (_) {
-                setState(() {
-                  _type = 1;
-                });
-              },
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text("Type"),
             ),
-            title: Text("Polygon"),
-          ),
-          this._error != null
-              ? Text(
-                  this._error,
-                  style: TextStyle(color: Colors.red),
-                )
-              : Container(),
-        ],
+            ListTile(
+              contentPadding: EdgeInsets.all(0),
+              leading: Radio(
+                value: 0,
+                groupValue: _type,
+                onChanged: (_) {
+                  setState(() {
+                    _type = 0;
+                  });
+                },
+              ),
+              title: Text("Rectangle"),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(0),
+              leading: Radio(
+                value: 1,
+                groupValue: _type,
+                onChanged: (_) {
+                  setState(() {
+                    _type = 1;
+                  });
+                },
+              ),
+              title: Text("Polygon"),
+            ),
+            this._error != null
+                ? Text(
+                    this._error,
+                    style: TextStyle(color: Colors.red),
+                  )
+                : Container(),
+          ],
+        ),
       ),
       actions: <Widget>[
         FlatButton(
