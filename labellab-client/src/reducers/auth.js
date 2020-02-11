@@ -30,7 +30,8 @@ const initialState = {
   verifyTokenMessage:'',
   passwordUpdatedMessage:'',
   verificationError:null,
-  isEmailSending:false
+  isEmailSending:false,
+  passwordUpdateError:null
 }
 
 const auth = (state = initialState, action) => {
@@ -121,17 +122,18 @@ const auth = (state = initialState, action) => {
         isLoading: true
       }
     case UPDATE_PASSWORD_SUCCESS:
-    console.log(action.payload)
       return {
         ...state,
         isLoading:false,
-        passwordUpdatedMessage:action.payload.msg
+        passwordUpdatedMessage:action.payload.msg,
+        passwordUpdateError:action.payload.msg === 'password updated'? false:true
       }
     case UPDATE_PASSWORD_FAILURE:
       return {
         ...state,
         isLoading:false,
-        passwordUpdatedMessage:action.payload
+        passwordUpdatedMessage:action.payload,
+        passwordUpdateError:true
       }
     default:
       return state

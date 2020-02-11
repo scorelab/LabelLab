@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { verifyResetPasswordToken, updatePassword } from '../../actions/auth'
 import { Input, Button } from 'semantic-ui-react'
 import { Redirect , Link } from 'react-router-dom'
+import './css/ResetPassword.css'
 
 class ResetPassword extends Component {
   constructor() {
@@ -12,8 +13,9 @@ class ResetPassword extends Component {
       username: '',
       email:'',
       password: '',
-      updated: false,
       error: true,
+      notNullError:false,
+      updated:false
     };
   }
 
@@ -33,35 +35,34 @@ class ResetPassword extends Component {
     const { match: { params } } = this.props;
     const { username,  email } = this.props.details;
     const { password } = this.state
+    if(password === ''){
+        this.setState({
+            notNullError:true
+        })
+    }else{
     try {
       await this.props.updatePassword(email, username, password, params.token)
-      if (this.props.passwordUpdatedMessage === 'password updated') {
         this.setState({
-          updated: true,
-          error: false,
+          notNullError:false,
+          updated:true
         });
-      } else {
-        this.setState({
-          updated: false,
-          error: true,
-        });
-      }
     } catch (error) {
         this.setState({
-            updated: false,
-            error: true,
+            notNullError:false,
+            updated:true
         });
-    }
+    }}
   };
 
   render() {
     const {
-    password, updated 
+    password, updated, notNullError
     } = this.state;
     const error = this.props.verificationError
+    const { passwordUpdateError } = this.props
     if (error) {
       return (
-        <div>
+        <div className='failureBody'>
             <h4>Problem resetting password. Please send another reset link.</h4>
             <Button
               as={Link}
@@ -77,37 +78,49 @@ class ResetPassword extends Component {
       );
     }else{
     return (
-      <div>
+        <div>
+        <>
+        {updated?
+        <>
+        {
+            passwordUpdateError===false?
+            <div className='successBody'>
+                <p>
+                Your password has been successfully reset, please try logging in
+                again.
+                </p>
+                <Button
+                as={Link}
+                to="/login">
+                Login
+                </Button>
+            </div>
+            :
+            <div className='errorResettingPassword'>
+                There was a problem setting your password please send another Password reset link.
+            </div>
+         }
+        </>
+        :
         <form className="password-form" onSubmit={this.updatePassword}>
-        <Input
-            primary
-            id="password"
-            label="password"
-            value={password}
-            onChange={this.handleChange('password')}
-            placeholder="Password"
-            type="password"
-          />
-          <Button type="submit" > Update Password </Button>
-        </form>
-        {updated && (
+            <Input
+                primary
+                id="password"
+                label="password"
+                value={password}
+                onChange={this.handleChange('password')}
+                placeholder="Password"
+                type="password"
+            />
+        {notNullError && (
           <div>
-            <p>
-              Your password has been successfully reset, please try logging in
-              again.
-            </p>
-            <Button
-              as={Link}
-              to="/login">
-              Login
-            </Button>
+            <p>The password cannot be null.</p>
           </div>
         )}
-        <Button
-            as={Link}
-            to="/register">
-            Register
-        </Button>
+          <Button type="submit" > Update Password </Button>
+        </form>
+        }
+        </>
       </div>
     );
   }
@@ -122,10 +135,11 @@ ResetPassword.propTypes = {
   }),
   verifyResetPasswordToken:PropTypes.func,
   updatePassword:PropTypes.func,
-  verifyTokenMessage:PropTypes.string.isRequired,
+  verifyTokenMessage:PropTypes.string,
   passwordUpdatedMessage:PropTypes.string,
   details:PropTypes.object.isRequired,
-  verificationError:PropTypes.bool.isRequired
+  verificationError:PropTypes.bool,
+  passwordUpdateError:PropTypes.bool
 };
  
 const mapStateToProps = state => {
@@ -133,7 +147,8 @@ const mapStateToProps = state => {
     verifyTokenMessage:state.auth.verifyTokenMessage,
     passwordUpdatedMessage:state.auth.passwordUpdatedMessage,
     details:state.auth.details,
-    verificationError:state.auth.verificationError
+    verificationError:state.auth.verificationError,
+    passwordUpdateError:state.auth.passwordUpdateError
    }
  }
  

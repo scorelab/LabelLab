@@ -4,6 +4,7 @@ import { Input, Button } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { Redirect , Link } from 'react-router-dom'
 import { forgotPassword } from '../../actions/auth'
+import './css/ForgotPassword.css'
 
 
 class ForgotPassword extends Component {
@@ -64,7 +65,7 @@ class ForgotPassword extends Component {
       } = this.state;
      const { isEmailSending, emailRecievedMessage } =this.props
     return (
-      <div>
+      <div className='mainBody'>
       { isEmailSending?
        <div>
          Sending...
@@ -93,16 +94,17 @@ class ForgotPassword extends Component {
       </>
       :
       <>
-       <form className="profile-form" onSubmit={this.sendEmail}>
+       <form className="profile-form" onSubmit={this.sendEmail} className='emailForm'>
           <Input
             primary
             id="email"
-            label="email"
             value={email}
             onChange={this.handleChange('email')}
             placeholder="Email Address"
           />
-          <Button primary>Send Password Reset Email</Button>
+          <span className='sendMail'>
+          <Button primary>Send Email</Button>
+          </span>
         </form>
         {showNullError && (
           <div>
@@ -120,7 +122,7 @@ class ForgotPassword extends Component {
 }
 
 ForgotPassword.propTypes = {
-     emailRecievedMessage:PropTypes.string.isRequired,
+     emailRecievedMessage:PropTypes.string,
      isEmailSending:PropTypes.bool.isRequired
   }
   
