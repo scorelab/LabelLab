@@ -149,7 +149,7 @@ exports.resetPassword = function (req, res, next) {
 				text:
 					'You are receiving this because you have requested the reset of the password for your LabelLab account.\n\n'
 					+ 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
-					+ `http://localhost:3000/reset/${user._id}/${token}\n\n`
+					+ `http://${process.env.REACT_APP_HOST}/reset/${user._id}/${token}\n\n`
 					+ 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
 				};
 
@@ -168,7 +168,7 @@ exports.resetPassword = function (req, res, next) {
   }
 }
 
-exports.resetPasswordAuthenticate = function(req, res, next){
+exports.resetPasswordAuthenticate = async function(req, res, next){
 	if (req && 
 		req.params && 
 		req.params.user_id && 
@@ -177,7 +177,7 @@ exports.resetPasswordAuthenticate = function(req, res, next){
 	const { token } = req.params
 	const id = req.params.user_id
 
-	User.findOne({ 
+	await User.findOne({ 
 		_id: id, 
 		resetPasswordExpires: {
 		$gt : Date.now()

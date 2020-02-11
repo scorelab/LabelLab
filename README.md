@@ -67,7 +67,7 @@ Both the front-end and the back-end can be run from the __labellab-server__ fold
 > **NOTE**: Before starting the server create a file named `.env` same as `.env.example` and add your **OAUTH** and **DATABASE** credentials in the file.
 
 And use [localhost:3000](https://) to browse.
-
+To enable ForgotPassword feature allow Less Secure App Access to your Gmail account. 
 
 > **NOTE**: This version is only supporting for Chrome and Firefox browser. And make sure to instal the extension -> Redux Dev Tools in chrome extension library.
 
