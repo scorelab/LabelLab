@@ -14,6 +14,7 @@ class ForgotPassword extends Component {
       showError: false,
       messageFromServer: '',
       showNullError: false,
+      emailRequestSent:false,
     };
   }
 
@@ -35,32 +36,22 @@ class ForgotPassword extends Component {
         showError: false,
         messageFromServer: '',
         showNullError: true,
+        emailRequestSent: false
       });
     } else {
-     console.log(this.props.emailRecievedMessage)
       try {
         await this.props.forgotPassword(email,this.redirect())
-        if (this.props.emailRecievedMessage === 'recovery email sent') {
           this.setState({
-            showError: false,
-            messageFromServer: 'recovery email sent',
             showNullError: false,
+            emailRequestSent:true
           });
-        }else{
-          {
-            this.setState({
-              showError: true,
-              messageFromServer: this.props.emailRecievedMessage,
-              showNullError: false,
-            });
-          }
-        }
       } catch (error) {
          {
           this.setState({
             showError: true,
             messageFromServer: this.props.emailRecievedMessage,
             showNullError: false,
+            emailRequestSent:true
           });
         }
       }
@@ -69,12 +60,40 @@ class ForgotPassword extends Component {
 
   render() {
     const {
- email, messageFromServer, showNullError, showError 
-} = this.state;
-
+      email, showNullError, emailRequestSent
+      } = this.state;
+     const { isEmailSending, emailRecievedMessage } =this.props
     return (
       <div>
-        <form className="profile-form" onSubmit={this.sendEmail}>
+      { isEmailSending?
+       <div>
+         Sending...
+       </div>
+       :
+      <>
+      {emailRequestSent?
+      <>
+        {emailRecievedMessage==='recovery email sent'?
+          <div>
+            <h3>Password Reset Email Successfully Sent!</h3>
+          </div>
+          :
+          <div>
+          <p>
+            That email address isn&apos;t recognized. Please try again or
+            register for a new account.
+          </p>
+          <Button
+            as={Link}
+            to="/register"
+          >Register
+          </Button>
+        </div>
+        }
+      </>
+      :
+      <>
+       <form className="profile-form" onSubmit={this.sendEmail}>
           <Input
             primary
             id="email"
@@ -90,25 +109,11 @@ class ForgotPassword extends Component {
             <p>The email address cannot be null.</p>
           </div>
         )}
-        {showError && (
-          <div>
-            <p>
-              That email address isn&apos;t recognized. Please try again or
-              register for a new account.
-            </p>
-            <Button
-              as={Link}
-              to="/register"
-            >Register
-            </Button>
-          </div>
-        )}
-        {messageFromServer === 'recovery email sent' && (
-          <div>
-            <h3>Password Reset Email Successfully Sent!</h3>
-          </div>
-        )}
+        </>
+      }
         <Button as= {Link} to="/login">Go Home</Button>
+      </>
+      }
       </div>
     );
   }
@@ -116,11 +121,13 @@ class ForgotPassword extends Component {
 
 ForgotPassword.propTypes = {
      emailRecievedMessage:PropTypes.string.isRequired,
+     isEmailSending:PropTypes.bool.isRequired
   }
   
   const mapStateToProps = state => {
     return {
-      emailRecievedMessage: state.auth.emailRecievedMessage
+      emailRecievedMessage: state.auth.emailRecievedMessage,
+      isEmailSending: state.auth.isEmailSending
     }
   }
   
@@ -136,4 +143,3 @@ ForgotPassword.propTypes = {
     mapStateToProps,
     mapActionToProps
   )(ForgotPassword)
-  
