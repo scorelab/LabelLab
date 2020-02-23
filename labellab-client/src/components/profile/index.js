@@ -10,7 +10,9 @@ import {
   Menu,
   Dimmer,
   Loader,
-  Dropdown
+  Dropdown,
+  Button,
+  Icon
 } from 'semantic-ui-react'
 import Navbar from '../navbar/project'
 import {
@@ -51,13 +53,27 @@ class Profile extends Component {
         image: reader.result,
         file: file
       })
-      this.onSubmit(e)
+      this.onSubmit()
     }
     reader.readAsDataURL(file)
   }
-  onSubmit = e => {
+  handleRemoveImage = () => {
+    this.setState({
+      image: null,
+      file: null
+    })
+    this.onSubmit()
+  }
+  onSubmit = () => {
+    const { uploadImage } = this.props
     let { file, image } = this.state
-    if (file && file.size > 101200) {
+    if (!file && !image) {
+      let data = {
+        image: null,
+        format: null
+      }
+      uploadImage(data, this.imageCallback)
+    } else if (file && file.size > 101200) {
       this.setState({
         max_size_error: 'max sized reached'
       })
@@ -66,7 +82,7 @@ class Profile extends Component {
         image: image,
         format: file.type
       }
-      this.props.uploadImage(data, this.imageCallback)
+      uploadImage(data, this.imageCallback)
     }
   }
   handleClick = id => {
@@ -75,6 +91,10 @@ class Profile extends Component {
     })
   }
   imageCallback = () => {
+    this.setState({
+      image: null,
+      file: null
+    })
     this.props.fetchUser()
   }
   render() {
@@ -109,12 +129,17 @@ class Profile extends Component {
                     >
                       Edit
                     </label>
+                    <Button
+                      negative
+                      icon="delete"
+                      onClick={this.handleRemoveImage}
+                    />
                   </div>
-                  {
-                    this.state.max_size_error ?
-                      <div className="image_size_error">Max size of the profile pic should be 101Kb</div>
-                      : null
-                  }
+                  {this.state.max_size_error ? (
+                    <div className="image_size_error">
+                      Max size of the profile pic should be 101Kb
+                    </div>
+                  ) : null}
                 </div>
                 <div className="profile-first-rightbar">
                   <Edit />
@@ -140,15 +165,17 @@ class Profile extends Component {
                     <Menu.Item as={Link} to="" name="projects">
                       Projects
                     </Menu.Item>
-                    <Dropdown item text='Project Analytics'>
+                    <Dropdown item text="Project Analytics">
                       <Dropdown.Menu>
-                        {
-                          this.props.projects.map(project =>
-                            <Dropdown.Item key={project._id} as={Link} to={'/project/' + project._id + '/analytics'}>
-                              {project.projectName}
-                            </Dropdown.Item>
-                          )
-                        }
+                        {projects.map(project => (
+                          <Dropdown.Item
+                            key={project._id}
+                            as={Link}
+                            to={'/project/' + project._id + '/analytics'}
+                          >
+                            {project.projectName}
+                          </Dropdown.Item>
+                        ))}
                       </Dropdown.Menu>
                     </Dropdown>
 
@@ -170,22 +197,24 @@ class Profile extends Component {
                             className="card-headers"
                             header={project.projectName}
                           />
-                          <Card.Content description={project.projectDescription} />
+                          <Card.Content
+                            description={project.projectDescription}
+                          />
                           <Card.Content extra />
                         </Card>
                       ))
                     ) : (
-                        <CardLoader />
-                      )}
+                      <CardLoader />
+                    )}
                   </Card.Group>
                 </div>
               </div>
             </React.Fragment>
           ) : (
-              <Dimmer active>
-                <Loader indeterminate>Loading..</Loader>
-              </Dimmer>
-            )}
+            <Dimmer active>
+              <Loader indeterminate>Loading..</Loader>
+            </Dimmer>
+          )}
         </Container>
       </div>
     )
