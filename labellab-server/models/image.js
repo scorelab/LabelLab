@@ -29,6 +29,10 @@ const ImageSchema = new mongoose.Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now
+	},
+	directory: {
+		type: String,
+		default: ''
 	}
 })
 
