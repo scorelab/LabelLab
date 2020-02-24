@@ -44,7 +44,9 @@ app.use('/', indexRouter)
 mongoose
 	.connect(config.mongoURI, {
 		promiseLibrary: require('bluebird'),
-		useNewUrlParser: true
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useCreateIndex: true
 	})
 	.then(() => console.log('MongoDB connected successfully!'))
 	.catch(err => console.error(err))
