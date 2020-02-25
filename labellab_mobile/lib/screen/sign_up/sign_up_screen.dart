@@ -98,18 +98,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      RaisedButton(
-                        elevation: 0,
-                        color: Theme.of(context).accentColor,
-                        colorBrightness: Brightness.dark,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      Builder(
+                        builder: (context) => RaisedButton(
+                          elevation: 0,
+                          color: Theme.of(context).accentColor,
+                          colorBrightness: Brightness.dark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: _isRegistering
+                              ? Text("Signnig Up")
+                              : Text("Sign Up"),
+                          onPressed: () =>
+                              !_isRegistering ? _onSubmit(context) : null,
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: _isRegistering
-                            ? Text("Signnig Up")
-                            : Text("Sign Up"),
-                        onPressed: _isRegistering ? null : _onSubmit,
                       ),
                     ],
                   ),
@@ -173,7 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  void _onSubmit() {
+  void _onSubmit(BuildContext context) {
     _key.currentState.save();
     if (_key.currentState.validate()) {
       setState(() {
@@ -193,9 +196,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isRegistering = false;
         });
         print(err.toString());
-        // Scaffold.of(context).showSnackBar(SnackBar(
-        //   content: Text("Sign in failed!"),
-        // ));
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("Sign in failed"),
+          backgroundColor: Colors.redAccent,
+        ));
       });
     }
   }
