@@ -81,8 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: _isLoginIn
                               ? Text("Signing In...")
                               : Text("Sign In"),
-                          onPressed: () =>
-                              !_isLoginIn ? _onSubmit(context) : null,
+                          onPressed: !_isLoginIn
+                              ? () {
+                                  _onSubmit(context);
+                                }
+                              : null,
                         ),
                       ),
                     ],

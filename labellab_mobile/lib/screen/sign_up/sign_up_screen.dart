@@ -110,8 +110,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: _isRegistering
                               ? Text("Signnig Up")
                               : Text("Sign Up"),
-                          onPressed: () =>
-                              !_isRegistering ? _onSubmit(context) : null,
+                          onPressed: !_isRegistering
+                              ? () {
+                                  _onSubmit(context);
+                                }
+                              : null,
                         ),
                       ),
                     ],
