@@ -33,7 +33,7 @@ const info = {
 
 chai.use(chaiHttp)
 
-describe('Label tests', async () => {
+describe('Analytics tests', async () => {
 	before(function(done) {
 		conn.connect()
 		.then(() => done())
