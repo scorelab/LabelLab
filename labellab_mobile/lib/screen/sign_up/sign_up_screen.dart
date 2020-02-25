@@ -156,8 +156,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _validateEmail(String email) {
     if (email.isEmpty) {
       return "Email can't be empty";
-    }
-    if (!RegExp(
+    } else if (!RegExp(
             r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
         .hasMatch(email)) {
       return "Invalid email";
@@ -168,6 +167,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _validatePassword(String password) {
     if (password.isEmpty) {
       return "Password can't be empty";
+    } else if (password.length < 6) {
+      return "Password must be at least 6 characters";
     }
     return null;
   }
