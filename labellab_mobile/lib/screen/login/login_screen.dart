@@ -69,18 +69,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      RaisedButton(
-                        elevation: 0,
-                        color: Theme.of(context).accentColor,
-                        colorBrightness: Brightness.dark,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      Builder(
+                        builder: (context) => RaisedButton(
+                          elevation: 0,
+                          color: Theme.of(context).accentColor,
+                          colorBrightness: Brightness.dark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: _isLoginIn
+                              ? Text("Signing In...")
+                              : Text("Sign In"),
+                          onPressed: () =>
+                              !_isLoginIn ? _onSubmit(context) : null,
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: _isLoginIn
-                            ? Text("Signing In...")
-                            : Text("Sign In"),
-                        onPressed: _isLoginIn ? null : _onSubmit,
                       ),
                     ],
                   ),
@@ -89,14 +92,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Center(child: Text("or")),
                 ),
-                SignInButton(
-                  Buttons.GoogleDark,
-                  onPressed: () => !_isLoginIn ? _signInWithGoogle() : null,
+                Builder(
+                  builder: (context) => SignInButton(
+                    Buttons.GoogleDark,
+                    onPressed: () =>
+                        !_isLoginIn ? _signInWithGoogle(context) : null,
+                  ),
                 ),
-                SignInButton(
-                  Buttons.GitHub,
-                  onPressed: () =>
-                      !_isLoginIn ? _signInWithGithub(context) : null,
+                Builder(
+                  builder: (context) => SignInButton(
+                    Buttons.GitHub,
+                    onPressed: () =>
+                        !_isLoginIn ? _signInWithGithub(context) : null,
+                  ),
                 ),
                 SizedBox(
                   height: 16,
@@ -131,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  void _onSubmit() {
+  void _onSubmit(BuildContext context) {
     if (_key.currentState.validate()) {
       _key.currentState.save();
 
@@ -151,14 +159,12 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoginIn = false;
         });
         print(err.toString());
-        // Scaffold.of(context).showSnackBar(SnackBar(
-        //   content: Text("Sign in failed!"),
-        // ));
+        _showAuthFailSnackbar(context);
       });
     }
   }
 
-  void _signInWithGoogle() {
+  void _signInWithGoogle(BuildContext context) {
     setState(() {
       _isLoginIn = true;
     });
@@ -175,9 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoginIn = false;
       });
       print(err.toString());
-      // Scaffold.of(context).showSnackBar(SnackBar(
-      //   content: Text("Sign in failed!"),
-      // ));
+      _showAuthFailSnackbar(context);
     });
   }
 
@@ -207,11 +211,19 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoginIn = false;
         });
+        _showAuthFailSnackbar(context);
       }
     });
   }
 
   void _onCreateAccount() {
     Application.router.navigateTo(context, "/signup");
+  }
+
+  void _showAuthFailSnackbar(BuildContext context) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text("Sign in failed"),
+      backgroundColor: Colors.redAccent,
+    ));
   }
 }
