@@ -90,9 +90,6 @@
     "lint": "eslint src/ --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,json}\""
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -106,7 +103,7 @@
     ]
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.3",
     "dotenv": "^8.0.0",
     "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-prettier": "^3.1.0"

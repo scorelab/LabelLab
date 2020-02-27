@@ -32,4 +32,4 @@ module.exports = {
         flowVersion: '0.53'
       }
     }
-  }
+}
