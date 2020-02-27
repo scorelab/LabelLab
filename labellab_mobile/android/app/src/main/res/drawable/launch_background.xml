@@ -4,9 +4,13 @@
     <item android:drawable="@android:color/white" />
 
     <!-- You can insert your own image assets here -->
-    <item>
+    <item
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:adjustViewBounds="true"   
+        android:scaleType="fitCenter" >
         <bitmap
-            android:gravity="center"
-            android:src="@drawable/pro" />
+            android:gravity="fill"
+            android:src="@drawable/splash" />
     </item>
 </layer-list>
