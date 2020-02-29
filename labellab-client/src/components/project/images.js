@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { Table, Button, Form, Dimmer, Loader } from 'semantic-ui-react'
+import { Table, Button, Form, Dimmer, Loader, Icon } from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
 import { submitImage, deleteImage, fetchProject } from '../../actions/index'
 import './css/images.css'
@@ -209,7 +209,10 @@ const columnStyles = [
 
 const Row = ({ image, projectId, style, onDelete, imageId }) => (
   <Table.Row style={{ ...style, display: 'flex' }}>
-    <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
+    <Table.Cell style={columnStyles[0]}>
+      {imageId + 1}
+      {image.labelled ? <Icon name="checkmark green"></Icon> : null}
+    </Table.Cell>
     <Table.Cell style={columnStyles[1]}>
       <a
         href={

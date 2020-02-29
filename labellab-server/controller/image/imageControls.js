@@ -165,7 +165,12 @@ exports.updateLabels = function(req, res) {
         {
           _id: req.params.imageId
         },
-        { height: data.height, width: data.width, labelData: data.labels },
+        {
+          height: data.height,
+          width: data.width,
+          labelData: data.labels,
+          labelled: true
+        },
         { new: true }
       ).exec(function(err, image) {
         if (err) {
@@ -217,50 +222,52 @@ exports.updateLabels = function(req, res) {
 }
 
 exports.deleteImage = function(req, res) {
-	if (req && req.params && req.params.imageId) {
-		Image.findOne({
-			           _id:req.params.imageId
-			        }).exec(function(err,image){
-			            if(err){
-			                return res.status(400).send({
-			                    success: false,
-			                    msg: 'Unable to connect to database. Please try again.',
-			                    error: err
-			                })
-			            }else{
-			            Image.findOneAndDelete({
-			                    _id: image
-			            })
-			            fs.unlinkSync(path.join(__dirname,"../../",`public/uploads/${image.imageUrl}`))
-			            }
-			        })
-		Image.findOneAndDelete({
-			_id: req.params.imageId
-		}).exec(function(err, image) {
-			if (err) {
-				return res.status(400).send({
-					success: false,
-					msg: 'Unable to connect to database. Please try again.',
-					error: err
-				})
-			} else {
-				Project.findOneAndUpdate(
-					{ _id: image.project },
-					{ $pull: { image: req.params.imageId } }
-				).exec(function(err, project) {
-					if (err) {
-						return res.status(400).send({
-							success: false,
-							msg: 'Cannot delete image',
-							error: err
-						})
-					}
-					return res.json({
-						success: true,
-						msg: 'Image deleted successfully!'
-					})
-				})
-			}
-		})
-	} else res.status(400).send({ success: false, msg: 'Invalid Data' })
+  if (req && req.params && req.params.imageId) {
+    Image.findOne({
+      _id: req.params.imageId
+    }).exec(function(err, image) {
+      if (err) {
+        return res.status(400).send({
+          success: false,
+          msg: 'Unable to connect to database. Please try again.',
+          error: err
+        })
+      } else {
+        Image.findOneAndDelete({
+          _id: image
+        })
+        fs.unlinkSync(
+          path.join(__dirname, '../../', `public/uploads/${image.imageUrl}`)
+        )
+      }
+    })
+    Image.findOneAndDelete({
+      _id: req.params.imageId
+    }).exec(function(err, image) {
+      if (err) {
+        return res.status(400).send({
+          success: false,
+          msg: 'Unable to connect to database. Please try again.',
+          error: err
+        })
+      } else {
+        Project.findOneAndUpdate(
+          { _id: image.project },
+          { $pull: { image: req.params.imageId } }
+        ).exec(function(err, project) {
+          if (err) {
+            return res.status(400).send({
+              success: false,
+              msg: 'Cannot delete image',
+              error: err
+            })
+          }
+          return res.json({
+            success: true,
+            msg: 'Image deleted successfully!'
+          })
+        })
+      }
+    })
+  } else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
