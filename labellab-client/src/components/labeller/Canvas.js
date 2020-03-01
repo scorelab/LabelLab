@@ -52,7 +52,7 @@ class Canvas extends Component {
   handleChange(eventType, { point, pos, figure, points }) {
     const { onChange, unfinishedFigure } = this.props
     const drawing = !!unfinishedFigure
-
+    const f = null
     switch (eventType) {
       case 'add':
         if (drawing) {
@@ -76,7 +76,7 @@ class Canvas extends Component {
         break
 
       case 'end':
-        const f = unfinishedFigure
+        f = unfinishedFigure
         onChange('new', f)
         break
 
@@ -157,14 +157,14 @@ class Canvas extends Component {
 
     const unfinishedDrawingDOM = drawing
       ? this.renderFigure(unfinishedFigure, {
-          finished: false,
-          editing: false,
-          interactive: false,
-          color: colorMapping[unfinishedFigure.color],
-          onChange: this.handleChange,
-          calcDistance,
-          newPoint: cursorPos
-        })
+        finished: false,
+        editing: false,
+        interactive: false,
+        color: colorMapping[unfinishedFigure.color],
+        onChange: this.handleChange,
+        calcDistance,
+        newPoint: cursorPos
+      })
       : null
 
     const getColor = f =>
