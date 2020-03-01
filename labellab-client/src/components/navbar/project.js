@@ -1,13 +1,72 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { Image, Header, Dropdown, Icon } from 'semantic-ui-react'
+import { Link, withRouter } from 'react-router-dom'
+import _ from 'lodash'
+import {
+  Image,
+  Header,
+  Dropdown,
+  Icon,
+  Search,
+  Grid,
+  Label
+} from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { hasToken } from '../../utils/token'
 import { fetchUser } from '../../actions/index'
 import { TOKEN_TYPE } from '../../constants/index'
 import './css/navbar.css'
+
+const initialState = { isLoading: false, results: [], value: '', }
+
+const resultRenderer = ({
+  imageName,
+  createdAt }) =>
+  (
+    <>
+      <Label content={imageName} />
+      <Label content={new Date(createdAt).toISOString().substring(0, 10)} />
+    </>
+  )
+
+
+resultRenderer.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
+}
+
 class ProjectNavbar extends Component {
+  state = initialState
+
+  handleResultSelect = (e, { result }) => {
+    const { projectId } = this.props.project
+    this.setState({
+      value: result.imageName,
+      projectId: projectId
+    })
+    this.props.history.push(
+      '/project/' +
+      projectId +
+      '/images/#' +
+      result._id
+    )
+  }
+
+  handleSearchChange = (e, { value }) => {
+    this.setState({ isLoading: true, value })
+
+    setTimeout(() => {
+      if (this.state.value.length < 1) return this.setState(initialState)
+
+      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+      const isMatch = (result) => re.test(result.imageName)
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(this.props.project.images, isMatch),
+      })
+    }, 300)
+  }
   componentDidMount() {
     if (hasToken(TOKEN_TYPE)) {
       this.props.fetchUser()
@@ -23,6 +82,7 @@ class ProjectNavbar extends Component {
   }
   render() {
     const { title, isfetching, user } = this.props
+    const { isLoading, value, results } = this.state
     return (
       <div className="navbar">
         <div className="startnav">
@@ -34,6 +94,22 @@ class ProjectNavbar extends Component {
           </div>
         </div>
         <div className="navbar-title">
+          <Grid>
+            <Grid.Column width={6}>
+              <Search
+                loading={isLoading}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                  leading: true,
+                })}
+                results={results}
+                value={value}
+                resultRenderer={resultRenderer}
+                placeholder="Search Images..."
+                {...this.props}
+              />
+            </Grid.Column>
+          </Grid>
           <Header textAlign="center" as="h2" content={title} />
         </div>
         <div className="subnavbar">
@@ -83,13 +159,20 @@ ProjectNavbar.propTypes = {
   history: PropTypes.object,
   user: PropTypes.object,
   fetchUser: PropTypes.func,
-  title: PropTypes.string
+  title: PropTypes.string,
+  project: PropTypes.object,
 }
 
 const mapStateToProps = state => {
+  const imageName = state.projects.currentProject.images ?
+    state.projects.currentProject.images.map(image => image.imageName)
+    : null
   return {
+    labels: state.labels.labels,
+    project: state.projects.currentProject,
     user: state.user.userDetails,
-    isfetching: state.user.userActions.isfetching
+    isfetching: state.user.userActions.isfetching,
+    imageName
   }
 }
 
