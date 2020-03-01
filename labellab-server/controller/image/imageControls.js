@@ -6,6 +6,8 @@ const Project = require('../../models/project')
 const Label = require('../../models/label')
 
 const ObjectID = require('mongodb').ObjectID
+const builder = require('xmlbuilder');
+const archiver = require('archiver');
 
 exports.postImage = function(req, res) {
   if (
@@ -257,5 +259,111 @@ exports.deleteImage = function(req, res) {
       success: true,
       msg: 'Image(s) deleted successfully!'
     })
+  } else res.status(400).send({ success: false, msg: 'Invalid Data' })
+}
+
+exports.exportDataset = function(req, res) {
+  `
+  Example annotation:
+  <annotation>
+    <filename>test.png</filename>
+    <size>
+      <width>1250</width>
+      <height>1250</height>
+      <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+      <name>text</name>
+      <truncated>0</truncated>
+      <difficult>0</difficult>
+      <bndbox>
+        <xmin>406</xmin>
+        <ymin>380</ymin>
+        <xmax>850</xmax>
+        <ymax>879</ymax>
+      </bndbox>
+    </object>
+  </annotation>
+  `
+  function createXML(image) {
+    let doc = builder.create('annotation');
+    doc = doc.ele('filename').txt(image.imageName)
+       .up()
+       .ele('size')
+       .ele('width').txt(image.width).up()
+       .ele('height').txt(image.height).up()
+       .ele('depth').txt('3').up()
+       .up()
+       .ele('segmented').txt('0')
+       .up()
+    // Loop over labelData keys to create bounding_boxes
+    for(let labelId in image.labelData) {
+      if (labelId === '__temp') continue
+      Label.find({
+        id: labelId
+      })
+        .select('name')
+        .exec((err, label) => {
+          const name = label[0].name
+          Array.from(image.labelData[labelId]).forEach(box => {
+            const [min, max] = box.points
+            xmin = min.lng 
+            ymin = min.lat 
+            xmax = max.lng
+            ymax = max.lat
+
+            let object = builder.create('object')
+            object = object
+              .ele('name').txt(name)
+              .up()
+              object.ele('pose').txt('Unspecified')
+              .up()
+              object.ele('truncated').txt('0')
+              .up()
+              object.ele('difficult').txt('0')
+              .up()
+              object.ele('bndbox')
+              .ele('xmin').txt(`${xmin}`).up()
+              .ele('ymin').txt(`${ymin}`).up()
+              .ele('xmax').txt(`${xmax}`).up()
+              .ele('ymax').txt(`${ymax}`).up()
+              .up()
+            doc.children.push(object)
+          })
+        })
+    }
+    setTimeout(() => {
+      // save the file in annotations/ directory
+      const dir = './public/uploads/annotations/'
+
+      if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+      }
+      fs.appendFileSync(`${dir}${image.imageName.split('.')[0]}.xml`, doc.toString({ pretty: true }), err => {})
+    }, 1000)
+  }
+
+  if (req) {
+    Image.find()
+      .exec(function(err, result) {
+        // create annotations for all images
+        Array.from(result).forEach(image => createXML(image))
+        // create a zip of annotations
+        const dir = './public/uploads/'
+        let stream = fs.createWriteStream(`${dir}annotations.zip`);
+        let archive = archiver('zip');
+
+        archive
+          .directory(`${dir}/annotations/`, false)
+          .on('error', err => reject(err))
+          .pipe(stream)
+        
+        archive.finalize()
+        res.status(200).send({
+          success: true,
+          msg: 'Done!'
+        })
+      })
   } else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }

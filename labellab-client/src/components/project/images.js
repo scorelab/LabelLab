@@ -12,7 +12,12 @@ import {
   Icon
 } from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
-import { submitImage, deleteImage, fetchProject } from '../../actions/index'
+import { 
+  submitImage, 
+  deleteImage, 
+  fetchProject, 
+  exportDataset,
+} from '../../actions/index'
 import './css/images.css'
 
 class ImagesIndex extends Component {
@@ -110,6 +115,26 @@ class ImagesIndex extends Component {
       maxSizeError: ''
     })
   }
+  handleExportDataset = () => {
+    // send get request for zip file URL
+    const { exportDataset, project, fetchProject } = this.props
+    exportDataset(fetchProject(project.projectId))
+    let downloadAnchor = document.createElement('a')
+    downloadAnchor.setAttribute(
+      'href',    
+      'http://' +
+      process.env.REACT_APP_HOST +
+      ':' +
+      process.env.REACT_APP_SERVER_PORT +
+      `/static/uploads/annotations.zip?${Date.now()}`
+    )
+    downloadAnchor.setAttribute('download', 'annotations.zip')
+    downloadAnchor.style.display = 'hidden'
+    downloadAnchor.id = 'downloadAnchor'
+    downloadAnchor.click()
+    // Removing the hidden tag
+    downloadAnchor.remove()
+  }
 
   render() {
     const { imageActions, project } = this.props
@@ -135,6 +160,13 @@ class ImagesIndex extends Component {
           >
             Add Image
           </label>
+          <button 
+            onClick={this.handleExportDataset}
+            style={{ textDecoration: 'none', color: 'white' }}
+            className="ui medium primary left floated button custom-margin">
+            Export dataset
+          </button>
+          
         </div>
 
         {showform ? (
@@ -228,7 +260,8 @@ ImagesIndex.propTypes = {
   history: PropTypes.object,
   fetchProject: PropTypes.func,
   submitImage: PropTypes.func,
-  deleteImage: PropTypes.func
+  deleteImage: PropTypes.func,
+  exportDataset: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -248,6 +281,9 @@ const mapDispatchToProps = dispatch => {
     },
     deleteImage: (imageId, projectId, callback) => {
       return dispatch(deleteImage(imageId, projectId, callback))
+    },
+    exportDataset: (callback) => {
+      return dispatch(exportDataset(callback))
     }
   }
 }
@@ -285,7 +321,9 @@ const Row = ({
     <Table.Cell style={columnStyles[1]}>
       <a
         href={
+          'http://' +
           process.env.REACT_APP_HOST +
+          ':' +
           process.env.REACT_APP_SERVER_PORT +
           `/static/uploads/${image.imageUrl}?${Date.now()}`
         }

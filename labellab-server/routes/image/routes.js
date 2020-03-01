@@ -13,6 +13,7 @@ router.post('/:projectId/create', requireAuth, imageControls.postImage)
 // GET method
 // To fetch a image
 router.get('/:imageId/get', requireAuth, imageControls.fetchImageId)
+router.get('/export', requireAuth, imageControls.exportDataset)
 
 // PUT method
 // To update labelData details

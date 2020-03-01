@@ -11,6 +11,7 @@
     "test": "mocha --timeout 120000"
   },
   "dependencies": {
+    "archiver": "^3.1.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -36,7 +37,8 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "validator": "^10.11.0"
+    "validator": "^10.11.0",
+    "xmlbuilder": "^14.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
