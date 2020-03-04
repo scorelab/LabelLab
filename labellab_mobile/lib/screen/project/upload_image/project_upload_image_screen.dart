@@ -4,6 +4,7 @@ import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class ProjectUploadImageScreen extends StatelessWidget {
@@ -74,18 +75,35 @@ class ProjectUploadImageScreen extends StatelessWidget {
             ),
             image.state == UploadImageState.PENDING
                 ? Positioned(
-                    right: 8,
                     top: 8,
-                    child: GestureDetector(
-                      child: Icon(
-                        Icons.cancel,
-                        size: 28,
-                        color: Colors.black54,
-                      ),
-                      onTap: () {
-                        Provider.of<ProjectUploadImageBloc>(context)
-                            .unselectImage(image);
-                      },
+                    left: 8,
+                    right: 8,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        GestureDetector(
+                          child: Icon(
+                            Icons.edit,
+                            size: 28,
+                            color: Colors.black54,
+                          ),
+                          onTap: () {
+                            _gotoEditImage(context, image);
+                          },
+                        ),
+                        GestureDetector(
+                          child: Icon(
+                            Icons.cancel,
+                            size: 28,
+                            color: Colors.black54,
+                          ),
+                          onTap: () {
+                            Provider.of<ProjectUploadImageBloc>(context)
+                                .unselectImage(image);
+                          },
+                        ),
+                      ],
                     ),
                   )
                 : Container(),
@@ -158,5 +176,11 @@ class ProjectUploadImageScreen extends StatelessWidget {
         Navigator.pop(context);
       }
     });
+  }
+
+  void _gotoEditImage(BuildContext context, UploadImage image) {
+    final imagePath = image.image.path.replaceAll(new RegExp('/'), '#');
+    Logger().d(imagePath);
+    Application.router.navigateTo(context, '/project/' + imagePath + "/edit");
   }
 }
