@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/screen/project/edit_image/project_edit_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/edit_image/project_edit_image_state.dart';
 import 'package:labellab_mobile/widgets/label_icon_button.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 
 class ProjectEditImageScreen extends StatelessWidget {
@@ -18,10 +19,19 @@ class ProjectEditImageScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text("Edit Image"),
             elevation: 0,
+            leading: _buildBackButton(context, snapshot),
           ),
           body: _buildBody(context, snapshot),
         );
       },
+    );
+  }
+
+  Widget _buildBackButton(
+      BuildContext context, AsyncSnapshot<ProjectEditImageState> snapshot) {
+    return IconButton(
+      icon: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+      onPressed: () => Navigator.pop(context, snapshot.data.image),
     );
   }
 
@@ -52,11 +62,9 @@ class ProjectEditImageScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  LabelIconButton(
-                    Icons.crop,
-                    "Crop",
-                    onTap: _showImageCrop,
-                  ),
+                  LabelIconButton(Icons.crop, "Crop", onTap: () {
+                    _showImageCrop(context, _state.image);
+                  }),
                   LabelIconButton(
                     Icons.photo_size_select_large,
                     "Resize",
@@ -73,7 +81,40 @@ class ProjectEditImageScreen extends StatelessWidget {
     }
   }
 
-  void _showImageCrop() {}
+  void _showImageCrop(BuildContext context, File image) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: image.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Theme.of(context).accentColor,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Crop Image',
+        ));
+    if (croppedFile != null) {
+      Provider.of<ProjectEditImageBloc>(context).cropImage(croppedFile);
+    }
+  }
 
   void _showImageResize() {}
 }

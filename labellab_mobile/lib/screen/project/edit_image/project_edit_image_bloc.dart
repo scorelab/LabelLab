@@ -23,6 +23,11 @@ class ProjectEditImageBloc {
     _stateController.add(ProjectEditImageState.success(image: _image));
   }
 
+  void cropImage(File croppedFile) {
+    _image = croppedFile;
+    _stateController.add(ProjectEditImageState.success(image: _image));
+  }
+
   StreamController<ProjectEditImageState> _stateController =
       StreamController<ProjectEditImageState>();
 

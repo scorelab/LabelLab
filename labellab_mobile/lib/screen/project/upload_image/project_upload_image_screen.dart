@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -178,9 +180,15 @@ class ProjectUploadImageScreen extends StatelessWidget {
     });
   }
 
-  void _gotoEditImage(BuildContext context, UploadImage image) {
+  void _gotoEditImage(BuildContext context, UploadImage image) async {
+    final imageIndex =
+        Provider.of<ProjectUploadImageBloc>(context).getImageIndex(image);
+    Logger().i(imageIndex);
     final imagePath = image.image.path.replaceAll(new RegExp('/'), '#');
-    Logger().d(imagePath);
-    Application.router.navigateTo(context, '/project/' + imagePath + "/edit");
+    final updatedImage = await Application.router
+        .navigateTo(context, '/project/' + imagePath + "/edit") as File;
+
+    Provider.of<ProjectUploadImageBloc>(context)
+        .updateImage(imageIndex, updatedImage);
   }
 }
