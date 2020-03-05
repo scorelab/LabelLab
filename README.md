@@ -23,7 +23,7 @@ Run `npm install` in `labellab-client` folder.
 
 ```
  cd labellab-client/
- npm install
+ npm install -d
  ```
  
 #### Set up MongoDB backend
@@ -32,7 +32,7 @@ Run `npm install` in `labellab-server` folder.
 
 ```
  cd labellab-server/
- npm install
+ npm install -d
  ```
     
 #### How to Use
