@@ -29,6 +29,11 @@ class ProjectUploadImageBloc {
     _stateController.add(ProjectUploadImageState.imageChange(images: _images));
   }
 
+  void updateImage(int index, File image) {
+    _images[index] = UploadImage(image: image);
+    _stateController.add(ProjectUploadImageState.imageChange(images: _images));
+  }
+
   void uploadImages() {
     if (_isUploading) return;
     _isUploading = true;
@@ -54,6 +59,10 @@ class ProjectUploadImageBloc {
     }).listen((response) {
       print(response.msg);
     });
+  }
+
+  int getImageIndex(UploadImage image) {
+    return _images.indexOf(image);
   }
 
   // Project stream
