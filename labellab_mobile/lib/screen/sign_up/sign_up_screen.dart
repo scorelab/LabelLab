@@ -48,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       LabelTextFormField(
                         labelText: "Username",
                         onSaved: (String value) {
-                          _user.username = value;
+                          _user.username = value.trim();
                         },
                         validator: _validateUsername,
                       ),
@@ -59,7 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         labelText: "Name",
                         textCapitalization: TextCapitalization.words,
                         onSaved: (String value) {
-                          _user.name = value;
+                          _user.name = value.trim();
                         },
                         validator: _validateName,
                       ),
@@ -69,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       LabelTextFormField(
                         labelText: "Email",
                         onSaved: (String value) {
-                          _user.email = value;
+                          _user.email = value.trim();
                         },
                         validator: _validateEmail,
                       ),
@@ -158,7 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return "Email can't be empty";
     } else if (!RegExp(
             r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-        .hasMatch(email)) {
+        .hasMatch(email.trim())) {
       return "Invalid email";
     }
     return null;
