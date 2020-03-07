@@ -78,7 +78,8 @@ class ImagesIndex extends Component {
         file: '',
         imageNames: [],
         showform: !this.state.showform,
-        format: ''
+        format: '',
+        maxSizeError:''
       })
     }
 
@@ -224,7 +225,6 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
     <Table.Cell style={columnStyles[1]}>
       <a
         href={
-          'http://' +
           process.env.REACT_APP_HOST +
           ':' +
           process.env.REACT_APP_SERVER_PORT +
