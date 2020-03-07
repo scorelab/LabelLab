@@ -16,7 +16,8 @@ class ImagesIndex extends Component {
       imageNames: [],
       projectId: '',
       showform: false,
-      format: ''
+      format: '',
+      maxSizeError:''
     }
   }
   handleImageChange = e => {
@@ -42,6 +43,11 @@ class ImagesIndex extends Component {
     e.preventDefault()
     const { project, fetchProject, submitImage } = this.props
     const { imageNames, images, format } = this.state
+    if (this.state.file && this.state.file.size > 101200) {
+      this.setState({
+        maxSizeError: 'max sized reached'
+      })
+    } else {
     let data = {
       imageNames: imageNames,
       images: images,
@@ -57,149 +63,151 @@ class ImagesIndex extends Component {
       fetchProject(project.projectId)
     })
   }
-  handleDelete = imageId => {
-    const { deleteImage, project, fetchProject } = this.props
-    deleteImage(imageId, project.projectId, fetchProject(project.projectId))
-  }
-  handleNameChange = e => {
-    const value = e.target.value
-    this.setState({ imageNames: [value] })
-  }
-  removeImage = () => {
-    this.setState({
-      images: [],
-      file: '',
-      imageNames: [],
-      showform: !this.state.showform,
-      format: ''
-    })
-  }
+}
+    handleDelete = imageId => {
+      const { deleteImage, project, fetchProject } = this.props
+      deleteImage(imageId, project.projectId, fetchProject(project.projectId))
+    }
+    handleNameChange = e => {
+      const value = e.target.value
+      this.setState({ imageNames: [value] })
+    }
+    removeImage = () => {
+      this.setState({
+        images: [],
+        file: '',
+        imageNames: [],
+        showform: !this.state.showform,
+        format: ''
+      })
+    }
 
-  render() {
-    const { imageActions, project } = this.props
-    const { showform, imageName } = this.state
-    return (
-      <div>
-        {imageActions.isdeleting ? (
-          <Dimmer active>
-            <Loader indeterminate>Removing Image :(</Loader>
-          </Dimmer>
-        ) : null}
+    render() {
+      const { imageActions, project } = this.props
+      const { showform, imageName } = this.state
+      return (
         <div>
-          <input
-            type="file"
-            multiple
-            onChange={this.handleImageChange}
-            className="image-file-input"
-            id="image-embedpollfileinput"
-          />
-          <label
-            htmlFor="image-embedpollfileinput"
-            className="ui medium primary left floated button custom-margin"
-          >
-            Add Image
+          {imageActions.isdeleting ? (
+            <Dimmer active>
+              <Loader indeterminate>Removing Image :(</Loader>
+            </Dimmer>
+          ) : null}
+          <div>
+            <input
+              type="file"
+              multiple
+              onChange={this.handleImageChange}
+              className="image-file-input"
+              id="image-embedpollfileinput"
+            />
+            <label
+              htmlFor="image-embedpollfileinput"
+              className="ui medium primary left floated button custom-margin"
+            >
+              Add Image
           </label>
-        </div>
+          </div>
 
-        {showform ? (
-          <Form
-            className="file-submit-form"
-            encType="multiple/form-data"
-            onSubmit={this.handleSubmit}
-          >
-            {this.state.images.length == 1 && (
-              <Form.Field>
-                <label>Image Name</label>
-                <input
-                  name="imageName"
-                  value={imageName}
-                  onChange={this.handleNameChange}
-                  placeholder="Image Name"
-                />
-              </Form.Field>
-            )}
-
-            <Button loading={imageActions.isposting} type="submit">
-              Submit
-            </Button>
-            <Button onClick={this.removeImage} type="delete">
-              Cancel
-            </Button>
-          </Form>
-        ) : null}
-        <Table
-          celled
-          style={{ display: 'flex', flexDirection: 'column', height: 600 }}
-        >
-          <Table.Header className="image-table-header">
-            <Table.Row className="flex image-table-row-back">
-              <Table.HeaderCell style={columnStyles[0]}>ID</Table.HeaderCell>
-              <Table.HeaderCell style={columnStyles[1]}>
-                Image Link
-              </Table.HeaderCell>
-              <Table.HeaderCell style={columnStyles[2]}>
-                Actions
-              </Table.HeaderCell>
-              <Table.HeaderCell className="image-table-special-headercell" />
-            </Table.Row>
-          </Table.Header>
-          <Table.Body className="image-table-body">
-            {project.images && project.images.length > 0 ? (
-              <AutoSizedList
-                rowHeight={55}
-                rowCount={project && project.images && project.images.length}
-                style={{ overflowY: 'scroll' }}
-                rowRenderer={({ index, style, key }) => (
-                  <Row
-                    key={key}
-                    style={style}
-                    image={project.images[index]}
-                    projectId={project.projectId}
-                    onDelete={this.handleDelete}
-                    imageId={index}
+          {showform ? (
+            <Form
+              className="file-submit-form"
+              encType="multiple/form-data"
+              onSubmit={this.handleSubmit}
+            >
+              {this.state.images.length == 1 && (
+                <Form.Field>
+                  <label>Image Name</label>
+                  <input
+                    name="imageName"
+                    value={imageName}
+                    onChange={this.handleNameChange}
+                    placeholder="Image Name"
                   />
-                )}
-                overscanRowCount={10}
-              />
-            ) : null}
-          </Table.Body>
-        </Table>
-      </div>
-    )
-  }
-}
+                </Form.Field>
+              )}
 
-ImagesIndex.propTypes = {
-  project: PropTypes.object,
-  imageActions: PropTypes.object,
-  history: PropTypes.object,
-  fetchProject: PropTypes.func,
-  submitImage: PropTypes.func,
-  deleteImage: PropTypes.func
-}
-
-const mapStateToProps = state => {
-  return {
-    project: state.projects.currentProject,
-    imageActions: state.images.imageActions
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchProject: data => {
-      return dispatch(fetchProject(data))
-    },
-    submitImage: (data, callback) => {
-      return dispatch(submitImage(data, callback))
-    },
-    deleteImage: (imageId, projectId, callback) => {
-      return dispatch(deleteImage(imageId, projectId, callback))
+              <Button loading={imageActions.isposting} type="submit">
+                Submit
+            </Button>
+              <Button onClick={this.removeImage} type="delete">
+                Cancel
+            </Button>
+            {this.state.maxSizeError? <div className="max-size-error">The size of the file should not be greater than 101Kb!</div>:null}
+            </Form>
+          ) : null}
+          <Table
+            celled
+            style={{ display: 'flex', flexDirection: 'column', height: 600 }}
+          >
+            <Table.Header className="image-table-header">
+              <Table.Row className="flex image-table-row-back">
+                <Table.HeaderCell style={columnStyles[0]}>ID</Table.HeaderCell>
+                <Table.HeaderCell style={columnStyles[1]}>
+                  Image Link
+              </Table.HeaderCell>
+                <Table.HeaderCell style={columnStyles[2]}>
+                  Actions
+              </Table.HeaderCell>
+                <Table.HeaderCell className="image-table-special-headercell" />
+              </Table.Row>
+            </Table.Header>
+            <Table.Body className="image-table-body">
+              {project.images && project.images.length > 0 ? (
+                <AutoSizedList
+                  rowHeight={55}
+                  rowCount={project && project.images && project.images.length}
+                  style={{ overflowY: 'scroll' }}
+                  rowRenderer={({ index, style, key }) => (
+                    <Row
+                      key={key}
+                      style={style}
+                      image={project.images[index]}
+                      projectId={project.projectId}
+                      onDelete={this.handleDelete}
+                      imageId={index}
+                    />
+                  )}
+                  overscanRowCount={10}
+                />
+              ) : null}
+            </Table.Body>
+          </Table>
+        </div>
+      )
     }
   }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
+  ImagesIndex.propTypes = {
+    project: PropTypes.object,
+    imageActions: PropTypes.object,
+    history: PropTypes.object,
+    fetchProject: PropTypes.func,
+    submitImage: PropTypes.func,
+    deleteImage: PropTypes.func
+  }
+
+  const mapStateToProps = state => {
+    return {
+      project: state.projects.currentProject,
+      imageActions: state.images.imageActions
+    }
+  }
+
+  const mapDispatchToProps = dispatch => {
+    return {
+      fetchProject: data => {
+        return dispatch(fetchProject(data))
+      },
+      submitImage: (data, callback) => {
+        return dispatch(submitImage(data, callback))
+      },
+      deleteImage: (imageId, projectId, callback) => {
+        return dispatch(deleteImage(imageId, projectId, callback))
+      }
+    }
+  }
+
+  export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
 
 const columnStyles = [
   { flex: '0 0 80px', lineHeight: '32px' },

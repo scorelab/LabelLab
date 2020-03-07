@@ -110,6 +110,11 @@ class Profile extends Component {
                       Edit
                     </label>
                   </div>
+                  {
+                    this.state.max_size_error ?
+                      <div className="image_size_error">Max size of the profile pic should be 101Kb</div>
+                      : null
+                  }
                 </div>
                 <div className="profile-first-rightbar">
                   <Edit />
@@ -138,9 +143,9 @@ class Profile extends Component {
                     <Dropdown item text='Project Analytics'>
                       <Dropdown.Menu>
                         {
-                          this.props.projects.map(project=>
-                            <Dropdown.Item as={Link} to={'/project/'+project._id+'/analytics'}>
-                            {project.projectName}
+                          this.props.projects.map(project =>
+                            <Dropdown.Item as={Link} to={'/project/' + project._id + '/analytics'}>
+                              {project.projectName}
                             </Dropdown.Item>
                           )
                         }
@@ -170,17 +175,17 @@ class Profile extends Component {
                         </Card>
                       ))
                     ) : (
-                      <CardLoader />
-                    )}
+                        <CardLoader />
+                      )}
                   </Card.Group>
                 </div>
               </div>
             </React.Fragment>
           ) : (
-            <Dimmer active>
-              <Loader indeterminate>Loading..</Loader>
-            </Dimmer>
-          )}
+              <Dimmer active>
+                <Loader indeterminate>Loading..</Loader>
+              </Dimmer>
+            )}
         </Container>
       </div>
     )
