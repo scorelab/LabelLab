@@ -4,23 +4,23 @@ class LabelType {
 }
 
 class Label {
+  String labelID;
   String id;
   String name;
   String type;
-  String mongoId;
 
-  Label({this.id, this.name, this.type, this.mongoId});
+  Label({this.id, this.name, this.type, this.labelID});
 
   Label.fromJson(dynamic json) {
+    labelID = json["_id"];
     id = json["id"];
     name = json["name"];
     type = json["type"];
-    mongoId = json["_id"];
   }
 
   Map<String, dynamic> toMap() {
     return {
-      "_id": mongoId,
+      "_id": labelID,
       "id": id,
       "name": name,
       "type": type,

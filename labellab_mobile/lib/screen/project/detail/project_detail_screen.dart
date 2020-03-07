@@ -386,7 +386,7 @@ class ProjectDetailScreen extends StatelessWidget {
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
               Provider.of<ProjectDetailBloc>(baseContext)
-                  .deleteLabel(label.mongoId);
+                  .deleteLabel(label.labelID);
               Navigator.of(context).pop(true);
             },
           );
