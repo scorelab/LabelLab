@@ -99,6 +99,10 @@ class LabelToolBloc {
         currentSelection: _currentSelection, labels: _labels));
   }
 
+  void refresh() {
+    _loadImageAndLabels();
+  }
+
   void uploadSelections() {
     print("Uploading selections");
     if (_isLoading) return;
