@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
 import 'package:labellab_mobile/screen/classify/classify_state.dart';
+import 'package:labellab_mobile/widgets/image_compress_dialog.dart';
 import 'package:labellab_mobile/widgets/selected_image.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class ClassifyScreen extends StatefulWidget {
@@ -43,7 +48,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
               ClassifyState state = snapshot.data;
               if (state.classification != null) {
                 WidgetsBinding.instance.addPostFrameCallback(
-                    (_) => _gotoClassificationDetail(state.classification.id));
+                        (_) => _gotoClassificationDetail(state.classification.id));
               }
               return ListView(
                 children: <Widget>[
@@ -107,9 +112,10 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
   }
 
   void _showImagePicker(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source).then((image) {
+    ImagePicker.pickImage(source: source).then((image) async {
       if (image != null) {
-        Provider.of<ClassifyBloc>(context).classifyImage(image);
+        File img = await _showImageCompressAlert(context, image);
+        Provider.of<ClassifyBloc>(context).classifyImage(img);
       } else {
         Application.router.pop(context);
       }
@@ -119,4 +125,30 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
   void _gotoClassificationDetail(String id) {
     Application.router.navigateTo(context, "/classification/$id", replace: true);
   }
+
+
+  Future<File> _showImageCompressAlert(BuildContext baseContext,
+      File image) async {
+    await showDialog(
+        context: baseContext,
+        builder: (context) {
+          return ImageCompressDialog(
+            onCancel: () {
+              Navigator.pop(context, false);
+            },
+            onConfirm: () async {
+              image = await FlutterImageCompress.compressAndGetFile(
+                  image.absolute.path,
+                  (await getApplicationDocumentsDirectory()).path + image.path
+                      ?.split("/")
+                      ?.last,
+                  quality: 70
+              );
+              Navigator.pop(context, true);
+            },
+          );
+        });
+    return image;
+  }
+
 }
