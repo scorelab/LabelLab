@@ -3,12 +3,17 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_item.dart';
+import 'package:labellab_mobile/screen/project/project_search_screen.dart';
 import 'package:labellab_mobile/screen/project/project_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/empty_placeholder.dart';
 import 'package:provider/provider.dart';
 
+import 'project_state.dart';
+
 class ProjectScreen extends StatelessWidget {
+  ProjectState _projectState;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,12 +21,20 @@ class ProjectScreen extends StatelessWidget {
         title: Text("Projects"),
         centerTitle: true,
         elevation: 0,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                _gotoProjectSearch(context);
+              })
+        ],
       ),
       body: StreamBuilder(
         stream: Provider.of<ProjectBloc>(context).projects,
         initialData: ProjectState.loading(),
         builder: (context, AsyncSnapshot<ProjectState> snapshot) {
           final ProjectState state = snapshot.data;
+          this._projectState = state;
           if (state.projects != null && state.projects.isNotEmpty) {
             return RefreshIndicator(
               onRefresh: () async {
@@ -31,33 +44,36 @@ class ProjectScreen extends StatelessWidget {
                 children: <Widget>[
                   state.isLoading
                       ? LinearProgressIndicator(
-                          backgroundColor: Theme.of(context).canvasColor,
-                        )
+                    backgroundColor: Theme
+                        .of(context)
+                        .canvasColor,
+                  )
                       : Container(
-                          height: 6,
-                        ),
+                    height: 6,
+                  ),
                   state.error != null
                       ? ListTile(
-                          title: Text(state.error),
-                        )
+                    title: Text(state.error),
+                  )
                       : Container(),
                   state.projects != null
                       ? Column(
-                          children: state.projects
-                              .map((project) => ProjectItem(
-                                    project,
-                                    onItemTapped: () {
-                                      _gotoProjectDetail(context, project.id);
-                                    },
-                                    onEditSelected: () {
-                                      _gotoEditProject(context, project.id);
-                                    },
-                                    onDeleteSelected: () {
-                                      _showDeleteConfirmation(context, project);
-                                    },
-                                  ))
-                              .toList(),
-                        )
+                    children: state.projects
+                        .map((project) =>
+                        ProjectItem(
+                          project,
+                          onItemTapped: () {
+                            _gotoProjectDetail(context, project.id);
+                          },
+                          onEditSelected: () {
+                            _gotoEditProject(context, project.id);
+                          },
+                          onDeleteSelected: () {
+                            _showDeleteConfirmation(context, project);
+                          },
+                        ))
+                        .toList(),
+                  )
                       : Container(),
                 ],
               ),
@@ -83,6 +99,10 @@ class ProjectScreen extends StatelessWidget {
     Application.router.navigateTo(context, "/project/add").whenComplete(() {
       Provider.of<ProjectBloc>(context).refresh();
     });
+  }
+
+  void _gotoProjectSearch(BuildContext context) {
+    showSearch(context: context, delegate: ProjectSearchScreen(_projectState));
   }
 
   void _gotoProjectDetail(BuildContext context, String id) {
