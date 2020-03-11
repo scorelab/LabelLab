@@ -1,6 +1,7 @@
 .project-main {
   display: flex;
 }
+
 .project-non-side-section {
   width: 100%;
   margin-right: unset !important;
@@ -18,4 +19,12 @@
     margin-right: unset !important;
     min-height: 50%;
   }
+}
+
+.project-non-side-section {
+    width: 75%;
+}
+
+.labelDropdown {
+    margin-left: 25vw;
 }
