@@ -1,7 +1,8 @@
 import 'dart:io';
 
 class ProjectEditImageState {
-  bool isLoading;
+  bool isLoading = false;
+  bool isEdited = false;
   String error;
   File image;
 
@@ -9,11 +10,11 @@ class ProjectEditImageState {
     isLoading = true;
   }
 
-  ProjectEditImageState.error(this.error, {this.image}) {
-    isLoading = false;
-  }
+  ProjectEditImageState.error(this.error, {this.image});
 
-  ProjectEditImageState.success({this.image}) {
-    isLoading = false;
+  ProjectEditImageState.success({this.image});
+
+  ProjectEditImageState.edited({this.image}) {
+    isEdited = true;
   }
 }
