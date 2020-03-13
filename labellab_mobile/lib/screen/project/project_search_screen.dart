@@ -60,7 +60,11 @@ class ProjectSearchScreen extends SearchDelegate {
               state.projects != null
                   ? Column(
                       children: state.projects
-                          .where((project) => project.name
+                          .where((project) =>
+                      project.name
+                          .toLowerCase()
+                          .contains(query.toLowerCase()) ||
+                          project.description
                               .toLowerCase()
                               .contains(query.toLowerCase()))
                           .map((project) => ProjectItem(
@@ -115,12 +119,7 @@ class ProjectSearchScreen extends SearchDelegate {
                                 onItemTapped: () {
                                   _gotoProjectDetail(context, project.id);
                                 },
-                                onEditSelected: () {
-                                  _gotoEditProject(context, project.id);
-                                },
-                                onDeleteSelected: () {
-                                  _showDeleteConfirmation(context, project);
-                                },
+                        shouldHaveOptions: false,
                               ))
                           .toList(),
                     )

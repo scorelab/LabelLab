@@ -12,31 +12,31 @@ import 'package:provider/provider.dart';
 import 'project_state.dart';
 
 class ProjectScreen extends StatelessWidget {
-  ProjectState _projectState;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Projects"),
-        centerTitle: true,
-        elevation: 0,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                _gotoProjectSearch(context);
-              })
-        ],
-      ),
-      body: StreamBuilder(
-        stream: Provider.of<ProjectBloc>(context).projects,
-        initialData: ProjectState.loading(),
-        builder: (context, AsyncSnapshot<ProjectState> snapshot) {
-          final ProjectState state = snapshot.data;
-          this._projectState = state;
-          if (state.projects != null && state.projects.isNotEmpty) {
-            return RefreshIndicator(
+    return StreamBuilder(
+      stream: Provider
+          .of<ProjectBloc>(context)
+          .projects,
+      initialData: ProjectState.loading(),
+      builder: (context, AsyncSnapshot<ProjectState> snapshot) {
+        final ProjectState state = snapshot.data;
+        if (state.projects != null && state.projects.isNotEmpty) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Projects"),
+              centerTitle: true,
+              elevation: 0,
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      _gotoProjectSearch(context, state);
+                    })
+              ],
+            ),
+            body: RefreshIndicator(
               onRefresh: () async {
                 Provider.of<ProjectBloc>(context).refresh();
               },
@@ -77,21 +77,36 @@ class ProjectScreen extends StatelessWidget {
                       : Container(),
                 ],
               ),
-            );
-          } else {
-            return EmptyPlaceholder(
-                description: "Your projects will appear here");
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "project_add_tag",
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: () => _gotoAddProject(context),
-      ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              heroTag: "project_add_tag",
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () => _gotoAddProject(context),
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Projects"),
+              centerTitle: true,
+              elevation: 0,
+            ),
+            body: EmptyPlaceholder(
+                description: "Your projects will appear here"),
+            floatingActionButton: FloatingActionButton(
+              heroTag: "project_add_tag",
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () => _gotoAddProject(context),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -101,8 +116,8 @@ class ProjectScreen extends StatelessWidget {
     });
   }
 
-  void _gotoProjectSearch(BuildContext context) {
-    showSearch(context: context, delegate: ProjectSearchScreen(_projectState));
+  void _gotoProjectSearch(BuildContext context, ProjectState _state) {
+    showSearch(context: context, delegate: ProjectSearchScreen(_state));
   }
 
   void _gotoProjectDetail(BuildContext context, String id) {

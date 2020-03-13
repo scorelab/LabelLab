@@ -246,3 +246,4 @@ $RECYCLE.BIN/
 
 # User
 config/keys.js
+package-lock.json

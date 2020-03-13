@@ -6,16 +6,17 @@ class ProjectItem extends StatelessWidget {
   final VoidCallback onItemTapped;
   final VoidCallback onEditSelected;
   final VoidCallback onDeleteSelected;
+  final bool shouldHaveOptions;
 
   const ProjectItem(this.project,
-      {Key key, this.onItemTapped, this.onDeleteSelected, this.onEditSelected})
+      {Key key, this.onItemTapped, this.onDeleteSelected, this.onEditSelected, this.shouldHaveOptions = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(project.name),
-      trailing: PopupMenuButton<int>(
+      trailing: shouldHaveOptions ? PopupMenuButton<int>(
         onSelected: (int selected) {
           switch (selected) {
             case 0:
@@ -38,7 +39,7 @@ class ProjectItem extends StatelessWidget {
             )
           ];
         },
-      ),
+      ) : null,
       onTap: this.onItemTapped,
     );
   }
