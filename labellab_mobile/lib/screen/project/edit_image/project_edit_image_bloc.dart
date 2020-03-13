@@ -5,6 +5,7 @@ import 'package:labellab_mobile/screen/project/edit_image/project_edit_image_sta
 import 'package:logger/logger.dart';
 
 class ProjectEditImageBloc {
+  File _original;
   File _image;
   bool _isLoading = false;
 
@@ -19,12 +20,18 @@ class ProjectEditImageBloc {
     imagePath = imagePath.replaceAll(new RegExp('#'), '/');
     Logger().i(imagePath);
     _image = File(imagePath);
+    _original = _image;
     _isLoading = false;
     _stateController.add(ProjectEditImageState.success(image: _image));
   }
 
   void cropImage(File croppedFile) {
     _image = croppedFile;
+    _stateController.add(ProjectEditImageState.edited(image: _image));
+  }
+
+  void revertImage() {
+    _image = _original;
     _stateController.add(ProjectEditImageState.success(image: _image));
   }
 
