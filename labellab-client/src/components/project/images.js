@@ -285,9 +285,7 @@ const Row = ({
     <Table.Cell style={columnStyles[1]}>
       <a
         href={
-          process.env.REACT_APP_HOST +
-          process.env.REACT_APP_SERVER_PORT +
-          `/static/uploads/${image.imageUrl}?${Date.now()}`
+          `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/static/uploads/${image.imageUrl}?${Date.now()}`
         }
       >
         {image.imageName}
