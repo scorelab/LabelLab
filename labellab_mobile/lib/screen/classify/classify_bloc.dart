@@ -15,6 +15,10 @@ class ClassifyBloc {
 
   ClassifyBloc();
 
+  void setImage(File image) {
+    _image = image;
+    _stateController.add(ClassifyState.setImage(image: image));
+  }
 
   void classifyImage(File image) {
     if (!_isClassifing && image != null) {

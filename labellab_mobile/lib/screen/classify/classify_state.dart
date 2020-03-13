@@ -16,6 +16,10 @@ class ClassifyState {
     isClassifing = true;
   }
 
+  ClassifyState.setImage({this.image}) {
+    isClassifing = false;
+  }
+
   ClassifyState.error(this.error, {this.image}) {
     isClassifing = false;
   }
