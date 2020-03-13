@@ -46,7 +46,7 @@ class LabelingLoader extends Component {
     const { match, setNextPrev, allImages } = this.props
     const len = allImages && allImages.length
     allImages &&
-      allImages.map((image, index) => {
+      allImages.forEach((image, index) => {
         if (image._id === match.params.imageId) {
           if (index === 0) {
             if (len <= 1) {
@@ -192,4 +192,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LabelingLoader)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LabelingLoader)

@@ -61,4 +61,7 @@ class LabelItem extends Component {
   }
 }
 
-export default connect(null, null)(LabelItem)
+export default connect(
+  null,
+  null
+)(LabelItem)

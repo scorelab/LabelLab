@@ -100,19 +100,22 @@ class Dashboard extends Component {
     })
   }
   handleChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    }, () => {
-      if(this.state.projectName === '') {
-        this.setState({
-          invalidDetails: true
-        })
-      } else {
-        this.setState({
-          invalidDetails: false
-        })
+    this.setState(
+      {
+        [e.target.name]: e.target.value
+      },
+      () => {
+        if (this.state.projectName === '') {
+          this.setState({
+            invalidDetails: true
+          })
+        } else {
+          this.setState({
+            invalidDetails: false
+          })
+        }
       }
-    })
+    )
   }
   handleProjectSubmit = () => {
     this.props.initProject(
@@ -234,4 +237,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Dashboard)

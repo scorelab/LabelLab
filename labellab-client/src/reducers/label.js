@@ -94,9 +94,9 @@ const user = (state = initialState, action) => {
         ...state,
         labelActions: {
           isupdating: false
-        },
+        }
       }
-      case UPDATE_A_LABEL_REQUEST:
+    case UPDATE_A_LABEL_REQUEST:
       return {
         ...state,
         labelActions: {
@@ -116,7 +116,7 @@ const user = (state = initialState, action) => {
         ...state,
         labelActions: {
           isupdating: false
-        },
+        }
       }
     case DELETE_LABEL_REQUEST:
       return {

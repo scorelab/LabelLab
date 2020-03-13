@@ -91,7 +91,7 @@ class ImagesIndex extends Component {
     } else {
       this.setState(prevState => ({
         selectedList: prevState.selectedList.filter(
-          checkedImage => checkedImage != imageId
+          checkedImage => checkedImage !== imageId
         )
       }))
     }
@@ -143,7 +143,7 @@ class ImagesIndex extends Component {
             encType="multiple/form-data"
             onSubmit={this.handleSubmit}
           >
-            {this.state.images.length == 1 && (
+            {this.state.images.length === 1 && (
               <Form.Field>
                 <label>Image Name</label>
                 <input
@@ -252,7 +252,10 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ImagesIndex)
 
 const columnStyles = [
   { flex: '0 0 80px', lineHeight: '32px' },

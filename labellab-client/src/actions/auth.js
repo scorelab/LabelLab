@@ -17,7 +17,7 @@ import {
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
-import { setToken, removeToken} from '../utils/token'
+import { setToken, removeToken } from '../utils/token'
 
 export const login = (username, password, callback) => {
   return dispatch => {
@@ -69,7 +69,6 @@ export const logout = callback => {
   }
 }
 
-
 export const forgotPassword = (email, callback) => {
   return dispatch => {
     const data = {
@@ -104,7 +103,6 @@ export const forgotPassword = (email, callback) => {
 
 export const verifyResetPasswordToken = (user_id, token) => {
   return dispatch => {
-
     dispatch(request())
     FetchApi('GET', `/api/v1/auth/reset-password/${user_id}/${token}`)
       .then(res => {
@@ -132,13 +130,18 @@ export const verifyResetPasswordToken = (user_id, token) => {
   }
 }
 
-export const updatePassword = (email, username, password, resetPasswordToken) =>{
+export const updatePassword = (
+  email,
+  username,
+  password,
+  resetPasswordToken
+) => {
   return dispatch => {
     const data = {
       email: email,
-      username:username,
+      username: username,
       password: password,
-      resetPasswordToken:resetPasswordToken
+      resetPasswordToken: resetPasswordToken
     }
     dispatch(request())
     FetchApi('PUT', `/api/v1/auth/update-password`, data)

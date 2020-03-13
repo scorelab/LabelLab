@@ -44,7 +44,7 @@ class ProjectDescriptionIndex extends Component {
   }
   callback = () => {
     const { project, fetchProject } = this.props
-    this.close();
+    this.close()
     fetchProject(project.projectId)
   }
   close = () => {
@@ -93,7 +93,7 @@ class ProjectDescriptionIndex extends Component {
                     content="Submit"
                   />
                 </div>
-              </div>            
+              </div>
             </Modal.Actions>
           </Modal>
         ) : null}

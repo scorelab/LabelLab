@@ -18,8 +18,8 @@ export const userRegister = (data, callback) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-              failure(err.response.data.msg, err.response.data.err_field)
-            )
+                failure(err.response.data.msg, err.response.data.err_field)
+              )
             : dispatch(failure(err.response.statusText, null))
         }
       })

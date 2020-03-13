@@ -14,7 +14,6 @@ import {
   UPDATE_A_LABEL_REQUEST,
   UPDATE_A_LABEL_SUCCESS,
   UPDATE_A_LABEL_FAILURE
-
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -104,7 +103,7 @@ export const updateLabels = (image_id, labelData) => {
   }
 }
 
-export const updateALabel = (label_id, labelData ,callback) => {
+export const updateALabel = (label_id, labelData, callback) => {
   return dispatch => {
     dispatch(request())
     FetchApi('PUT', '/api/v1/label/' + label_id + '/update', labelData, true)

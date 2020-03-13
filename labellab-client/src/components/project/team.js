@@ -184,4 +184,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamIndex)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TeamIndex)

@@ -94,15 +94,20 @@ class LoginIndex extends Component {
   callback = () => {
     const { location, history } = this.props
     location &&
-      location.state &&
-      location.state.from &&
-      location.state.from.pathname
+    location.state &&
+    location.state.from &&
+    location.state.from.pathname
       ? history.push(location.state.from.pathname)
       : history.push('/')
   }
 
   render() {
-    const { isAuthenticating, statusText, registerStatusText, authError } = this.props
+    const {
+      isAuthenticating,
+      statusText,
+      registerStatusText,
+      authError
+    } = this.props
     const { email, password, errors } = this.state
     return (
       <div className="login-grand-parent">
@@ -161,13 +166,12 @@ class LoginIndex extends Component {
                 </Message>
               )}
 
-              {(!authError && registerStatusText || statusText) && (
+              {((!authError && registerStatusText) || statusText) && (
                 <Message>
                   <Icon name="info circle" />
                   {registerStatusText || statusText}
                 </Message>
               )}
-
 
               <div className="action">
                 <Link to="#">Forgot password?</Link>

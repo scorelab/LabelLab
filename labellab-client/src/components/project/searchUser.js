@@ -99,4 +99,7 @@ const mapActionToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapActionToProps)(SearchUser)
+export default connect(
+  mapStateToProps,
+  mapActionToProps
+)(SearchUser)
