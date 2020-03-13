@@ -72,9 +72,6 @@ class HistorySearchScreen extends SearchDelegate {
                           })
                           .map((classification) => HistoryItem(
                                 classification,
-                                onDeleteSelected: () {
-                                  _showOnDeleteAlert(context, classification);
-                                },
                                 onSelected: () => _gotoClassification(
                                     context, classification.id),
                               ))
@@ -126,6 +123,7 @@ class HistorySearchScreen extends SearchDelegate {
                                 },
                                 onSelected: () => _gotoClassification(
                                     context, classification.id),
+                        shouldHaveOptions: false,
                               ))
                           .toList(),
                     )

@@ -6,9 +6,10 @@ class HistoryItem extends StatelessWidget {
   final Classification classification;
   final VoidCallback onSelected;
   final VoidCallback onDeleteSelected;
+  final bool shouldHaveOptions;
 
   const HistoryItem(this.classification,
-      {Key key, this.onSelected, this.onDeleteSelected})
+      {Key key, this.onSelected, this.onDeleteSelected, this.shouldHaveOptions = true})
       : super(key: key);
 
   @override
@@ -43,7 +44,7 @@ class HistoryItem extends StatelessWidget {
                         .toList()
                     : [],
               ),
-              trailing: PopupMenuButton<int>(
+              trailing: shouldHaveOptions ? PopupMenuButton<int>(
                 onSelected: (int selected) {
                   switch (selected) {
                     case 0:
@@ -59,7 +60,7 @@ class HistoryItem extends StatelessWidget {
                     )
                   ];
                 },
-              ),
+              ) : null,
             ),
           ],
         ),
