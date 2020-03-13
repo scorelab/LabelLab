@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
@@ -21,17 +24,25 @@ class ProjectDetailScreen extends StatelessWidget {
       initialData: ProjectDetailState.loading(),
       builder: (context, snapshot) {
         ProjectDetailState _state = snapshot.data;
+        bool _hasImages = _state.project.images.length > 0;
         return Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
+                iconTheme: IconThemeData(
+                    color: _hasImages ? Colors.white : Colors.black),
+                actionsIconTheme: IconThemeData(
+                    color: _hasImages ? Colors.white : Colors.black),
                 expandedHeight: 200,
                 elevation: 2,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
+                  background: _hasImages ? _buildCover(_state) : Container(),
                   centerTitle: true,
                   title: Text(
                     _state.project != null ? _state.project.name : "",
+                    style: TextStyle(
+                        color: _hasImages ? Colors.white : Colors.black),
                   ),
                 ),
                 actions: _buildActions(context, _state.project),
@@ -113,6 +124,33 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCover(ProjectDetailState state) {
+    return Container(
+      child: Row(
+        children: state.project.images
+            .sublist(0, min(state.project.images.length, 4))
+            .map(
+              (image) => Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: CachedNetworkImageProvider(image.imageUrl),
+                          fit: BoxFit.cover)),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                    child: Container(
+                      decoration:
+                          BoxDecoration(color: Colors.black.withOpacity(0.1)),
+                    ),
+                  ),
+                ),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 
