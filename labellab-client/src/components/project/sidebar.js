@@ -57,7 +57,8 @@ class ProjectSidebar extends Component {
     return (
       <div className="sidebar-parent">
         {project.images ? (
-          <div>
+          <div className="sidebar-container">
+            {this.props.children}
             <div className="sidebar-menu-parent">
               <Menu vertical size="large">
                 <Menu.Item
@@ -150,4 +151,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectSidebar)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectSidebar)
