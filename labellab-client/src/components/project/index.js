@@ -90,9 +90,10 @@ class ProjectIndex extends Component {
         ) : null}
         <ProjectNavbar history={history} />
         <div className="project-main">
-          <Sidebar history={history} />
-          <div className="project-non-side-section">
+          <Sidebar history={history}>
             <ProjectDescription history={history} />
+          </Sidebar>
+          <div className="project-non-side-section">
             <Switch>
               <PrivateRoute
                 exact

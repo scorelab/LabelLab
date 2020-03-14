@@ -6,6 +6,7 @@ import {
   Icon,
   Input,
   Button,
+  Card,
   Dimmer,
   Loader,
   Modal
@@ -25,6 +26,7 @@ class ProjectDescriptionIndex extends Component {
     const { project } = this.props
     if (prevProps.project !== project) {
       this.setState({
+        name: project.projectName,
         desc: project.projectDescription
       })
     }
@@ -44,7 +46,7 @@ class ProjectDescriptionIndex extends Component {
   }
   callback = () => {
     const { project, fetchProject } = this.props
-    this.close();
+    this.close()
     fetchProject(project.projectId)
   }
   close = () => {
@@ -59,45 +61,50 @@ class ProjectDescriptionIndex extends Component {
   }
   render() {
     const { actions } = this.props
-    const { edit, desc } = this.state
+    const { edit, name, desc } = this.state
     return (
       <div className="projectDesc-parent">
         {actions.isfetching ? (
           <Dimmer active>
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
-        ) : null}
-        <div className="projectDesc-header">
-          <Header content="Project Description" as="h4" />
-          <Icon name="pencil alternate" onClick={this.handleUpdate} />
-        </div>
-        {edit ? (
-          <Modal size="small" open={this.state.edit} onClose={this.close}>
-            <Modal.Header>
-              <p>Enter Project Description</p>
-            </Modal.Header>
-            <Modal.Actions>
-              <div className="modal-actions">
-                <Input
-                  name="desc"
-                  type="text"
-                  label="Description"
-                  placeholder="Description..."
-                  defaultValue={this.state.desc}
-                  onChange={this.handleChange}
-                />
-                <div>
-                  <Button
-                    positive
-                    onClick={this.handleSubmit}
-                    content="Submit"
-                  />
-                </div>
-              </div>            
-            </Modal.Actions>
-          </Modal>
-        ) : null}
-        {!edit && desc ? desc : null}
+        ) : (
+          <Card>
+            <Card.Header className="projectDesc-header">
+              <Header content={name} as="h4"></Header>
+              <Icon name="pencil alternate" onClick={this.handleUpdate} />
+            </Card.Header>
+            <Card.Content>
+              {edit ? (
+                <Modal size="small" open={this.state.edit} onClose={this.close}>
+                  <Modal.Header>
+                    <p>Enter Project Description</p>
+                  </Modal.Header>
+                  <Modal.Actions>
+                    <div className="modal-actions">
+                      <Input
+                        name="desc"
+                        type="text"
+                        label="Description"
+                        placeholder="Description..."
+                        defaultValue={this.state.desc}
+                        onChange={this.handleChange}
+                      />
+                      <div>
+                        <Button
+                          positive
+                          onClick={this.handleSubmit}
+                          content="Submit"
+                        />
+                      </div>
+                    </div>
+                  </Modal.Actions>
+                </Modal>
+              ) : null}
+              {!edit && desc ? desc : null}
+            </Card.Content>
+          </Card>
+        )}
       </div>
     )
   }

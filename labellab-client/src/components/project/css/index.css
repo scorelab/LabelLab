@@ -5,6 +5,7 @@
 .project-non-side-section {
   width: 100%;
   margin-right: unset !important;
+  margin-top: 4em;
 }
 
 @media only screen and (max-width: 767px) {

@@ -1,3 +1,9 @@
+.sidebar-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 .sidebar-parent {
   width: 25%;
   display: flex;
@@ -15,13 +21,14 @@
 }
 .sidebar-menu-parent {
   margin-top: 2em;
+  margin-bottom: 2em;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 .delete-project-button {
   margin-top: 2rem !important;
-  width: 100%;
+  width: 80%;
 }
 
 @media only screen and (max-width: 767px) {
