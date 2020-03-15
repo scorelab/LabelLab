@@ -106,9 +106,10 @@ class LabelIndex extends Component {
               </Table.Row>
             </Table.Header>
 
-            <Table.Body>
+            <Table.Body  >
               {labels.map((label, index) => (
-                <LabelItem
+                <LabelItem 
+                  key={index}
                   index={index}
                   label={label}
                   options={options}

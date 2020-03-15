@@ -139,7 +139,7 @@ class Profile extends Component {
                       <Dropdown.Menu>
                         {
                           this.props.projects.map(project=>
-                            <Dropdown.Item as={Link} to={'/project/'+project._id+'/analytics'}>
+                            <Dropdown.Item key = {this.id} as={Link} to={'/project/'+project._id+'/analytics'}>
                             {project.projectName}
                             </Dropdown.Item>
                           )
