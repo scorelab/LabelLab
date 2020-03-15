@@ -21,17 +21,17 @@ const initialState = {
   statusText: '',
   details: {
     email: '',
-    username:''
+    username: ''
   },
   error: false,
   errField: '',
-  isLoading:false,
-  emailRecievedMessage:'',
-  verifyTokenMessage:'',
-  passwordUpdatedMessage:'',
-  verificationError:null,
-  isEmailSending:false,
-  passwordUpdateError:null
+  isLoading: false,
+  emailRecievedMessage: '',
+  verifyTokenMessage: '',
+  passwordUpdatedMessage: '',
+  verificationError: null,
+  isEmailSending: false,
+  passwordUpdateError: null
 }
 
 const auth = (state = initialState, action) => {
@@ -47,6 +47,7 @@ const auth = (state = initialState, action) => {
         isAuthenticated: true,
         isAuthenticating: false,
         statusText: 'You are logged in successfully!',
+        error: false,
         details: {
           email: action.payload.email
         }
@@ -57,21 +58,24 @@ const auth = (state = initialState, action) => {
         isAuthenticated: false,
         isAuthenticating: false,
         statusText:
-          action.payload === 'Unauthorized' ? 'Email is not registered' : null,
+          action.error === 'Unauthorized' ? 'Incorrect e-mail address or password!' : null,
         error: true,
         errField: action.other
       }
     case LOGOUT_REQUEST:
       return {
         ...state,
-        isAuthenticating: true
+        isAuthenticating: true,
+        statusText: '',
+        error: false,
       }
     case LOGOUT_SUCCESS:
       return {
         ...state,
         isAuthenticated: false,
         isAuthenticating: false,
-        statusText: 'You have been successfully logged out',
+        statusText: 'You have been successfully logged out!',
+        error: false,
         details: {
           email: ''
         }
@@ -84,36 +88,36 @@ const auth = (state = initialState, action) => {
     case SENT_EMAIL_SUCCESS:
       return {
         ...state,
-        isEmailSending:false,
-        emailRecievedMessage:action.payload
+        isEmailSending: false,
+        emailRecievedMessage: action.payload
       }
     case EMAIL_SENT_FAILURE:
       return {
         ...state,
-        isEmailSending:false,
-        emailRecievedMessage:action.payload
+        isEmailSending: false,
+        emailRecievedMessage: action.payload
       }
     case VERIFY_TOKEN_REQUEST:
       return {
         ...state,
-        isLoading:true,
+        isLoading: true,
       }
     case VERIFY_TOKEN_SUCCESS:
       return {
         ...state,
-        isLoading:false,
+        isLoading: false,
         details: {
           email: action.payload.email,
           username: action.payload.username
         },
-        verifyTokenMessage:action.payload.msg,
-        verificationError:action.payload.msg === 'password reset link a-ok'? false:true
+        verifyTokenMessage: action.payload.msg,
+        verificationError: action.payload.msg === 'password reset link a-ok' ? false : true
       }
     case VERIFY_TOKEN_FAILURE:
       return {
         ...state,
-        isLoading:false,
-        verifyTokenMessage:action.payload,
+        isLoading: false,
+        verifyTokenMessage: action.payload,
         verificationError: true
       }
     case UPDATE_PASSWORD_REQUEST:
@@ -124,16 +128,16 @@ const auth = (state = initialState, action) => {
     case UPDATE_PASSWORD_SUCCESS:
       return {
         ...state,
-        isLoading:false,
-        passwordUpdatedMessage:action.payload.msg,
-        passwordUpdateError:action.payload.msg === 'password updated'? false:true
+        isLoading: false,
+        passwordUpdatedMessage: action.payload.msg,
+        passwordUpdateError: action.payload.msg === 'password updated' ? false : true
       }
     case UPDATE_PASSWORD_FAILURE:
       return {
         ...state,
-        isLoading:false,
-        passwordUpdatedMessage:action.payload,
-        passwordUpdateError:true
+        isLoading: false,
+        passwordUpdatedMessage: action.payload,
+        passwordUpdateError: true
       }
     default:
       return state

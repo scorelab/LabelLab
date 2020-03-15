@@ -264,13 +264,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
     final encodedBytes = base64Encode(imageBytes);
     final data = {
       "projectId": projectId,
-      "imageName": "Image",
-      "image": "base64," + encodedBytes,
+      "imageNames": ["Image"],
+      "images": ["base64," + encodedBytes],
       "format": "image/jpg",
     };
-    Options options = Options(
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
-        contentType: ContentType.parse("application/x-www-form-urlencoded"));
+    Options options =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     return _dio
         .post(API_URL + ENDPOINT_IMAGE + "/$projectId/create",
             options: options, data: data)
@@ -321,11 +320,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> deleteImage(String token, String imageId) {
+    final data = {
+      "images": [imageId]
+    };
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .delete(API_URL + ENDPOINT_IMAGE + "/$imageId/delete", options: options)
+        .delete(API_URL + ENDPOINT_IMAGE + "/delete",
+            options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
     });

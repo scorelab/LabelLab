@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/label.dart';
-import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/common/label_selection_list.dart';
 import 'package:labellab_mobile/screen/project/common/label_selection_painter.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
@@ -224,8 +224,21 @@ class LabelToolScreen extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text("Select label",
-                  style: Theme.of(context).textTheme.title),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("Select label",
+                      style: Theme.of(context).textTheme.title),
+                  FlatButton.icon(
+                    icon: Icon(Icons.add),
+                    label: Text("Add"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showAddLabelModel(baseContext);
+                    },
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 8,
@@ -252,5 +265,20 @@ class LabelToolScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  _showAddLabelModel(BuildContext baseContext) {
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return AddEditLabelDialog(
+          Provider.of<LabelToolBloc>(baseContext).projectId,
+        );
+      },
+    ).then((bool isSuccess) {
+      if (isSuccess) {
+        Provider.of<LabelToolBloc>(baseContext).refresh();
+      }
+    });
   }
 }

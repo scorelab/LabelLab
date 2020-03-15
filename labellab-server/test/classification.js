@@ -9,7 +9,7 @@ var Image = require('../models/image')
 var User = require('../models/user')
 var Project = require('../models/project')
 let server = require('../app')
-let config = require('../config/test')
+let conn = require('../config/test')
 const Info = require('./info')
 
 const projectInfo = {
@@ -23,54 +23,13 @@ chai.use(chaiHttp)
 
 describe('Classification tests', async () => {
 	before(function(done) {
-		mongoose
-			.connect(config.mongoURI, {
-				promiseLibrary: require('bluebird'),
-				useNewUrlParser: true
-			})
-			.then(() => console.log('Test MongoDb connected successfully!'))
-			.catch(err => console.error(err))
-		const db = mongoose.connection
-		db.on('error', console.error.bind(console, 'connection error'))
-		db.once('open', function() {
-			done()
-		})
+		conn.connect()
+		.then(() => done())
+		.catch((err) => done(err));
 	})
-
 	after(async () => {
-		await Project.deleteOne({
-				  projectName: projectInfo.projectName
-				}).exec(function(err) {
-					if (err) {
-					console.log(err)
-					}
-					process.exit(0)
-                    })
-        await Classification.deleteOne({
-            _id: classificationId
-            }).exec(function(err) {
-                if (err) {
-                console.log(err)
-                }
-                console.log(classificationId)
-                process.exit(0)
-                })
-        await Image.deleteOne({
-            imageUrl: imageUrl
-            }).exec(function(err) {
-                if (err) {
-                console.log(err)
-                }
-                fs.unlink(`./public/classifications/${imageUrl}`,process.exit(0))
-                })
-		await User.deleteOne({
-					email: Info.userInfo.email
-				}).exec(function(err) {
-					if (err) {
-						console.log(err)
-						}
-						process.exit(0)
-				})
+		await conn.close()
+		process.exit(0)
 	})
 
 	it('User Register', done => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Menu, Button, Confirm } from 'semantic-ui-react'
+import { Menu, Button, Confirm, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import {
@@ -56,60 +56,67 @@ class ProjectSidebar extends Component {
     const { activeItem } = this.state
     return (
       <div className="sidebar-parent">
-        <div className="sidebar-menu-parent">
-          <Menu vertical size="large">
-            <Menu.Item
-              as={Link}
-              to={`/project/${project.projectId}/team`}
-              name="team"
-              active={activeItem === 'team'}
-              onClick={this.handleItemClick}
-            >
-              Project Team
-            </Menu.Item>
+        {project.images ? (
+          <div>
+            <div className="sidebar-menu-parent">
+              <Menu vertical size="large">
+                <Menu.Item
+                  as={Link}
+                  to={`/project/${project.projectId}/team`}
+                  name="team"
+                  active={activeItem === 'team'}
+                  onClick={this.handleItemClick}
+                >
+                  Project Team
+                </Menu.Item>
 
-            <Menu.Item
-              as={Link}
-              to={`/project/${project.projectId}/images`}
-              name="images"
-              active={activeItem === 'images'}
-              onClick={this.handleItemClick}
-            >
-              Project Images
-            </Menu.Item>
+                <Menu.Item
+                  as={Link}
+                  to={`/project/${project.projectId}/images`}
+                  name="images"
+                  active={activeItem === 'images'}
+                  onClick={this.handleItemClick}
+                >
+                  Project Images
+                  <Label>{project.images.length}</Label>
+                </Menu.Item>
 
-            <Menu.Item
-              as={Link}
-              to={`/project/${project.projectId}/analytics`}
-              name="analytics"
-              active={activeItem === 'analytics'}
-              onClick={this.handleItemClick}
-            >
-              Project Analytics
-            </Menu.Item>
-            <Menu.Item
-              as={Link}
-              to={`/project/${project.projectId}/labels`}
-              name="labels"
-              active={activeItem === 'labels'}
-              onClick={this.handleItemClick}
-            >
-              Project Labels
-            </Menu.Item>
-          </Menu>
-        </div>
+                <Menu.Item
+                  as={Link}
+                  to={`/project/${project.projectId}/analytics`}
+                  name="analytics"
+                  active={activeItem === 'analytics'}
+                  onClick={this.handleItemClick}
+                >
+                  Project Analytics
+                </Menu.Item>
+                <Menu.Item
+                  as={Link}
+                  to={`/project/${project.projectId}/labels`}
+                  name="labels"
+                  active={activeItem === 'labels'}
+                  onClick={this.handleItemClick}
+                >
+                  Project Labels
+                </Menu.Item>
+              </Menu>
+            </div>
 
-        <Button
-          negative
-          className="delete-project-button"
-          onClick={this.handleOpen}
-          content="Delete Project"
-        />
-        <Confirm
-          open={this.state.open}
-          onCancel={this.handleClose}
-          onConfirm={this.handleDeleteProject}
-        />
+            <Button
+              negative
+              className="delete-project-button"
+              onClick={this.handleOpen}
+              content="Delete Project"
+            />
+            <Confirm
+              open={this.state.open}
+              onCancel={this.handleClose}
+              onConfirm={this.handleDeleteProject}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
     )
   }

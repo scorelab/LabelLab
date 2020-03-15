@@ -8,6 +8,7 @@ var User = require('../models/user')
 var Label = require('../models/label')
 let server = require('../app')
 let conn = require('../config/test')
+const Info = require('./info')
 
 const userInfo = {
 	name: 'name',
@@ -30,13 +31,9 @@ const info = {
     type: 'String'
 }
 
-const updateInfo = {
-	label: 'labelNameUpdate'
-}
-
 chai.use(chaiHttp)
 
-describe('Label tests', async () => {
+describe('Analytics tests', async () => {
 	before(function(done) {
 		conn.connect()
 		.then(() => done())
@@ -44,7 +41,7 @@ describe('Label tests', async () => {
 	})
 
 	after(async () => {
-		await conn.close()
+        await conn.close()
 		process.exit(0)
 	})
 
@@ -123,41 +120,41 @@ describe('Label tests', async () => {
 			})
 	})
 
-	it('Label Get By Id', done => {
+	it('Fetch time-label dataset of a project', done => {
 		chai
 			.request(server)
-			.get('/api/v1/label/' + createdProjectId + '/get')
+			.get('/api/v1/analytics/' + createdProjectId + '/timeLabel/get')
 			.set('Authorization', 'Bearer ' + token)
 			.end((err, data) => {
 				if (data) {
 					expect(data).to.have.an('object')
-					expect(data.body).to.have.property('success', true)
-					expect(data.body).to.have.property('msg')
-					expect(data.body).to.have.property('body')
-					expect(data.body.body).to.have.an('object')
+                    expect(data.body).to.have.property('success', true)
+                    expect(data.body).to.have.property('body')
+                    expect(data.body.body).to.have.an('object')
+                    expect(data.body.body.labels).to.have.an('array')
 					done()
 				}
 			})
-	})
-
-	it('Label Update', done => {
+    })
+    
+    it('Fetch counts of how often a label is used in a project', done => {
 		chai
 			.request(server)
-			.put('/api/v1/label/' + createdLabelId + '/update')
+			.get('/api/v1/analytics/' + createdProjectId + '/labelCount/get')
 			.set('Authorization', 'Bearer ' + token)
-			.send(updateInfo)
 			.end((err, data) => {
 				if (data) {
 					expect(data).to.have.an('object')
-					expect(data.body).to.have.property('success', true)
-					expect(data.body).to.have.property('msg', 'Label updated!')
-					expect(data.body).to.have.property('body')
+                    expect(data.body).to.have.property('success', true)
+                    expect(data.body).to.have.property('body')
+                    expect(data.body.body).to.have.an('object')
+                    expect(data.body.body.labels).to.have.an('array')
 					done()
 				}
 			})
-	})
-
-	it('Project Delete', done => {
+    })
+    
+	it('Label Delete', done => {
 		chai
 			.request(server)
 			.delete('/api/v1/label/' + createdLabelId + '/delete')
@@ -171,6 +168,6 @@ describe('Label tests', async () => {
 					done()
 				}
 			})
-	})
+    })
 
 })

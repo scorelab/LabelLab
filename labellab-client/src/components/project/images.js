@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { Table, Button, Form, Dimmer, Loader, Icon } from 'semantic-ui-react'
+import {
+  Table,
+  Button,
+  Form,
+  Dimmer,
+  Loader,
+  Checkbox,
+  Icon
+} from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
 import { submitImage, deleteImage, fetchProject } from '../../actions/index'
 import './css/images.css'
@@ -16,7 +24,9 @@ class ImagesIndex extends Component {
       imageNames: [],
       projectId: '',
       showform: false,
-      format: ''
+      format: '',
+      maxSizeError: '',
+      selectedList: []
     }
   }
   handleImageChange = e => {
@@ -42,24 +52,49 @@ class ImagesIndex extends Component {
     e.preventDefault()
     const { project, fetchProject, submitImage } = this.props
     const { imageNames, images, format } = this.state
-    let data = {
-      imageNames: imageNames,
-      images: images,
-      projectId: project.projectId,
-      format: format
-    }
-    submitImage(data, () => {
+    if (this.state.file && this.state.file.size > 101200) {
       this.setState({
-        showform: false,
-        images: [],
-        imageNames: []
+        maxSizeError: 'max sized reached'
+      })
+    } else {
+      let data = {
+        imageNames: imageNames,
+        images: images,
+        projectId: project.projectId,
+        format: format
+      }
+      submitImage(data, () => {
+        this.setState({
+          showform: false,
+          images: [],
+          imageNames: []
+        })
+        fetchProject(project.projectId)
+      })
+    }
+  }
+  handleDelete = () => {
+    const { deleteImage, project, fetchProject } = this.props
+    const self = this
+    deleteImage({ images: Array.from(this.state.selectedList) }, () => {
+      self.setState({
+        selectedList: []
       })
       fetchProject(project.projectId)
     })
   }
-  handleDelete = imageId => {
-    const { deleteImage, project, fetchProject } = this.props
-    deleteImage(imageId, project.projectId, fetchProject(project.projectId))
+  handleSelected = imageId => {
+    if (!this.state.selectedList.includes(imageId)) {
+      this.setState(prevState => ({
+        selectedList: [...prevState.selectedList, imageId]
+      }))
+    } else {
+      this.setState(prevState => ({
+        selectedList: prevState.selectedList.filter(
+          checkedImage => checkedImage != imageId
+        )
+      }))
+    }
   }
   handleNameChange = e => {
     const value = e.target.value
@@ -71,7 +106,8 @@ class ImagesIndex extends Component {
       file: '',
       imageNames: [],
       showform: !this.state.showform,
-      format: ''
+      format: '',
+      maxSizeError: ''
     })
   }
 
@@ -125,6 +161,11 @@ class ImagesIndex extends Component {
             <Button onClick={this.removeImage} type="delete">
               Cancel
             </Button>
+            {this.state.maxSizeError ? (
+              <div className="max-size-error">
+                The size of the file should not be greater than 101Kb!
+              </div>
+            ) : null}
           </Form>
         ) : null}
         <Table
@@ -134,11 +175,19 @@ class ImagesIndex extends Component {
           <Table.Header className="image-table-header">
             <Table.Row className="flex image-table-row-back">
               <Table.HeaderCell style={columnStyles[0]}>ID</Table.HeaderCell>
+              <Table.HeaderCell style={columnStyles[0]}></Table.HeaderCell>
               <Table.HeaderCell style={columnStyles[1]}>
                 Image Link
               </Table.HeaderCell>
               <Table.HeaderCell style={columnStyles[2]}>
-                Actions
+                Actions{' '}
+                <Button
+                  negative
+                  disabled={!this.state.selectedList.length}
+                  onClick={this.handleDelete}
+                >
+                  Delete
+                </Button>
               </Table.HeaderCell>
               <Table.HeaderCell className="image-table-special-headercell" />
             </Table.Row>
@@ -157,6 +206,10 @@ class ImagesIndex extends Component {
                     projectId={project.projectId}
                     onDelete={this.handleDelete}
                     imageId={index}
+                    onSelect={this.handleSelected}
+                    selected={this.state.selectedList.includes(
+                      project.images[index]._id
+                    )}
                   />
                 )}
                 overscanRowCount={10}
@@ -207,18 +260,32 @@ const columnStyles = [
   { flex: '0 0 250px', lineHeight: '32px' }
 ]
 
-const Row = ({ image, projectId, style, onDelete, imageId }) => (
+const Row = ({
+  image,
+  projectId,
+  style,
+  onDelete,
+  imageId,
+  onSelect,
+  selected
+}) => (
   <Table.Row style={{ ...style, display: 'flex' }}>
     <Table.Cell style={columnStyles[0]}>
       {imageId + 1}
       {image.labelled ? <Icon name="checkmark green"></Icon> : null}
     </Table.Cell>
+    <Table.Cell style={columnStyles[0]}>
+      <Checkbox
+        onClick={() => {
+          onSelect(image._id)
+        }}
+        checked={selected}
+      />
+    </Table.Cell>
     <Table.Cell style={columnStyles[1]}>
       <a
         href={
-          'http://' +
           process.env.REACT_APP_HOST +
-          ':' +
           process.env.REACT_APP_SERVER_PORT +
           `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
@@ -235,7 +302,10 @@ const Row = ({ image, projectId, style, onDelete, imageId }) => (
           icon="trash"
           label="Delete"
           size="tiny"
-          onClick={() => onDelete(image._id)}
+          onClick={async () => {
+            await onSelect(image._id)
+            onDelete()
+          }}
         />
       </div>
     </Table.Cell>
