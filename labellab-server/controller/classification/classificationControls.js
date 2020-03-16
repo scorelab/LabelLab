@@ -1,6 +1,7 @@
 let fs = require('fs')
 const Image = require('../../models/image')
 const Classification = require('../../models/classification')
+const request = require('request')
 
 exports.classify = function(req, res) {
 	if (req && req.body && req.body.image && req.body.format) {
@@ -22,12 +23,34 @@ exports.classify = function(req, res) {
 				if (err) {
 					return res.status(400).send({ success: false, msg: err })
 				} else {
-					// TODO - Integrate with the classification model
 
-					// Mock label creation to emulate classification model.
-					var label = [
-						{ label_name: 'Label ' + Math.floor(Math.random() * 10 + 1) }
-					]
+                    // Integration with the classification model
+                    function doRequest() {
+                        return new Promise(function (resolve, reject) {
+                            const post = {
+                                image,
+                                filename: updateData.imageUrl
+                            }
+                            let url = process.env.ML_HOST + ':' + process.env.ML_PORT
+                            request.post(url, post, function (error, res, body) {
+                                if (body) {
+                                    resolve(body)
+                                } else if (error) {
+                                    reject(error)
+                                } else {
+                                    reject('Not sufficient data to analyze')
+                                }
+                            })
+                        })
+                    }
+
+                    var label = []
+                    doRequest().then(body => {
+                        label = JSON.parse(body).label
+                    }).catch(err => {
+                        console.log(err)
+                    })
+
 					const newClassification = new Classification({
 						imageUrl: updateData.imageUrl,
 						user: data.id,
