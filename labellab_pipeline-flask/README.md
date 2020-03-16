@@ -18,6 +18,8 @@ environment(recomended) using venv and activate it.
 pip install -r requirements.txt
 python3 main.py
 ```
+- Add a .env file in this folder. A sample env file has been provided under the name .env.example
+
 
 ## Project structure
 ```

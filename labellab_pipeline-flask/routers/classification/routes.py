@@ -1,5 +1,5 @@
-from flask import Blueprint
 from controllers.classification import classificationController
+from flask import Blueprint
 
 classificationBlueprint = Blueprint("auth", __name__)
 

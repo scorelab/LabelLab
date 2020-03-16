@@ -2,18 +2,18 @@ from app import db
 
 
 class User(db.Document):
-	name = db.StringField()
-	username = db.StringField()
-	email = db.StringField()
-	password = db.StringField()
-	accessToken = db.StringField()
-	googleId = db.StringField()
-	githubId = db.StringField()
-	createdAt = db.DateTimeField()
-	thumbnaild = db.StringField()
-	profileImage: db.StringField()
-	resetPasswordToken:db.StringField()
-	resetPasswordExpires: db.DateTimeField()
+    name = db.StringField()
+    username = db.StringField()
+    email = db.StringField()
+    password = db.StringField()
+    accessToken = db.StringField()
+    googleId = db.StringField()
+    githubId = db.StringField()
+    createdAt = db.DateTimeField()
+    thumbnaild = db.StringField()
+    profileImage: db.StringField()
+    resetPasswordToken: db.StringField()
+    resetPasswordExpires: db.DateTimeField()
 #     TODO: Need to create a separate model for project and then refer it
 # 	project: [
 # 		{

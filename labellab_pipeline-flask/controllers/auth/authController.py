@@ -2,7 +2,6 @@ import bcrypt
 from flask import abort, jsonify, request
 from models.user import User
 
-
 salt = bcrypt.gensalt(rounds=8)
 
 
