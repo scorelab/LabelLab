@@ -2,10 +2,15 @@ from app import app
 from dotenv import load_dotenv
 from flask import request
 import os
+from routers.auth.routes import authBlueprint
+
 
 # Load environment variables from .env files
 project_folder = os.path.expanduser(os.path.dirname(__file__))
 load_dotenv(os.path.join(project_folder, '.env'))
+
+
+app.register_blueprint(authBlueprint, url_prefix='/auth')
 
 
 @app.route("/", methods=['GET', 'POST'])

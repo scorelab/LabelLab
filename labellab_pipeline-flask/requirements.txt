@@ -1,2 +1,3 @@
 Flask==1.0.3
 python-dotenv-0.12.0
+Flask-MongoAlchemy=0.7.2
