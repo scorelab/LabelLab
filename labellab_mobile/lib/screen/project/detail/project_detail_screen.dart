@@ -184,11 +184,40 @@ class ProjectDetailScreen extends StatelessWidget {
                       width: 64,
                       height: 64,
                       color: Colors.black12,
-                      child: Image(
-                        image: CachedNetworkImageProvider(
-                          image.imageUrl,
-                        ),
-                        fit: BoxFit.cover,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          Image(
+                            image: CachedNetworkImageProvider(
+                              image.imageUrl,
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                  Colors.black38,
+                                  Color.fromRGBO(255, 255, 255, 0)
+                                ])),
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Text(
+                              image.labels != null
+                                  ? image.labels.length != 1
+                                      ? image.labels.length.toString() +
+                                          " Labels"
+                                      : "1 Label"
+                                  : "",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
