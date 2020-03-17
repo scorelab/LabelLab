@@ -1,12 +1,12 @@
-.core-searchbar {
+.searchbar-parent {
   position: absolute;
   margin-left: 184px;
   margin-top: 25px;
   width: 340px;
   height: 46px;
   border-radius: 5px;
-  background-color: #eeeeee;
 }
+
 .size {
   font-size: 1.1em !important;
 }
