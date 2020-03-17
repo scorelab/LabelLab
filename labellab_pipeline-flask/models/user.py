@@ -6,14 +6,14 @@ class User(db.Document):
     username = db.StringField()
     email = db.StringField()
     password = db.StringField()
-    accessToken = db.StringField()
-    googleId = db.StringField()
-    githubId = db.StringField()
-    createdAt = db.DateTimeField()
-    thumbnaild = db.StringField()
-    profileImage: db.StringField()
-    resetPasswordToken: db.StringField()
-    resetPasswordExpires: db.DateTimeField()
+    accessToken = db.StringField(required=False)
+    googleId = db.StringField(required=False)
+    githubId = db.StringField(required=False)
+    createdAt = db.DateTimeField(required=False)
+    thumbnaild = db.StringField(required=False)
+    profileImage: db.StringField(required=False)
+    resetPasswordToken: db.StringField(required=False)
+    resetPasswordExpires: db.DateTimeField(required=False)
 #     TODO: Need to create a separate model for project and then refer it
 # 	project: [
 # 		{
