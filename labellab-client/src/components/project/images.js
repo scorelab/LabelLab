@@ -12,6 +12,8 @@ import {
   Icon
 } from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css'; 
 import { submitImage, deleteImage, fetchProject } from '../../actions/index'
 import './css/images.css'
 
@@ -26,7 +28,10 @@ class ImagesIndex extends Component {
       showform: false,
       format: '',
       maxSizeError: '',
-      selectedList: []
+      selectedList: [],
+      imageUrls:[],
+      photoIndex: 0,
+      isOpen: false,
     }
   }
   handleImageChange = e => {
@@ -39,15 +44,18 @@ class ImagesIndex extends Component {
           images: [...prevState.images, reader.result],
           file: file,
           format: file.type,
-          imageNames: [...prevState.imageNames, file.name]
+          imageNames: [...prevState.imageNames, file.name],
+          imageUrls:[...prevState.imageUrls, URL.createObjectURL(file)]
         }))
       }
       reader.readAsDataURL(file)
     })
     this.setState({
-      showform: !this.state.showform
+      showform: !this.state.showform,
+      isOpen: true
     })
   }
+  
   handleSubmit = e => {
     e.preventDefault()
     const { project, fetchProject, submitImage } = this.props
@@ -107,13 +115,17 @@ class ImagesIndex extends Component {
       imageNames: [],
       showform: !this.state.showform,
       format: '',
-      maxSizeError: ''
+      maxSizeError: '',
+      imageUrls:[],
+      photoIndex: 0,
+      isOpen: false,
     })
   }
 
   render() {
-    const { imageActions, project } = this.props
-    const { showform, imageName } = this.state
+    const { imageActions, project } = this.props;
+    const { showform, imageName, imageUrls } = this.state;
+    const { photoIndex, isOpen } = this.state;
     return (
       <div>
         {imageActions.isdeleting ? (
@@ -136,7 +148,6 @@ class ImagesIndex extends Component {
             Add Image
           </label>
         </div>
-
         {showform ? (
           <Form
             className="file-submit-form"
@@ -154,12 +165,34 @@ class ImagesIndex extends Component {
                 />
               </Form.Field>
             )}
-
+            {
+              imageUrls && isOpen ?
+              <Lightbox
+                mainSrc={imageUrls[photoIndex]}
+                nextSrc={imageUrls[(photoIndex + 1) % imageUrls.length]}
+                prevSrc={imageUrls[(photoIndex + imageUrls.length - 1) % imageUrls.length]}
+                onCloseRequest={() => this.setState({ isOpen: false })}
+                onMovePrevRequest={() =>
+                  this.setState({
+                    photoIndex: (photoIndex + imageUrls.length - 1) % imageUrls.length,
+                  })
+                }
+                onMoveNextRequest={() =>
+                  this.setState({
+                    photoIndex: (photoIndex + 1) % imageUrls.length,
+                  })
+                }
+          />:
+              null
+            }
             <Button loading={imageActions.isposting} type="submit">
               Submit
             </Button>
             <Button onClick={this.removeImage} type="delete">
               Cancel
+            </Button>
+            <Button onClick={()=>this.setState({isOpen:true})}>
+              View
             </Button>
             {this.state.maxSizeError ? (
               <div className="max-size-error">
@@ -287,7 +320,9 @@ const Row = ({
     <Table.Cell style={columnStyles[1]}>
       <a
         href={
-          `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/static/uploads/${image.imageUrl}?${Date.now()}`
+          process.env.REACT_APP_HOST + ':' +
+          process.env.REACT_APP_SERVER_PORT +
+          `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
       >
         {image.imageName}
