@@ -258,3 +258,24 @@
     display: none;
   }
 }
+
+@media (max-width: 768px) {
+  .searchBar {
+    width: 100%;
+  }
+
+  .navbar ul li {
+    padding: 10px 20px 10px 20px;
+    text-align: left;
+  }
+
+  .ui.input {
+    width: 100%;
+  }
+
+  .navbar .subnavbar {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+  }
+}

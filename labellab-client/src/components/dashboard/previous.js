@@ -20,7 +20,7 @@ class PreviousProject extends Component {
     const { actions, projects } = this.props
     return (
       <div className="previous-card-parent">
-        <Card.Group itemsPerRow={3}>
+        <Card.Group itemsPerRow={3} stackable={true}>
           {!actions.isfetching ? (
             projects[0] &&
             projects.map((project, index) => (
