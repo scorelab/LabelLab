@@ -182,9 +182,6 @@ typings/
 .env
 .env.test
 
-#config
-dbURI.js
-
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 

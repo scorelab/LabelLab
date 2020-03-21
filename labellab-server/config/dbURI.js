@@ -10,7 +10,7 @@ var dbPass = process.env.DB_PASSWORD
 let mongoURI
 
 if(dbName && dbUser && dbPass){
-	mongoURI = '' + dbHost + '://'+ dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
+	mongoURI = 'mongodb+srv://IndrajithEkanayaka:labellab&971010@labellab-wikwc.mongodb.net/test?retryWrites=true&w=majority'
 }
 else{
 	mongoURI = ''
