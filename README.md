@@ -59,6 +59,10 @@ To create a free MongoDB Atlas cloud database, follow the guide at  [https://doc
 ```
 You should fill in these values in their relevent fields in the `.env` file.
 
+To add the connection string, go to the cluster you created -> Click connect -> Connect your application -> Copy the connection string and paste it inside `labellab-server` -> `config` -> `dbURI.js`
+```
+mongoURI = '{{DB_HOST}}://{{DB_USERNAME}}:{{DB_PASSWORD}}@{{DB_CLUSTER}}/{{DB_NAME}}?retryWrites=true&w=majority'
+```
 > **NOTE**: Your IP address may change if you've been disconnected from the internet and reconnected. If that happens, it means that your internet connection doesn't have a static IP. You may no longer be able to access the database if you've whitelisted only your previous IP address. You can allow access from any IP address from the Atlas control panel to overcome this issue.
 
 Both the front-end and the back-end can be run from the `labellab-server` folder using the terminal:
