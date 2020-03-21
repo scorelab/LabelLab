@@ -335,6 +335,20 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<ApiResponse> deleteImages(String token, List<String> imageIds) {
+    final data = {"images": imageIds};
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .delete(API_URL + ENDPOINT_IMAGE + "/delete",
+            options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
   Future<List<Label>> getLabels(String token, String projectId) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
