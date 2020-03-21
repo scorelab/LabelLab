@@ -12,6 +12,7 @@ class ProjectDetailBloc {
 
   Project _project;
   bool _isLoading = false;
+  List<String> _selectedImages = [];
 
   ProjectDetailBloc(this.projectId) {
     _loadProject();
@@ -37,6 +38,42 @@ class ProjectDetailBloc {
     });
   }
 
+  // Used for initial selection of image
+  void selectImage(String id) {
+    _selectedImages.add(id);
+    _setState(ProjectDetailState.multiSelect(_project,
+        selectedImages: _selectedImages));
+  }
+
+  // Used to switch selection state
+  void switchSelection(String id) {
+    _selectedImages.contains(id)
+        ? _selectedImages.remove(id)
+        : _selectedImages.add(id);
+    _setState(ProjectDetailState.multiSelect(_project,
+        selectedImages: _selectedImages));
+  }
+
+  // Used to select all images
+  void selectAllImages() {
+    _selectedImages = _project.images.map((image) => image.id).toList();
+    _setState(ProjectDetailState.multiSelect(_project,
+        selectedImages: _selectedImages));
+  }
+
+  // Used to delete selected images
+  void deleteSelected() {
+    _repository.deleteImages(_selectedImages).then((_) {
+      refresh();
+    });
+  }
+
+  // Used to cancel current selection
+  void cancelSelection() {
+    _selectedImages = [];
+    _setState(ProjectDetailState.success(_project));
+  }
+
   // Project stream
   StreamController<ProjectDetailState> _stateController =
       StreamController<ProjectDetailState>();
@@ -44,6 +81,7 @@ class ProjectDetailBloc {
   Stream<ProjectDetailState> get state => _stateController.stream;
 
   void _loadProject() {
+    _selectedImages = [];
     if (_isLoading) return;
     _isLoading = true;
     _setState(ProjectDetailState.loading(project: _project));

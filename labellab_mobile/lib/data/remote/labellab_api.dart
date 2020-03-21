@@ -32,13 +32,17 @@ abstract class LabelLabAPI {
   Future<ApiResponse> updateProject(String token, Project project);
   Future<ApiResponse> deleteProject(String token, String id);
   Future<ApiResponse> addMember(String token, String projectId, String email);
-  Future<ApiResponse> removeMember(String token, String projectId, String email);
+  Future<ApiResponse> removeMember(
+      String token, String projectId, String email);
 
   // Image
-  Future<ApiResponse> uploadImage(String token, String projectId, UploadImage image);
+  Future<ApiResponse> uploadImage(
+      String token, String projectId, UploadImage image);
   Future<Image> getImage(String token, String imageId);
-  Future<ApiResponse> updateImage(String token, Image image, List<LabelSelection> selections);
+  Future<ApiResponse> updateImage(
+      String token, Image image, List<LabelSelection> selections);
   Future<ApiResponse> deleteImage(String token, String imageId);
+  Future<ApiResponse> deleteImages(String token, List<String> imageIds);
 
   // Label
   Future<List<Label>> getLabels(String token, String projectId);
