@@ -480,3 +480,4 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/node,dart,linux,macos,python,windows,flutter,sublimetext,webstorm+all,visualstudiocode
 labellab_mobile/android/app/google-services.json
+/labellab-server/config/dbURI.js
