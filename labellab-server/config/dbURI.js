@@ -10,7 +10,7 @@ var dbPass = process.env.DB_PASSWORD
 let mongoURI
 
 if(dbName && dbUser && dbPass){
-	mongoURI = ''
+	mongoURI = '' + dbHost + '://'+ dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
 }
 else{
 	mongoURI = ''
