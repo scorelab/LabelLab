@@ -10,5 +10,4 @@ docker-compose*
 */obj
 README.md
 LICENSE
-.vscode 
-dbURI.js
+.vscode
