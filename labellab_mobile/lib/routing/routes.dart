@@ -32,8 +32,7 @@ class Routes {
         handler: signupHandler, transitionType: TransitionType.native);
     router.define(profile,
         handler: profileHandler, transitionType: TransitionType.native);
-    router.define(profile,
-        handler: profileHandler, transitionType: TransitionType.native);
+
     router.define(addProject,
         handler: addProjectHandler, transitionType: TransitionType.native);
     router.define(editProject,
@@ -46,6 +45,7 @@ class Routes {
     router.define(moreImagesProject,
         handler: moreImagesProjectHandler,
         transitionType: TransitionType.native);
+
     router.define(uploadImage,
         handler: uploadImageHandler, transitionType: TransitionType.native);
     router.define(editImage,
@@ -54,6 +54,7 @@ class Routes {
         handler: viewImageHandler, transitionType: TransitionType.native);
     router.define(labelImage,
         handler: labelImageHandler, transitionType: TransitionType.native);
+
     router.define(classify,
         handler: classifyHandler, transitionType: TransitionType.native);
     router.define(classification,
