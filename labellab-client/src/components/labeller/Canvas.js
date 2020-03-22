@@ -52,7 +52,7 @@ class Canvas extends Component {
   handleChange(eventType, { point, pos, figure, points }) {
     const { onChange, unfinishedFigure } = this.props
     const drawing = !!unfinishedFigure
-    const f = null
+    let f = null
     switch (eventType) {
       case 'add':
         if (drawing) {
