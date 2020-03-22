@@ -8,3 +8,7 @@
 .team-remove-user-icon:hover {
   cursor: pointer;
 }
+
+.ui.container{
+  margin-left: unset !important;
+}

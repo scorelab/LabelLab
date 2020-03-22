@@ -168,9 +168,10 @@ class ImagesIndex extends Component {
             ) : null}
           </Form>
         ) : null}
+        <div className="image-table-container">
         <Table
           celled
-          style={{ display: 'flex', flexDirection: 'column', height: 600 }}
+          style={{ display: 'flex', flexDirection: 'column', height: 600, marginRight: 200, overflow: 'auto'  }}
         >
           <Table.Header className="image-table-header">
             <Table.Row className="flex image-table-row-back">
@@ -217,6 +218,7 @@ class ImagesIndex extends Component {
             ) : null}
           </Table.Body>
         </Table>
+        </div>
       </div>
     )
   }

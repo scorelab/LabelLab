@@ -50,3 +50,10 @@
 .max-size-error{
   color:red;
 }
+.custom-margin {
+  margin-bottom: 1rem !important;
+}
+.image-table-container {
+  width: 100%;
+  padding-right: 20px;
+}

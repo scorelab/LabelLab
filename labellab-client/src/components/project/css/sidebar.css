@@ -20,5 +20,6 @@
   justify-content: center;
 }
 .delete-project-button {
-  width: 80%;
+  margin-top: 2rem !important;
+  width: 100%;
 }
