@@ -28,7 +28,7 @@
 }
 .delete-project-button {
   margin-top: 2rem !important;
-  width: 80%;
+  width: 100%;
 }
 
 @media only screen and (max-width: 767px) {
