@@ -162,6 +162,30 @@ class LabelingApp extends Component {
       //   });
       // break;
 
+      case "replace":
+        pushState(
+          state => {
+          return {
+            figures: update(state.figures, {
+              [label.id]: {
+                $splice: [
+                  [
+                    idx,
+                    1,
+                    {
+                      id: figure.id,
+                      type: figure.type,
+                      points: figure.points
+                    }
+                  ]
+                ]
+              }
+            })
+          };
+        });
+      break
+
+
       case 'delete':
         pushState(state => ({
           figures: update(state.figures, {
