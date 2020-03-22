@@ -12,3 +12,9 @@
 .ui.container{
   margin-left: unset !important;
 }
+
+@media only screen and (max-width: 767px) {
+  .ui.container{
+    width: 100% !important;
+  }
+}
