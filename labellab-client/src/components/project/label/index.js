@@ -86,7 +86,7 @@ class LabelIndex extends Component {
     const { actions, labels } = this.props
     const { showform } = this.state
     return (
-      <Container>
+      <Container style={{overflow: 'auto'}}>
         {actions.isdeleting ? (
           <Dimmer active>
             <Loader indeterminate>Removing Label :)</Loader>
