@@ -245,21 +245,43 @@ class ProjectDetailScreen extends StatelessWidget {
                                   TextStyle(color: Colors.white, fontSize: 14),
                             ),
                           ),
-                          selectedImages.contains(image.id)
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .accentColor
-                                        .withOpacity(0.8),
+                          AnimatedCrossFade(
+                            crossFadeState: selectedImages.contains(image.id)
+                                ? CrossFadeState.showFirst
+                                : CrossFadeState.showSecond,
+                            duration: Duration(milliseconds: 200),
+                            firstChild: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .accentColor
+                                    .withOpacity(0.8),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.done,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            secondChild: Container(),
+                            layoutBuilder: (topChild, topChildKey, bottomChild,
+                                bottomChildKey) {
+                              return Stack(
+                                overflow: Overflow.visible,
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Positioned(
+                                    key: bottomChildKey,
+                                    child: bottomChild,
                                   ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.done,
-                                      color: Colors.white,
-                                    ),
+                                  Positioned(
+                                    key: topChildKey,
+                                    child: topChild,
                                   ),
-                                )
-                              : Container()
+                                ],
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
