@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 // import Hotkeys from 'react-hot-keys';
 import update from 'immutability-helper'
 
@@ -214,6 +215,7 @@ class LabelingApp extends Component {
     const {
       labels,
       imageUrl,
+      projectUrl,
       // reference,
       onBack,
       onSkip,
@@ -273,7 +275,8 @@ class LabelingApp extends Component {
             pushState(state => ({
               figures: update(figures, { [labelId]: { $set: newValue } })
             })),
-          labelData: figures
+          labelData: figures,
+          onHome: () => this.props.history.push(projectUrl)
         }
     // let selectedFigure = null;
     const allFigures = []
@@ -338,4 +341,4 @@ class LabelingApp extends Component {
   }
 }
 
-export default withLoadImageData(withHistory(LabelingApp))
+export default withLoadImageData(withRouter(withHistory(LabelingApp)))

@@ -192,9 +192,7 @@ class LoginIndex extends Component {
             <div className="login-icons">
               <a
                 href={
-                  process.env.REACT_APP_HOST +
-                  process.env.REACT_APP_SERVER_PORT +
-                  `/api/v1/auth/google`
+                  `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/auth/google`
                 }
               >
                 <Image src={googleIcon} />
@@ -203,9 +201,7 @@ class LoginIndex extends Component {
             <div className="login-icons">
               <a
                 href={
-                  process.env.REACT_APP_HOST +
-                  process.env.REACT_APP_SERVER_PORT +
-                  `/api/v1/auth/github`
+                  `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/auth/github`
                 }
               >
                 <Image src={githubIcon} />
