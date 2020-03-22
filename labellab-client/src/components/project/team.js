@@ -100,7 +100,7 @@ class TeamIndex extends Component {
             />
           </Modal.Actions>
         </Modal>
-        <Table color="green" celled padded striped>
+        <Table color="green" celled padded striped stackable>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell singleLine>Project Members</Table.HeaderCell>
