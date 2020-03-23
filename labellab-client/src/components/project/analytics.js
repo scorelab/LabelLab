@@ -11,7 +11,7 @@ class AnalyticsIndex extends Component {
     fetchTimeLabel(match.params.projectId)
   }
   render() {
-    const { timeData, countData, isfetching } = this.props
+    const { timeData, countData, isfetching } = this.props        
     return (
       <div className="project-analytics-parent">
         <div className="analytics-row">
@@ -54,8 +54,8 @@ AnalyticsIndex.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    timeData: state.analytics.timeData,
-    countData: state.analytics.countData,
+    timeData: state.analytics.timeData || {},
+    countData: state.analytics.countData || {},
     isfetching: state.analytics.isfetching
   }
 }
