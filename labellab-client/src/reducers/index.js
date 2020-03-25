@@ -18,7 +18,7 @@ const rootReducers = combineReducers({
   labels: label,
   searchProjects: searchProjects,
   searchUser: searchUser,
-  analytics
+  analytics: analytics
 })
 
 export default rootReducers

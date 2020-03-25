@@ -4,9 +4,22 @@ import PropTypes from 'prop-types'
 import { Header, Grid } from 'semantic-ui-react'
 import { Bar, Pie } from 'react-chartjs-2'
 import './css/analytics.css'
+import {
+  getTimeLabel,
+  getLabelCount
+} from '../../actions/index'
+
 class AnalyticsIndex extends Component {
+  refreshData = () => {
+    const { project, getTimeLabel, getLabelCount } = this.props
+    getTimeLabel(project.projectId)  
+    getLabelCount(project.projectId) 
+  }
+  componentDidMount() {
+    this.refreshData();   
+  }
   render() {
-    const { timeData, countData, isfetching } = this.props        
+    const { timeData, countData, isfetching } = this.props   
     return (
       <div className="project-analytics-parent">
         <div className="analytics-row">
@@ -42,18 +55,33 @@ class AnalyticsIndex extends Component {
 
 AnalyticsIndex.propTypes = {
   analytics: PropTypes.object,
-  isfetching: PropTypes.bool
+  project: PropTypes.object,
+  isfetching: PropTypes.bool,
+  getTimeLabel: PropTypes.func,
+  getLabelCount: PropTypes.func
 }
 
 const mapStateToProps = state => {
   return {
+    project: state.projects.currentProject,
     timeData: state.analytics.timeData || {},
     countData: state.analytics.countData || {},
     isfetching: state.analytics.isfetching
   }
 }
 
+const mapDispatchToProps = dispatch => {  
+  return {
+    getTimeLabel: projectId => {
+      return dispatch(getTimeLabel(projectId))
+    },
+    getLabelCount: projectId => {
+      return dispatch(getLabelCount(projectId))
+    }
+  }
+}
+
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(AnalyticsIndex)
