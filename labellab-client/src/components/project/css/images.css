@@ -57,3 +57,10 @@
   width: 100%;
   padding-right: 20px;
 }
+.image-table {
+  display: flex; 
+  flex-direction: column; 
+  height: 600px; 
+  margin-right: 200px; 
+  overflow: auto 
+}
