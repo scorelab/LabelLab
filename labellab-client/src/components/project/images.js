@@ -171,7 +171,7 @@ class ImagesIndex extends Component {
         <div className="image-table-container">
         <Table
           celled
-          style={{ display: 'flex', flexDirection: 'column', height: 600, marginRight: 200, overflow: 'auto'  }}
+          className="image-table"
         >
           <Table.Header className="image-table-header">
             <Table.Row className="flex image-table-row-back">
