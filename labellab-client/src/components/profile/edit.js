@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Dimmer, Loader, Button } from 'semantic-ui-react'
+import {
+  Label,
+  Dimmer,
+  Loader,
+  Button,
+  Card,
+  Modal,
+  Input
+} from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { editUser, fetchUser } from '../../actions/index'
 import './css/edit.css'
@@ -10,7 +18,8 @@ class Edit extends Component {
     super(props)
     this.state = {
       name: '',
-      username: ''
+      username: '',
+      open: false
     }
   }
   componentDidMount() {
@@ -52,9 +61,11 @@ class Edit extends Component {
   callback = () => {
     this.props.fetchUser()
   }
+  closeModal = () => this.setState({ open: false })
+  openModal = () => this.setState({ open: true })
   render() {
-    const { name, username } = this.state
-    const { actions } = this.props
+    const { name, username, open } = this.state
+    const { actions, user } = this.props
     return (
       <React.Fragment>
         {actions.isfetching ? (
@@ -62,31 +73,67 @@ class Edit extends Component {
             <Loader indeterminate>Loading..</Loader>
           </Dimmer>
         ) : (
-          <Form>
-            <div>
-              <Form.Input
-                fluid
-                label="Name"
-                name="name"
-                placeholder="Name"
-                value={name}
-                onChange={this.onChange}
-              />
-              <Form.Input
-                fluid
-                label="Username"
-                name="username"
-                placeholder="Username"
-                value={username}
-                onChange={this.onChange}
-              />
-            </div>
-            <div className="profile-form-button-parent">
-              <Button floated="right" type="button" onClick={this.handleSubmit}>
-                Save
+          <Card className="user-card">
+            <Card.Header as="h2" className="user-card-header">
+              User Information
+              <Button floated="right" type="button" onClick={this.openModal}>
+                Edit
               </Button>
-            </div>
-          </Form>
+            </Card.Header>
+            <Card.Content>
+              <Modal size="small" open={open} onClose={this.closeModal}>
+                <Modal.Header>
+                  <p>Edit User Details</p>
+                </Modal.Header>
+                <Modal.Actions>
+                  <div className="modal-actions">
+                    <div>
+                      <Input
+                        name="name"
+                        type="text"
+                        label="Name"
+                        placeholder="Name..."
+                        defaultValue={name}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        name="username"
+                        type="text"
+                        label="Username"
+                        placeholder="Username..."
+                        defaultValue={username}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <div>
+                      <Button
+                        positive
+                        onClick={this.handleSubmit}
+                        content="Submit"
+                      />
+                    </div>
+                  </div>
+                </Modal.Actions>
+              </Modal>
+              <div className="user-details">
+                <div className="user-detail">
+                  <Label color="white" size="big" image>
+                    Name
+                    <Label.Detail>{user.userDetails.name}</Label.Detail>
+                  </Label>
+                </div>
+
+                <div className="user-detail">
+                  <Label color="white" size="big" image>
+                    Username
+                    <Label.Detail>{user.userDetails.username}</Label.Detail>
+                  </Label>
+                </div>
+              </div>
+            </Card.Content>
+          </Card>
         )}
       </React.Fragment>
     )

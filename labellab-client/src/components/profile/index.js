@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom'
 import {
   Card,
   Image,
-  Header,
+  Label,
   Container,
   Menu,
   Dimmer,
   Loader,
   Dropdown,
   Button,
-  Icon
+  Grid
 } from 'semantic-ui-react'
 import Navbar from '../navbar/project'
 import {
@@ -142,21 +142,48 @@ class Profile extends Component {
                   ) : null}
                 </div>
                 <div className="profile-first-rightbar">
-                  <Edit />
-                  <div className="profile-rightbar-child">
-                    <div>
-                      <Header as="h5" content="Total Projects" />
-                      {profile.totalProjects}
-                    </div>
-                    <div>
-                      <Header as="h5" content="Total Images" />
-                      {profile.totalImages}
-                    </div>
-                    <div>
-                      <Header as="h5" content="Total Labels" />
-                      {profile.totalLabels}
-                    </div>
-                  </div>
+                  <Grid columns={2}>
+                    <Grid.Row>
+                      <Grid.Column>
+                        <Edit />
+                      </Grid.Column>
+                      <Grid.Column>
+                        <Card className="project-card">
+                          <Card.Header as="h2" className="project-card-header">
+                            Project Information
+                          </Card.Header>
+                          <Card.Content>
+                            <div className="project-details">
+                              <div className="project-detail">
+                                <Label color="white" size="big" image>
+                                  Total Projects
+                                  <Label.Detail>
+                                    {profile.totalProjects}
+                                  </Label.Detail>
+                                </Label>
+                              </div>
+                              <div className="project-detail">
+                                <Label color="white" size="big" image>
+                                  Total Images
+                                  <Label.Detail>
+                                    {profile.totalImages}
+                                  </Label.Detail>
+                                </Label>
+                              </div>
+                              <div className="project-detail">
+                                <Label color="white" size="big" image>
+                                  Total Labels
+                                  <Label.Detail>
+                                    {profile.totalLabels}
+                                  </Label.Detail>
+                                </Label>
+                              </div>
+                            </div>
+                          </Card.Content>
+                        </Card>
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                 </div>
               </div>
               <div className="project-second">
