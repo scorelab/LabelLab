@@ -2,13 +2,13 @@
 class ClassificationLabel {
   String id;
   String name;
-  int accuracy;
+  int confidence;
 
   ClassificationLabel();
 
   ClassificationLabel.fromJson(dynamic json) {
     id = json["_id"];
     name = json["label_name"];
-    accuracy = json["accuracy"] ?? 0;
+    confidence = json["confidence"] ?? 0;
   }
 }

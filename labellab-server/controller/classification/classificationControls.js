@@ -27,7 +27,7 @@ exports.classify = function(req, res) {
                     // Mock label creation to emulate classification model.
                     var label = [{
                         label_name: 'Label ' + Math.floor(Math.random() * 10 + 1),
-                        accuracy: Math.floor(Math.random() * 50) + 50
+                        confidence: Math.floor(Math.random() * 50) + 50
                     }]
                     const newClassification = new Classification({
                         imageUrl: updateData.imageUrl,

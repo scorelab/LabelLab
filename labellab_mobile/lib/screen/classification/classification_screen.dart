@@ -90,7 +90,7 @@ class ClassificationScreen extends StatelessWidget {
             children: classification.label != null
                 ? classification.label.map((label) {
                     return Chip(
-                      label: Text(label.name + " => " + label.accuracy.toString() + '%'),
+                      label: Text(label.name + " => " + label.confidence.toString() + '%'),
                     );
                   }).toList()
                 : [],
