@@ -158,12 +158,12 @@ class ProjectUploadImageScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.camera),
               title: Text("Camera"),
-              onTap: () => _showImagePicker(context, ImageSource.camera),
+              onTap: () => _showImagePicker(context, ImageSource.camera,Provider.of<ProjectUploadImageBloc>(pageContext).selectImage),
             ),
             ListTile(
               leading: Icon(Icons.photo_library),
               title: Text("Gallery"),
-              onTap: () => _showImagePicker(pageContext, ImageSource.gallery),
+              onTap: () => _showImagePicker(pageContext, ImageSource.gallery,Provider.of<ProjectUploadImageBloc>(pageContext).selectImage),
             ),
           ],
         ),
@@ -171,10 +171,10 @@ class ProjectUploadImageScreen extends StatelessWidget {
     );
   }
 
-  void _showImagePicker(BuildContext context, ImageSource source) {
+  void _showImagePicker(BuildContext context, ImageSource source,Function(File) selectImage) {
     ImagePicker.pickImage(source: source).then((image) {
       if (image != null) {
-        Provider.of<ProjectUploadImageBloc>(context).selectImage(image);
+        selectImage(image);
         Navigator.pop(context);
       }
     });
