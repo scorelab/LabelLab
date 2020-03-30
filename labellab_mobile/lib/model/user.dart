@@ -4,6 +4,7 @@ class User {
   String username;
   String email;
   String thumbnail;
+  String profileImage;
   List<String> projectIds;
 
   User({this.id, this.name, this.username, this.email});
@@ -14,11 +15,15 @@ class User {
     username = json["username"];
     email = json["email"];
     thumbnail = json["thumbnail"];
+    profileImage = json["profileImage"]??'';
     if (hasProjects) {
       projectIds = json["project"];
     }
     if (thumbnail != null && !thumbnail.startsWith("http")) {
       thumbnail = (imageEndpoint != null ? imageEndpoint : "") + thumbnail;
+    }
+    if (profileImage != null && !profileImage.startsWith("http")) {
+      profileImage = (imageEndpoint != null ? imageEndpoint : "") + profileImage;
     }
   }
 }

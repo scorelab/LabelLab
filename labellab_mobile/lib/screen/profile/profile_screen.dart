@@ -1,3 +1,7 @@
+
+
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -83,7 +87,7 @@ class ProfileScreen extends StatelessWidget {
                     ? Image(
                         width: 128,
                         height: 128,
-                        image: CachedNetworkImageProvider(user.thumbnail),
+                        image: CachedNetworkImageProvider(user.profileImage != ''?user.profileImage:user.thumbnail),
                         fit: BoxFit.cover,
                       )
                     : null,
@@ -131,12 +135,12 @@ class ProfileScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.camera),
               title: Text("Camera"),
-              onTap: () => _showImagePicker(context, ImageSource.camera),
+              onTap: () => _showImagePicker(context, ImageSource.camera,Provider.of<ProfileBloc>(pageContext).uploadImage),
             ),
             ListTile(
               leading: Icon(Icons.photo_library),
               title: Text("Gallery"),
-              onTap: () => _showImagePicker(pageContext, ImageSource.gallery),
+              onTap: () => _showImagePicker(pageContext, ImageSource.gallery,Provider.of<ProfileBloc>(pageContext).uploadImage),
             ),
           ],
         ),
@@ -144,10 +148,10 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showImagePicker(BuildContext context, ImageSource source) {
+  void _showImagePicker(BuildContext context, ImageSource source,Function(File) uploadImage) {
     ImagePicker.pickImage(source: source).then((image) {
       if (image != null) {
-        Provider.of<ProfileBloc>(context).uploadImage(image);
+        uploadImage(image);
         Navigator.pop(context);
       }
     });

@@ -40,7 +40,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   static const ENDPOINT_USERS_INFO = "users/info";
   static const ENDPOINT_USERS_SEARCH = "users/search";
-  static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
+  static const ENDPOINT_UPLOAD_USER_IMAGE = "users/uploadImage";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_CREATE = "project/create";

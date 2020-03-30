@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
                   ? Image(
                       height: 48,
                       width: 48,
-                      image: CachedNetworkImageProvider(user.thumbnail),
+                      image: CachedNetworkImageProvider(user.profileImage != ''?user.profileImage:user.thumbnail),
                       fit: BoxFit.cover,
                     )
                   : null,
