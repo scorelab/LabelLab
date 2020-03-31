@@ -13,6 +13,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
+import 'package:labellab_mobile/model/object_detection.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -29,6 +30,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const String API_URL = BASE_URL + "api/v1/";
   static const String STATIC_CLASSIFICATION_URL =
       BASE_URL + "static/classifications/";
+  static const String STATIC_DETECTION_URL =
+      BASE_URL + "static/object_detections/";
   static const String STATIC_IMAGE_URL = BASE_URL + "static/img/";
   static const String STATIC_UPLOADS_URL = BASE_URL + "static/uploads/";
 
@@ -56,6 +59,10 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_CLASSIFICAITON_CLASSIFY = "classification/classify";
   static const ENDPOINT_CLASSIFICATION_GET = "classification/get";
   static const ENDPOINT_CLASSIFICATION_DELETE = "classification/delete";
+
+  static const ENDPOINT_DETECTION_DETECT = "objectdetection/detect";
+  static const ENDPOINT_DETECTION_GET = "objectdetection/get";
+  static const ENDPOINT_DETECTION_DELETE = "objectdetection/delete";
 
   @override
   Future<LoginResponse> login(AuthUser user) {
@@ -471,6 +478,83 @@ class LabelLabAPIImpl extends LabelLabAPI {
     return _dio
         .delete(API_URL + ENDPOINT_CLASSIFICATION_DELETE + "/$id",
             options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return ApiResponse(response.data);
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+
+  @override
+  Future<ObjectDetection> detect(String token, File image) async {
+    final imageBytes = image.readAsBytesSync();
+    final encodedBytes = base64Encode(imageBytes);
+    final data = {"image": "base64," + encodedBytes, "format": "image/jpg"};
+    Options options = Options(
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+        contentType: ContentType.parse("application/x-www-form-urlencoded"));
+    final response = await _dio.post(API_URL + ENDPOINT_DETECTION_DETECT,
+        options: options, data: data);
+    return ObjectDetection.fromJson(response.data['body'],
+        staticEndpoint: STATIC_DETECTION_URL);
+  }
+
+
+  @override
+  Future<List<ObjectDetection>> getDetections(String token) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_DETECTION_GET, options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((item) => ObjectDetection.fromJson(item,
+            staticEndpoint: STATIC_DETECTION_URL))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+
+  @override
+  Future<ObjectDetection> getDetection(String token, String id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_DETECTION_GET + "/$id", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((item) => ObjectDetection.fromJson(item,
+            staticEndpoint: STATIC_DETECTION_URL))
+            .toList()
+            .first;
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+
+  @override
+  Future<ApiResponse> deleteDetection(String token, String id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .delete(API_URL + ENDPOINT_DETECTION_DELETE + "/$id",
+        options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {

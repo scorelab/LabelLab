@@ -24,6 +24,15 @@ class Routes {
   static const classify = "/classify/:by";
   static const classification = "/classification/:id";
 
+
+  // Object Detection
+  static const detect = "/detect/:by";
+  static const objectDetection = "/objectDetection/:id";
+
+  //Classification and Object Detection Choice
+
+  static const classificationAndDetectionChoice = "/classificationAndDetectionChoice/:by";
+
   static void configureRouter(Router router) {
     router.define(main, handler: mainHandler);
     router.define(login,
@@ -59,5 +68,14 @@ class Routes {
         handler: classifyHandler, transitionType: TransitionType.native);
     router.define(classification,
         handler: classificationHandler, transitionType: TransitionType.native);
+
+    router.define(detect,
+        handler: detectHandler, transitionType: TransitionType.native);
+    router.define(objectDetection,
+        handler: objectDetectionHandler, transitionType: TransitionType.native);
+
+
+    router.define(classificationAndDetectionChoice,
+        handler: classificationAndDetectionChoiceHandler, transitionType: TransitionType.native);
   }
 }

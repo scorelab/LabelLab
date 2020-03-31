@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/classification.dart';
 
-class HistoryItem extends StatelessWidget {
+class ClassificationHistoryItem extends StatelessWidget {
   final Classification classification;
   final VoidCallback onSelected;
   final VoidCallback onDeleteSelected;
 
-  const HistoryItem(this.classification,
+  const ClassificationHistoryItem(this.classification,
       {Key key, this.onSelected, this.onDeleteSelected})
       : super(key: key);
 

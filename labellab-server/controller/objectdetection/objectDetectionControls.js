@@ -1,5 +1,5 @@
 let fs = require('fs')
-const Detection = require('../../models/detection')
+const ObjectDetection = require('../../models/objectDetection')
 
 exports.detect = function(req, res) {
     if (req && req.body && req.body.image && req.body.format) {
@@ -10,38 +10,34 @@ exports.detect = function(req, res) {
             format: format
         }
         let baseImg = data.image.split(',')[1]
-        var image = new Image();
-        image.src = baseImg;
-        let image_width = image.width;
-        let image_height = image.height;
         let binaryData = new Buffer(baseImg, 'base64')
         let ext = data.format.split('/')[1]
         let updateData = { imageUrl: `${data.id}${Date.now()}.${ext}` }
 
         fs.writeFile(
-            `./public/detections/${updateData.imageUrl}`,
+            `./public/object_detections/${updateData.imageUrl}`,
             binaryData,
             async err => {
                 if (err) {
                     return res.status(400).send({ success: false, msg: err })
                 } else {
-                    // TODO - Integrate with the detection model
+                    // TODO - Integrate with the object detection model
 
-                    // Mock label creation to emulate detection model.
+                    // Mock label creation to emulate object detection model.
                     var detections = [{
                         label_name: 'Label ' + Math.floor(Math.random() * 10 + 1),
                         confidence: Math.floor(Math.random() * 50) + 50,
-                        x1: Math.floor(Math.random() * image_width),
-                        y1: Math.floor(Math.random() * image_height),
-                        x2: Math.floor(Math.random() * image_width),
-                        y2: Math.floor(Math.random() * image_height),
+                        x1: Math.floor(Math.random() * 500),
+                        y1: Math.floor(Math.random() * 600),
+                        x2: Math.floor(Math.random() * 500),
+                        y2: Math.floor(Math.random() * 600),
                     }]
-                    const newDetection = new Detection({
+                    const newObjectDetection = new ObjectDetection({
                         imageUrl: updateData.imageUrl,
                         user: data.id,
                         detections: detections
                     })
-                    newDetection.save(function(err, detection) {
+                    newObjectDetection.save(function(err, detection) {
                         if (err) {
                             console.log(err)
                             return res
@@ -67,8 +63,8 @@ exports.detect = function(req, res) {
     } else res.status(400).send({ success: false, msg: 'Invalid Data' })
 }
 
-exports.fetchDetection = function(req, res) {
-    Classification.find({
+exports.fetchDetections = function(req, res) {
+    ObjectDetection.find({
             user: req.user._id
         })
         .select('imageUrl createdAt detections')
@@ -96,7 +92,7 @@ exports.fetchDetection = function(req, res) {
 
 exports.fetchDetectionId = function(req, res) {
     if (req && req.params && req.params.detectionId) {
-        Detection.find({
+        ObjectDetection.find({
                 _id: req.params.detectionId
             })
             .select('imageUrl createdAt detections')
@@ -125,7 +121,7 @@ exports.fetchDetectionId = function(req, res) {
 
 exports.deleteDetectionId = function(req, res) {
     if (req && req.params && req.params.detectionId) {
-        Detection.deleteOne({
+        ObjectDetection.deleteOne({
             _id: req.params.detectionId
         }).exec(function(err) {
             if (err) {

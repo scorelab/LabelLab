@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/model/classification.dart';
-import 'package:labellab_mobile/routing/application.dart';
-import 'package:labellab_mobile/screen/history/history_bloc.dart';
-import 'package:labellab_mobile/screen/history/history_item.dart';
-import 'package:labellab_mobile/screen/history/history_state.dart';
-import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
-import 'package:labellab_mobile/widgets/empty_placeholder.dart';
+import 'package:labellab_mobile/screen/history/classification_history_bloc.dart';
+import 'package:labellab_mobile/screen/history/classification_history_widget.dart';
+import 'package:labellab_mobile/screen/history/object_detection_history_bloc.dart';
+import 'package:labellab_mobile/screen/history/object_detection_history_widget.dart';
 import 'package:provider/provider.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
+  @override
+  _HistoryScreenState createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  bool classification = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,82 +20,35 @@ class HistoryScreen extends StatelessWidget {
         title: Text("History"),
         centerTitle: true,
         elevation: 0,
+        actions: <Widget>[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right:8.0),
+              child: OutlineButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Text(
+                      classification ? 'Classifications' : 'Object Detections'),
+                  onPressed: () {
+                    setState(() {
+                      classification = !classification;
+                    });
+                  }),
+            ),
+          )
+        ],
       ),
-      body: StreamBuilder(
-        stream: Provider.of<HistoryBloc>(context).classifications,
-        initialData: HistoryState.loading(),
-        builder: (context, AsyncSnapshot<HistoryState> snapshot) {
-          final HistoryState state = snapshot.data;
-          if (state.classifications != null &&
-              state.classifications.isNotEmpty) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                Provider.of<HistoryBloc>(context).refresh();
-              },
-              child: ListView(
-                children: <Widget>[
-                  state.isLoading
-                      ? LinearProgressIndicator(
-                          backgroundColor: Theme.of(context).canvasColor,
-                        )
-                      : Container(
-                          height: 6,
-                        ),
-                  state.error != null
-                      ? ListTile(
-                          title: Text(state.error),
-                        )
-                      : Container(),
-                  state.classifications != null
-                      ? Column(
-                          children: state.classifications
-                              .map((classification) => HistoryItem(
-                                    classification,
-                                    onDeleteSelected: () {
-                                      _showOnDeleteAlert(
-                                          context, classification);
-                                    },
-                                    onSelected: () => _gotoClassification(
-                                        context, classification.id),
-                                  ))
-                              .toList(),
-                        )
-                      : Container(),
-                ],
-              ),
-            );
-          } else {
-            return EmptyPlaceholder(
-              description: "Your past classifications will appear here",
-            );
-          }
-        },
-      ),
+      body: classification
+          ? Provider<ClassificationHistoryBloc>(
+              builder: (context) => ClassificationHistoryBloc(),
+              dispose: (context, bloc) => bloc.dispose(),
+              child: ClassificationHistoryWidget(),
+            )
+          : Provider<ObjectDetectionHistoryBloc>(
+              builder: (context) => ObjectDetectionHistoryBloc(),
+              dispose: (context, bloc) => bloc.dispose(),
+              child: ObjectDetectionHistoryWidget(),
+            ),
     );
-  }
-
-  void _showOnDeleteAlert(
-      BuildContext baseContext, Classification classification) {
-    showDialog(
-      context: baseContext,
-      builder: (context) {
-        return DeleteConfirmDialog(
-          name: "",
-          onCancel: () {
-            Navigator.pop(context);
-          },
-          onConfirm: () {
-            Provider.of<HistoryBloc>(baseContext).delete(classification.id);
-            Navigator.pop(context);
-          },
-        );
-      },
-    );
-  }
-
-  void _gotoClassification(BuildContext context, String id) {
-    Application.router.navigateTo(context, "/classification/$id").then((_) {
-      Provider.of<HistoryBloc>(context).refresh();
-    });
   }
 }

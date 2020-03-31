@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:labellab_mobile/data/local/classifcation_provider.dart';
+import 'package:labellab_mobile/data/local/object_detection_provider.dart';
 import 'package:labellab_mobile/data/local/project_provider.dart';
 import 'package:labellab_mobile/data/local/user_provider.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
@@ -13,6 +14,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
+import 'package:labellab_mobile/model/object_detection.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -23,6 +25,7 @@ class Repository {
   LabelLabAPI _api;
   ProjectProvider _projectProvider;
   ClassificationProvider _classificationProvider;
+  ObjectDetectionProvider _objectDetectionProvider;
   UserProvider _userProvider;
 
   String accessToken;
@@ -207,6 +210,7 @@ class Repository {
     return _api.classify(accessToken, image);
   }
 
+
   Future<List<Classification>> getClassifications() {
     if (accessToken == null) return Future(null);
     return _api.getClassifications(accessToken).then((classifications) {
@@ -257,6 +261,65 @@ class Repository {
     });
   }
 
+  //Object Detection
+  // Classification
+  Future<ObjectDetection> detect(File image) {
+    if (accessToken == null) return Future(null);
+    return _api.detect(accessToken, image);
+  }
+
+
+  Future<List<ObjectDetection>> getDetections() {
+    if (accessToken == null) return Future(null);
+    return _api.getDetections(accessToken).then((detections) {
+      _objectDetectionProvider.open().then((_) async {
+        await _objectDetectionProvider.replaceDetections(detections);
+        _objectDetectionProvider.close();
+      });
+      return detections;
+    });
+  }
+
+  Future<List<ObjectDetection>> getDetectionsLocal() {
+    return _objectDetectionProvider.open().then((_) {
+      return _objectDetectionProvider
+          .getDetections()
+          .then((detections) {
+        _objectDetectionProvider.close();
+        return detections;
+      });
+    });
+  }
+
+  Future<ObjectDetection> getDetection(String id) {
+    if (accessToken == null) return Future(null);
+    return _api.getDetection(accessToken, id);
+  }
+
+  Future<ObjectDetection> getDetectionLocal(String id) {
+    return _objectDetectionProvider.open().then((_) {
+      return _objectDetectionProvider
+          .getDetection(id)
+          .then((detection) {
+        _objectDetectionProvider.close();
+        return detection;
+      });
+    });
+  }
+
+  Future<bool> deleteDetection(String id) {
+    if (accessToken == null) return Future(null);
+    return _api.deleteDetection(accessToken, id).then((res) {
+      return _objectDetectionProvider.open().then((_) {
+        return _objectDetectionProvider.delete(id).then((_) {
+          _objectDetectionProvider.close();
+          return res.success;
+        });
+      });
+    });
+  }
+
+
   // Singleton
   static final Repository _respository = Repository._internal();
 
@@ -268,5 +331,6 @@ class Repository {
       : _api = LabelLabAPIImpl(),
         _projectProvider = ProjectProvider(),
         _classificationProvider = ClassificationProvider(),
+        _objectDetectionProvider = ObjectDetectionProvider(),
         _userProvider = UserProvider();
 }

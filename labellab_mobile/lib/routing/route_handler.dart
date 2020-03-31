@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
 import 'package:labellab_mobile/screen/classification/classification_screen.dart';
+import 'package:labellab_mobile/screen/classification_detection_choice_screen.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
 import 'package:labellab_mobile/screen/classify/classify_screen.dart';
+import 'package:labellab_mobile/screen/detect/detect_bloc.dart';
+import 'package:labellab_mobile/screen/detect/detect_screen.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:labellab_mobile/screen/main_screen.dart';
+import 'package:labellab_mobile/screen/object_detection/object_detection_bloc.dart';
+import 'package:labellab_mobile/screen/object_detection/object_detection_screen.dart';
 import 'package:labellab_mobile/screen/profile/profile_bloc.dart';
 import 'package:labellab_mobile/screen/profile/profile_screen.dart';
 import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.dart';
@@ -142,3 +147,28 @@ var classificationHandler = Handler(
     child: ClassificationScreen(),
   );
 });
+
+
+var detectHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return Provider<DetectBloc>(
+        builder: (context) => DetectBloc(),
+        dispose: (context, bloc) => bloc.dispose(),
+        child: DetectScreen(params['by'].first == 'camera'),
+      );
+    });
+
+var objectDetectionHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return Provider<ObjectDetectionBloc>(
+        builder: (context) => ObjectDetectionBloc(params['id'].first),
+        dispose: (context, bloc) => bloc.dispose(),
+        child: ObjectDetectionScreen(),
+      );
+    });
+
+
+var classificationAndDetectionChoiceHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return ClassificationDetectionChoiceScreen(params['by'].first);
+    });

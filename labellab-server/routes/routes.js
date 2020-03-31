@@ -9,7 +9,7 @@ var imageRoutes = require('./image/routes')
 var labelRoutes = require('./label/routes')
 var analyticsRoutes = require('./analytics/routes')
 var classificationRoutes = require('./classification/routes')
-var detectionRoutes = require('./detection/routes')
+var objectDetectionRoutes = require('./objectdetection/routes')
 
 // Routes
 // -> /api/auth/
@@ -20,6 +20,6 @@ router.use('/api/v1/image', imageRoutes)
 router.use('/api/v1/label', labelRoutes)
 router.use('/api/v1/analytics', analyticsRoutes)
 router.use('/api/v1/classification', classificationRoutes)
-router.use('/api/v1/detection', detectionRoutes)
+router.use('/api/v1/objectdetection', objectDetectionRoutes)
 
 module.exports = router

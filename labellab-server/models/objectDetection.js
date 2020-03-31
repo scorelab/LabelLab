@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const DetectionSchema = new mongoose.Schema({
+const ObjectDetectionSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -11,7 +11,7 @@ const DetectionSchema = new mongoose.Schema({
     },
     detections: [{
         confidence: Number,
-        label_name: ObjectId,
+        label_name: String,
         x1: Number,
         y1: Number,
         x2: Number,
@@ -23,4 +23,4 @@ const DetectionSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Detection', DetectionSchema)
+module.exports = mongoose.model('ObjectDetection', ObjectDetectionSchema)

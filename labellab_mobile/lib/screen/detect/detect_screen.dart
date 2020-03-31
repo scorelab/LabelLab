@@ -5,22 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:labellab_mobile/routing/application.dart';
-import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
-import 'package:labellab_mobile/screen/classify/classify_state.dart';
+import 'package:labellab_mobile/screen/detect/detect_state.dart';
 import 'package:labellab_mobile/widgets/selected_image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-class ClassifyScreen extends StatefulWidget {
+import 'detect_bloc.dart';
+
+class DetectScreen extends StatefulWidget {
   final bool isCamera;
 
-  ClassifyScreen(this.isCamera);
+  DetectScreen(this.isCamera);
 
   @override
-  _ClassifyScreenState createState() => _ClassifyScreenState();
+  _DetectScreenState createState() => _DetectScreenState();
 }
 
-class _ClassifyScreenState extends State<ClassifyScreen> {
+class _DetectScreenState extends State<DetectScreen> {
   bool uploadWithCompression;
 
   @override
@@ -37,21 +38,21 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Classifying",
+          "Object Detection",
         ),
         centerTitle: true,
         elevation: 0,
       ),
-      body: StreamBuilder<ClassifyState>(
-          stream: Provider.of<ClassifyBloc>(context).state,
-          initialData: ClassifyState.initial(),
+      body: StreamBuilder<DetectState>(
+          stream: Provider.of<DetectBloc>(context).state,
+          initialData: DetectState.initial(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              ClassifyState state = snapshot.data;
-              if (state.classification != null) {
+              DetectState state = snapshot.data;
+              if (state.objectDetection != null) {
                 WidgetsBinding.instance.addPostFrameCallback(
                         (_) =>
-                        _gotoClassificationDetail(state.classification.id));
+                        _gotoClassificationDetail(state.objectDetection.id));
               }
               return ListView(
                 children: <Widget>[
@@ -70,7 +71,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  state.isClassifing
+                  state.isDetecting
                       ? Container()
                       : CheckboxListTile(
                     title: Text("Upload Compressed Image (Faster)"),
@@ -86,12 +87,12 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  state.isClassifing
+                  state.isDetecting
                       ? Container()
                       : FlatButton(
                     child: Text("Upload"),
                     onPressed: () async {
-                      Provider.of<ClassifyBloc>(context).classifyImage(
+                      Provider.of<DetectBloc>(context).detectImage(
                           uploadWithCompression
                               ? await _compressImage(state.image)
                               : state.image);
@@ -100,7 +101,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                   SizedBox(
                     height: 24,
                   ),
-                  state.isClassifing
+                  state.isDetecting
                       ? Container()
                       : FlatButton(
                     child: Text("Cancel"),
@@ -108,7 +109,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                       Application.router.pop(context);
                     },
                   ),
-                  state.isClassifing ? _buildProgress(context) : Container(),
+                  state.isDetecting ? _buildProgress(context) : Container(),
                   state.error != null
                       ? _buildError(context, state.error)
                       : Container(),
@@ -127,7 +128,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
         FlatButton(
           child: Text("Retry"),
           onPressed: () {
-            Provider.of<ClassifyBloc>(context).retry();
+            Provider.of<DetectBloc>(context).retry();
           },
         ),
       ],
@@ -146,7 +147,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
           FlatButton(
             child: Text("Cancel"),
             onPressed: () {
-              Provider.of<ClassifyBloc>(context).cancel();
+              Provider.of<DetectBloc>(context).cancel();
               Application.router.pop(context);
             },
           ),
@@ -158,7 +159,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
   void _showImagePicker(BuildContext context, ImageSource source) {
     ImagePicker.pickImage(source: source).then((image) async {
       if (image != null) {
-        Provider.of<ClassifyBloc>(context).setImage(image);
+        Provider.of<DetectBloc>(context).setImage(image);
       } else {
         Application.router.pop(context);
       }
@@ -167,7 +168,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
 
   void _gotoClassificationDetail(String id) {
     Application.router
-        .navigateTo(context, "/classification/$id", replace: true);
+        .navigateTo(context, "/objectDetection/$id", replace: true);
   }
 
   Future<File> _compressImage(File image) async {

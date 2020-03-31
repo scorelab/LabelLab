@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/screen/history/history_bloc.dart';
+import 'package:labellab_mobile/model/object_detection.dart';
+import 'package:labellab_mobile/screen/history/classification_history_bloc.dart';
 import 'package:labellab_mobile/screen/history/history_screen.dart';
+import 'package:labellab_mobile/screen/history/object_detection_history_bloc.dart';
 import 'package:labellab_mobile/screen/home/home_screen.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_screen.dart';
@@ -33,11 +35,7 @@ class _MainScreenState extends State<MainScreen> {
                       onPageChanged: (index) => pageIndexNotifier.value = index,
                       controller: _pageController,
                       children: <Widget>[
-                        Provider<HistoryBloc>(
-                          builder: (context) => HistoryBloc(),
-                          dispose: (context, bloc) => bloc.dispose(),
-                          child: HistoryScreen(),
-                        ),
+                        HistoryScreen(),
                         HomeScreen(),
                         Provider<ProjectBloc>(
                           builder: (context) => ProjectBloc(),
@@ -50,11 +48,7 @@ class _MainScreenState extends State<MainScreen> {
                       onPageChanged: (index) => pageIndexNotifier.value = index,
                       controller: _pageController,
                       children: <Widget>[
-                        Provider<HistoryBloc>(
-                          builder: (context) => HistoryBloc(),
-                          dispose: (context, bloc) => bloc.dispose(),
-                          child: HistoryScreen(),
-                        ),
+                        HistoryScreen(),
                         HomeScreen(),
                       ],
                     ),
