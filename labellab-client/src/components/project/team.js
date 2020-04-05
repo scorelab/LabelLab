@@ -138,6 +138,7 @@ class TeamIndex extends Component {
         <div className="add-member-button">
           <Button
             icon
+            positive
             className="add-member"
             onClick={this.handleAddMember}
             labelPosition="left"
@@ -184,4 +185,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamIndex)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TeamIndex)

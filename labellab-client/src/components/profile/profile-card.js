@@ -152,9 +152,14 @@ class ProfileCard extends Component {
                 htmlFor="profile-embedpollfileinput"
                 className="ui medium primary left floated button custom-margin"
               >
-                Change image
+                Change Image
               </label>
-              <Button negative icon="delete" onClick={this.handleRemoveImage} />
+              <Button
+                negative
+                basic
+                icon="delete"
+                onClick={this.handleRemoveImage}
+              />
             </div>
           </div>
         )}

@@ -114,6 +114,7 @@ class ProjectSidebar extends Component {
 
             <Button
               negative
+              basic
               className="delete-project-button"
               onClick={this.handleOpen}
               content="Delete Project"

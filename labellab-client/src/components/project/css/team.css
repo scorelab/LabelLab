@@ -2,19 +2,18 @@
   padding: 2em 0;
 }
 .add-member {
-  background-color: #00a89f !important;
   color: white !important;
 }
 .team-remove-user-icon:hover {
   cursor: pointer;
 }
 
-.ui.container{
+.ui.container {
   margin-left: unset !important;
 }
 
 @media only screen and (max-width: 767px) {
-  .ui.container{
+  .ui.container {
     width: 100% !important;
   }
 }

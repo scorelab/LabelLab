@@ -165,6 +165,7 @@ class ModelsIndex extends Component {
                       label="Delete"
                       size="tiny"
                       onClick={null}
+                      basic
                       negative
                     />
                   </Table.Cell>

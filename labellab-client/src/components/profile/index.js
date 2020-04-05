@@ -145,8 +145,8 @@ class Profile extends Component {
                       </Card>
                     ))
                   ) : (
-                    <CardLoader />
-                  )}
+                      <CardLoader />
+                    )}
                 </Card.Group>
               </div>
             </div>
@@ -177,10 +177,10 @@ class Profile extends Component {
             </div> */}
           </React.Fragment>
         ) : (
-          <Dimmer active>
-            <Loader indeterminate>Loading..</Loader>
-          </Dimmer>
-        )}
+            <Dimmer active>
+              <Loader indeterminate>Loading..</Loader>
+            </Dimmer>
+          )}
       </div>
     )
   }
