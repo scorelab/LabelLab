@@ -100,19 +100,22 @@ class Dashboard extends Component {
     })
   }
   handleChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    }, () => {
-      if(this.state.projectName === '') {
-        this.setState({
-          invalidDetails: true
-        })
-      } else {
-        this.setState({
-          invalidDetails: false
-        })
+    this.setState(
+      {
+        [e.target.name]: e.target.value
+      },
+      () => {
+        if (this.state.projectName === '') {
+          this.setState({
+            invalidDetails: true
+          })
+        } else {
+          this.setState({
+            invalidDetails: false
+          })
+        }
       }
-    })
+    )
   }
   handleProjectSubmit = () => {
     this.props.initProject(
@@ -176,7 +179,8 @@ class Dashboard extends Component {
           <div className="create-project-button">
             <Button
               icon
-              className="create-button"
+              positive
+              className=""
               onClick={this.handleCreateProject}
               labelPosition="left"
             >
@@ -185,7 +189,12 @@ class Dashboard extends Component {
             </Button>
           </div>
           <div className="previous-heading">
-            <Header className="mobile-padding" textAlign="left" as="h3" content="Previous Works" />
+            <Header
+              className="mobile-padding"
+              textAlign="left"
+              as="h3"
+              content="Previous Works"
+            />
             <PreviousWork />
           </div>
         </div>
@@ -234,4 +243,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Dashboard)

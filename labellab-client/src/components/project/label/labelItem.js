@@ -46,7 +46,7 @@ class LabelItem extends Component {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Button type="button" onClick={() => onDelete(label)}>
+          <Button negative basic type="button" onClick={() => onDelete(label)}>
             <Icon name="trash" />
           </Button>
           <Button
@@ -61,4 +61,7 @@ class LabelItem extends Component {
   }
 }
 
-export default connect(null, null)(LabelItem)
+export default connect(
+  null,
+  null
+)(LabelItem)

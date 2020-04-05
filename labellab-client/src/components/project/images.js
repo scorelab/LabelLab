@@ -147,7 +147,7 @@ class ImagesIndex extends Component {
           />
           <label
             htmlFor="image-embedpollfileinput"
-            className="ui medium primary left floated button custom-margin"
+            className="ui medium primary left floated button custom-margin positive"
           >
             Add Image
           </label>
@@ -219,6 +219,7 @@ class ImagesIndex extends Component {
                   Actions
                   <Button
                     negative
+                    basic
                     disabled={!this.state.selectedList.length}
                     onClick={this.handleDelete}
                   >
@@ -360,6 +361,8 @@ const Row = ({
           <Button icon="pencil" label="Edit" size="tiny" />
         </Link>
         <Button
+          negative
+          basic
           icon="trash"
           label="Delete"
           size="tiny"
