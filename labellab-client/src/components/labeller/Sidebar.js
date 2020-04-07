@@ -8,7 +8,9 @@ import {
   Form,
   Checkbox,
   Radio,
-  Select
+  Select,
+  Popup,
+  Grid,
 } from 'semantic-ui-react'
 import { shortcuts, colors } from './utils'
 import Hotkeys from 'react-hot-keys'
@@ -25,7 +27,6 @@ export default class Sidebar extends PureComponent {
       onToggle,
       filter,
       style,
-      openHotkeys,
       onBack,
       onSkip,
       onHome,
@@ -34,15 +35,6 @@ export default class Sidebar extends PureComponent {
       models,
       makePrediction
     } = this.props
-
-    const hotkeysButton = openHotkeys ? (
-      <Icon
-        link
-        name="keyboard"
-        style={headerIconStyle}
-        onClick={openHotkeys}
-      />
-    ) : null
 
     const getSelectHandler = ({ type, id }) =>
       type === 'bbox' || type === 'polygon' ? () => onSelect(id) : null
@@ -59,7 +51,34 @@ export default class Sidebar extends PureComponent {
       >
         <Header size="large" style={{ flex: '0 0 auto' }}>
           {title}
-          {hotkeysButton}
+          <Popup
+            flowing
+            content={
+              <Grid columns={2} style={{ width: '400px' }}>
+                <Grid.Row>
+                  <Grid.Column width={7}>Select Label:</Grid.Column>
+                  <Grid.Column width={9}>
+                    <Label>0</Label>-<Label>9</Label> and <Label>q</Label>,{' '}
+                    <Label>w</Label>, <Label>e</Label>
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                  <Grid.Column width={7}>Unselect Label:</Grid.Column>
+                  <Grid.Column width={9}>
+                    <Label>Esc</Label>
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                  <Grid.Column width={7}>Delete Polygon:</Grid.Column>
+                  <Grid.Column width={9}>
+                    Select Polygon + <Label>Del</Label>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            }
+            header="Shortcuts"
+            trigger={<Icon link name="keyboard" style={headerIconStyle} />}
+          />
         </Header>
         <List divided selection style={{ flex: 1, overflowY: 'auto' }}>
           {labels.map((label, i) =>
