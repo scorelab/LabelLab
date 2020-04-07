@@ -13,7 +13,7 @@ import {
   Message,
   Icon,
   Label,
-  Form
+  Form,
 } from 'semantic-ui-react'
 import { validateForm, isEmail } from '../../utils/helpers'
 import { login } from '../../actions/index'
@@ -33,7 +33,8 @@ class LoginIndex extends Component {
       errors: {
         email: '',
         password: ''
-      }
+      },
+      showPassword:false
     }
   }
 
@@ -100,6 +101,12 @@ class LoginIndex extends Component {
       ? history.push(location.state.from.pathname)
       : history.push('/')
   }
+   
+  showPassword = () =>{
+  this.setState({
+    showPassword:!this.state.showPassword
+  })
+  }
 
   render() {
     const { isAuthenticating, statusText, registerStatusText, authError } = this.props
@@ -141,7 +148,7 @@ class LoginIndex extends Component {
                 <label>Password</label>
 
                 <Input
-                  type="password"
+                  type={this.state.showPassword?"text":"password"}
                   placeholder="Password"
                   name="password"
                   value={password}
@@ -153,7 +160,9 @@ class LoginIndex extends Component {
                   </Label>
                 )}
               </Form.Field>
-
+              <Button onClick={this.showPassword} className='show-password'>
+                {this.state.showPassword?<Icon fitted name='eye slash' />:<Icon fitted name='eye' />}
+              </Button>
               {authError && (
                 <Message negative>
                   <Icon name="warning circle" />
@@ -170,7 +179,7 @@ class LoginIndex extends Component {
 
 
               <div className="action">
-                <Link to="#">Forgot password?</Link>
+                <Link to="/forgotpassword">Forgot password?</Link>
               </div>
 
               <Button primary>Log in</Button>
