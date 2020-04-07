@@ -3,7 +3,9 @@
         width: 80% !important;
     }
 }
-
+.show-password{
+    width:5vw;
+}
 .login-grand-parent{
     display: flex;
     flex-direction: column;
