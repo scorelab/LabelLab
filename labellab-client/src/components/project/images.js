@@ -59,6 +59,9 @@ class ImagesIndex extends Component {
 
   handleSubmit = e => {
     e.preventDefault()
+    if (this.state.isOpen) {
+      return
+    }
     const { project, fetchProject, submitImage } = this.props
     const { imageNames, images, format } = this.state
     if (this.state.file && this.state.file.size > 101200) {
