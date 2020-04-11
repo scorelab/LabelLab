@@ -1,6 +1,3 @@
-.image-grand-parent {
-  width: 100%;
-}
 .image-parent {
   padding: 1em;
   display: flex;
@@ -22,33 +19,13 @@
 .flex {
   display: flex;
 }
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-.height-600 {
-  height: 600;
-}
-.image-table-row-back {
-  background: #f9fafb;
-}
-.image-table-header {
-  flex: 0 0 auto;
-}
-.image-table-special-headercell {
-  flex: 0 0 auto;
-  opacity: 0;
-  overflow-y: scroll;
-  padding: 0;
-  border: 0;
-}
 .image-table-body {
-  height: 100%;
   flex: 1;
-  outline: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
-.max-size-error{
-  color:red;
+.max-size-error {
+  color: red;
 }
 .custom-margin {
   margin-bottom: 1rem !important;
@@ -58,9 +35,9 @@
   padding-right: 20px;
 }
 .image-table {
-  display: flex; 
-  flex-direction: column; 
-  height: 600px; 
-  margin-right: 200px; 
-  overflow: auto 
+  display: flex;
+  flex-direction: column;
+  height: 30em;
+  margin-right: 200px;
+  background-color: red;
 }
