@@ -46,6 +46,12 @@ export default class Sidebar extends PureComponent {
 
     const getSelectHandler = ({ type, id }) =>
       type === 'bbox' || type === 'polygon' ? () => onSelect(id) : null
+
+    const modelOptions = [
+      { value: 'frcnn', text: 'Faster RCNN' },
+      { value: 'yolo', text: 'YOLOv3' },
+      { value: 'mrcnn', text: 'Mask RCNN' }
+    ]
     return (
       <div
         style={{
@@ -61,6 +67,15 @@ export default class Sidebar extends PureComponent {
           {title}
           {hotkeysButton}
         </Header>
+        <Header size="tiny">Generate bounding box using ML model</Header>
+        <Select
+          placeholder="Select a model"
+          options={modelOptions}
+          style={{ marginBottom: '10px' }}
+        />
+        <Button primary fluid>
+          Generate
+        </Button>
         <List divided selection style={{ flex: 1, overflowY: 'auto' }}>
           {labels.map((label, i) =>
             ListItem({
@@ -114,11 +129,7 @@ function ListItem({
   color,
   selected = false,
   disabled = false,
-  isToggled = false,
-  labelData,
-  onFormChange,
-  models,
-  makePrediction
+  isToggled = false
 }) {
   const icons = []
 
@@ -145,96 +156,13 @@ function ListItem({
     />
   ) : null
 
-  function genSublist(label) {
-    const sublistStyle = { fontSize: '12px' }
-    if (label.type === 'text') {
-      const filteredModels = (models || []).filter(
-        ({ type }) => type === 'object_classification'
-      )
-      const options = filteredModels.map(({ id, name }) => ({
-        value: id,
-        text: name
-      }))
-      const fillInDOM =
-        filteredModels.length > 0 ? (
-          <div>
-            Fill in using a model prediction:
-            <Select
-              options={options}
-              placeholder="Select a model"
-              onChange={async (e, { value }) => {
-                const m = models.find(({ id }) => id === value)
-                const text = (await makePrediction(m)).join(', ')
-                onFormChange(label.id, [text])
-              }}
-            />
-          </div>
-        ) : null
-      return (
-        <List style={sublistStyle}>
-          <List.Item>
-            <Form>
-              <Form.Input
-                label={label.prompt}
-                style={{ width: '100%' }}
-                value={labelData[0] || ''}
-                onChange={(e, { value }) => onFormChange(label.id, [value])}
-              />
-              {fillInDOM}
-            </Form>
-          </List.Item>
-        </List>
-      )
-    }
-
-    if (label.type === 'select') {
-      const { options } = label
-      const handleChange = function(option) {
-        return (e, { checked }) =>
-          onFormChange(
-            label.id,
-            checked
-              ? labelData.concat([option])
-              : labelData.filter(x => x !== option)
-          )
-      }
-
-      const items = options.map(option => (
-        <List.Item key={option}>
-          <Checkbox
-            label={option}
-            checked={labelData.indexOf(option) !== -1}
-            onChange={handleChange(option)}
-          />
-        </List.Item>
-      ))
-      return <List style={sublistStyle}>{items}</List>
-    }
-
-    if (label.type === 'select-one') {
-      const { options } = label
-      const items = options.map(option => (
-        <List.Item key={option}>
-          <Radio
-            label={option}
-            checked={labelData.indexOf(option) !== -1}
-            onChange={(e, { checked }) => onFormChange(label.id, [option])}
-          />
-        </List.Item>
-      ))
-      return <List style={sublistStyle}>{items}</List>
-    }
-
-    return null
-  }
-
   return (
     <List.Item
       onClick={onSelect}
       disabled={disabled}
       active={selected}
       key={label.id}
-      style={{ fontSize: '1.3em' }}
+      style={{ fontSize: '1em' }}
     >
       <Hotkeys
         keyName={shortcut}
@@ -245,8 +173,6 @@ function ListItem({
         </Label>
         {label.name}
         {figureIcon}
-        <span style={{ float: 'right' }}>{icons}</span>
-        {genSublist(label)}
       </Hotkeys>
     </List.Item>
   )
