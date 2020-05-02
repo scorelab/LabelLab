@@ -22,6 +22,7 @@ class LabelingLoader extends Component {
       disableNext: false
     }
   }
+  
   componentDidMount() {
     const { match, fetchLabels, fetchProject, fetchProjectImage } = this.props
     fetchLabels(match.params.projectId)
@@ -119,6 +120,7 @@ class LabelingLoader extends Component {
               `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/static/uploads/${image.imageUrl}?${Date.now()}`
             }
             projectUrl={`/project/${match.params.projectId}/images`}
+            projectId={match.params.projectId}
             demo={false}
             {...props}
           />

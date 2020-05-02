@@ -8,6 +8,7 @@ import {
   Form,
   Checkbox,
   Radio,
+  Loader,
   Select
 } from 'semantic-ui-react'
 import { shortcuts, colors } from './utils'
@@ -29,6 +30,11 @@ export default class Sidebar extends PureComponent {
       onBack,
       onSkip,
       onHome,
+      modelOptions,
+      genModelLoader,
+      genbbox,
+      handleModelSelect,
+      isModelSelected,
       labelData,
       onFormChange,
       models,
@@ -61,6 +67,22 @@ export default class Sidebar extends PureComponent {
           {title}
           {hotkeysButton}
         </Header>
+        <Header size="tiny">Generate bounding box using ML model</Header>
+        <Select
+          placeholder="Select a model"
+          options={modelOptions}
+          style={{ marginBottom: '10px' }}
+          onClick={handleModelSelect}
+        />
+        <Button
+          primary
+          fluid
+          loading={genModelLoader}
+          onClick={genbbox}
+          disabled={!isModelSelected}
+        >
+          Generate
+        </Button>
         <List divided selection style={{ flex: 1, overflowY: 'auto' }}>
           {labels.map((label, i) =>
             ListItem({

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 // import Hotkeys from 'react-hot-keys';
 import update from 'immutability-helper'
-
+import PropTypes from 'prop-types'
 import 'semantic-ui-css/semantic.min.css'
-
+import { createLabel } from '../../actions/index'
 import Canvas from './Canvas'
 // import HotkeysPanel from './HotkeysPanel';
 import Sidebar from './Sidebar'
@@ -28,16 +29,17 @@ import { withLoadImageData } from './LoadImageDataHOC'
 class LabelingApp extends Component {
   constructor(props) {
     super(props)
-    const { labels } = props
+    const { labels, projectId } = props
     const toggles = {}
     labels.map(label => (toggles[label.id] = true))
 
     this.state = {
       selected: null,
       toggles,
-
+      genModelLoader: false,
       selectedFigureId: null,
-
+      selectedModel: null,
+      isModelSelected: false,
       // UI
       reassigning: { status: false, type: null },
       hotkeysPanel: false
@@ -61,7 +63,6 @@ class LabelingApp extends Component {
     }
 
     const { labels } = this.props
-
     const labelIdx = labels.findIndex(label => label.id === selected)
     const type = labels[labelIdx].type
     const color = colors[labelIdx]
@@ -124,47 +125,8 @@ class LabelingApp extends Component {
         )
         break
 
-      // case "replace":
-      //   pushState(state => {
-      //     let { tracingOptions } = figure;
-      //     if (tracingOptions && tracingOptions.enabled) {
-      //       const imageInfo = {
-      //         height,
-      //         width,
-      //         imageData
-      //       };
-      //       tracingOptions = {
-      //         ...tracingOptions,
-      //         trace: computeTrace(figure.points, imageInfo, tracingOptions)
-      //       };
-      //     } else {
-      //       tracingOptions = { ...tracingOptions, trace: [] };
-      //     }
-
-      //     return {
-      //       figures: update(state.figures, {
-      //         [label.id]: {
-      //           $splice: [
-      //             [
-      //               idx,
-      //               1,
-      //               {
-      //                 id: figure.id,
-      //                 type: figure.type,
-      //                 points: figure.points,
-      //                 tracingOptions
-      //               }
-      //             ]
-      //           ]
-      //         }
-      //       })
-      //     };
-      //   });
-      // break;
-
-      case "replace":
-        pushState(
-          state => {
+      case 'replace':
+        pushState(state => {
           return {
             figures: update(state.figures, {
               [label.id]: {
@@ -181,10 +143,9 @@ class LabelingApp extends Component {
                 ]
               }
             })
-          };
-        });
-      break
-
+          }
+        })
+        break
 
       case 'delete':
         pushState(state => ({
@@ -235,6 +196,20 @@ class LabelingApp extends Component {
     }
   }
 
+  handleNewLabelSubmit = name => {
+    const { projectId, createLabel } = this.props
+    let data = {
+      name: name,
+      type: 'bbox',
+      projectId: projectId
+    }
+    createLabel(data, this.callback)
+  }
+  callback = () => {
+    // this.genModelLoader: false
+    window.location.reload()
+  }
+
   render() {
     const {
       labels,
@@ -268,6 +243,9 @@ class LabelingApp extends Component {
       models,
       makePrediction
     }
+
+    const modelOptions = [{ value: 'frcnn', text: 'Faster RCNN' }]
+
     const sidebarProps = reassigning.status
       ? {
           title: 'Select the new label',
@@ -288,6 +266,7 @@ class LabelingApp extends Component {
           selected,
           onSelect: this.handleSelected,
           toggles,
+          modelOptions,
           onToggle: label =>
             this.setState({
               toggles: update(toggles, {
@@ -295,6 +274,53 @@ class LabelingApp extends Component {
               })
             }),
           openHotkeys: () => this.setState({ hotkeysPanel: true }),
+          genModelLoader: this.state.genModelLoader,
+          isModelSelected: this.state.isModelSelected,
+          handleModelSelect: e => {
+            this.setState({
+              // selectedModel: value,
+              isModelSelected: true
+            })
+          },
+          genbbox: async () => {
+            this.setState({ genModelLoader: true })
+            const existingLabels = []
+            var detectedLabels = ''
+            labels.map((label, _) => existingLabels.push(label.name))
+
+            var cocoSsd = require('@tensorflow-models/coco-ssd')
+            let img = new Image()
+            img.crossOrigin = 'Anonymous'
+            img.src = imageUrl
+            // Load the model.
+            const model = await cocoSsd.load()
+            // Classify the image.
+            const predictions = await model.detect(img)
+            if (predictions.length !== 0) {
+              predictions.forEach(predictedLabel => {
+                if (
+                  existingLabels.includes(predictedLabel.class) ||
+                  existingLabels.includes(predictedLabel.class.toUpperCase())
+                ) {
+                  detectedLabels += predictedLabel.class + ', '
+                } else {
+                  existingLabels.push(predictedLabel.class)
+                  this.handleNewLabelSubmit(predictedLabel.class)
+                }
+              })
+            } else {
+              alert('No label detected!')
+            }
+            if (detectedLabels.length !== 0) {
+              detectedLabels = detectedLabels.slice(0, -2)
+              alert(
+                'No new label detected!\n' +
+                  detectedLabels +
+                  ' label/s already exists'
+              )
+            }
+            this.setState({ genModelLoader: false })
+          },
           onFormChange: (labelId, newValue) =>
             pushState(state => ({
               figures: update(figures, { [labelId]: { $set: newValue } })
@@ -365,4 +391,27 @@ class LabelingApp extends Component {
   }
 }
 
-export default withLoadImageData(withRouter(withHistory(LabelingApp)))
+LabelingApp.propTypes = {
+  createLabel: PropTypes.func
+}
+const mapStateToProps = state => {
+  return {
+    labels: state.labels.labels
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    // fetchLabels: projectId => {
+    //   return dispatch(fetchLabels(projectId))
+    // },
+    createLabel: (data, callback) => {
+      return dispatch(createLabel(data, callback))
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withLoadImageData(withRouter(withHistory(LabelingApp))))
