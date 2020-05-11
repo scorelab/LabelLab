@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: LabelLab API
+  version: 2.0.0
+  description: Rest API for machine learning supported web-base image labelling tool.
+  contact:
+    name: SCoRe Lab
+    url: 'http://www.scorelab.org/'
+    email: info@scorelab.org
+  license:
+    name: Apache 2.0
+    url: 'https://github.com/scorelab/LabelLab/blob/master/LICENSE'
+servers:
+  - url: 'http://localhost:8000'
+    description: Development
+paths: {}
+components:
+  schemas: {}
+  securitySchemes:
+    accessToken:
+      type: http
+      scheme: bearer
+tags:
+  - name: Models
+    description: Models of the API
