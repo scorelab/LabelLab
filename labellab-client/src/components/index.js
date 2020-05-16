@@ -63,6 +63,11 @@ const ResetPassword = Loadable({
   loading: Loading
 })
 
+const ModelEditor = Loadable({
+  loader: () => import('../components/model-editor'),
+  loading: Loading
+})
+
 class App extends Component {
   render() {
     return (
@@ -80,6 +85,10 @@ class App extends Component {
             <PrivateRoute
               path={`/labeller/:projectId/:imageId`}
               component={Labeller}
+            />
+            <PrivateRoute
+              path={`/model_editor/:type/:projectId`}
+              component={ModelEditor}
             />
             <PrivateRoute path={`/project/:projectId`} component={Project} />
           </Switch>
