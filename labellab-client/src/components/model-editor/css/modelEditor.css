@@ -1,0 +1,7 @@
+.model-editor {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding-top: 1em;
+    width: 95%;
+}
