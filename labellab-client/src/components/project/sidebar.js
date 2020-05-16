@@ -99,6 +99,15 @@ class ProjectSidebar extends Component {
                 >
                   Project Labels
                 </Menu.Item>
+                <Menu.Item
+                  as={Link}
+                  to={`/project/${project.projectId}/models`}
+                  name="models"
+                  active={activeItem === 'models'}
+                  onClick={this.handleItemClick}
+                >
+                  Project Models
+                </Menu.Item>
               </Menu>
             </div>
 
@@ -150,4 +159,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectSidebar)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectSidebar)
