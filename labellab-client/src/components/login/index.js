@@ -34,7 +34,7 @@ class LoginIndex extends Component {
         email: '',
         password: ''
       },
-      showPassword:false
+      showPassword: false,
     }
   }
 
@@ -101,11 +101,11 @@ class LoginIndex extends Component {
       ? history.push(location.state.from.pathname)
       : history.push('/')
   }
-   
-  showPassword = () =>{
-  this.setState({
-    showPassword:!this.state.showPassword
-  })
+
+  showPassword = () => {
+    this.setState({
+      showPassword: !this.state.showPassword,
+    })
   }
 
   render() {
@@ -148,11 +148,21 @@ class LoginIndex extends Component {
                 <label>Password</label>
 
                 <Input
-                  type={this.state.showPassword?"text":"password"}
+                  type={this.state.showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   name="password"
                   value={password}
                   onChange={this.handleChange}
+                  label={
+                    <Button onClick={this.showPassword} className="show-password">
+                      {this.state.showPassword ?
+                        <Icon fitted name='eye slash' />
+                        :
+                        <Icon fitted name='eye' />
+                      }
+                    </Button>
+                  }
+                  labelPosition='right'
                 />
                 {errors.password && (
                   <Label pointing color="red">
@@ -160,9 +170,6 @@ class LoginIndex extends Component {
                   </Label>
                 )}
               </Form.Field>
-              <Button onClick={this.showPassword} className='show-password'>
-                {this.state.showPassword?<Icon fitted name='eye slash' />:<Icon fitted name='eye' />}
-              </Button>
               {authError && (
                 <Message negative>
                   <Icon name="warning circle" />

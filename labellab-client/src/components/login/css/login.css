@@ -3,16 +3,18 @@
         width: 80% !important;
     }
 }
-.show-password{
-    width:5vw;
+
+.show-password {
+    width: 3vw;
 }
-.login-grand-parent{
+
+.login-grand-parent {
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
-.login-parent{
+.login-parent {
     margin-top: 5em;
     width: 30%;
     margin-left: auto;
