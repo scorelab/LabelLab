@@ -175,6 +175,11 @@ class Repository {
     return _api.deleteImage(accessToken, imageId);
   }
 
+  Future<ApiResponse> deleteImages(List<String> imageIds) {
+    if (accessToken == null) return Future(null);
+    return _api.deleteImages(accessToken, imageIds);
+  }
+
   // Label
   Future<ApiResponse> createLabel(String projectId, Label label) {
     if (accessToken == null) return Future(null);

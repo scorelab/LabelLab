@@ -61,16 +61,30 @@ class ProjectEditImageScreen extends StatelessWidget {
               height: 64,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  LabelIconButton(Icons.crop, "Crop", onTap: () {
-                    _showImageCrop(context, _state.image);
-                  }),
-                  LabelIconButton(
-                    Icons.photo_size_select_large,
-                    "Resize",
-                    onTap: _showImageResize,
-                  ),
-                ],
+                children: _state.isEdited
+                    ? <Widget>[
+                        LabelIconButton(Icons.undo, "Reset", onTap: () {
+                          _revertEdits(context);
+                        }),
+                        LabelIconButton(Icons.crop, "Crop", onTap: () {
+                          _showImageCrop(context, _state.image);
+                        }),
+                        LabelIconButton(
+                          Icons.photo_size_select_large,
+                          "Resize",
+                          onTap: _showImageResize,
+                        ),
+                      ]
+                    : <Widget>[
+                        LabelIconButton(Icons.crop, "Crop", onTap: () {
+                          _showImageCrop(context, _state.image);
+                        }),
+                        LabelIconButton(
+                          Icons.photo_size_select_large,
+                          "Resize",
+                          onTap: _showImageResize,
+                        ),
+                      ],
               ),
             ),
           )
@@ -117,4 +131,8 @@ class ProjectEditImageScreen extends StatelessWidget {
   }
 
   void _showImageResize() {}
+
+  void _revertEdits(BuildContext context) {
+    Provider.of<ProjectEditImageBloc>(context).revertImage();
+  }
 }

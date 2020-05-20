@@ -51,6 +51,10 @@ const Labels = Loadable({
   loader: () => import('./label/index'),
   loading: Loading
 })
+const Models = Loadable({
+  loader: () => import('./models'),
+  loading: Loading
+})
 
 class ProjectIndex extends Component {
   constructor(props) {
@@ -86,9 +90,10 @@ class ProjectIndex extends Component {
         ) : null}
         <ProjectNavbar history={history} />
         <div className="project-main">
-          <Sidebar history={history} />
-          <div className="project-non-side-section">
+          <Sidebar history={history}>
             <ProjectDescription history={history} />
+          </Sidebar>
+          <div className="project-non-side-section">
             <Switch>
               <PrivateRoute
                 exact
@@ -109,6 +114,11 @@ class ProjectIndex extends Component {
                 exact
                 path={`${match.path}/labels`}
                 component={Labels}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/models`}
+                component={Models}
               />
             </Switch>
           </div>

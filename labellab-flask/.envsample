@@ -1,0 +1,5 @@
+export FLASK_APP="app.py"
+export FLASK_ENV=""
+export FLASK_CONFIG=""
+
+export DATABASE_URL=""

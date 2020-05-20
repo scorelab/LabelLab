@@ -2,6 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+	<style>
+		html { display : none; }
+	</style>
+
+	<script>
+		if (self == top) {
+			document.documentElement.style.display = 'block';}
+		else {
+			top.location = self.location;
+	    }
+	</script>
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />

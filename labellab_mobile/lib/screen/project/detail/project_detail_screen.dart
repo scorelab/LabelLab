@@ -63,15 +63,35 @@ class ProjectDetailScreen extends StatelessWidget {
                                 "Images",
                                 style: Theme.of(context).textTheme.title,
                               ),
-                              _state.project.images.length > 8
-                                  ? FlatButton(
-                                      child: Text("More"),
-                                      onPressed: () => _gotoMoreImagesScreen(
-                                        context,
-                                        _state.project.id,
-                                      ),
-                                    )
-                                  : Container(),
+                              Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    _state.project.images.length > 8
+                                        ? FlatButton(
+                                            child: Text("More"),
+                                            onPressed: () =>
+                                                _gotoMoreImagesScreen(
+                                              context,
+                                              _state.project.id,
+                                            ),
+                                          )
+                                        : Container(),
+                                    _state.isSelecting
+                                        ? PopupMenuButton<int>(
+                                            child: Container(
+                                              child:
+                                                  Icon(Icons.arrow_drop_down),
+                                            ),
+                                            onSelected: (int index) =>
+                                                _onImageAction(context, index),
+                                            itemBuilder:
+                                                (BuildContext context) =>
+                                                    _buildImageActions(context),
+                                          )
+                                        : Container()
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -80,7 +100,11 @@ class ProjectDetailScreen extends StatelessWidget {
                   : SliverFillRemaining(),
               _state.project != null && _state.project.images != null
                   ? _buildImages(
-                      context, _state.project.id, _state.project.images)
+                      context,
+                      _state.project.id,
+                      _state.project.images,
+                      _state.isSelecting,
+                      _state.selectedImages)
                   : SliverFillRemaining(),
               _state.project != null && _state.project.labels != null
                   ? _buildLabels(
@@ -168,7 +192,11 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildImages(
-      BuildContext context, String projectId, List<LabelLab.Image> images) {
+      BuildContext context,
+      String projectId,
+      List<LabelLab.Image> images,
+      bool isSelecting,
+      List<String> selectedImages) {
     return images.length > 0
         ? SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -184,15 +212,86 @@ class ProjectDetailScreen extends StatelessWidget {
                       width: 64,
                       height: 64,
                       color: Colors.black12,
-                      child: Image(
-                        image: CachedNetworkImageProvider(
-                          image.imageUrl,
-                        ),
-                        fit: BoxFit.cover,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          Image(
+                            image: CachedNetworkImageProvider(
+                              image.imageUrl,
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                  Colors.black38,
+                                  Color.fromRGBO(255, 255, 255, 0)
+                                ])),
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Text(
+                              image.labels != null
+                                  ? image.labels.length != 1
+                                      ? image.labels.length.toString() +
+                                          " Labels"
+                                      : "1 Label"
+                                  : "",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                          ),
+                          AnimatedCrossFade(
+                            crossFadeState: selectedImages.contains(image.id)
+                                ? CrossFadeState.showFirst
+                                : CrossFadeState.showSecond,
+                            duration: Duration(milliseconds: 200),
+                            firstChild: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .accentColor
+                                    .withOpacity(0.8),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.done,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            secondChild: Container(),
+                            layoutBuilder: (topChild, topChildKey, bottomChild,
+                                bottomChildKey) {
+                              return Stack(
+                                overflow: Overflow.visible,
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Positioned(
+                                    key: bottomChildKey,
+                                    child: bottomChild,
+                                  ),
+                                  Positioned(
+                                    key: topChildKey,
+                                    child: topChild,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  onTap: () => _gotoViewImage(context, projectId, image.id),
+                  onTap: () => isSelecting
+                      ? _selectImage(context, image.id)
+                      : _gotoViewImage(context, projectId, image.id),
+                  onLongPress: () => !isSelecting
+                      ? _switchToMultiSelect(context, image.id)
+                      : null,
                 );
               }).toList(),
             ),
@@ -299,6 +398,45 @@ class ProjectDetailScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  List<PopupMenuEntry<int>> _buildImageActions(BuildContext context) {
+    return [
+      PopupMenuItem(
+        value: 0,
+        child: Text("Select all"),
+      ),
+      PopupMenuItem(
+        value: 1,
+        child: Text("Delete"),
+      ),
+      PopupMenuItem(
+        value: 2,
+        child: Text("Cancel"),
+      ),
+    ];
+  }
+
+  void _onImageAction(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        Provider.of<ProjectDetailBloc>(context).selectAllImages();
+        break;
+      case 1:
+        Provider.of<ProjectDetailBloc>(context).deleteSelected();
+        break;
+      case 2:
+        Provider.of<ProjectDetailBloc>(context).cancelSelection();
+        break;
+    }
+  }
+
+  void _switchToMultiSelect(BuildContext context, String id) {
+    Provider.of<ProjectDetailBloc>(context).selectImage(id);
+  }
+
+  void _selectImage(BuildContext context, String id) {
+    Provider.of<ProjectDetailBloc>(context).switchSelection(id);
   }
 
   void _gotoEditProject(BuildContext context, String id) {

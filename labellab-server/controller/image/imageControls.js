@@ -242,7 +242,11 @@ exports.deleteImage = function(req, res) {
           )
           Project.findOneAndUpdate(
             { _id: image.project },
-            { $pull: { image: req.params.imageId } }
+            {
+              $pull: {
+                image: image._id
+              }
+            }
           ).exec(function(err, project) {
             if (err) {
               return res.status(400).send({

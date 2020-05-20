@@ -1,8 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
-import 'package:labellab_mobile/screen/project/label_tool/label_tool_screen.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/routing/routes.dart';

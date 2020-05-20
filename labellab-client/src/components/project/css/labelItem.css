@@ -8,3 +8,7 @@
   padding-bottom: 1.5em;
   padding-top: 1.5em;
 }
+
+.label-container {
+  overflow: auto
+}

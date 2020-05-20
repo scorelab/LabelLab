@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-// import Hotkeys from 'react-hot-keys';
+import { withRouter } from 'react-router-dom'
 import update from 'immutability-helper'
 
 import 'semantic-ui-css/semantic.min.css'
 
 import Canvas from './Canvas'
-// import HotkeysPanel from './HotkeysPanel';
 import Sidebar from './Sidebar'
 // import { PathToolbar, MakePredictionToolbar } from './CanvasToolbar';
 // import Reference from './Reference';
@@ -38,8 +37,7 @@ class LabelingApp extends Component {
       selectedFigureId: null,
 
       // UI
-      reassigning: { status: false, type: null },
-      hotkeysPanel: false
+      reassigning: { status: false, type: null, }
     }
 
     this.canvasRef = React.createRef()
@@ -161,6 +159,28 @@ class LabelingApp extends Component {
       //   });
       // break;
 
+      case 'replace':
+        pushState((state) => {
+          return {
+            figures: update(state.figures, {
+              [label.id]: {
+                $splice: [
+                  [
+                    idx,
+                    1,
+                    {
+                      id: figure.id,
+                      type: figure.type,
+                      points: figure.points
+                    }
+                  ]
+                ]
+              }
+            })
+          }
+        })
+        break
+
       case 'delete':
         pushState(state => ({
           figures: update(state.figures, {
@@ -214,6 +234,7 @@ class LabelingApp extends Component {
     const {
       labels,
       imageUrl,
+      projectUrl,
       // reference,
       onBack,
       onSkip,
@@ -232,7 +253,6 @@ class LabelingApp extends Component {
       // selectedFigureId,
       reassigning,
       toggles
-      // hotkeysPanel
     } = this.state
 
     const forwardedProps = {
@@ -268,12 +288,12 @@ class LabelingApp extends Component {
                 [label.id]: { $set: !toggles[label.id] }
               })
             }),
-          openHotkeys: () => this.setState({ hotkeysPanel: true }),
           onFormChange: (labelId, newValue) =>
             pushState(state => ({
               figures: update(figures, { [labelId]: { $set: newValue } })
             })),
-          labelData: figures
+          labelData: figures,
+          onHome: () => this.props.history.push(projectUrl)
         }
     // let selectedFigure = null;
     const allFigures = []
@@ -338,4 +358,4 @@ class LabelingApp extends Component {
   }
 }
 
-export default withLoadImageData(withHistory(LabelingApp))
+export default withLoadImageData(withRouter(withHistory(LabelingApp)))
