@@ -14,25 +14,25 @@ var dbPass = process.env.DB_PASSWORD
 let mongoURI
 
 if (travis) {
-	mongoURI = 'mongodb://travis:test@localhost:27017/mydb_test'
+  mongoURI = 'mongodb://travis:test@localhost:27017/mydb_test'
 } else if (dbHost && dbName && dbCluster && dbUser && dbPass) {
-	mongoURI = '' + dbHost + '://' + dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
+  mongoURI = '' + dbHost + '://' + dbUser + ':' + dbPass + '@' + dbCluster + '/' + dbName
 }
- else {
-	mongoURI = ''
+else {
+  mongoURI = ''
 }
 
 function connect() {
   return new Promise((resolve, reject) => {
-      mockgoose.prepareStorage()
-        .then(() => {
-          mongoose.connect(mongoURI,
-            { useNewUrlParser: true, useCreateIndex: true })
-            .then((res, err) => {
-              if (err) return reject(err);
-              resolve();
-            })
-     })
+    mockgoose.prepareStorage()
+      .then(() => {
+        mongoose.connect(mongoURI,
+          { useNewUrlParser: true, useCreateIndex: true })
+          .then((res, err) => {
+            if (err) return reject(err);
+            resolve();
+          })
+      })
   });
 }
 
