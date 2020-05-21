@@ -4,6 +4,12 @@
   background: #e5e5e5;
   min-height: 100vh !important;
 }
+
+.dashboard-container {
+  width: 80%;
+  margin: auto;
+}
+
 .create-project-button {
   padding: 2em 0;
 }

@@ -137,7 +137,7 @@ class Dashboard extends Component {
     return (
       <div className="dashboard-parent">
         <Navbar user={user} isfetching={isfetching} history={history} />
-        <Container className="home.container">
+        <div className="dashboard-container">
           {errors}
           <Dimmer active={isinitializing}>
             <Loader indeterminate>Preparing Files</Loader>
@@ -188,7 +188,7 @@ class Dashboard extends Component {
             <Header textAlign="left" as="h3" content="Previous Works" />
             <PreviousWork />
           </div>
-        </Container>
+        </div>
       </div>
     )
   }
