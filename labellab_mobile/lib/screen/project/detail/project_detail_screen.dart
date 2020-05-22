@@ -24,7 +24,8 @@ class ProjectDetailScreen extends StatelessWidget {
       initialData: ProjectDetailState.loading(),
       builder: (context, snapshot) {
         ProjectDetailState _state = snapshot.data;
-        bool _hasImages = _state.project.images.length > 0;
+        bool _hasImages =
+            (_state.project != null) ? _state.project.images.length > 0 : false;
         return Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
