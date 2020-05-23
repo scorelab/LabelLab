@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import {Container} from "semantic-ui-react"
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import Loadable from 'react-loadable'
 import Loader from '../loading/index'
 
-import "./css/modelEditor.css"
+import { fetchLabels } from '../../actions/label'
+import { fetchProject } from '../../actions/project/fetchDetails'
+
+import './css/modelEditor.css'
 
 const Loading = ({ error }) => {
   if (error) return <div>Error loading component</div>
@@ -16,26 +20,52 @@ const ClassifierEditor = Loadable({
 })
 
 class ModelEditor extends Component {
+  componentDidMount() {
+    const { fetchLabels, fetchProject, match } = this.props
 
-    getEditorType = () => {
+    fetchLabels(match.params.projectId)
+    fetchProject(match.params.projectId)
+  }
 
-        const {type} = this.props.match.params;
+  getEditorType = () => {
+    const { match, labels, project } = this.props
 
-        switch(type) {
-            case "classifier":
-                return <ClassifierEditor />;
-            default:
-                return <div>Error loading component</div>
-        }
+    switch (match.params.type) {
+      case 'classifier':
+        return <ClassifierEditor labels={labels} images={project.images} />
+      default:
+        return <div>Error loading component</div>
     }
+  }
 
-    render() {
-        return (
-            <div className="model-editor">
-                {this.getEditorType()}
-            </div>
-        )
-    }
+  render() {
+    return <div className="model-editor">{this.getEditorType()}</div>
+  }
 }
 
-export default ModelEditor;
+ModelEditor.propTypes = {
+  labels: PropTypes.array,
+  fetchLabels: PropTypes.func,
+  fetchProject: PropTypes.func
+}
+
+const mapStateToProps = state => ({
+  labels: state.labels.labels,
+  project: state.projects.currentProject
+})
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchLabels: projectId => {
+      return dispatch(fetchLabels(projectId))
+    },
+    fetchProject: projectId => {
+      return dispatch(fetchProject(projectId))
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModelEditor)
