@@ -1,0 +1,2 @@
+export const ADD_LABEL = 'ADD_LABEL',
+  REMOVE_LABEL = 'REMOVE_LABEL'

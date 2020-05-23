@@ -1,0 +1,57 @@
+.add-new-label-btn {
+  padding-top: 1em;
+}
+
+.label-card {
+  padding: 1em;
+  text-align: left;
+}
+
+.label-header-row {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-top: 0.3em;
+  margin-bottom: -1em;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label-name {
+  color: #393939;
+  font-size: 1.6em;
+  display: inline;
+}
+
+.label-type-icon {
+  padding-left: 0.5em;
+}
+
+.label-delete-icon {
+  float: right;
+}
+
+.label-count {
+  align-self: flex-end;
+  margin: 0.5em;
+}
+
+.label-images {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 95%;
+  margin: auto;
+  overflow-x: scroll;
+}
+
+.label-images::-webkit-scrollbar {
+  display: none;
+}
+
+.label-image {
+  border-radius: 5px;
+  height: 100px;
+  margin-left: 1em;
+  width: auto;
+}
