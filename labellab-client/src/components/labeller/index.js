@@ -116,9 +116,12 @@ class LabelingLoader extends Component {
             labels={lab}
             labelData={(img && img.labelData) || {}}
             imageUrl={
-              `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/static/uploads/${image.imageUrl}?${Date.now()}`
+              'http://' +
+              process.env.REACT_APP_HOST +
+              ':' +
+              process.env.REACT_APP_SERVER_PORT +
+              `/static/uploads/${image.imageUrl}?${Date.now()}`
             }
-            projectUrl={`/project/${match.params.projectId}/images`}
             demo={false}
             {...props}
           />

@@ -8,14 +8,16 @@ import {
   Form,
   Dimmer,
   Loader,
-  Icon,
   Checkbox,
-  Dropdown
+  Icon
 } from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
-import Lightbox from 'react-image-lightbox'
-import 'react-image-lightbox/style.css'
-import { submitImage, deleteImage, fetchProject } from '../../actions/index'
+import { 
+  submitImage, 
+  deleteImage, 
+  fetchProject, 
+  exportDataset,
+} from '../../actions/index'
 import './css/images.css'
 
 class ImagesIndex extends Component {
@@ -29,10 +31,7 @@ class ImagesIndex extends Component {
       showform: false,
       format: '',
       maxSizeError: '',
-      selectedList: [],
-      imageUrls: [],
-      photoIndex: 0,
-      isOpen: false
+      selectedList: []
     }
   }
   handleImageChange = e => {
@@ -45,18 +44,15 @@ class ImagesIndex extends Component {
           images: [...prevState.images, reader.result],
           file: file,
           format: file.type,
-          imageNames: [...prevState.imageNames, file.name],
-          imageUrls: [...prevState.imageUrls, URL.createObjectURL(file)]
+          imageNames: [...prevState.imageNames, file.name]
         }))
       }
       reader.readAsDataURL(file)
     })
     this.setState({
-      showform: !this.state.showform,
-      isOpen: true
+      showform: !this.state.showform
     })
   }
-
   handleSubmit = e => {
     e.preventDefault()
     if (this.state.isOpen) {
@@ -119,17 +115,33 @@ class ImagesIndex extends Component {
       imageNames: [],
       showform: !this.state.showform,
       format: '',
-      maxSizeError: '',
-      imageUrls: [],
-      photoIndex: 0,
-      isOpen: false,
+      maxSizeError: ''
     })
+  }
+  handleExportDataset = () => {
+    // send get request for zip file URL
+    const { exportDataset, project, fetchProject } = this.props
+    exportDataset(fetchProject(project.projectId))
+    let downloadAnchor = document.createElement('a')
+    downloadAnchor.setAttribute(
+      'href',    
+      'http://' +
+      process.env.REACT_APP_HOST +
+      ':' +
+      process.env.REACT_APP_SERVER_PORT +
+      `/static/uploads/annotations.zip?${Date.now()}`
+    )
+    downloadAnchor.setAttribute('download', 'annotations.zip')
+    downloadAnchor.style.display = 'hidden'
+    downloadAnchor.id = 'downloadAnchor'
+    downloadAnchor.click()
+    // Removing the hidden tag
+    downloadAnchor.remove()
   }
 
   render() {
     const { imageActions, project } = this.props
-    const { showform, imageName, imageUrls } = this.state
-    const { photoIndex, isOpen } = this.state
+    const { showform, imageName } = this.state
     return (
       <div>
         {imageActions.isdeleting ? (
@@ -151,7 +163,15 @@ class ImagesIndex extends Component {
           >
             Add Image
           </label>
+          <button 
+            onClick={this.handleExportDataset}
+            style={{ textDecoration: 'none', color: 'white' }}
+            className="ui medium primary left floated button custom-margin">
+            Export dataset
+          </button>
+          
         </div>
+
         {showform ? (
           <Form
             className="file-submit-form"
@@ -169,37 +189,12 @@ class ImagesIndex extends Component {
                 />
               </Form.Field>
             )}
-            {imageUrls && isOpen ? (
-              <Lightbox
-                mainSrc={imageUrls[photoIndex]}
-                nextSrc={imageUrls[(photoIndex + 1) % imageUrls.length]}
-                prevSrc={
-                  imageUrls[
-                  (photoIndex + imageUrls.length - 1) % imageUrls.length
-                  ]
-                }
-                onCloseRequest={() => this.setState({ isOpen: false })}
-                onMovePrevRequest={() =>
-                  this.setState({
-                    photoIndex:
-                      (photoIndex + imageUrls.length - 1) % imageUrls.length,
-                  })
-                }
-                onMoveNextRequest={() =>
-                  this.setState({
-                    photoIndex: (photoIndex + 1) % imageUrls.length
-                  })
-                }
-              />
-            ) : null}
+
             <Button loading={imageActions.isposting} type="submit">
               Submit
             </Button>
             <Button onClick={this.removeImage} type="delete">
               Cancel
-            </Button>
-            <Button onClick={() => this.setState({ isOpen: true })}>
-              View
             </Button>
             {this.state.maxSizeError ? (
               <div className="max-size-error">
@@ -208,51 +203,55 @@ class ImagesIndex extends Component {
             ) : null}
           </Form>
         ) : null}
-        <div className="image-table-container">
-          <Table celled className="image-table" color="green">
-            <Table.Header className="image-table-header">
-              <Table.Row className="flex">
-                <Table.HeaderCell width={1}>ID</Table.HeaderCell>
-                <Table.HeaderCell width={1}></Table.HeaderCell>
-                <Table.HeaderCell width={11}>Image Link</Table.HeaderCell>
-                <Table.HeaderCell width={3}>
-                  Actions
-                  <Button
-                    negative
-                    disabled={!this.state.selectedList.length}
-                    onClick={this.handleDelete}
-                  >
-                    Delete
-                  </Button>
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body className="image-table-body">
-              {project.images && project.images.length > 0 ? (
-                <AutoSizedList
-                  rowHeight={55}
-                  rowCount={project && project.images && project.images.length}
-                  rowRenderer={({ index, style, key }) => (
-                    <Row
-                      key={key}
-                      style={style}
-                      image={project.images[index]}
-                      projectId={project.projectId}
-                      onDelete={this.handleDelete}
-                      imageId={index}
-                      onSelect={this.handleSelected}
-                      selected={this.state.selectedList.includes(
-                        project.images[index]._id
-                      )}
-                      isLast={index === project.images.length - 1}
-                    />
-                  )}
-                  overscanRowCount={10}
-                />
-              ) : null}
-            </Table.Body>
-          </Table>
-        </div>
+        <Table
+          celled
+          style={{ display: 'flex', flexDirection: 'column', height: 600 }}
+        >
+          <Table.Header className="image-table-header">
+            <Table.Row className="flex image-table-row-back">
+              <Table.HeaderCell style={columnStyles[0]}>ID</Table.HeaderCell>
+              <Table.HeaderCell style={columnStyles[0]}></Table.HeaderCell>
+              <Table.HeaderCell style={columnStyles[1]}>
+                Image Link
+              </Table.HeaderCell>
+              <Table.HeaderCell style={columnStyles[2]}>
+                Actions{' '}
+                <Button
+                  negative
+                  disabled={!this.state.selectedList.length}
+                  onClick={this.handleDelete}
+                >
+                  Delete
+                </Button>
+              </Table.HeaderCell>
+              <Table.HeaderCell className="image-table-special-headercell" />
+            </Table.Row>
+          </Table.Header>
+          <Table.Body className="image-table-body">
+            {project.images && project.images.length > 0 ? (
+              <AutoSizedList
+                rowHeight={55}
+                rowCount={project && project.images && project.images.length}
+                style={{ overflowY: 'scroll' }}
+                rowRenderer={({ index, style, key }) => (
+                  <Row
+                    key={key}
+                    style={style}
+                    image={project.images[index]}
+                    projectId={project.projectId}
+                    onDelete={this.handleDelete}
+                    imageId={index}
+                    onSelect={this.handleSelected}
+                    selected={this.state.selectedList.includes(
+                      project.images[index]._id
+                    )}
+                  />
+                )}
+                overscanRowCount={10}
+              />
+            ) : null}
+          </Table.Body>
+        </Table>
       </div>
     )
   }
@@ -264,7 +263,8 @@ ImagesIndex.propTypes = {
   history: PropTypes.object,
   fetchProject: PropTypes.func,
   submitImage: PropTypes.func,
-  deleteImage: PropTypes.func
+  deleteImage: PropTypes.func,
+  exportDataset: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -284,11 +284,20 @@ const mapDispatchToProps = dispatch => {
     },
     deleteImage: (imageId, projectId, callback) => {
       return dispatch(deleteImage(imageId, projectId, callback))
+    },
+    exportDataset: (callback) => {
+      return dispatch(exportDataset(callback))
     }
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
+
+const columnStyles = [
+  { flex: '0 0 80px', lineHeight: '32px' },
+  { flex: '1', lineHeight: '32px' },
+  { flex: '0 0 250px', lineHeight: '32px' }
+]
 
 const Row = ({
   image,
@@ -297,73 +306,52 @@ const Row = ({
   onDelete,
   imageId,
   onSelect,
-  selected,
-  isLast,
+  selected
 }) => (
-    <Table.Row
-      style={{
-        ...style,
-        display: 'flex',
-        borderBottom: isLast ? '1px solid rgba(34,36,38,.1)' : '',
-      }}
-    >
-      <Table.Cell width={1}>
-        {imageId + 1}
-        {image.labelled ? <Icon name="checkmark green"></Icon> : null}
-      </Table.Cell>
-      <Table.Cell width={1}>
-        <Checkbox
-          onClick={() => {
-            onSelect(image._id)
-          }}
-          checked={selected}
-        />
-      </Table.Cell>
-      <Table.Cell width={11}>
-        <a
-          href={
-            process.env.REACT_APP_HOST +
-            ':' +
-            process.env.REACT_APP_SERVER_PORT +
-            `/static/uploads/${image.imageUrl}?${Date.now()}`
-          }
-        >
-          {image.imageName}
-        </a>
-        {image.labelled ? (
-          <span className="labelDropdown">
-            <Dropdown text="Labels">
-              <Dropdown.Menu>
-                {Object.keys(image.labelData).map((key, index) =>
-                  image.labelData[key].length !== 0 ?
-                    <Dropdown.Item
-                      text={key + '  ' + image.labelData[key].length}
-                      key={index} />
-                    : null
-                )}
-              </Dropdown.Menu>
-            </Dropdown>
-          </span>) : null
+  <Table.Row style={{ ...style, display: 'flex' }}>
+    <Table.Cell style={columnStyles[0]}>
+      {imageId + 1}
+      {image.labelled ? <Icon name="checkmark green"></Icon> : null}
+    </Table.Cell>
+    <Table.Cell style={columnStyles[0]}>
+      <Checkbox
+        onClick={() => {
+          onSelect(image._id)
+        }}
+        checked={selected}
+      />
+    </Table.Cell>
+    <Table.Cell style={columnStyles[1]}>
+      <a
+        href={
+          'http://' +
+          process.env.REACT_APP_HOST +
+          ':' +
+          process.env.REACT_APP_SERVER_PORT +
+          `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
-      </Table.Cell>
-      <Table.Cell width={3}>
-        <div>
-          <Link to={`/labeller/${projectId}/${image._id}`}>
-            <Button icon="pencil" label="Edit" size="tiny" />
-          </Link>
-          <Button
-            icon="trash"
-            label="Delete"
-            size="tiny"
-            onClick={async () => {
-              await onSelect(image._id)
-              onDelete()
-            }}
-          />
-        </div>
-      </Table.Cell>
-    </Table.Row>
-  )
+      >
+        {image.imageName}
+      </a>
+    </Table.Cell>
+    <Table.Cell style={columnStyles[2]}>
+      <div>
+        <Link to={`/labeller/${projectId}/${image._id}`}>
+          <Button icon="pencil" label="Edit" size="tiny" />
+        </Link>
+        <Button
+          icon="trash"
+          label="Delete"
+          size="tiny"
+          onClick={async () => {
+            await onSelect(image._id)
+            onDelete()
+          }}
+        />
+      </div>
+    </Table.Cell>
+  </Table.Row>
+)
 
 const AutoSizedList = props => (
   <AutoSizer>

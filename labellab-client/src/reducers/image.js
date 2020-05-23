@@ -8,7 +8,10 @@ import {
   DELETE_IMAGE_FAILURE,
   DELETE_IMAGE_REQUEST,
   DELETE_IMAGE_SUCCESS,
-  SET_IMAGE_STATE
+  SET_IMAGE_STATE,
+  DOWNLOAD_REQUEST,
+  DOWNLOAD_FAILURE,
+  DOWNLOAD_SUCCESS,
 } from '../constants/index'
 
 const initialState = {
@@ -16,7 +19,8 @@ const initialState = {
     isposting: false,
     error: '',
     isfetching: false,
-    isdeleting: false
+    isdeleting: false,
+    isdownloading: false,
   },
   currentImage: {},
   nextImage: {},
@@ -101,6 +105,29 @@ const user = (state = initialState, action) => {
         ...state,
         nextImage: action.payload.next,
         prevImage: action.payload.prev
+      }
+    case DOWNLOAD_REQUEST:
+      return {
+        ...state,
+        imageActions: {
+          isdownloading: true,
+        }
+      }
+    case DOWNLOAD_FAILURE:
+      return {
+        ...state,
+        imageActions: {
+          isdownloading: false,
+          error: 'Something went wrong!'
+        }
+      }
+    case DOWNLOAD_SUCCESS:
+      return {
+        ...state,
+        imageActions: {
+          isdownloading: false,
+          error: 'Successfully downloaded',
+        }
       }
     default:
       return state

@@ -8,7 +8,10 @@ import {
   FETCH_IMAGE_FAILURE,
   FETCH_IMAGE_REQUEST,
   FETCH_IMAGE_SUCCESS,
-  SET_IMAGE_STATE
+  SET_IMAGE_STATE,
+  DOWNLOAD_REQUEST,
+  DOWNLOAD_FAILURE,
+  DOWNLOAD_SUCCESS,
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -104,5 +107,32 @@ export const setNextPrev = (next, prev) => {
   }
   function request(data) {
     return { type: SET_IMAGE_STATE, payload: data }
+  }
+}
+
+export const exportDataset = (callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('GET', '/api/v1/image/export', null, true)
+      .then(res => {
+        dispatch(success(res.data.body))
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: DOWNLOAD_REQUEST }
+  }
+  function success(data) {
+    return { type: DOWNLOAD_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: DOWNLOAD_FAILURE, payload: error }
   }
 }
