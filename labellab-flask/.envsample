@@ -2,4 +2,6 @@ export FLASK_APP="app.py"
 export FLASK_ENV=""
 export FLASK_CONFIG=""
 
-export DATABASE_URL=""
+export DEV_DATABASE_URL= "mysql+pymysql://" + username + ":" + password + "@" + host + "/labellab"   
+export TEST_DATABASE_URL="mysql+pymysql://" + username + ":" + password + "@" + host + "/test_labellab"   
+export DATABASE_URL=""  

@@ -20,17 +20,27 @@ class Config:
 
 class DevelopmentConfig(Config):
     """Development Congigurations"""
-
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DEV_DATABASE_URL"
+    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     # needs to be removed in further versions
 
 
 class TestingConfig(Config):
     TESTING = True
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "TEST_DATABASE_URL"
+    )
 
 
 class ProductionConfig(Config):
     """Production Congigurations"""
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL"
+    )
 
     @classmethod
     def init_app(cls, app):

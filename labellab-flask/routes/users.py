@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from controllers import userscontroller
+from ..controllers import userscontroller
 
 usersprint = Blueprint("users", __name__)
 
