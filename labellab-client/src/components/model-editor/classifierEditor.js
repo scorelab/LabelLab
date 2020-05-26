@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Grid, Segment, Header } from 'semantic-ui-react'
 
 import LabelSelector from './sub-modules/labelSelector'
+import PreprocessingSelector from './sub-modules/preprocessingSelector'
 
 import './css/classifierEditor.css'
 
@@ -22,6 +23,7 @@ class ClassifierEditor extends Component {
           <Segment className="classifier-column-heading">
             <Header>Train</Header>
           </Segment>
+          <PreprocessingSelector />
         </Grid.Column>
         <Grid.Column width={5}>
           <Segment className="classifier-column-heading">
