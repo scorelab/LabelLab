@@ -17,10 +17,6 @@ class Poject(Model):
     admin_id = Column(db.Integer, 
                       db.ForeignKey('user.id'),
                       nullable=False)
-    projectmembers = db.relationship('projectmember', 
-                                      backref='project',
-                                      lazy=True,
-                                      cascade="all, delete-orphan")
     labels = db.relationship('label', 
                              backref='project',
                              lazy=True,
