@@ -49,7 +49,7 @@ For client-side `.env` file:
 
 ```
 REACT_APP_HOST=http://localhost
-REACT_APP_SERVER_ENVIORNMENT=dev
+REACT_APP_SERVER_ENVIRONMENT=dev
 REACT_APP_SERVER_PORT=4000
 ```
 
