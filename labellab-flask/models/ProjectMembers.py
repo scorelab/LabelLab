@@ -14,10 +14,6 @@ class PojectMember(Model):
                      db.ForeignKey('user.id'), 
                      primary_key=True,
                      nullable=False)
-    project_id = Column(db.Integer,
-                        db.ForeignKey('project.id'), 
-                        primary_key=True,
-                        nullable=False)
     team_id = Column(db.Integer,
                      db.ForeignKey('team.id'), 
                      nullable=False)
