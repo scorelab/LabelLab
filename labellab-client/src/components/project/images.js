@@ -326,7 +326,7 @@ const Row = ({
       <a
         rel={'external'}
         href={
-          process.env.REACT_APP_SERVER_ENVIORNMENT !== 'dev'
+          process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
             ? image.imageUrl
             : 'http://' +
               process.env.REACT_APP_HOST +

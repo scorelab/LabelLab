@@ -116,7 +116,7 @@ class LabelingLoader extends Component {
             labels={lab}
             labelData={(img && img.labelData) || {}}
             imageUrl={
-              process.env.REACT_APP_SERVER_ENVIORNMENT !== 'dev'
+              process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
                 ? image.imageUrl
                 : `${process.env.REACT_APP_HOST}:${
                     process.env.REACT_APP_SERVER_PORT
