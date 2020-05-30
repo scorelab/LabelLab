@@ -14,6 +14,7 @@ import {
   Input
 } from 'semantic-ui-react'
 
+import AddModelEntityModal from './addModelEntityModal'
 import {
   addPreprocessingStep,
   removePreprocessingStep,
@@ -134,13 +135,14 @@ class PreprocessingSelector extends Component {
             </Grid>
           </div>
         </Card.Content>
-        <AddPreprocessingStepModal
-          model={model}
-          stepEditing={this.state.editingStep}
+        <AddModelEntityModal
           open={modalOpen}
           close={this.toggleModal}
-          addStep={addPreprocessingStep}
-          steps={model.preprocessingSteps}
+          options={preprocessingStepOptions}
+          entityName="step"
+          modelEntities={model.preprocessingSteps}
+          addEntity={addPreprocessingStep}
+          entityEditing={this.state.editingStep}
         />
       </Card>
     )
@@ -168,222 +170,6 @@ const PreprocessingStep = props => {
       </Label>
     </div>
   )
-}
-
-class AddPreprocessingStepModal extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      selectedStep: {},
-      selectedStepUserSettings: {}
-    }
-
-    this.dropdownOptions = []
-  }
-
-  componentWillReceiveProps() {
-    if (this.dropdownOptions.length == 0) {
-      this.dropdownOptions = preprocessingStepOptions.map((step, index) => {
-        return {
-          key: step.name,
-          text: step.name,
-          value: step.name,
-          id: index,
-          settings: step.settings ? step.settings : null
-        }
-      })
-    }
-
-    if (this.props.stepEditing) {
-      const { stepEditing } = this.props
-
-      const stepIndex = this.getStepIndexFromModel(stepEditing.name)
-
-      if (stepIndex !== -1) {
-        const dropdownOption = this.dropdownOptions.find(
-          option => option.value === stepEditing.name
-        )
-
-        const preprocessingStep = this.dropdownOptions.find(
-          step => step.value === stepEditing.name
-        )
-
-        this.setState({
-          selectedStep: dropdownOption,
-          selectedStepUserSettings: {
-            name: stepEditing.name,
-            settings: stepEditing.settings
-          }
-        })
-      }
-    } else {
-      this.setState({
-        selectedStep: null,
-        selectedStepUserSettings: null
-      })
-    }
-  }
-
-  getUserSettingIndex = label => {
-    const { selectedStepUserSettings } = this.state
-    const settingIndex = selectedStepUserSettings.settings
-      .map(setting => setting.name)
-      .indexOf(label)
-    return settingIndex
-  }
-
-  getStepIndexFromModel = stepName => {
-    const stepIndex = this.props.model.preprocessingSteps
-      .map(step => step.name)
-      .indexOf(stepName)
-    return stepIndex
-  }
-
-  selectStep = stepValue => {
-    const dropdownOption = this.dropdownOptions.find(
-      option => option.value === stepValue
-    )
-
-    this.setState({
-      selectedStep: dropdownOption,
-      selectedStepUserSettings: {
-        name: dropdownOption.value,
-        settings: []
-      }
-    })
-  }
-
-  handleSettingChange = (label, value) => {
-    const { selectedStepUserSettings } = this.state
-
-    const settingIndex = this.getUserSettingIndex(label)
-
-    if (settingIndex !== -1) {
-      // If the user has edited this setting already
-      selectedStepUserSettings.settings[settingIndex] = {
-        name: label,
-        value: value
-      }
-    } else {
-      // If the user has edited this setting for the first time
-      selectedStepUserSettings.settings.push({ name: label, value: value })
-    }
-
-    this.setState({ selectedStepUserSettings })
-  }
-
-  getSettingInput = setting => {
-    const { selectedStepUserSettings } = this.state
-
-    const settingIndex = this.getUserSettingIndex(setting.label)
-
-    switch (setting.type) {
-      case 'input':
-        return (
-          <Input
-            className="setting"
-            name={setting.label}
-            label={setting.label}
-            value={
-              settingIndex !== -1
-                ? selectedStepUserSettings.settings[settingIndex].value
-                : ''
-            }
-            onChange={event =>
-              this.handleSettingChange(setting.label, event.target.value)
-            }
-          />
-        )
-      case 'dropdown':
-        return (
-          <Dropdown
-            className="setting"
-            placeholder={setting.label}
-            selection
-            options={setting.options.map((setting, index) => {
-              return {
-                key: setting,
-                text: setting,
-                value: setting,
-                id: index
-              }
-            })}
-            onChange={(event, { value }) => {
-              this.handleSettingChange(setting.label, value)
-            }}
-          />
-        )
-      default:
-        return null
-    }
-  }
-
-  render() {
-    const { open, close, steps, addStep, stepEditing } = this.props
-    const { selectedStep, selectedStepUserSettings } = this.state
-
-    return (
-      <Modal open={open} size="small">
-        <Header
-          content={
-            stepEditing
-              ? 'Please make the necessary changes'
-              : 'Please choose the preprocessing step you would like to add'
-          }
-        />
-        <Modal.Content>
-          <div className="preprocessing-steps-modal">
-            {!stepEditing && (
-              <Dropdown
-                placeholder="Select step..."
-                selection
-                options={this.dropdownOptions}
-                onChange={(event, { value }) => this.selectStep(value)}
-              />
-            )}
-            {selectedStep && selectedStep.settings && (
-              <div className="preprocessing-step-settings">
-                {selectedStep.settings.map((setting, index) => {
-                  return (
-                    <div
-                      className="preprocessing-step-option"
-                      key={setting.label}
-                    >
-                      {this.getSettingInput(setting)}
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            basic
-            positive
-            onClick={() => {
-              addStep(steps, selectedStepUserSettings)
-              this.setState({ selectedStep: {}, selectedStepUserSettings: {} })
-              close()
-            }}
-          >
-            Add
-          </Button>
-          <Button
-            basic
-            negative
-            onClick={() => {
-              this.setState({ selectedStep: {}, selectedStepUserSettings: {} })
-              close()
-            }}
-          >
-            Close
-          </Button>
-        </Modal.Actions>
-      </Modal>
-    )
-  }
 }
 
 PreprocessingSelector.propTypes = {

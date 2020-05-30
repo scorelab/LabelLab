@@ -24,28 +24,6 @@
   margin-top: -1em;
 }
 
-.preprocessing-step-option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5em;
-  width: 18em;
-}
-
-.preprocessing-steps-modal {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-}
-
-.preprocessing-step-settings {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin: 1em;
-  flex-wrap: wrap;
-}
-
 .preprocessing-step-label {
   display: inline-block;
   margin-top: 0.4em;

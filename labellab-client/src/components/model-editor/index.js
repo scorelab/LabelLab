@@ -32,7 +32,13 @@ class ModelEditor extends Component {
 
     switch (match.params.type) {
       case 'classifier':
-        return <ClassifierEditor labels={labels} images={project.images} />
+        return (
+          <ClassifierEditor
+            labels={labels}
+            images={project.images}
+            source={match.params.source}
+          />
+        )
       default:
         return <div>Error loading component</div>
     }

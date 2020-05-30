@@ -19,15 +19,34 @@ class ModelsIndex extends Component {
     super(props)
 
     this.state = {
-      modelType: "classifier",
-      open: false,
+      modelType: 'classifier',
+      modelSource: 'transfer',
+      open: false
     }
 
-    this.model = [
+    this.modelTypes = [
       {
         key: 'classifier',
         text: 'Classifier',
         value: 'classifier'
+      }
+    ]
+
+    this.modelSources = [
+      {
+        key: 'tranfer',
+        text: 'Transfer',
+        value: 'transfer'
+      },
+      {
+        key: 'upload',
+        text: 'Upload',
+        value: 'upload'
+      },
+      {
+        key: 'custom',
+        text: 'Custom',
+        value: 'custom'
       }
     ]
   }
@@ -37,21 +56,15 @@ class ModelsIndex extends Component {
     fetchProject(project.projectId)
   }
 
-  getModelType = (event, {value}) => {
-    this.setState({
-      modelType: value
-    })
-  }
-
-  toggleOpen = () => { 
-    this.setState((prevState) => ({
+  toggleOpen = () => {
+    this.setState(prevState => ({
       open: !prevState.open
     }))
   }
 
   render() {
     const { project } = this.props
-    const { modelType, open } = this.state
+    const { modelType, modelSource, open } = this.state
 
     return (
       <Container>
@@ -64,11 +77,26 @@ class ModelsIndex extends Component {
               placeholder="Select model type..."
               fluid
               selection
-              options={this.model}
+              options={this.modelTypes}
+              onChange={(event, { value }) => {
+                this.setState({ modelType: value })
+              }}
+            />
+            <br />
+            <Dropdown
+              placeholder="Select model source..."
+              fluid
+              selection
+              options={this.modelSources}
+              onChange={(event, { value }) => {
+                this.setState({ modelSource: value })
+              }}
             />
           </Modal.Content>
           <Modal.Actions>
-            <Link to={`/model_editor/${modelType}/${project.projectId}`}>
+            <Link
+              to={`/model_editor/${modelType}/${modelSource}/${project.projectId}`}
+            >
               <Button positive>Create</Button>
             </Link>
           </Modal.Actions>
@@ -80,7 +108,9 @@ class ModelsIndex extends Component {
         <Table color="green" celled padded striped stackable>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell singleLine collapsing>S. No.</Table.HeaderCell>
+              <Table.HeaderCell singleLine collapsing>
+                S. No.
+              </Table.HeaderCell>
               <Table.HeaderCell>Model Name</Table.HeaderCell>
               <Table.HeaderCell>Model Type</Table.HeaderCell>
               <Table.HeaderCell>Options</Table.HeaderCell>
@@ -102,7 +132,9 @@ class ModelsIndex extends Component {
                     <Header as="h4">{model.type}</Header>
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/model_editor/${model.type}/${project.projectId}/${model._id}`}>
+                    <Link
+                      to={`/model_editor/${model.type}/${model.source}/${project.projectId}/${model._id}`}
+                    >
                       <Button icon="pencil" label="Edit" size="tiny" />
                     </Link>
                     <Button
