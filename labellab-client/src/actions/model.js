@@ -3,7 +3,12 @@ import {
   REMOVE_LABEL,
   ADD_PREPROCESSING_STEP,
   REMOVE_PREPROCESSING_STEP,
-  SET_TRAIN_TEST_SPLIT
+  SET_TRAIN_TEST_SPLIT,
+  SET_MODEL_PARAMETER,
+  SET_TRANSFER_SOURCE,
+  ADD_LAYER,
+  EDIT_LAYER,
+  REMOVE_LAYER
 } from '../constants/index'
 
 export const addLabel = (labels, labelToAdd) => {
@@ -53,5 +58,49 @@ export const setTrainTestSplit = (field, value) => {
   return {
     type: SET_TRAIN_TEST_SPLIT,
     payload
+  }
+}
+
+export const setModelParameter = (field, value) => {
+  const payload = {}
+  payload[field] = value
+
+  return {
+    type: SET_MODEL_PARAMETER,
+    payload
+  }
+}
+
+export const setTransferLearningSource = value => {
+  return {
+    type: SET_TRANSFER_SOURCE,
+    payload: value
+  }
+}
+
+export const addLayer = (layers, layer) => {
+  layers.push(layer)
+
+  return {
+    type: ADD_LAYER,
+    payload: layers
+  }
+}
+
+export const editLayer = (layers, index, editedLayer) => {
+  layers[index] = editedLayer
+
+  return {
+    type: EDIT_LAYER,
+    payload: layers
+  }
+}
+
+export const removeLayer = (layers, layerToRemove) => {
+  layers = layers.filter(layer => layer.name !== layerToRemove)
+
+  return {
+    type: REMOVE_LAYER,
+    payload: layers
   }
 }

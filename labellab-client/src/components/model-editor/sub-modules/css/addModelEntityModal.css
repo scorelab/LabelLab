@@ -1,0 +1,17 @@
+.add-entity-modal {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.entity-settings {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 1em;
+  flex-wrap: wrap;
+}
+
+.entity-settings-option {
+  margin: 0.5em;
+}

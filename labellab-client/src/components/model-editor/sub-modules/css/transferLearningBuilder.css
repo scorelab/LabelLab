@@ -1,0 +1,31 @@
+.transfer-learning-card {
+  text-align: center;
+}
+
+.question-icon {
+  cursor: pointer;
+  padding: 1em;
+}
+
+.layer-label-container {
+  align-items: center;
+  background-color: #e8e8e8;
+  border-radius: 5px;
+  display: flex;
+  font-weight: 600;
+  justify-content: space-between;
+  margin-bottom: 0.4em;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.layer-delete-icon {
+  align-self: flex-end;
+  cursor: pointer;
+  padding-left: 0.2em;
+}
+
+.layer-edit-icon {
+  cursor: pointer;
+  padding-left: 0.5em;
+}
