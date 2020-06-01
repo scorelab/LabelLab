@@ -1,20 +1,19 @@
 from datetime import datetime
 from flask import current_app
 
-from ..database import db, Column, Model
-from ..extensions import Base
+from api.extensions import db, Base
 
-class PojectMember(Model):
+class PojectMember(db.Model):
     """
-    This model holds information about a user registered
+    This model holds information about a projectmember registered
     """
     __tablename__ = "projectmember"
 
-    user_id = Column(db.Integer,
+    user_id = db.Column(db.Integer,
                      db.ForeignKey('user.id'), 
                      primary_key=True,
                      nullable=False)
-    team_id = Column(db.Integer,
+    team_id = db.Column(db.Integer,
                      db.ForeignKey('team.id'), 
                      nullable=False)
     

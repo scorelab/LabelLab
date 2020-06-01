@@ -2,11 +2,12 @@ from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
-from config import config
-from routes import users
-from extensions import db, migrate
-from models import User, Image, Label, LabelData, ProjectMembers, Projects, Team
+from api.config import config
+from api.routes import users
+from api.extensions import db, migrate, jwt
+from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken
 
 
 def create_app(config_name):
@@ -33,10 +34,11 @@ def register_additional_extensions(app):
     CORS(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
 
 def register_blueprint(app):
     """Register Flask blueprints."""
-    app.register_blueprint(users.usersprint, url_prefix="/api/users")
+    app.register_blueprint(users.usersprint, url_prefix="/api/v1")
     return None
 
 def register_shellcontext(app):
@@ -44,6 +46,6 @@ def register_shellcontext(app):
 
     def shell_context():
         """Shell context objects."""
-        return {"db": db, "User": user.model.User}
+        return {"db": db, "User": models.User}
 
     app.shell_context_processor(shell_context)
