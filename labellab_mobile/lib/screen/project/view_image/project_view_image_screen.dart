@@ -19,7 +19,7 @@ class ProjectViewImageScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text(""),
             elevation: 0,
-            actions: _buildActions(context),
+            actions: _buildActions(context, snapshot),
           ),
           body: _buildBody(context, snapshot),
           floatingActionButton: FloatingActionButton(
@@ -35,18 +35,28 @@ class ProjectViewImageScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildActions(BuildContext context) {
+  List<Widget> _buildActions(
+      BuildContext context, AsyncSnapshot<ProjectViewImageState> snapshot) {
     return [
       PopupMenuButton<int>(
         onSelected: (int value) {
-          if (value == 0) {
-            _showDeleteConfirmation(context);
+          switch (value) {
+            case 0:
+              _gotoImagePathScreen(context, snapshot.data.image.id);
+              break;
+            case 1:
+              _showDeleteConfirmation(context);
+              break;
           }
         },
         itemBuilder: (context) {
           return [
             PopupMenuItem(
               value: 0,
+              child: Text("Show Path"),
+            ),
+            PopupMenuItem(
+              value: 1,
               child: Text("Delete"),
             )
           ];
@@ -121,5 +131,11 @@ class ProjectViewImageScreen extends StatelessWidget {
         Navigator.pop(baseContext);
       }
     });
+  }
+
+  void _gotoImagePathScreen(BuildContext context, String imageId) {
+    final String projectId =
+        Provider.of<ProjectViewImageBloc>(context).projectId;
+    Application.router.navigateTo(context, "/project/$projectId/path/$imageId");
   }
 }
