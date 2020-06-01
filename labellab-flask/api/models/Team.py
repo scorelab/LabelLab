@@ -1,23 +1,22 @@
 from datetime import datetime
 from flask import current_app
 
-from ..database import db, Column, Model
-from ..extensions import Base
+from api.extensions import db, Base
 
-class Team(Model):
+class Team(db.Model):
     """
-    This model holds information about a user registered
+    This model holds information about a team in a project
     """
     __tablename__ = "team"
 
-    id = Column(db.Integer, primary_key=True)
-    teamname = Column(db.String(80), nullable=False,)
-    role = Column(db.String(128),
+    id = db.Column(db.Integer, primary_key=True)
+    teamname = db.Column(db.String(80), nullable=False,)
+    role = db.Column(db.String(128),
                   default = 'Member')
-    project_id = Column(db.Integer, 
+    project_id = db.Column(db.Integer, 
                         db.ForeignKey('project.id'),
                         nullable=False)
-    team_members = db.relationship('projectmember', 
+    team_members = db.relationship('PojectMember', 
                                     backref='team',
                                     lazy=True,
                                     cascade="all, delete-orphan")

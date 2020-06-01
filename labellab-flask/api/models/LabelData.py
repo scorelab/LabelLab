@@ -1,23 +1,22 @@
 from datetime import datetime
 from flask import current_app
 
-from ..database import db, Column, Model
-from ..extensions import Base
+from api.extensions import db, Base
 
-class LabelData(Model):
+class LabelData(db.Model):
     """
-    This model holds information about a user registered
+    This model holds information about the labeldata of a label to an image
     """
     __tablename__ = "labeldata"
 
-    id = Column(db.Integer, primary_key=True)
-    months_passed = Column(db.Integer)
-    latitude = Column(db.Integer)
-    longitude = Column(db.Integer)
-    image_id = Column(db.Integer, 
+    id = db.Column(db.Integer, primary_key=True)
+    months_passed = db.Column(db.Integer)
+    latitude = db.Column(db.Integer)
+    longitude = db.Column(db.Integer)
+    image_id = db.Column(db.Integer, 
                       db.ForeignKey('image.id'),
                       nullable=False)
-    label_id = Column(db.Integer, 
+    label_id = db.Column(db.Integer, 
                       db.ForeignKey('label.id'),
                       nullable=False)
     

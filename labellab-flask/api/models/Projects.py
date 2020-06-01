@@ -1,27 +1,26 @@
 from datetime import datetime
 from flask import current_app
 
-from ..database import db, Column, Model
-from ..extensions import Base
+from api.extensions import db, Base
 
-class Poject(Model):
+class Project(db.Model):
     """
-    This model holds information about a user registered
+    This model holds information about a project and its admin
     """
     __tablename__ = "project"
 
-    id = Column(db.Integer, primary_key=True)
-    projectname = Column(db.String(80), nullable=False,)
-    projectdescription = Column(db.String(128),
+    id = db.Column(db.Integer, primary_key=True)
+    projectname = db.Column(db.String(80), nullable=False,)
+    projectdescription = db.Column(db.String(128),
                                 default = 'Image labelling')
-    admin_id = Column(db.Integer, 
+    admin_id = db.Column(db.Integer, 
                       db.ForeignKey('user.id'),
                       nullable=False)
-    labels = db.relationship('label', 
+    labels = db.relationship('Label', 
                              backref='project',
                              lazy=True,
                              cascade="all, delete-orphan")
-    images = db.relationship('image', 
+    images = db.relationship('Image', 
                              backref='project',
                              lazy=True,
                              cascade="all, delete-orphan")
