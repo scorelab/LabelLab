@@ -37,7 +37,7 @@ class Register(MethodView):
             # Return a message to the user telling them that they they already
             # exist
             response = {"message": "Email already exists. Please login."}
-            return make_response(jsonify(response)), 202
+            return make_response(jsonify(response)), 401
         
         # Querying the database with requested username
         user = User.find_by_username(username)
