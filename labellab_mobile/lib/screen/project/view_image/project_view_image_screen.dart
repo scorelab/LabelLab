@@ -64,26 +64,25 @@ class ProjectViewImageScreen extends StatelessWidget {
         children: <Widget>[
           _state.isLoading ? LinearProgressIndicator() : Container(),
           _state.error != null ? Text(_state.error) : Container(),
-          _state.image != null
+          _state.image != null && _state.image.labels != null
               ? LabelSelectionList(_state.image.labels, false)
               : Container(),
           _state.image != null
               ? Expanded(
                   child: Container(
-                    decoration: new BoxDecoration(
-                      image: _state.image != null
-                          ? DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                  _state.image.imageUrl))
-                          : null,
-                    ),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                                _state.image.imageUrl))),
                     child: CustomPaint(
                       size: Size.infinite,
-                      painter: LabelSelectionPainter(
-                        _state.image.labels,
-                        null,
-                        _state.image,
-                      ),
+                      painter: _state.image.labels != null
+                          ? LabelSelectionPainter(
+                              _state.image.labels,
+                              null,
+                              _state.image,
+                            )
+                          : null,
                     ),
                   ),
                 )
