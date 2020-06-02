@@ -13,6 +13,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
+import 'package:labellab_mobile/model/location.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -178,6 +179,11 @@ class Repository {
   Future<ApiResponse> deleteImages(List<String> imageIds) {
     if (accessToken == null) return Future(null);
     return _api.deleteImages(accessToken, imageIds);
+  }
+
+  Future<List<Location>> getImagePath(String imageId) {
+    if (accessToken == null) return Future(null);
+    return _api.getImagePath(accessToken, imageId);
   }
 
   // Label
