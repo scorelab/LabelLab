@@ -13,6 +13,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
+import 'package:labellab_mobile/model/location.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -52,6 +53,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_IMAGE = "image";
 
   static const ENDPOINT_LABEL = "label";
+
+  static const ENDPOINT_PATH = "path";
 
   static const ENDPOINT_CLASSIFICAITON_CLASSIFY = "classification/classify";
   static const ENDPOINT_CLASSIFICATION_GET = "classification/get";
@@ -346,6 +349,22 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       return ApiResponse(response.data);
     });
+  }
+
+  @override
+  Future<List<Location>> getImagePath(String token, String imageId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+
+    return _dio
+        .get(API_URL + ENDPOINT_IMAGE + "/$imageId/" + ENDPOINT_PATH,
+            options: options)
+        .then(
+          (response) => response.data['data']
+              .map((location) => Location.fromJson(location))
+              .toList(),
+        );
   }
 
   @override

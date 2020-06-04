@@ -9,6 +9,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
+import 'package:labellab_mobile/model/location.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -43,6 +44,7 @@ abstract class LabelLabAPI {
       String token, Image image, List<LabelSelection> selections);
   Future<ApiResponse> deleteImage(String token, String imageId);
   Future<ApiResponse> deleteImages(String token, List<String> imageIds);
+  Future<List<Location>> getImagePath(String token, String imageId);
 
   // Label
   Future<List<Label>> getLabels(String token, String projectId);

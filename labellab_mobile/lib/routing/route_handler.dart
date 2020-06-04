@@ -21,6 +21,8 @@ import 'package:labellab_mobile/screen/project/upload_image/project_upload_image
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_screen.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_screen.dart';
+import 'package:labellab_mobile/screen/project/view_image_path/project_image_path_bloc.dart';
+import 'package:labellab_mobile/screen/project/view_image_path/project_image_path_screen.dart';
 import 'package:labellab_mobile/screen/project/view_more_images/project_more_images_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_more_images/project_more_images_screen.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
@@ -122,6 +124,16 @@ var labelImageHandler = Handler(
         LabelToolBloc(params['project_id'].first, params['image_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: LabelToolScreen(),
+  );
+});
+
+var viewPathHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ProjectImagePathBloc>(
+    builder: (context) => ProjectImagePathBloc(
+        params['project_id'].first, params['image_id'].first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ProjectImagePathScreen(),
   );
 });
 

@@ -9,6 +9,12 @@ LabelLab is an image analyzing and classification platform. It allows users to u
 
 See the [LICENSE](https://github.com/scorelab/LabelLab/blob/master/LICENSE) file for details.
 
+#### Deployment
+
+Host your own Labellab server for **FREE** with One-Click Deploy
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## User Guide
 
 #### How to Setup
@@ -24,8 +30,8 @@ Run `npm install` in `labellab-client` folder.
 ```
  cd labellab-client/
  npm install
- ```
- 
+```
+
 #### Set up MongoDB backend
 
 Run `npm install` in `labellab-server` folder.
@@ -33,47 +39,51 @@ Run `npm install` in `labellab-server` folder.
 ```
  cd labellab-server/
  npm install
- ```
-    
+```
+
 #### How to Use
 
 First you need to create a `.env` file in both `labellab-server` folder and `labellab-client` folder following the template provided in the file `.env.example` which is present in both the folders.<br/> <br/>
 
 For client-side `.env` file:
+
 ```
 REACT_APP_HOST=http://localhost
-REACT_APP_SERVER_ENVIORNMENT=dev
+REACT_APP_SERVER_ENVIRONMENT=dev
 REACT_APP_SERVER_PORT=4000
 ```
 
 For server-side `.env` file:
+
 ```
 HOST=localhost
 PORT=4000
 ```
-`JWT_SECRET` can be any word your choice. 
 
-To create a free MongoDB Atlas cloud database, follow the guide at  [https://docs.atlas.mongodb.com/getting-started/](https://docs.atlas.mongodb.com/getting-started/). After setting up, find the conection string to your database. It should look like this:
+`JWT_SECRET` can be any word your choice.
+
+To create a free MongoDB Atlas cloud database, follow the guide at [https://docs.atlas.mongodb.com/getting-started/](https://docs.atlas.mongodb.com/getting-started/). After setting up, find the conection string to your database. It should look like this:
+
 ```
 {{DB_HOST}}://{{DB_USERNAME}}:{{DB_PASSWORD}}@{{DB_CLUSTER}}/{{DB_NAME}}
 ```
+
 You should fill in these values in their relevent fields in the `.env` file.
 
 > **NOTE**: Your IP address may change if you've been disconnected from the internet and reconnected. If that happens, it means that your internet connection doesn't have a static IP. You may no longer be able to access the database if you've whitelisted only your previous IP address. You can allow access from any IP address from the Atlas control panel to overcome this issue.
 
 Both the front-end and the back-end can be run from the `labellab-server` folder using the terminal:
 
-1. To run both the client and server with a single command, run the following:   
-`$ npm run dev`
+1. To run both the client and server with a single command, run the following:  
+   `$ npm run dev`
 
-2. To run the server separately:    
-`$ npm run server`
+2. To run the server separately:  
+   `$ npm run server`
 
 > The server can also be run using `$ npm start`
 
-3. To run the client separately:    
-`$ npm run client`
-
+3. To run the client separately:  
+   `$ npm run client`
 
 > **NOTE**: Before starting the server create a file named `.env` same as `.env.example` and add your **OAUTH** and **DATABASE** credentials in the file.
 
@@ -82,6 +92,7 @@ Visit [localhost:3000](http://localhost:3000) to browse.
 > **NOTE**: This version only supports Google Chrome and Mozilla Firefox browsers. Make sure to instal the extension [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) if you're using Google Chrome.
 
 #### How to Use (Mobile)
+
 Run the Node server in the `labellab-server` directory (if not already done):
 
 `npm start`

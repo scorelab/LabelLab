@@ -2,17 +2,19 @@ const path = require('path')
 
 let User = require('../../models/user')
 
-exports.userInfo = function(req, res) {
+let cloudinary = require('cloudinary').v2
+
+exports.userInfo = function (req, res) {
   User.findOne({
-    email: req.user.email
+    email: req.user.email,
   })
     .select('name email thumbnail googleId githubId username profileImage')
-    .exec(function(err, user) {
+    .exec(function (err, user) {
       if (err) {
         return res.status(400).send({
           success: false,
           msg: 'Unable to connect to database. Please try again.',
-          error: err
+          error: err,
         })
       }
       if (!user) {
@@ -23,19 +25,19 @@ exports.userInfo = function(req, res) {
     })
 }
 
-exports.editInfo = function(req, res) {
+exports.editInfo = function (req, res) {
   User.findOneAndUpdate(
     {
-      email: req.user.email
+      email: req.user.email,
     },
     req.body,
     { new: true }
-  ).exec(function(err, user) {
+  ).exec(function (err, user) {
     if (err) {
       return res.status(400).send({
         success: false,
         msg: 'Unable to connect to database. Please try again.',
-        error: err
+        error: err,
       })
     }
     if (!user) {
@@ -46,17 +48,17 @@ exports.editInfo = function(req, res) {
   })
 }
 
-exports.searchUser = function(req, res) {
+exports.searchUser = function (req, res) {
   if (req && req.params && req.params.query) {
     User.find(
       {
-        email: { $regex: req.params.query, $ne: req.user.email }
+        email: { $regex: req.params.query, $ne: req.user.email },
       },
-      function(err, user) {
+      function (err, user) {
         if (err) return console.log(err)
         res.json({
           success: true,
-          body: user
+          body: user,
         })
       }
     )
@@ -65,18 +67,18 @@ exports.searchUser = function(req, res) {
   }
 }
 
-exports.countInfo = function(req, res) {
+exports.countInfo = function (req, res) {
   User.findOne({
-    _id: req.user._id
+    _id: req.user._id,
   })
     .select('email')
     .populate('project')
-    .exec(function(err, user) {
+    .exec(function (err, user) {
       if (err) {
         return res.status(400).send({
           success: false,
           msg: 'Unable to connect to database. Please try again.',
-          error: err
+          error: err,
         })
       }
       if (!user) {
@@ -85,7 +87,7 @@ exports.countInfo = function(req, res) {
         let data = {
           totalProjects: user.project.length,
           totalImages: 0,
-          totalLabels: 0
+          totalLabels: 0,
         }
         user.project.map((project, index) => {
           data.totalImages += project.image.length
@@ -97,7 +99,7 @@ exports.countInfo = function(req, res) {
     })
 }
 
-exports.userUploadImage = function(req, res) {
+exports.userUploadImage = function (req, res) {
   let isUploadingImage = false
   let profileURL = ''
   const { id, email } = req.user
@@ -106,7 +108,7 @@ exports.userUploadImage = function(req, res) {
   if (req && req.body && req.body.image == null) {
     isUploadingImage = false
     data = {
-      email: email
+      email: email,
     }
     profileURL = ''
   } else if (req && req.body && req.body.image && req.body.format) {
@@ -116,7 +118,7 @@ exports.userUploadImage = function(req, res) {
       id: id,
       email: email,
       img: image,
-      format: format
+      format: format,
     }
     let baseImg = data.img.split(',')[1]
     binaryData = new Buffer(baseImg, 'base64')
@@ -126,60 +128,88 @@ exports.userUploadImage = function(req, res) {
     profileURL = 'http://localhost:4000/static/img/' + updateData.profileImage
   }
 
-  User.findOneAndUpdate(
-    {
-      email: data.email
-    },
-    {
-      profileImage: profileURL
-    }
-  ).exec(function(err, user) {
-    if (err)
-      return res.status(400).send({
-        success: false,
-        msg: 'Unable To Change Image. Please Try Again.'
-      })
-
-    if (!isUploadingImage) {
-      let profileImage = user.profileImage.replace(
-        'http://localhost:4000/static/img/',
-        ''
-      )
-      if (
-        profileImage != '' &&
-        require('fs').existsSync(
-          path.join(__dirname, '../../', `public/img/${profileImage}`)
-        )
-      ) {
-        require('fs').unlinkSync(
-          path.join(__dirname, '../../', `public/img/${profileImage}`)
-        )
-        res.json({
-          success: true,
-          body: url,
-          msg: 'Image Removed Successfully.'
-        })
+  if (process.env.CLOUDINARY_URL != null) {
+    cloudinary.uploader.upload(image, function (err, result) {
+      if (err) {
+        return res.status(400).send({ success: false, msg: err })
       } else {
-        return res.status(400).send({ success: false, msg: 'No saved image' })
-      }
-    } else {
-      require('fs').writeFile(
-        `./public/img/${updateData.profileImage}`,
-        binaryData,
-        function(err) {
-          if (err) {
-            return res
-              .status(400)
-              .send({ success: false, msg: 'Something went wrong' })
-          } else {
-            res.json({
-              success: true,
-              body: url,
-              msg: 'Image Uploaded Successfully.'
-            })
+        User.findOneAndUpdate(
+          {
+            email: data.email,
+          },
+          {
+            profileImage: result.url,
           }
+        ).exec(function (err) {
+          if (err)
+            return res.status(400).send({
+              success: false,
+              msg: 'Unable To Upload Image. Please Try Again.',
+            })
+          res.json({
+            success: true,
+            body: url,
+            msg: 'Image Uploaded Successfully.',
+          })
+        })
+      }
+    })
+  } else {
+    User.findOneAndUpdate(
+      {
+        email: data.email,
+      },
+      {
+        profileImage: profileURL,
+      }
+    ).exec(function (err, user) {
+      if (err)
+        return res.status(400).send({
+          success: false,
+          msg: 'Unable To Change Image. Please Try Again.',
+        })
+
+      if (!isUploadingImage) {
+        let profileImage = user.profileImage.replace(
+          'http://localhost:4000/static/img/',
+          ''
+        )
+        if (
+          profileImage != '' &&
+          require('fs').existsSync(
+            path.join(__dirname, '../../', `public/img/${profileImage}`)
+          )
+        ) {
+          require('fs').unlinkSync(
+            path.join(__dirname, '../../', `public/img/${profileImage}`)
+          )
+          res.json({
+            success: true,
+            body: url,
+            msg: 'Image Removed Successfully.',
+          })
+        } else {
+          return res.status(400).send({ success: false, msg: 'No saved image' })
         }
-      )
-    }
-  })
+      } else {
+        require('fs').writeFile(
+          `./public/img/${updateData.profileImage}`,
+          binaryData,
+          function (err) {
+            if (err) {
+              return res
+                .status(400)
+                .send({ success: false, msg: 'Something went wrong' })
+            } else {
+              res.json({
+                success: true,
+                body: url,
+                msg: 'Image Uploaded Successfully.',
+              })
+            }
+          }
+        )
+      }
+    })
+  }
 }

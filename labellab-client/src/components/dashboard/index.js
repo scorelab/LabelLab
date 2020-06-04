@@ -185,7 +185,7 @@ class Dashboard extends Component {
             </Button>
           </div>
           <div className="previous-heading">
-            <Header textAlign="left" as="h3" content="Previous Works" />
+            <Header className="mobile-padding" textAlign="left" as="h3" content="Previous Works" />
             <PreviousWork />
           </div>
         </div>

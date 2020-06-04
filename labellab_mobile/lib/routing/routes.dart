@@ -20,6 +20,9 @@ class Routes {
   static const viewImage = "/project/:project_id/view/:image_id";
   static const labelImage = "/project/:project_id/label/:image_id";
 
+  // Image Path
+  static const viewPath = "/project/:project_id/path/:image_id";
+
   // Classify
   static const classify = "/classify/:by";
   static const classification = "/classification/:id";
@@ -54,6 +57,9 @@ class Routes {
         handler: viewImageHandler, transitionType: TransitionType.native);
     router.define(labelImage,
         handler: labelImageHandler, transitionType: TransitionType.native);
+
+    router.define(viewPath,
+        handler: viewPathHandler, transitionType: TransitionType.native);
 
     router.define(classify,
         handler: classifyHandler, transitionType: TransitionType.native);

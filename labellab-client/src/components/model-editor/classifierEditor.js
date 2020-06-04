@@ -3,10 +3,23 @@ import PropTypes from 'prop-types'
 import { Grid, Segment, Header } from 'semantic-ui-react'
 
 import LabelSelector from './sub-modules/labelSelector'
+import PreprocessingSelector from './sub-modules/preprocessingSelector'
+import TransferLearningBuilder from './sub-modules/transferLearningBuilder'
 
 import './css/classifierEditor.css'
 
 class ClassifierEditor extends Component {
+  getBuilderType = () => {
+    const { source } = this.props
+
+    switch (source) {
+      case 'transfer':
+        return <TransferLearningBuilder />
+      default:
+        return <div>Error loading component</div>
+    }
+  }
+
   render() {
     const { labels, images } = this.props
 
@@ -22,6 +35,8 @@ class ClassifierEditor extends Component {
           <Segment className="classifier-column-heading">
             <Header>Train</Header>
           </Segment>
+          <PreprocessingSelector />
+          {this.getBuilderType()}
         </Grid.Column>
         <Grid.Column width={5}>
           <Segment className="classifier-column-heading">

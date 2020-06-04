@@ -324,11 +324,15 @@ const Row = ({
     </Table.Cell>
     <Table.Cell width={11}>
       <a
+        rel={'external'}
         href={
-          process.env.REACT_APP_HOST +
-          ':' +
-          process.env.REACT_APP_SERVER_PORT +
-          `/static/uploads/${image.imageUrl}?${Date.now()}`
+          process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
+            ? image.imageUrl
+            : 'http://' +
+              process.env.REACT_APP_HOST +
+              ':' +
+              process.env.REACT_APP_SERVER_PORT +
+              `/static/uploads/${image.imageUrl}?${Date.now()}`
         }
       >
         {image.imageName}
