@@ -17,11 +17,10 @@ class LabelSelectionList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (selections != null && selections.length > 0) {
       return Container(
-        alignment: Alignment.centerLeft,
-        height: 54,
-        padding: EdgeInsets.only(right: 8),
-        child: ListView(
-          scrollDirection: Axis.horizontal,
+        margin: EdgeInsets.symmetric(horizontal: 8),
+        child: Wrap(
+          spacing: 8,
+          direction: Axis.horizontal,
           children: selections.map((selection) {
             return Padding(
               padding: const EdgeInsets.only(left: 8.0),

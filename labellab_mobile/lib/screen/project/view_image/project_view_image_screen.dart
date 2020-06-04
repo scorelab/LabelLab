@@ -71,6 +71,7 @@ class ProjectViewImageScreen extends StatelessWidget {
       ProjectViewImageState _state = snapshot.data;
       return Column(
         mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _state.isLoading ? LinearProgressIndicator() : Container(),
           _state.error != null ? Text(_state.error) : Container(),
