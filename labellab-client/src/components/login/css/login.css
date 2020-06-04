@@ -1,44 +1,40 @@
 @media only screen and (max-width: 600px) {
-    .login-parent {
-        width: 80% !important;
-    }
-}
-
-.show-password {
-    width: 3vw;
+  .login-parent {
+    width: 80% !important;
+  }
 }
 
 .login-grand-parent {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .login-parent {
-    margin-top: 5em;
-    width: 30%;
-    margin-left: auto;
-    margin-right: auto;
+  margin-top: 5em;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login-oauth-icon {
-    display: flex;
-    justify-content: space-evenly;
-    margin: 2em 0 2em;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 2em 0 2em;
 }
 
 .login-oauth-icon div {
-    max-width: 15vw;
+  max-width: 15vw;
 }
 
 .login-icons {
-    width: 45px;
+  width: 45px;
 }
 
 .action {
-    padding: 1em 0;
+  padding: 1em 0;
 }
 
 .login-form {
-    margin-top: 2em;
+  margin-top: 2em;
 }
