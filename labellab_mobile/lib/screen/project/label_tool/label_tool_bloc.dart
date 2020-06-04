@@ -16,6 +16,13 @@ class LabelToolBloc {
 
   List<LabelSelection> _selections = [];
   LabelSelection _currentSelection;
+
+  bool _isUpdating = false;
+
+  // Holds the previous index and the selection
+  int _tempIndex;
+  LabelSelection _tempSelection;
+
   Image _image;
   List<Label> _labels = [];
   bool _isLoading = false;
@@ -52,20 +59,29 @@ class LabelToolBloc {
 
   void startCurrentSelection(Point point) {
     _currentSelection.setStartPoint(point);
-    _setState(LabelToolState.drawingSelection(_selections, _image,
-        labels: _labels, currentSelection: _currentSelection));
+    _setState(_isUpdating
+        ? LabelToolState.updatingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection)
+        : LabelToolState.drawingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection));
   }
 
   void updateCurrentSelection(Point point) {
     _currentSelection.setEndPoint(point);
-    _setState(LabelToolState.drawingSelection(_selections, _image,
-        labels: _labels, currentSelection: _currentSelection));
+    _setState(_isUpdating
+        ? LabelToolState.updatingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection)
+        : LabelToolState.drawingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection));
   }
 
   void appendToCurrentSelection(Point point) {
     _currentSelection.appendPoint(point);
-    _setState(LabelToolState.drawingSelection(_selections, _image,
-        labels: _labels, currentSelection: _currentSelection));
+    _setState(_isUpdating
+        ? LabelToolState.updatingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection)
+        : LabelToolState.drawingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection));
   }
 
   void cancelCurrentSelection() {
@@ -76,18 +92,27 @@ class LabelToolBloc {
 
   void resetCurrentSelection() {
     _currentSelection.points.removeRange(0, _currentSelection.points.length);
-    _setState(LabelToolState.drawingSelection(_selections, _image,
-        labels: _labels, currentSelection: _currentSelection));
+    _setState(_isUpdating
+        ? LabelToolState.updatingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection)
+        : LabelToolState.drawingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection));
   }
 
   void undoFromCurrentSelection() {
     _currentSelection.points.removeLast();
-    _setState(LabelToolState.drawingSelection(_selections, _image,
-        labels: _labels, currentSelection: _currentSelection));
+    _setState(_isUpdating
+        ? LabelToolState.updatingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection)
+        : LabelToolState.drawingSelection(_selections, _image,
+            labels: _labels, currentSelection: _currentSelection));
   }
 
   void saveCurrentSelection() {
-    _selections.add(_currentSelection);
+    _isUpdating
+        ? _selections.insert(_tempIndex, _currentSelection)
+        : _selections.add(_currentSelection);
+    _isUpdating = false;
     _currentSelection = null;
     _setState(
         LabelToolState.doneSelection(_selections, _image, labels: _labels));
@@ -97,6 +122,26 @@ class LabelToolBloc {
     _selections.remove(selection);
     _setState(LabelToolState.drawingSelection(_selections, _image,
         currentSelection: _currentSelection, labels: _labels));
+  }
+
+  // Provoke selection update
+  void updateSelection(LabelSelection selection) {
+    _isUpdating = true;
+    _tempIndex = _selections.indexOf(selection);
+    _tempSelection = selection;
+    _selections.remove(selection);
+    _currentSelection = LabelSelection(selection.label);
+    _setState(LabelToolState.updatingSelection(_selections, _image,
+        labels: _labels, currentSelection: _currentSelection));
+  }
+
+  // Cancel selection update
+  void cancelUpdatingSelection() {
+    _isUpdating = false;
+    _selections.insert(_tempIndex, _tempSelection);
+    _currentSelection = null;
+    _setState(
+        LabelToolState.doneSelection(_selections, _image, labels: _labels));
   }
 
   void refresh() {
