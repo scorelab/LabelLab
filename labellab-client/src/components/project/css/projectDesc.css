@@ -51,9 +51,7 @@
   }
   div.project-non-side-section {
     height: 30px;
-    position: absolute;
-    margin-top: 22rem;
-    margin-left: 0px;
+    margin-left: auto;
   }
   div.project-main {
     margin-left: 30%;
