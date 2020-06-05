@@ -1,6 +1,7 @@
 .navbar {
   width: 100%;
   z-index: 3;
+  background-color: #fff;
   justify-content: space-between;
   box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2);
   align-items: center;
