@@ -108,35 +108,9 @@ class Profile extends Component {
               <div className="profile">
                 <ProfileCard />
               </div>
-              <div className="content">ddd</div>
-            </div>
-            <div className="project-second">
-              <div className="project-second-leftbar">
-                <Menu vertical>
-                  <Menu.Item as={Link} to="" name="projects">
-                    Projects
-                  </Menu.Item>
-                  <Dropdown item text="Project Analytics">
-                    <Dropdown.Menu>
-                      {projects.map(project => (
-                        <Dropdown.Item
-                          key={project._id}
-                          as={Link}
-                          to={'/project/' + project._id + '/analytics'}
-                        >
-                          {project.projectName}
-                        </Dropdown.Item>
-                      ))}
-                    </Dropdown.Menu>
-                  </Dropdown>
-
-                  <Menu.Item as={Link} to="" name="summary">
-                    Summary
-                  </Menu.Item>
-                </Menu>
-              </div>
-              <div className="project-second-rightbar">
-                <Card.Group itemsPerRow={3}>
+              <div className="content">
+                <div className="title">Projects</div>
+                <Card.Group itemsPerRow={3} stackable={true}>
                   {!actions.isfetching ? (
                     projects[0] &&
                     projects.map((project, index) => (
@@ -160,6 +134,31 @@ class Profile extends Component {
                 </Card.Group>
               </div>
             </div>
+            {/* <div className="project-second">
+              <div className="project-second-leftbar">
+                <Menu vertical>
+                  <Menu.Item as={Link} to="" name="projects">
+                    Projects
+                  </Menu.Item>
+                  <Dropdown item text="Project Analytics">
+                    <Dropdown.Menu>
+                      {projects.map(project => (
+                        <Dropdown.Item
+                          key={project._id}
+                          as={Link}
+                          to={'/project/' + project._id + '/analytics'}
+                        >
+                          {project.projectName}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Menu.Item as={Link} to="" name="summary">
+                    Summary
+                  </Menu.Item>
+                </Menu>
+              </div>
+            </div> */}
           </React.Fragment>
         ) : (
           <Dimmer active>
@@ -215,82 +214,3 @@ export default connect(
   mapStateToProps,
   mapActionToProps
 )(Profile)
-
-{
-  /* <div className="profile-first-leftbar">
-                <img
-                  alt=""
-                  src={
-                    user.profileImage === ''
-                      ? `${user.thumbnail}`
-                      : `${user.profileImage}?${Date.now()}`
-                  }
-                  className="image"
-                />
-                <div className="profile-edit-button">
-                  <input
-                    type="file"
-                    onChange={this.handleImageChange}
-                    className="profile-file-input"
-                    id="profile-embedpollfileinput"
-                  />
-                  <label
-                    htmlFor="profile-embedpollfileinput"
-                    className="ui medium primary left floated button custom-margin"
-                  >
-                    Edit
-                  </label>
-                  <Button
-                    negative
-                    icon="delete"
-                    onClick={this.handleRemoveImage}
-                  />
-                </div>
-                {this.state.max_size_error ? (
-                  <div className="image_size_error">
-                    Max size of the profile pic should be 101Kb
-                  </div>
-                ) : null}
-              </div>
-              <div className="profile-first-rightbar">
-                <Grid columns={2}>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Card className="project-card">
-                        <Card.Header as="h2" className="project-card-header">
-                          Project Information
-                        </Card.Header>
-                        <Card.Content>
-                          <div className="project-details">
-                            <div className="project-detail">
-                              <Label color="white" size="big" image>
-                                Total Projects
-                                <Label.Detail>
-                                  {profile.totalProjects}
-                                </Label.Detail>
-                              </Label>
-                            </div>
-                            <div className="project-detail">
-                              <Label color="white" size="big" image>
-                                Total Images
-                                <Label.Detail>
-                                  {profile.totalImages}
-                                </Label.Detail>
-                              </Label>
-                            </div>
-                            <div className="project-detail">
-                              <Label color="white" size="big" image>
-                                Total Labels
-                                <Label.Detail>
-                                  {profile.totalLabels}
-                                </Label.Detail>
-                              </Label>
-                            </div>
-                          </div>
-                        </Card.Content>
-                      </Card>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </div> */
-}

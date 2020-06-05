@@ -60,3 +60,14 @@
     align-items: center;
   }
 }
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-actions > div {
+  padding-bottom: 1em;
+  padding-top: 1em;
+}
