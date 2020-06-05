@@ -24,7 +24,7 @@ import {
 import { hasToken } from '../../utils/token'
 import { TOKEN_TYPE } from '../../constants/index'
 import CardLoader from '../../utils/cardLoader'
-import Edit from './edit'
+import ProfileCard from './profile-card'
 import './css/profile.css'
 class Profile extends Component {
   constructor(props) {
@@ -102,147 +102,70 @@ class Profile extends Component {
     return (
       <div>
         <Navbar title="Profile" history={history} />
-        <Container>
-          {!isfetching ? (
-            <React.Fragment>
-              <div className="profile-first">
-                <div className="profile-first-leftbar">
-                  <Image
-                    centered
-                    src={
-                      user.profileImage === ''
-                        ? `${user.thumbnail}`
-                        : `${user.profileImage}?${Date.now()}`
-                    }
-                    size="small"
-                  />
-                  <div className="profile-edit-button">
-                    <input
-                      type="file"
-                      onChange={this.handleImageChange}
-                      className="profile-file-input"
-                      id="profile-embedpollfileinput"
-                    />
-                    <label
-                      htmlFor="profile-embedpollfileinput"
-                      className="ui medium primary left floated button custom-margin"
-                    >
-                      Edit
-                    </label>
-                    <Button
-                      negative
-                      icon="delete"
-                      onClick={this.handleRemoveImage}
-                    />
-                  </div>
-                  {this.state.max_size_error ? (
-                    <div className="image_size_error">
-                      Max size of the profile pic should be 101Kb
-                    </div>
-                  ) : null}
-                </div>
-                <div className="profile-first-rightbar">
-                  <Grid columns={2}>
-                    <Grid.Row>
-                      <Grid.Column>
-                        <Edit />
-                      </Grid.Column>
-                      <Grid.Column>
-                        <Card className="project-card">
-                          <Card.Header as="h2" className="project-card-header">
-                            Project Information
-                          </Card.Header>
-                          <Card.Content>
-                            <div className="project-details">
-                              <div className="project-detail">
-                                <Label color="white" size="big" image>
-                                  Total Projects
-                                  <Label.Detail>
-                                    {profile.totalProjects}
-                                  </Label.Detail>
-                                </Label>
-                              </div>
-                              <div className="project-detail">
-                                <Label color="white" size="big" image>
-                                  Total Images
-                                  <Label.Detail>
-                                    {profile.totalImages}
-                                  </Label.Detail>
-                                </Label>
-                              </div>
-                              <div className="project-detail">
-                                <Label color="white" size="big" image>
-                                  Total Labels
-                                  <Label.Detail>
-                                    {profile.totalLabels}
-                                  </Label.Detail>
-                                </Label>
-                              </div>
-                            </div>
-                          </Card.Content>
-                        </Card>
-                      </Grid.Column>
-                    </Grid.Row>
-                  </Grid>
-                </div>
+        {!isfetching ? (
+          <React.Fragment>
+            <div className="container">
+              <div className="profile">
+                <ProfileCard />
               </div>
-              <div className="project-second">
-                <div className="project-second-leftbar">
-                  <Menu vertical>
-                    <Menu.Item as={Link} to="" name="projects">
-                      Projects
-                    </Menu.Item>
-                    <Dropdown item text="Project Analytics">
-                      <Dropdown.Menu>
-                        {projects.map(project => (
-                          <Dropdown.Item
-                            key={project._id}
-                            as={Link}
-                            to={'/project/' + project._id + '/analytics'}
-                          >
-                            {project.projectName}
-                          </Dropdown.Item>
-                        ))}
-                      </Dropdown.Menu>
-                    </Dropdown>
-
-                    <Menu.Item as={Link} to="" name="summary">
-                      Summary
-                    </Menu.Item>
-                  </Menu>
-                </div>
-                <div className="project-second-rightbar">
-                  <Card.Group itemsPerRow={3}>
-                    {!actions.isfetching ? (
-                      projects[0] &&
-                      projects.map((project, index) => (
-                        <Card
-                          key={index}
-                          onClick={() => this.handleClick(project._id)}
+              <div className="content">ddd</div>
+            </div>
+            <div className="project-second">
+              <div className="project-second-leftbar">
+                <Menu vertical>
+                  <Menu.Item as={Link} to="" name="projects">
+                    Projects
+                  </Menu.Item>
+                  <Dropdown item text="Project Analytics">
+                    <Dropdown.Menu>
+                      {projects.map(project => (
+                        <Dropdown.Item
+                          key={project._id}
+                          as={Link}
+                          to={'/project/' + project._id + '/analytics'}
                         >
-                          <Card.Content
-                            className="card-headers"
-                            header={project.projectName}
-                          />
-                          <Card.Content
-                            description={project.projectDescription}
-                          />
-                          <Card.Content extra />
-                        </Card>
-                      ))
-                    ) : (
-                      <CardLoader />
-                    )}
-                  </Card.Group>
-                </div>
+                          {project.projectName}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+
+                  <Menu.Item as={Link} to="" name="summary">
+                    Summary
+                  </Menu.Item>
+                </Menu>
               </div>
-            </React.Fragment>
-          ) : (
-            <Dimmer active>
-              <Loader indeterminate>Loading..</Loader>
-            </Dimmer>
-          )}
-        </Container>
+              <div className="project-second-rightbar">
+                <Card.Group itemsPerRow={3}>
+                  {!actions.isfetching ? (
+                    projects[0] &&
+                    projects.map((project, index) => (
+                      <Card
+                        key={index}
+                        onClick={() => this.handleClick(project._id)}
+                      >
+                        <Card.Content
+                          className="card-headers"
+                          header={project.projectName}
+                        />
+                        <Card.Content
+                          description={project.projectDescription}
+                        />
+                        <Card.Content extra />
+                      </Card>
+                    ))
+                  ) : (
+                    <CardLoader />
+                  )}
+                </Card.Group>
+              </div>
+            </div>
+          </React.Fragment>
+        ) : (
+          <Dimmer active>
+            <Loader indeterminate>Loading..</Loader>
+          </Dimmer>
+        )}
       </div>
     )
   }
@@ -292,3 +215,82 @@ export default connect(
   mapStateToProps,
   mapActionToProps
 )(Profile)
+
+{
+  /* <div className="profile-first-leftbar">
+                <img
+                  alt=""
+                  src={
+                    user.profileImage === ''
+                      ? `${user.thumbnail}`
+                      : `${user.profileImage}?${Date.now()}`
+                  }
+                  className="image"
+                />
+                <div className="profile-edit-button">
+                  <input
+                    type="file"
+                    onChange={this.handleImageChange}
+                    className="profile-file-input"
+                    id="profile-embedpollfileinput"
+                  />
+                  <label
+                    htmlFor="profile-embedpollfileinput"
+                    className="ui medium primary left floated button custom-margin"
+                  >
+                    Edit
+                  </label>
+                  <Button
+                    negative
+                    icon="delete"
+                    onClick={this.handleRemoveImage}
+                  />
+                </div>
+                {this.state.max_size_error ? (
+                  <div className="image_size_error">
+                    Max size of the profile pic should be 101Kb
+                  </div>
+                ) : null}
+              </div>
+              <div className="profile-first-rightbar">
+                <Grid columns={2}>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Card className="project-card">
+                        <Card.Header as="h2" className="project-card-header">
+                          Project Information
+                        </Card.Header>
+                        <Card.Content>
+                          <div className="project-details">
+                            <div className="project-detail">
+                              <Label color="white" size="big" image>
+                                Total Projects
+                                <Label.Detail>
+                                  {profile.totalProjects}
+                                </Label.Detail>
+                              </Label>
+                            </div>
+                            <div className="project-detail">
+                              <Label color="white" size="big" image>
+                                Total Images
+                                <Label.Detail>
+                                  {profile.totalImages}
+                                </Label.Detail>
+                              </Label>
+                            </div>
+                            <div className="project-detail">
+                              <Label color="white" size="big" image>
+                                Total Labels
+                                <Label.Detail>
+                                  {profile.totalLabels}
+                                </Label.Detail>
+                              </Label>
+                            </div>
+                          </div>
+                        </Card.Content>
+                      </Card>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </div> */
+}

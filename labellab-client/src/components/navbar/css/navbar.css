@@ -142,6 +142,7 @@
     width: 100%;
     height: 6em;
     display: flex;
+    background-color: #fff;
     flex-wrap: wrap;
     z-index: 1;
     align-items: center;
