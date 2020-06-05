@@ -17,22 +17,18 @@ import { fetchUser } from '../../actions/index'
 import { TOKEN_TYPE } from '../../constants/index'
 import './css/navbar.css'
 
-const initialState = { isLoading: false, results: [], value: '', }
+const initialState = { isLoading: false, results: [], value: '' }
 
-const resultRenderer = ({
-  imageName,
-  createdAt }) =>
-  (
-    <>
-      <Label content={imageName} />
-      <Label content={new Date(createdAt).toISOString().substring(0, 10)} />
-    </>
-  )
-
+const resultRenderer = ({ imageName, createdAt }) => (
+  <>
+    <Label content={imageName} />
+    <Label content={new Date(createdAt).toISOString().substring(0, 10)} />
+  </>
+)
 
 resultRenderer.propTypes = {
   title: PropTypes.string,
-  description: PropTypes.string,
+  description: PropTypes.string
 }
 
 class ProjectNavbar extends Component {
@@ -44,12 +40,7 @@ class ProjectNavbar extends Component {
       value: result.imageName,
       projectId: projectId
     })
-    this.props.history.push(
-      '/project/' +
-      projectId +
-      '/images/#' +
-      result._id
-    )
+    this.props.history.push('/project/' + projectId + '/images/#' + result._id)
   }
 
   handleSearchChange = (e, { value }) => {
@@ -59,11 +50,11 @@ class ProjectNavbar extends Component {
       if (this.state.value.length < 1) return this.setState(initialState)
 
       const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-      const isMatch = (result) => re.test(result.imageName)
+      const isMatch = result => re.test(result.imageName)
 
       this.setState({
         isLoading: false,
-        results: _.filter(this.props.project.images, isMatch),
+        results: _.filter(this.props.project.images, isMatch)
       })
     }, 300)
   }
@@ -84,72 +75,75 @@ class ProjectNavbar extends Component {
     const { title, isfetching, user } = this.props
     const { isLoading, value, results } = this.state
     return (
-      <div className="navbar">
-        <div className="startnav">
-          <div className="project-nav-title" onClick={this.pushRouter}>
-            <Link to="/">
-              <Icon name="arrow left" />
-              Dashboard
-            </Link>
-          </div>
+      <header className="navbar">
+        <div className="project-nav-title" onClick={this.pushRouter}>
+          <Link to="/">
+            <Icon name="arrow left" />
+            Dashboard
+          </Link>
         </div>
-        <div className="navbar-title">
-          <Grid>
-            <Grid.Column width={6}>
-              <Search
-                loading={isLoading}
-                onResultSelect={this.handleResultSelect}
-                onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                  leading: true,
-                })}
-                results={results}
-                value={value}
-                resultRenderer={resultRenderer}
-                placeholder="Search Images..."
-                {...this.props}
+        <input type="checkbox" className="menu-btn" id="menu-btn" />
+        <label htmlFor="menu-btn" className="menu-icon">
+          <span className="nav-icon"></span>
+        </label>
+        <ul className="dropdown-menu">
+          <li className="searchBar">
+            <Search
+              loading={isLoading}
+              onResultSelect={this.handleResultSelect}
+              onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                leading: true
+              })}
+              results={results}
+              value={value}
+              resultRenderer={resultRenderer}
+              placeholder="Search Images..."
+              {...this.props}
+            />
+          </li>
+          <li>
+            <Header textAlign="center" as="h2" content={title} />
+          </li>
+          <li className="subnavbar">
+            <Link to="/profile">
+              <Header
+                className="username"
+                textAlign="center"
+                as="h5"
+                content={user.username}
               />
-            </Grid.Column>
-          </Grid>
-          <Header textAlign="center" as="h2" content={title} />
-        </div>
-        <div className="subnavbar">
-          <ul>
-            <li>
-              <Header textAlign="center" as="h5" content={user.username} />
-            </li>
-            <li>
               {isfetching ? (
                 <h4>LOADING</h4>
               ) : user ? (
-                <a target="_blank" rel="noopener noreferrer" href="/profile">
-                  <Image
-                    centered
-                    src={
-                      user.profileImage === ''
-                        ? `${user.thumbnail}`
-                        : `${user.profileImage}?${Date.now()}`
-                    }
-                    size="mini"
-                    circular
-                  />
-                </a>
+                <Image
+                  className="profilepic"
+                  centered
+                  src={
+                    user.profileImage === ''
+                      ? `${user.thumbnail}`
+                      : `${user.profileImage}?${Date.now()}`
+                  }
+                  size="mini"
+                  circular
+                />
               ) : null}
-            </li>
-            <li>
-              <Dropdown>
-                <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <Link to="/profile">Profile</Link>
-                  </Dropdown.Item>
-                  <Dropdown.Item as="label" onClick={this.handleClick}>
-                    Logout
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </li>
-          </ul>
-        </div>
-      </div>
+            </Link>
+            <Dropdown className="dropdown">
+              <Dropdown.Menu>
+                <Dropdown.Item>
+                  <Link to="/profile">Profile</Link>
+                </Dropdown.Item>
+                <Dropdown.Item as="label" onClick={this.handleClick}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </li>
+          <li>
+            <h4 className="logout">Logout</h4>
+          </li>
+        </ul>
+      </header>
     )
   }
 }
@@ -160,12 +154,12 @@ ProjectNavbar.propTypes = {
   user: PropTypes.object,
   fetchUser: PropTypes.func,
   title: PropTypes.string,
-  project: PropTypes.object,
+  project: PropTypes.object
 }
 
 const mapStateToProps = state => {
-  const imageName = state.projects.currentProject.images ?
-    state.projects.currentProject.images.map(image => image.imageName)
+  const imageName = state.projects.currentProject.images
+    ? state.projects.currentProject.images.map(image => image.imageName)
     : null
   return {
     labels: state.labels.labels,

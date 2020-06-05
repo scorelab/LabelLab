@@ -1,31 +1,32 @@
 @media only screen and (max-width: 600px) {
-    .register-parent {
-        width: 80% !important;
-    }
-    .register-submit {
-        width: 100% !important;
-    }
+  .register-parent {
+    width: 80% !important;
   }
-
-.register-parent{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    margin-top: 5em;
-    width: 30%;
-    margin-left: auto;
-    margin-right: auto;
+  .register-submit {
+    width: 100% !important;
+  }
 }
 
-.errorText{
-    color:#9f3a38;
-    padding:  0px 10px 10px 10px;
+.register-parent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 5em 0px;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.errorText {
+  color: #9f3a38;
+  padding: 0px 10px 10px 10px;
 }
 
 .register-form {
-    margin-top: 1.2em;
+  margin-top: 1.2em;
 }
 
-.register-login{
-    padding: 1em 0;
+.register-login {
+  padding: 1em 0;
 }

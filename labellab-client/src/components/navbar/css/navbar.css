@@ -1,10 +1,9 @@
 .navbar {
-  position: relative;
   width: 100%;
-  background-color: #ffffff;
   z-index: 3;
   justify-content: space-between;
   box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2);
+  align-items: center;
 }
 
 .navbar ul {
@@ -64,13 +63,12 @@
 }
 
 .project-nav-title {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 0 0 0 1em;
+  position: absolute;
+  display: inline;
   font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
   font-weight: bold;
+  padding: 20px 20px;
 }
 
 .navbar .menu-icon .nav-icon:before {
@@ -143,12 +141,10 @@
   .navbar {
     width: 100%;
     height: 6em;
-    background-color: #ffffff;
     display: flex;
     flex-wrap: wrap;
     z-index: 1;
     align-items: center;
-    position: relative;
   }
 
   .navbar .subnavbar .dropdown {
