@@ -7,6 +7,13 @@
 .container > .content {
   box-sizing: border-box;
   width: 100%;
+  margin: 20px 0px;
+  padding: 0px 15px;
+}
+
+.container > .content .title {
+  font-size: 23px;
+  margin-bottom: 20px;
 }
 
 .container .profile {
@@ -66,8 +73,9 @@
 }
 
 @media only screen and (min-width: 768px) {
-  .container .content {
+  .container > .content {
     width: 70%;
+    padding-left: 0;
   }
 
   .container .profile {
@@ -76,8 +84,9 @@
 }
 
 @media only screen and (min-width: 993px) {
-  .container .content {
+  .container > .content {
     width: 75%;
+    padding-left: 0;
   }
 
   .container .profile {
