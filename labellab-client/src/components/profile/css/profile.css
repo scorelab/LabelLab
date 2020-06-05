@@ -64,12 +64,32 @@
 }
 
 .project-details {
-  text-align: center;
+  display: flex;
+  margin-bottom: 20px;
+  flex-direction: column;
 }
 
-.project-detail {
-  padding-bottom: 0.4em;
-  display: block;
+.project-details .project-detail {
+  flex-grow: 1;
+  display: flex;
+  border: 1px #ddd solid;
+  margin: 5px 5px;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px 2px #dddddd83;
+  justify-content: space-between;
+}
+
+.project-details .project-detail .key {
+  padding: 10px 5px;
+  text-align: center;
+  font-size: 16px;
+  justify-self: center;
+}
+.project-details .project-detail .value {
+  background-color: #eee;
+  height: 100%;
+  padding: 10px 20px;
+  text-align: center;
 }
 
 @media only screen and (min-width: 768px) {
@@ -80,6 +100,10 @@
 
   .container .profile {
     width: 30%;
+  }
+
+  .project-details {
+    flex-direction: row;
   }
 }
 

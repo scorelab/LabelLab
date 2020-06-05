@@ -109,6 +109,22 @@ class Profile extends Component {
                 <ProfileCard />
               </div>
               <div className="content">
+                <div className="title">Projects Information</div>
+
+                <div className="project-details">
+                  <div className="project-detail">
+                    <div className="key">Total Projects</div>
+                    <div className="value">{profile.totalProjects}</div>
+                  </div>
+                  <div className="project-detail">
+                    <div className="key">Total Images</div>
+                    <div className="value">{profile.totalImages}</div>
+                  </div>
+                  <div className="project-detail">
+                    <div className="key">Total Labels</div>
+                    <div className="value">{profile.totalLabels}</div>
+                  </div>
+                </div>
                 <div className="title">Projects</div>
                 <Card.Group itemsPerRow={3} stackable={true}>
                   {!actions.isfetching ? (
