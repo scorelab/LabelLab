@@ -3,6 +3,11 @@ from flask import current_app
 
 from api.extensions import db, Base
 
+model_has_label = db.Table("model_has_label",
+                    db.Column("model_id", db.Integer, db.ForeignKey("model.id")),
+                    db.Column("label_id", db.Integer, db.ForeignKey("label.id")),
+                    db.PrimaryKeyConstraint("model_id", "label_id"))
+
 class Label(db.Model):
     """
     This model holds information about a label
@@ -21,6 +26,7 @@ class Label(db.Model):
                                  backref='label',
                                  lazy=True,
                                  cascade="all, delete-orphan")
+    models = db.relationship("MLModel", secondary=model_has_label, backref=db.backref("labels", lazy="dynamic"))
     
     def __init__(self, labelname, label_type, count, project_id):
         """
@@ -36,3 +42,8 @@ class Label(db.Model):
         Returns the object reprensentation
         """
         return "<Label %r>" % self.labelname
+    
+    @classmethod
+    def find_by_id_in_project(cls, _id, project_id):
+        result = cls.query.filter_by(id=_id, project_id=project_id).first()
+        return result

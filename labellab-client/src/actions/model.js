@@ -1,4 +1,8 @@
 import {
+  SET_PROJECT_ID,
+  SET_NAME,
+  SET_TYPE,
+  SET_SOURCE_TYPE,
   ADD_LABEL,
   REMOVE_LABEL,
   ADD_PREPROCESSING_STEP,
@@ -8,8 +12,41 @@ import {
   SET_TRANSFER_SOURCE,
   ADD_LAYER,
   EDIT_LAYER,
-  REMOVE_LAYER
+  REMOVE_LAYER,
+  SAVE_MODEL_REQUEST,
+  SAVE_MODEL_SUCCESS,
+  SAVE_MODEL_FAILURE
 } from '../constants/index'
+
+import FetchApi from '../utils/FetchAPI'
+
+export const setProjectId = id => {
+  return {
+    type: SET_PROJECT_ID,
+    payload: id
+  }
+}
+
+export const setName = name => {
+  return {
+    type: SET_NAME,
+    payload: name
+  }
+}
+
+export const setType = type => {
+  return {
+    type: SET_TYPE,
+    payload: type
+  }
+}
+
+export const setSource = sourceType => {
+  return {
+    type: SET_SOURCE_TYPE,
+    payload: sourceType
+  }
+}
 
 export const addLabel = (labels, labelToAdd) => {
   if (!labels.includes(labelToAdd)) {
@@ -102,5 +139,31 @@ export const removeLayer = (layers, layerToRemove) => {
   return {
     type: REMOVE_LAYER,
     payload: layers
+  }
+}
+
+export const saveModel = modelData => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('POST', '/api/v1/models/save', modelData, true)
+      .then(res => {
+        dispatch(success())
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.message
+            ? dispatch(failure(err.response.message))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: SAVE_MODEL_REQUEST }
+  }
+  function success() {
+    return { type: SAVE_MODEL_SUCCESS }
+  }
+  function failure(error) {
+    return { type: SAVE_MODEL_FAILURE, payload: error }
   }
 }
