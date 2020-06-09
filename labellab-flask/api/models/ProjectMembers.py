@@ -17,7 +17,7 @@ class ProjectMember(db.Model):
                      db.ForeignKey('team.id', ondelete="cascade", onupdate="cascade"), 
                      nullable=False)
     
-    def __init__(self, user_id, project_id, team_id):
+    def __init__(self, user_id, team_id):
         """
         Initializes the projectMember instance
         """
@@ -28,36 +28,4 @@ class ProjectMember(db.Model):
         """
         Returns the object reprensentation
         """
-        return "<ProjectMember %r>" % self.user_id
-    
-    def to_json(self):
-        """
-        Returns a JSON object
-        """
-        projectmember_json = {"projectMemberId": self.user_id, 
-                              "teamId": self.team_id}
-        return projectmember_json
-    
-    @classmethod
-    def find_projectmember(cls, user_id, team_id):
-        return cls.query.filter_by(user_id=user_id, 
-                                   team_id=team_id).first()
-    
-    @classmethod
-    def find_by_team_name(cls, team_name):
-        return cls.query.filter_by(team_name=team_name).all()
-    
-    @classmethod
-    def find_all_teams_of_user(cls, user_id):
-        return cls.query.filter_by(user_id=user_id).all()
-    
-    def save(self):
-        """
-        Save a team to the database.
-        This includes creating a new user and editing one.
-        """
-        db.session.add(self)
-        db.session.commit()
-        projectmember_json = {"projectMemberId": self.user_id, 
-                              "teamId": self.team_id}
-        return projectmember_json
+        return "<ProjectMember %r>" % self.id

@@ -1,4 +1,4 @@
-from flask import make_response, jsonify
+from flask import jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.ext.declarative import declarative_base

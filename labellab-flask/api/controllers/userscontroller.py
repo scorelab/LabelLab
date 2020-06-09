@@ -10,7 +10,14 @@ from flask_jwt_extended import (
 )
 from api.extensions import db
 from api.models.User import User
-from api.helpers.user import find_by_email, find_by_username, save, to_json
+from api.models.RevokedToken import RevokedToken
+from api.helpers.user import (
+    find_by_email, 
+    find_by_username, 
+    save, 
+    to_json, 
+    get_user_roles
+)
 
 class Register(MethodView):
     """This class registers a new user."""

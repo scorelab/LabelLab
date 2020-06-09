@@ -35,33 +35,4 @@ class Team(db.Model):
         Returns the object reprensentation
         """
         return "<Team %r>" % self.team_name
-    
-    def to_json(self):
-        """
-        Returns a JSON object
-        """
-        team_json = {"teamId": self.id, 
-                     "team_Name": self.team_name,
-                     "role": self.role}
-        return team_json
-    
-    @classmethod
-    def find_by_team_id(cls, id):
-        return cls.query.filter_by(id=id).first()
-    
-    @classmethod
-    def find_by_team_name(cls, name):
-        return cls.query.filter_by(name=name).first()
-    
-    @classmethod
-    def find_all_teams(cls, project_id):
-        return cls.query.filter_by(project_id=project_id).first()
-    
-    def save(self):
-        """
-        Save a team to the database.
-        This includes creating a new user and editing one.
-        """
-        db.session.add(self)
-        db.session.commit()
         
