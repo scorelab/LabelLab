@@ -51,6 +51,8 @@ onnx==1.7.0
 opencv-python==4.2.0.34
 opt-einsum==3.2.1
 pandas==1.0.4
+marshmallow==2.21.0
+marshmallow-sqlalchemy==0.17.1
 pep8==1.7.1
 Pillow==7.1.2
 protobuf==3.12.2

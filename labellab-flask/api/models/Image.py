@@ -3,11 +3,6 @@ from flask import current_app
 
 from api.extensions import db, Base
 
-"""
-This table is an association table for 
-a many to many relationship between images and labels
-"""
-
 class Image(db.Model):
     """
     This model holds information about an image in a project
