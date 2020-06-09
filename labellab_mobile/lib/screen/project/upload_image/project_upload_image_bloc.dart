@@ -18,9 +18,8 @@ class ProjectUploadImageBloc {
 
   ProjectUploadImageBloc(this.projectId);
 
-  void selectImage(File image) {
-    final _image = UploadImage(image: image);
-    _images.add(_image);
+  void selectImages(List<UploadImage> images) {
+    _images = _images + images;
     _stateController.add(ProjectUploadImageState.imageChange(images: _images));
   }
 

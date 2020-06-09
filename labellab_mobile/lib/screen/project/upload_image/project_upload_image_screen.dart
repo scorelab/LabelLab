@@ -1,13 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ProjectUploadImageScreen extends StatelessWidget {
   @override
@@ -143,47 +145,42 @@ class ProjectUploadImageScreen extends StatelessWidget {
     );
   }
 
-  void _showChangePictureMethodSelect(BuildContext pageContext) {
-    showDialog(
-      context: pageContext,
-      builder: (context) => AlertDialog(
-        title: Text("Choose method"),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        elevation: 8,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.camera),
-              title: Text("Camera"),
-              onTap: () => _showImagePicker(context, ImageSource.camera),
-            ),
-            ListTile(
-              leading: Icon(Icons.photo_library),
-              title: Text("Gallery"),
-              onTap: () => _showImagePicker(pageContext, ImageSource.gallery),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  void _showChangePictureMethodSelect(BuildContext context) async {
+    List<UploadImage> uploadImages = List<UploadImage>();
 
-  void _showImagePicker(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source).then((image) {
-      if (image != null) {
-        Provider.of<ProjectUploadImageBloc>(context).selectImage(image);
-        Navigator.pop(context);
-      }
+    MultiImagePicker.pickImages(
+      maxImages: 100,
+      enableCamera: true,
+      materialOptions: MaterialOptions(
+        actionBarTitle: "Select Images",
+        actionBarColor: "#00a89f",
+        statusBarColor: "#a2a2a2",
+        useDetailsView: false,
+      ),
+    ).then((images) {
+      // Return a temp file stream
+      Observable.fromIterable(images).flatMap((image) {
+        return image.getByteData().then((byteData) {
+          return getTemporaryDirectory().then((tempDir) {
+            return new File(tempDir.path + '/' + image.name).writeAsBytes(
+                byteData.buffer.asUint8List(
+                    byteData.offsetInBytes, byteData.lengthInBytes));
+          });
+        }).asStream();
+      }).doOnDone(() {
+        // Logger().i("Success");
+        Logger().i(uploadImages.first);
+        Provider.of<ProjectUploadImageBloc>(context).selectImages(uploadImages);
+      }).listen((uploadFile) {
+        UploadImage uploadImage = UploadImage(image: uploadFile);
+        uploadImages.add(uploadImage);
+      });
     });
   }
 
   void _gotoEditImage(BuildContext context, UploadImage image) async {
     final imageIndex =
         Provider.of<ProjectUploadImageBloc>(context).getImageIndex(image);
-    Logger().i(imageIndex);
     final imagePath = image.image.path.replaceAll(new RegExp('/'), '#');
     final updatedImage = await Application.router
         .navigateTo(context, '/project/' + imagePath + "/edit") as File;
