@@ -10,7 +10,7 @@ from flask_jwt_extended import (
 )
 from api.extensions import db
 from api.models.User import User
-from api.helpers.user import find_by_email, find_by_username, save, to_json, get
+from api.helpers.user import find_by_email, find_by_username, save, to_json
 
 class Register(MethodView):
     """This class registers a new user."""
@@ -114,7 +114,6 @@ class Login(MethodView):
             # Return a server error using the HTTP Error Code 500 (Internal
             # Server Error)
             return make_response(jsonify(response)), 500
-        get(2)
         
         # Generate the access token. This will be used as the
         # authorization header

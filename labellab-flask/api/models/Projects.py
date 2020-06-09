@@ -2,8 +2,11 @@ from datetime import datetime
 from flask import current_app, jsonify
 
 from api.extensions import db, Base
+<<<<<<< HEAD
 from api.models.Team import Team
 from api.models.User import User
+=======
+>>>>>>> ea40d4a... Update user helpers
 
 class Project(db.Model):
     """

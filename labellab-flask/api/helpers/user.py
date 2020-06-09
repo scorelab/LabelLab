@@ -56,21 +56,3 @@ def save(user):
     db.session.add(user)
     db.session.commit()
     return user_schema.dump(user).data
-
-def get(user_id):
-    queries = db.session.query(
-            User, ProjectMember, Team, Project
-        ).join(
-            ProjectMember, User.id == ProjectMember.user_id,
-        ).join(
-            Team, ProjectMember.team_id == Team.id,
-        ).join(
-            Project, Team.project_id == Project.id,
-        ).filter(
-            User.id == user_id
-        )
-    # user = find_by_user_id(user_id)
-    # print(user_schema.dump(user).data)
-    for q in queries:
-        print(queries)
-    # print(projects_schema.dump(queries).data)

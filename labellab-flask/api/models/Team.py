@@ -30,11 +30,12 @@ class Team(db.Model):
         self.role = role
         self.project_id = project_id
 
-    # def __repr__(self):
-    #     """
-    #     Returns the object reprensentation
-    #     """
-    #     return "<Team %r>" % self.teamname
+    def __repr__(self):
+        """
+        Returns the object reprensentation
+        """
+        return "<Team %r>" % self.teamname
+    
     def to_json(self):
         """
         Returns a JSON object
@@ -63,8 +64,4 @@ class Team(db.Model):
         """
         db.session.add(self)
         db.session.commit()
-        team_json = {"teamId": self.id, 
-                     "teamName": self.teamname,
-                     "role": self.role}
-        return team_json
         
