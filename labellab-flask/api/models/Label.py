@@ -20,13 +20,16 @@ class Label(db.Model):
     count = db.Column(db.Integer,
                    default = 0)
     project_id = db.Column(db.Integer, 
-                        db.ForeignKey('project.id'),
+                        db.ForeignKey('project.id', ondelete="cascade", onupdate="cascade"),
                         nullable=False)
     labelsdata = db.relationship('LabelData', 
                                  backref='label',
                                  lazy=True,
-                                 cascade="all, delete-orphan")
-    models = db.relationship("MLModel", secondary=model_has_label, backref=db.backref("labels", lazy="dynamic"))
+                                 cascade="all, save-update, delete",
+                                 passive_deletes=True)
+    models = db.relationship("MLModel", 
+                             secondary=model_has_label, 
+                             backref=db.backref("labels", lazy="dynamic"))
     
     def __init__(self, label_name, label_type, project_id):
         """

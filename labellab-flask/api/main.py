@@ -3,12 +3,12 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from flask_marshmallow import Marshmallow
 
 from api.config import config
 from api.routes import users, models, labels
-from api.extensions import db, migrate, jwt
-from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, MLModel
-
+from api.extensions import db, migrate, jwt, ma
+from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLModel
 
 def create_app(config_name):
     try:
@@ -35,6 +35,8 @@ def register_additional_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    ma.init_app(app)
+
 
 
 def register_blueprint(app):
