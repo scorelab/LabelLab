@@ -6,6 +6,7 @@ import Loader from '../loading/index'
 
 import { fetchLabels } from '../../actions/label'
 import { fetchProject } from '../../actions/project/fetchDetails'
+import { saveModel } from '../../actions/model'
 
 import './css/modelEditor.css'
 
@@ -28,7 +29,7 @@ class ModelEditor extends Component {
   }
 
   getEditorType = () => {
-    const { match, labels, project } = this.props
+    const { match, labels, project, saveModel } = this.props
 
     switch (match.params.type) {
       case 'classifier':
@@ -37,6 +38,7 @@ class ModelEditor extends Component {
             labels={labels}
             images={project.images}
             source={match.params.source}
+            saveModel={saveModel}
           />
         )
       default:
@@ -52,7 +54,8 @@ class ModelEditor extends Component {
 ModelEditor.propTypes = {
   labels: PropTypes.array,
   fetchLabels: PropTypes.func,
-  fetchProject: PropTypes.func
+  fetchProject: PropTypes.func,
+  saveModel: PropTypes.func
 }
 
 const mapStateToProps = state => ({
@@ -67,6 +70,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchProject: projectId => {
       return dispatch(fetchProject(projectId))
+    },
+    saveModel: modelData => {
+      return dispatch(saveModel(modelData))
     }
   }
 }

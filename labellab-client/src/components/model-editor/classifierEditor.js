@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Grid, Segment, Header } from 'semantic-ui-react'
+import { Grid, Segment, Header, Button } from 'semantic-ui-react'
 
 import LabelSelector from './sub-modules/labelSelector'
 import PreprocessingSelector from './sub-modules/preprocessingSelector'
@@ -21,7 +22,7 @@ class ClassifierEditor extends Component {
   }
 
   render() {
-    const { labels, images } = this.props
+    const { labels, images, model, saveModel } = this.props
 
     return (
       <Grid stackable columns={3}>
@@ -42,6 +43,9 @@ class ClassifierEditor extends Component {
           <Segment className="classifier-column-heading">
             <Header>Export/Test</Header>
           </Segment>
+          <Button positive fluid onClick={() => saveModel(model)}>
+            Save Changes
+          </Button>
         </Grid.Column>
       </Grid>
     )
@@ -50,7 +54,16 @@ class ClassifierEditor extends Component {
 
 ClassifierEditor.propTypes = {
   labels: PropTypes.array,
-  images: PropTypes.array
+  images: PropTypes.array,
+  model: PropTypes.object,
+  saveModel: PropTypes.func
 }
 
-export default ClassifierEditor
+const mapStateToProps = state => ({
+  model: state.model.model
+})
+
+export default connect(
+  mapStateToProps,
+  null
+)(ClassifierEditor)

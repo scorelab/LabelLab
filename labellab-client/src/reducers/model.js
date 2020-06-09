@@ -1,4 +1,8 @@
 import {
+  SET_PROJECT_ID,
+  SET_NAME,
+  SET_TYPE,
+  SET_SOURCE_TYPE,
   ADD_LABEL,
   REMOVE_LABEL,
   ADD_PREPROCESSING_STEP,
@@ -8,12 +12,22 @@ import {
   SET_TRANSFER_SOURCE,
   ADD_LAYER,
   EDIT_LAYER,
-  REMOVE_LAYER
+  REMOVE_LAYER,
+  SAVE_MODEL_REQUEST,
+  SAVE_MODEL_SUCCESS,
+  SAVE_MODEL_FAILURE
 } from '../constants/index'
 
 const initialState = {
-  modelActions: {},
+  modelActions: {
+    isSaving: false,
+    errors: ''
+  },
   model: {
+    name: '',
+    type: '',
+    source: '',
+    id: '',
     labels: [],
     preprocessingSteps: [],
     train: '',
@@ -26,13 +40,46 @@ const initialState = {
     metric: null,
     optimizer: null,
     transferSource: null,
-    layers: []
+    layers: [],
+    projectId: ''
   },
   models: []
 }
 
 const model = (state = initialState, action) => {
   switch (action.type) {
+    case SET_PROJECT_ID:
+      return {
+        ...state,
+        model: {
+          ...state.model,
+          projectId: action.payload
+        }
+      }
+    case SET_NAME:
+      return {
+        ...state,
+        model: {
+          ...state.model,
+          name: action.payload
+        }
+      }
+    case SET_TYPE:
+      return {
+        ...state,
+        model: {
+          ...state.model,
+          type: action.payload
+        }
+      }
+    case SET_SOURCE_TYPE:
+      return {
+        ...state,
+        model: {
+          ...state.model,
+          source: action.payload
+        }
+      }
     case ADD_LABEL:
     case REMOVE_LABEL:
       return {
@@ -73,6 +120,29 @@ const model = (state = initialState, action) => {
         model: {
           ...state.model,
           layers: action.payload
+        }
+      }
+    case SAVE_MODEL_REQUEST:
+      return {
+        ...state,
+        modelActions: {
+          isSaving: true
+        }
+      }
+    case SAVE_MODEL_FAILURE:
+      return {
+        ...state,
+        modelActions: {
+          isSaving: false,
+          errors: action.payload
+        }
+      }
+    case SAVE_MODEL_SUCCESS:
+      return {
+        ...state,
+        model: action.payload.model,
+        modelActions: {
+          isSaving: false
         }
       }
     default:
