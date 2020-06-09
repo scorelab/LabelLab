@@ -24,11 +24,11 @@ class ProjectMember(db.Model):
         self.user_id = user_id
         self.team_id = team_id
 
-    # def __repr__(self):
-    #     """
-    #     Returns the object reprensentation
-    #     """
-    #     return "<ProjectMember %r>" % self.user_id
+    def __repr__(self):
+        """
+        Returns the object reprensentation
+        """
+        return "<ProjectMember %r>" % self.user_id
     
     def to_json(self):
         """

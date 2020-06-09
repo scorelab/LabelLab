@@ -41,11 +41,11 @@ class User(db.Model):
         if password:
             self.password = User.generate_password_hash(password)
 
-    # def __repr__(self):
-    #     """
-    #     Returns the object reprensentation of user
-    #     """
-    #     return "<User %r>" % self.name
+    def __repr__(self):
+        """
+        Returns the object reprensentation of user
+        """
+        return "<User %r>" % self.name
 
     @staticmethod
     def generate_password_hash(password):
@@ -53,11 +53,6 @@ class User(db.Model):
         Returns hash of password
         """
         return Bcrypt().generate_password_hash(password,10).decode()
-    
-    # @classmethod
-    # def delete_by_id(cls, id):
-    #     cls.query.filter_by(id=id).delete()
-    #     db.session.commit()
 
     def verify_password(self, password):
         """
