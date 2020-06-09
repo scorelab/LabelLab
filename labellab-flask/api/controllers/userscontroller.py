@@ -8,14 +8,15 @@ from flask_jwt_extended import (
     get_jwt_identity,
     get_raw_jwt,
 )
+from api.extensions import db
 from api.models.User import User
-
+from api.helpers.user import find_by_email, find_by_username, save, to_json, get
 
 class Register(MethodView):
     """This class registers a new user."""
-
+    
     def post(self):
-        """Handle POST request for this view. Url --> /api/users/register"""
+        """Handle POST request for this view. Url --> /api/v1/auth/register"""
         # getting JSON data from request
         post_data = request.get_json(silent=True,force=True)
 
@@ -30,7 +31,7 @@ class Register(MethodView):
             return make_response(jsonify(response)), 404
 
         # Querying the database with requested email
-        user = User.find_by_email(email)
+        user = find_by_email(email)
 
         if user:
             # There is an existing user. We don't want to register users twice
@@ -38,10 +39,10 @@ class Register(MethodView):
             # exist
             response = {"message": "Email already exists. Please login."}
             return make_response(jsonify(response)), 401
-        
-        # Querying the database with requested username
-        user = User.find_by_username(username)
 
+        # Querying the database with requested username
+        user = find_by_username(username)
+        
         if user:
             # There is an existing username. We don't want to register users twice
             # Return a message to the user telling them that the username already
@@ -62,13 +63,14 @@ class Register(MethodView):
                         password=password, 
                         name=name, 
                         username=username)
-            user.save()
+            user = save(user)
         except Exception as err:
             print("Error occured: ", err)
             response = {"message": "Something went wrong!!"}
             return make_response(jsonify(response)), 500
 
-        response = {"message": "You registered successfully. Please log in."}
+        response = {"message": "You registered successfully. Please log in.",
+                    "result": user}
 
         # return a response notifying the user that they registered
         # successfully
@@ -79,10 +81,9 @@ class Login(MethodView):
     """This class-based view handles user login and access token generation."""
 
     def post(self):
-        """Handle POST request for this view. Url ---> /api/users/login"""
+        """Handle POST request for this view. Url ---> /api/v1/auth/login/"""
         data = request.get_json(silent=True,
                                 force=True)
-
         try:
             email = data["email"]
             password = data["password"]
@@ -90,10 +91,10 @@ class Login(MethodView):
             print("Error occured: ", err)
             response = {"message": "Please provide all the required fields."}
             return make_response(jsonify(response)), 404
-
+        
         # Get the user object using their email (unique to every user)
         # print(dir(User.User))
-        user = User.find_by_email(email)
+        user = find_by_email(email)
 
         if not user:
             # User does not exist. Therefore, we return an error message
@@ -113,14 +114,15 @@ class Login(MethodView):
             # Return a server error using the HTTP Error Code 500 (Internal
             # Server Error)
             return make_response(jsonify(response)), 500
-
+        get(2)
+        
         # Generate the access token. This will be used as the
         # authorization header
         response = {
             "message": "You logged in successfully.",
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "user_details": user.to_json(),
+            "user_details": to_json(user),
         }
         return make_response(jsonify(response)), 200
 

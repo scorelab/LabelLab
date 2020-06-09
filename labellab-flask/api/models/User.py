@@ -1,8 +1,9 @@
 from datetime import datetime
-from flask import current_app
+from flask import current_app, jsonify
 from flask_bcrypt import Bcrypt
+import json
 
-from api.extensions import db, Base
+from api.extensions import db, Base, ma
 
 class User(db.Model):
     """
@@ -22,11 +23,13 @@ class User(db.Model):
     projects = db.relationship('Project', 
                                backref='user', 
                                lazy=True,
-                               cascade="all, delete-orphan")
-    projectmembers = db.relationship('PojectMember', 
+                               cascade="all, save-update, delete",
+                               passive_deletes=True)
+    projectmembers = db.relationship('ProjectMember', 
                                       backref='user',
                                       lazy=True,
-                                      cascade="all, delete-orphan")
+                                      cascade="all, save-update, delete",
+                                      passive_deletes=True)
 
     def __init__(self, name, username, email, password):
         """
@@ -38,30 +41,11 @@ class User(db.Model):
         if password:
             self.password = User.generate_password_hash(password)
 
-    def __repr__(self):
-        """
-        Returns the object reprensentation of user
-        """
-        return "<User %r>" % self.name
-    
-    def to_json(self):
-        """
-        Returns a JSON object
-        """
-        user_json = {"name": self.name, "email": self.email, "username": self.username}
-        return user_json
-
-    @classmethod
-    def find_by_email(cls, email):
-        return cls.query.filter_by(email=email).first()
-
-    @classmethod
-    def find_by_user_id(cls, _id):
-        return cls.query.filter_by(id=_id).first()
-    
-    @classmethod
-    def find_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
+    # def __repr__(self):
+    #     """
+    #     Returns the object reprensentation of user
+    #     """
+    #     return "<User %r>" % self.name
 
     @staticmethod
     def generate_password_hash(password):
@@ -69,17 +53,14 @@ class User(db.Model):
         Returns hash of password
         """
         return Bcrypt().generate_password_hash(password,10).decode()
+    
+    # @classmethod
+    # def delete_by_id(cls, id):
+    #     cls.query.filter_by(id=id).delete()
+    #     db.session.commit()
 
     def verify_password(self, password):
         """
         Verify the password
         """
         return Bcrypt().check_password_hash(self.password, password)
-
-    def save(self):
-        """
-        Save a user to the database.
-        This includes creating a new user and editing one.
-        """
-        db.session.add(self)
-        db.session.commit()
