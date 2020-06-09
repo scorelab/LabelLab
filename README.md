@@ -123,3 +123,52 @@ or run the Flutter application.
 `flutter run`
 
 > **NOTE**: A device with USB debugging enabled or virtual device is required.
+<br/>
+
+## For setting up the Flask backend
+### Technologies required
+
+-   **[Python3](https://www.python.org/downloads/)** - Make sure you have a python3 environment setup.
+-   **[Virtualenv](https://virtualenv.pypa.io/en/stable/)** - Make sure you install your packages locally in a virtual env and after adding a packing make sure to use 
+```bash
+pip freeze>requirements.txt
+```
+-   **[MySQL](https://www.mysql.com/)** - Preferrably MySQL-5.7 database is used. 
+-   **[SQLAlchemy](https://www.sqlalchemy.org)** - An SQL ORM
+<br/>
+
+1. Make a database in your MYSQL 
+   ```bash
+   CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] labellab
+   ```
+2. Create a folder called called venv using 
+   ```bash
+   cd labellab-flask && mkdir venv
+   ```
+3. Change directory to the folder.
+
+    ```bash
+    cd venv/
+    ```
+4. Create a virtual env in that folder using 
+   ```bash
+   pip install virtualenv or sudo -H pip install virtualenv
+   virtualenv -p python3 venv
+   source bin/activate
+   ```
+5. Change the directory back to the parent directory and <br/> 
+   add the credentials to your database in the `.env` file.
+6. Install all the dependencies using
+   ```bash
+   pip install -r requirements.txt
+   ```
+7. Upgrade your database using the migrations file
+   ```bash 
+   flask db upgrade
+   ```
+8. Run `flask run` in order to start the server.
+
+>**Note**: It is preferred to undo the migrations before pulling the latest changes, if the latest changes have any changes in the migrations <br/>
+or has a new migrations file and in order to create a new migartions file the command `flask db migrate` can be used.
+
+>**Note**: If faced by a directory missing issue do ensure that you have the labellab-flask directory in your `PYTHONPATH` environment variable.
