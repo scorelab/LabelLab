@@ -141,32 +141,29 @@ pip freeze>requirements.txt
    ```bash
    CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] labellab
    ```
-2. Create a folder called called venv using 
+2. Create a virtual env in that folder using 
    ```bash
-   cd labellab-flask && mkdir venv
+   pip install virtualenv or sudo -H pip install virtualenv
+   virtualenv -p python3 venv
    ```
 3. Change directory to the folder.
 
     ```bash
     cd venv/
+    source bin/activate for MacOs or linux
+    .\Source\activate.bat for Windows
     ```
-4. Create a virtual env in that folder using 
-   ```bash
-   pip install virtualenv or sudo -H pip install virtualenv
-   virtualenv -p python3 venv
-   source bin/activate
-   ```
-5. Change the directory back to the parent directory and <br/> 
+4. Change the directory back to the parent directory and <br/> 
    add the credentials to your database in the `.env` file.
-6. Install all the dependencies using
+5. Install all the dependencies using
    ```bash
    pip install -r requirements.txt
    ```
-7. Upgrade your database using the migrations file
+6. Upgrade your database using the migrations file
    ```bash 
    flask db upgrade
    ```
-8. Run `flask run` in order to start the server.
+7. Run `flask run` in order to start the server.
 
 >**Note**: It is preferred to undo the migrations before pulling the latest changes, if the latest changes have any changes in the migrations <br/>
 or has a new migrations file and in order to create a new migartions file the command `flask db migrate` can be used.
