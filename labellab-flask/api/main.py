@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
 
 from api.config import config
-from api.routes import users, projects, models, labels
+from api.routes import users, projects, models, labels, teams
 from api.extensions import db, migrate, jwt, ma
 from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLModel
 
@@ -45,6 +45,7 @@ def register_blueprint(app):
     app.register_blueprint(models.modelsprint, url_prefix="/api/v1")
     app.register_blueprint(labels.labelsprint, url_prefix="/api/v1")
     app.register_blueprint(projects.projectsprint, url_prefix="/api/v1")
+    app.register_blueprint(teams.teamsprint, url_prefix="/api/v1")
     return None
 
 
