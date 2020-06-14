@@ -3,6 +3,10 @@ const layerOptions = [
     name: 'Conv2D',
     settings: [
       {
+        label: 'Filters',
+        type: 'input'
+      },
+      {
         label: 'Kernel Size',
         type: 'input'
       },

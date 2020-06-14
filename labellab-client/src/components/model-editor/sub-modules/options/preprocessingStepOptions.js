@@ -20,9 +20,6 @@ const preprocessingStepOption = [
     ]
   },
   {
-    name: 'ZCA Whitening'
-  },
-  {
     name: 'Rotation Range',
     settings: [
       {
