@@ -11,8 +11,9 @@ from api.models.ProjectMembers import ProjectMember
 from api.helpers.project import (
     find_by_project_id, 
     find_by_projectname, 
-    save, 
-    delete_by_id)
+    save as save_project, 
+    delete_by_id as delete_project
+)
 from api.helpers.user import (
     get_data, 
     find_by_email, 
@@ -73,7 +74,7 @@ class CreateProject(MethodView):
             project = Project(projectname=projectname, 
                         projectdescription=projectdescription, 
                         admin_id=admin_id)
-            project_new = save(project)
+            project_new = save_project(project)
 
             """Save the project admin."""
             team = Team(teamname="admin",
@@ -112,7 +113,7 @@ class GetAllProjects(MethodView):
     
     @jwt_required
     def get(self):
-        """Handle GET request for this view. Url ---> /api/project/get"""
+        """Handle GET request for this view. Url ---> /api/v1/project/get"""
         current_user = get_jwt_identity()
         
         try:
@@ -194,7 +195,7 @@ class ProjectInfo(MethodView):
                     }
                 return make_response(jsonify(response)), 400
             
-            delete_by_id(project_id)
+            delete_project(project_id)
             response = {
                 "success": True,
                 "msg": "Project deleted."
@@ -237,7 +238,7 @@ class ProjectInfo(MethodView):
             project.projectname = projectname
             project.projectdescription = projectdescription
 
-            project_new = save(project)
+            project_new = save_project(project)
 
             response = {
                     "success": True,
