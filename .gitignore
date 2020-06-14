@@ -266,6 +266,7 @@ instance/
 .webassets-cache
 labellab-flask/api/static/steps/*
 labellab-flask/api/static/layers/*
+labellab-flask/public/uploads/*
 
 # Scrapy stuff:
 .scrapy

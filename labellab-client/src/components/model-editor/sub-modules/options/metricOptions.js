@@ -1,8 +1,3 @@
-const metricOptions = [
-  'Accuracy',
-  'Binary Accuracy',
-  'Categorical Accuracy',
-  'Binary Crossentropy'
-]
+const metricOptions = ['Accuracy']
 
 export default metricOptions
