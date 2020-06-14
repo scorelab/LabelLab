@@ -49,10 +49,11 @@ class CreateProject(MethodView):
             project_name = post_data["project_name"]
             project_description = post_data["project_description"]
             admin_id = current_user
-        except Exception:
+        except KeyError as err:
             response = {
                 "success": False,
-                "msg": "Please provide all the required fields."}
+                "msg": f'{str(err)} key is not present'
+            }
             return make_response(jsonify(response)), 400
 
         # Querying the database with requested project_name
@@ -66,7 +67,7 @@ class CreateProject(MethodView):
             response = {
                 "success": False,
                 "msg": "Project already exists. Please change the Project Name."}
-            return make_response(jsonify(response)), 401
+            return make_response(jsonify(response)), 400
         
         # There is no project so we'll try to create a new one
         
@@ -123,7 +124,7 @@ class GetAllProjects(MethodView):
             if not data:
                 response = {
                     "success": False,
-                    "msg": "Data could not be fetched"}
+                    "msg": "Data not found"}
                 return make_response(jsonify(response)), 404
 
             all_projects = data["all_projects"]
@@ -131,14 +132,14 @@ class GetAllProjects(MethodView):
             if not all_projects:
                 response = {
                     "success": False,
-                    "msg": "Data could not be fetched"
+                    "msg": "No projects present"
                     }
                 return make_response(jsonify(response)), 404
 
             response = {
-            "success": True,
-            "msg": "Projects fetched successfully.",
-            "body": all_projects
+                "success": True,
+                "msg": "Projects fetched successfully.",
+                "body": all_projects
             }
 
             return make_response(jsonify(response)), 200
@@ -150,7 +151,7 @@ class GetAllProjects(MethodView):
                 "msg": "Data could not be fetched"
                 }
 
-            return make_response(jsonify(response)), 404
+            return make_response(jsonify(response)), 500
 
 
 class ProjectInfo(MethodView):
@@ -221,10 +222,12 @@ class ProjectInfo(MethodView):
         try:
             project_name = post_data["project_name"]
             project_description = post_data["project_description"]
-        except Exception:
+            
+        except KeyError as err:
             response = {
                 "success": False,
-                "msg": "Please provide all the required fields."}
+                "msg": f'{str(err)} key is not present'
+            }
             return make_response(jsonify(response)), 400
 
         try:
@@ -254,8 +257,8 @@ class ProjectInfo(MethodView):
             print("Error occurred: ", err)
             response = {
                 "success": False,
-                "msg": "Project not present."}
-            return make_response(jsonify(response)), 404
+                "msg": "Something went wrong"}
+            return make_response(jsonify(response)), 500
 
 
 class AddProjectMember(MethodView):
@@ -271,7 +274,7 @@ class AddProjectMember(MethodView):
         # getting JSON data from request
         post_data = request.get_json(silent=True,
                                      force=True)
-        current_user = get_jwt_identity
+        current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
 
         if not roles.index("admin"):
@@ -280,11 +283,20 @@ class AddProjectMember(MethodView):
                     "success": False,
                     "msg": "User not admin."
                 }
-            return make_response(jsonify(response)), 400
+            return make_response(jsonify(response)), 403
 
         try:
             user_email = post_data["memberEmail"]
             team_name = post_data["teamName"]
+
+        except KeyError as err:
+            response = {
+                "success": False,
+                "msg": f'{str(err)} key is not present'
+            }
+            return make_response(jsonify(response)), 400
+
+        try:
             user_obj = find_by_email(user_email)
             user = to_json(user_obj)
             if not user:
@@ -348,12 +360,13 @@ class AddProjectMember(MethodView):
                     "success": False,
                     "msg": "Could not save the projectmember."
                     }
-            return make_response(jsonify(response)), 400
+            return make_response(jsonify(response)), 500
 
         except Exception:
             response = {
                 "success": False,
-                "msg": "Please provide all the required fields."}
+                "msg": "Something went wrong!!"
+            }
             return make_response(jsonify(response)), 500
 
 class RemoveProjectMember(MethodView):
@@ -369,7 +382,7 @@ class RemoveProjectMember(MethodView):
         # getting JSON data from request
         post_data = request.get_json(silent=True,
                                      force=True)
-        current_user = get_jwt_identity
+        current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
 
         if not roles.index("admin"):
@@ -378,10 +391,19 @@ class RemoveProjectMember(MethodView):
                     "success": False,
                     "msg": "User not admin."
                 }
-            return make_response(jsonify(response)), 400
+            return make_response(jsonify(response)), 403
 
         try:
             user_email = post_data["memberEmail"]
+
+        except KeyError as err:
+            response = {
+                "success": False,
+                "msg": f'{str(err)} key is not present'
+            }
+            return make_response(jsonify(response)), 400
+
+        try:
             user_obj = find_by_email(user_email)
             user = to_json(user_obj)
             if not user:
@@ -409,13 +431,13 @@ class RemoveProjectMember(MethodView):
                 response = {
                     "success": False,
                     "msg": "Could not delete projectmember from all teams"}
-                return make_response(jsonify(response)), 400
+                return make_response(jsonify(response)), 500
 
         except Exception:
             response = {
                 "success": False,
-                "msg": "Please provide all the required fields."}
-            return make_response(jsonify(response)), 400
+                "msg": "Something went wrong!!"}
+            return make_response(jsonify(response)), 500
 
 
 projectController = {
