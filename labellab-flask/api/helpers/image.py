@@ -18,11 +18,11 @@ def find_by_id(_id):
     image = Image.query.filter_by(id=_id).first()
     return image_schema.dump(image).data
 
-def find_by_imagename(imagename):
+def find_by_image_name(image_name):
     """
     query Image on their Imagename
     """
-    image = Image.query.filter_by(imagename=imagename).first()
+    image = Image.query.filter_by(image_name=image_name).first()
     return image_schema.dump(image).data
 
 def delete_by_id(_id):
@@ -32,18 +32,18 @@ def delete_by_id(_id):
     Image.query.filter_by(id=_id).delete()
     db.session.commit()
     
-def delete_by_imagename(imagename):
+def delete_by_image_name(image_name):
     """
     Delete Image by their name
     """
-    Image.query.filter_by(imagename=imagename).delete()
+    Image.query.filter_by(image_name=image_name).delete()
     db.session.commit()
 
-def save(Image):
+def save(image):
     """
     Save a Image to the database.
     This includes creating a new Image and editing one.
     """
-    db.session.add(Image)
+    db.session.add(image)
     db.session.commit()
-    return image_schema.dump(Image).data
+    return image_schema.dump(image).data

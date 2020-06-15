@@ -18,11 +18,11 @@ def find_by_id(_id):
     team = Team.query.filter_by(id=_id).first()
     return team_schema.dump(team).data
 
-def find_by_teamname(teamname):
+def find_by_team_name(team_name):
     """
-    query team on their teamname
+    query team on their team_name
     """
-    team = Team.query.filter_by(teamname=teamname).first()
+    team = Team.query.filter_by(team_name=team_name).first()
     return team_schema.dump(team).data
 
 def find_by_project_and_role(project_id, role):
@@ -32,16 +32,16 @@ def find_by_project_and_role(project_id, role):
     team = Team.query.filter_by(project_id=project_id, role=role).first()
     return team_schema.dump(team).data
 
-def find_by_project_and_name(project_id, teamname):
+def find_by_project_and_name(project_id, team_name):
     """
-    query team on their project_id and teamname.
+    query team on their project_id and team_name.
     """
-    team = Team.query.filter_by(project_id=project_id, teamname=teamname).first()
+    team = Team.query.filter_by(project_id=project_id, team_name=team_name).first()
     return team_schema.dump(team).data
 
 def find_all(project_id):
     """
-    query team on their project_id and teamname.
+    query team on their project_id and team_name.
     """
     teams = Team.query.filter_by(project_id=project_id).all()
     return teams_schema.dump(teams).data
@@ -53,11 +53,11 @@ def delete_by_id(_id):
     Team.query.filter_by(id=_id).delete()
     db.session.commit()
     
-def delete_by_teamname(teamname):
+def delete_by_team_name(team_name):
     """
-    Delete team by their teamname
+    Delete team by their team_name
     """
-    Team.query.filter_by(teamname=teamname).delete()
+    Team.query.filter_by(team_name=team_name).delete()
     db.session.commit()
 
 def delete_by_role(role):
