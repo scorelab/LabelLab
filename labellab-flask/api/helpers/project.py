@@ -18,11 +18,11 @@ def find_by_project_id(_id):
     project = Project.query.filter_by(id=_id).first()
     return project_schema.dump(project).data
 
-def find_by_projectname(projectname):
+def find_by_project_name(project_name):
     """
-    query project on their projectname
+    query project on their project_name
     """
-    project = Project.query.filter_by(projectname=projectname).first()
+    project = Project.query.filter_by(project_name=project_name).first()
     return project_schema.dump(project).data
 
 def delete_by_id(_id):
@@ -32,11 +32,11 @@ def delete_by_id(_id):
     Project.query.filter_by(id=_id).delete()
     db.session.commit()
     
-def delete_by_projectname(projectname):
+def delete_by_project_name(project_name):
     """
     Delete project by their name
     """
-    Project.query.filter_by(projectname=projectname).delete()
+    Project.query.filter_by(project_name=project_name).delete()
     db.session.commit()
 
 def save(project):

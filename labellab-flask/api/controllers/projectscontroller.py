@@ -10,7 +10,7 @@ from api.models.Team import Team
 from api.models.ProjectMembers import ProjectMember
 from api.helpers.project import (
     find_by_project_id, 
-    find_by_projectname, 
+    find_by_project_name, 
     save as save_project, 
     delete_by_id as delete_project
 )
@@ -24,11 +24,11 @@ from api.helpers.user import (
 )
 from api.helpers.team import (
     save as save_team, 
-    find_by_teamname, 
+    find_by_team_name, 
     delete_by_id as delete_team
 )
 from api.helpers.projectmember import (
-    save as save_projectmember, 
+    save as save_project_member, 
     find_by_user_id_team_id, 
     delete_by_user_id_team_id, 
     count_users_in_team
@@ -45,8 +45,8 @@ class CreateProject(MethodView):
                                      force=True)
         current_user = get_jwt_identity()
         try:
-            projectname = post_data["projectname"]
-            projectdescription = post_data["projectdescription"]
+            project_name = post_data["project_name"]
+            project_description = post_data["project_description"]
             admin_id = current_user
         except Exception:
             response = {
@@ -54,8 +54,8 @@ class CreateProject(MethodView):
                 "msg": "Please provide all the required fields."}
             return make_response(jsonify(response)), 400
 
-        # Querying the database with requested projectname
-        project = find_by_projectname(projectname)
+        # Querying the database with requested project_name
+        project = find_by_project_name(project_name)
 
         if project:
             # There is an existing project with the same name. We don't want to create two
@@ -71,20 +71,20 @@ class CreateProject(MethodView):
         
         """Save the new Project."""
         try:
-            project = Project(projectname=projectname, 
-                        projectdescription=projectdescription, 
+            project = Project(project_name=project_name, 
+                        project_description=project_description, 
                         admin_id=admin_id)
             project_new = save_project(project)
 
             """Save the project admin."""
-            team = Team(teamname="admin",
+            team = Team(team_name="admin",
                         role="admin",
                         project_id=project_new.id)
             team_new = save_team(team)
 
             project_member = ProjectMember(user_id=admin_id,
                                     team_id=team_new.id)
-            project_member_new = save_projectmember(project_member)
+            project_member_new = save_project_member(project_member)
             
             res = {
                 "project": project_new,
@@ -218,8 +218,8 @@ class ProjectInfo(MethodView):
         post_data = request.get_json(silent=True,
                                      force=True)
         try:
-            projectname = post_data["projectname"]
-            projectdescription = post_data["projectdescription"]
+            project_name = post_data["project_name"]
+            project_description = post_data["project_description"]
         except Exception:
             response = {
                 "success": False,
@@ -235,8 +235,8 @@ class ProjectInfo(MethodView):
                     "msg": "Project not present."}
                 return make_response(jsonify(response)), 404
             
-            project.projectname = projectname
-            project.projectdescription = projectdescription
+            project.project_name = project_name
+            project.project_description = project_description
 
             project_new = save_project(project)
 
@@ -290,7 +290,7 @@ class AddProjectMember(MethodView):
                 }
                 return make_response(jsonify(response)), 404
             
-            team_exist = find_by_teamname(team_name)
+            team_exist = find_by_team_name(team_name)
 
             if team_exist:
                 project_member_exist = find_by_user_id_team_id(user.id, team_exist.id)
@@ -311,7 +311,7 @@ class AddProjectMember(MethodView):
 
             if not team_exist:
                 try:
-                    team = Team(teamname=team_name,
+                    team = Team(team_name=team_name,
                                 project_id=project_id,
                                 user_id=user.id)
                     team_exist = save_team(team)
@@ -328,7 +328,7 @@ class AddProjectMember(MethodView):
                                     team_id=team_exist.id
                                 )
 
-                project_member_new = save_projectmember(project_member)
+                project_member_new = save_project_member(project_member)
                 
                 user_added = find_by_user_id(project_member_new.user_id)
                 response = {
