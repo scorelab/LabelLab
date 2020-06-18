@@ -2,6 +2,8 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+imagesdir = os.path.join(os.path.dirname(basedir),'uploads')
+
 """Constants used throughout the application.
     All hard coded settings/data that are not actual/official configuration
     options for Flask and their extensions goes here.
@@ -31,7 +33,8 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # needs to be removed in further versions
     ML_FILES_DIR = os.path.join(os.path.dirname(basedir),'model_files')
-
+    UPLOAD_FOLDER = imagesdir
+    
 
 class TestingConfig(Config):
     TESTING = True
