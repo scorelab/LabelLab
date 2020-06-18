@@ -75,15 +75,15 @@ class CreateProject(MethodView):
                         project_description=project_description, 
                         admin_id=admin_id)
             project_new = save_project(project)
-
+            
             """Save the project admin."""
             team = Team(team_name="admin",
                         role="admin",
-                        project_id=project_new.id)
+                        project_id=project_new['id'])
             team_new = save_team(team)
 
             project_member = ProjectMember(user_id=admin_id,
-                                    team_id=team_new.id)
+                                    team_id=team_new['id'])
             project_member_new = save_project_member(project_member)
             
             res = {
@@ -293,7 +293,7 @@ class AddProjectMember(MethodView):
             team_exist = find_by_team_name(team_name)
 
             if team_exist:
-                project_member_exist = find_by_user_id_team_id(user.id, team_exist.id)
+                project_member_exist = find_by_user_id_team_id(user['id'], team_exist['id'])
             
             if team_exist and team_name=="admin":
                 response = {
@@ -313,7 +313,7 @@ class AddProjectMember(MethodView):
                 try:
                     team = Team(team_name=team_name,
                                 project_id=project_id,
-                                user_id=user.id)
+                                user_id=user['id'])
                     team_exist = save_team(team)
                 except Exception as err:
                     print("Error occured: ",err)
@@ -324,13 +324,13 @@ class AddProjectMember(MethodView):
                     return make_response(jsonify(response)), 400
             try:
                 project_member = ProjectMember(
-                                    user_id=user.id,
-                                    team_id=team_exist.id
+                                    user_id=user['id'],
+                                    team_id=team_exist['id']
                                 )
 
                 project_member_new = save_project_member(project_member)
                 
-                user_added = find_by_user_id(project_member_new.user_id)
+                user_added = find_by_user_id(project_member_new['user_id'])
                 response = {
                         "success": True,
                         "msg": "ProjectMember added.",
@@ -387,10 +387,10 @@ class RemoveProjectMember(MethodView):
                 }
                 return make_response(jsonify(response)), 404
             try:
-                team_ids = get_teams_of_user_in_project(user.id, project_id)
+                team_ids = get_teams_of_user_in_project(user['id'], project_id)
 
                 for id in team_ids:
-                    delete_by_user_id_team_id(user.id, id)
+                    delete_by_user_id_team_id(user['id'], id)
                     project_members = count_users_in_team(id)
                     if project_members==0:
                         delete_team(id)
