@@ -12,7 +12,8 @@ from api.helpers.project import (
     find_by_project_id, 
     find_by_project_name, 
     save as save_project, 
-    delete_by_id as delete_project
+    delete_by_id as delete_project,
+    update_project
 )
 from api.helpers.user import (
     get_data, 
@@ -234,16 +235,19 @@ class ProjectInfo(MethodView):
                     "success": False,
                     "msg": "Project not present."}
                 return make_response(jsonify(response)), 404
-            
-            project.project_name = project_name
-            project.project_description = project_description
 
-            project_new = save_project(project)
+            data = {
+                "project_name": project_name,
+                "project_description": project_description
+            }
+
+            project_new = update_project(project_id, data)
 
             response = {
                     "success": True,
                     "msg": "Project updated.",
-                    "body": project_new}
+                    "body": project_new
+            }
             return make_response(jsonify(response)), 201
 
         except Exception as err:
