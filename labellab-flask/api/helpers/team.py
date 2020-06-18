@@ -46,6 +46,16 @@ def find_all(project_id):
     teams = Team.query.filter_by(project_id=project_id).all()
     return teams_schema.dump(teams).data
 
+def update_team(team_id, data):
+    """
+    update team using its id.
+    """
+    team = Team.query.get(team_id)
+    team.team_name = data['team_name']
+    team.role = data['role']
+    db.session.commit()
+    return team_schema.dump(team).data
+
 def delete_by_id(_id):
     """
     Delete team by their id
