@@ -25,6 +25,16 @@ def find_by_project_name(project_name):
     project = Project.query.filter_by(project_name=project_name).first()
     return project_schema.dump(project).data
 
+def update_project(project_id, data):
+    """
+    update project using its id.
+    """
+    project = Project.query.get(project_id)
+    project.project_name = data['project_name']
+    project.project_description = data['projectdescription']
+    db.session.commit()
+    return project_schema.dump(project).data
+    
 def delete_by_id(_id):
     """
     Delete project by their id
