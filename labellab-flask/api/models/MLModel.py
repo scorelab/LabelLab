@@ -82,6 +82,8 @@ class MLModel(db.Model):
                             for label in model.labels:
                                 model.labels.remove(label)
                                 db.session.commit()
+                            # TODO: Ensure frontend sends ID instead of label name
+                            # TODO: Refactor based on new label and image controllers
                             for label_id in model_data[key]:
                                 label = Label.find_by_id_in_project(label_id, self.project_id)
                                 if label:
@@ -150,6 +152,9 @@ class MLModel(db.Model):
         model_json = {"id": self.id, "name": self.name, "type": self.type,
                       "source": self.source, "project_id": self.project_id, "preprocessingSteps": self.preprocessing_steps, "layers": self.layers, "train": f'{self.train}', "test": f'{self.test}', "validation": f'{self.validation}', "epochs": self.epochs, "batch_size": self.batch_size, "learning_rate": f'{self.learning_rate}', "loss": self.loss, "metric": self.metric, "optimizer": self.optimizer, "loss_graph_url": self.loss_graph_url, "accuracy_graph_url": self.accuracy_graph_url, "saved_model_url": self.saved_model_url, "transfer_source": self.transfer_source, "labels": self.label_ids}
         return model_json
+
+    def set_saved_model_url(self, url):
+        self.saved_model_url = url
 
     @classmethod
     def find_by_id(cls, _id):
