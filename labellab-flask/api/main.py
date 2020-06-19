@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 
 from api.config import config
-from api.routes import users, models
+from api.routes import users, models, labels
 from api.extensions import db, migrate, jwt
 from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, MLModel
 
@@ -41,6 +41,7 @@ def register_blueprint(app):
     """Register Flask blueprints."""
     app.register_blueprint(users.usersprint, url_prefix="/api/v1")
     app.register_blueprint(models.modelsprint, url_prefix="/api/v1")
+    app.register_blueprint(labels.labelsprint, url_prefix="/api/v1")
     return None
 
 
