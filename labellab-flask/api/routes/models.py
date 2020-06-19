@@ -9,3 +9,9 @@ modelsprint.add_url_rule(
     view_func=modelscontroller.modelController["save"],
     methods=["POST"]
 )
+
+modelsprint.add_url_rule(
+    "/models/train",
+    view_func=modelscontroller.modelController["save"],
+    methods=["POST"]
+)

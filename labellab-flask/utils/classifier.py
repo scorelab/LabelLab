@@ -193,3 +193,7 @@ class Classifier:
                         validation_data=self.valid_generator,
                         validation_steps=STEP_SIZE_VALID,
                         epochs=self.epochs)
+
+    # Save the model in SavedModel format
+    def save(self, directory):
+        self.model.save(directory)
