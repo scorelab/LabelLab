@@ -8,4 +8,10 @@ class LoginResponse {
     this.token = json['token'];
     this.msg = json['msg'];
   }
+
+  LoginResponse.mock() {
+    this.success = true;
+    this.token = "mock-token";
+    this.msg = "success";
+  }
 }

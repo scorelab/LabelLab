@@ -49,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("email"),
                         labelText: "Email",
                         onSaved: (String value) {
                           _user.email = value.trim();
@@ -59,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("password"),
                         labelText: "Password",
                         isObscure: true,
                         onSaved: (String value) {
@@ -71,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Builder(
                         builder: (context) => RaisedButton(
+                          key: Key("signin-button"),
                           elevation: 0,
                           color: Theme.of(context).accentColor,
                           colorBrightness: Brightness.dark,
