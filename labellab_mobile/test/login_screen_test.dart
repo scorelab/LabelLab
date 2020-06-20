@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
-import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 import 'mock_labellab_api_impl.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'wrapper/material_wrapper.dart';
 
 // Parameters
 final String email = "";
@@ -33,14 +32,4 @@ void main() {
     // expect(
     //     await mockAPI.login(AuthUser(email, password)), isA<LoginResponse>());
   });
-}
-
-// Helper to wrap with material app
-Widget wrapWidget({Widget child}) {
-  return ChangeNotifierProvider<AuthState>(
-    builder: (context) => AuthState(),
-    child: MaterialApp(
-      home: child,
-    ),
-  );
 }
