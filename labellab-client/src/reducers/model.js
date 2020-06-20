@@ -41,7 +41,11 @@ const initialState = {
     optimizer: null,
     transferSource: null,
     layers: [],
-    projectId: ''
+    projectId: '',
+    accuracyGraphUrl: '',
+    lossGraphUrl: '',
+    modelAccuracy: null,
+    modelLoss: null
   },
   models: []
 }
