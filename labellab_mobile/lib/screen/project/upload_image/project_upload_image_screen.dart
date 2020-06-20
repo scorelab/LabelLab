@@ -141,11 +141,11 @@ class ProjectUploadImageScreen extends StatelessWidget {
           child: Container(color: Colors.black12, child: Icon(Icons.add)),
         ),
       ),
-      onTap: () => _showChangePictureMethodSelect(context),
+      onTap: () => _selectImages(context),
     );
   }
 
-  void _showChangePictureMethodSelect(BuildContext context) async {
+  void _selectImages(BuildContext context) async {
     List<UploadImage> uploadImages = List<UploadImage>();
 
     MultiImagePicker.pickImages(
@@ -158,24 +158,30 @@ class ProjectUploadImageScreen extends StatelessWidget {
         useDetailsView: false,
       ),
     ).then((images) {
-      // Return a temp file stream
+      // Emmits upload images
       Observable.fromIterable(images).flatMap((image) {
-        return image.getByteData().then((byteData) {
+        // To create a temp image file
+        Future<File> fetchImageFile = image.getByteData().then((byteData) {
           return getTemporaryDirectory().then((tempDir) {
             return new File(tempDir.path + '/' + image.name).writeAsBytes(
                 byteData.buffer.asUint8List(
                     byteData.offsetInBytes, byteData.lengthInBytes));
           });
+        });
+
+        // To read image metadata
+        Future<Metadata> fetchMetadata = image.metadata;
+
+        return Future.wait([fetchImageFile, fetchMetadata]).then((result) {
+          return UploadImage(
+              name: image.name, image: result.first, metadata: result.last);
         }).asStream();
       }).doOnDone(() {
-        // Logger().i("Success");
-        Logger().i(uploadImages.first);
         Provider.of<ProjectUploadImageBloc>(context).selectImages(uploadImages);
-      }).listen((uploadFile) {
-        UploadImage uploadImage = UploadImage(image: uploadFile);
+      }).listen((uploadImage) {
         uploadImages.add(uploadImage);
       });
-    });
+    }).catchError((err) => Logger().e(err.toString()));
   }
 
   void _gotoEditImage(BuildContext context, UploadImage image) async {
