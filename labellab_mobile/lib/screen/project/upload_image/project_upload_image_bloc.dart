@@ -5,6 +5,7 @@ import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProjectUploadImageBloc {
@@ -56,7 +57,7 @@ class ProjectUploadImageBloc {
       _stateController
           .add(ProjectUploadImageState.error(err.toString(), images: _images));
     }).listen((response) {
-      print(response.msg);
+      Logger().i(response.msg.toString());
     });
   }
 

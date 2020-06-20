@@ -265,11 +265,33 @@ class LabelLabAPIImpl extends LabelLabAPI {
       String token, String projectId, UploadImage image) async {
     final imageBytes = image.image.readAsBytesSync();
     final encodedBytes = base64Encode(imageBytes);
+
+    final takenAt = (image.metadata != null &&
+            image.metadata.exif != null &&
+            image.metadata.exif.dateTime != null)
+        ? image.metadata.exif.dateTime
+        : "";
+    final latitude = (image.metadata != null &&
+            image.metadata.gps != null &&
+            image.metadata.gps.gpsLatitude != null)
+        ? image.metadata.gps.gpsLatitude
+        : "";
+    final longitude = (image.metadata != null &&
+            image.metadata.gps != null &&
+            image.metadata.gps.gpsLongitude != null)
+        ? image.metadata.gps.gpsLongitude
+        : "";
+
     final data = {
       "projectId": projectId,
       "imageNames": ["Image"],
       "images": ["base64," + encodedBytes],
       "format": "image/jpg",
+      "metadata": {
+        "takenAt": takenAt,
+        "latitude": latitude,
+        "longitude": longitude
+      }
     };
     Options options =
         Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
