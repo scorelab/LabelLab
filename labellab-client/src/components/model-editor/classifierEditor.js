@@ -6,6 +6,7 @@ import { Grid, Segment, Header, Button } from 'semantic-ui-react'
 import LabelSelector from './sub-modules/labelSelector'
 import PreprocessingSelector from './sub-modules/preprocessingSelector'
 import TransferLearningBuilder from './sub-modules/transferLearningBuilder'
+import TrainingGraphs from './sub-modules/trainingGraphs'
 
 import './css/classifierEditor.css'
 
@@ -43,6 +44,7 @@ class ClassifierEditor extends Component {
           <Segment className="classifier-column-heading">
             <Header>Export/Test</Header>
           </Segment>
+          <TrainingGraphs />
           <Button positive fluid onClick={() => saveModel(model)}>
             Save Changes
           </Button>
