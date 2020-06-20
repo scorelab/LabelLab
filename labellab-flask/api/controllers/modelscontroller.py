@@ -86,6 +86,11 @@ class Train(MethodView):
                 # Compile
                 cl.compile()
 
+                # Set graph directory
+                model.loss_graph_url = f"graphs/{model.id}/loss.jpg"
+                model.accuracy_graph_url = f"graphs/{model.id}/accuracy.jpg"
+                cl.set_graph_directory(f"./public/graphs/{model.id}")
+
                 # Fit
                 cl.fit()
 
