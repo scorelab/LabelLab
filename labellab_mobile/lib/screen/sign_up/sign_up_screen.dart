@@ -46,6 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("username"),
                         labelText: "Username",
                         onSaved: (String value) {
                           _user.username = value.trim();
@@ -56,6 +57,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("name"),
                         labelText: "Name",
                         textCapitalization: TextCapitalization.words,
                         onSaved: (String value) {
@@ -67,6 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("email"),
                         labelText: "Email",
                         onSaved: (String value) {
                           _user.email = value.trim();
@@ -77,6 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("password"),
                         labelText: "Password",
                         isObscure: true,
                         onSaved: (String value) {
@@ -88,6 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("confirm-password"),
                         labelText: "Confirm Password",
                         isObscure: true,
                         onSaved: (String value) {
@@ -100,6 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Builder(
                         builder: (context) => RaisedButton(
+                          key: Key("signup-button"),
                           elevation: 0,
                           color: Theme.of(context).accentColor,
                           colorBrightness: Brightness.dark,
