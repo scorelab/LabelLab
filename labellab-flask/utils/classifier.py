@@ -4,6 +4,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from utils.layer import FlattenLayer, DenseLayer, DropoutLayer, GlobalAveragePooling2DLayer, ActivationLayer, Conv2DLayer, MaxPool2DLayer, get_setting
 from utils.preprocessing import get_preprocessing_steps
+from utils.trainingplot import TrainingPlot
 
 TARGET_SIZE = (256, 256)
 INPUT_SIZE = (256, 256, 3)
@@ -184,6 +185,10 @@ class Classifier:
     def compile(self):
         self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
 
+    # Set callback to save model URL
+    def set_graph_directory(self, plot_directory):
+        self.plot_losses = TrainingPlot(plot_directory)
+
     # Fit the model and validate
     def fit(self):
         STEP_SIZE_TRAIN = self.train_generator.n//self.train_generator.batch_size
@@ -192,7 +197,8 @@ class Classifier:
                         steps_per_epoch=STEP_SIZE_TRAIN,
                         validation_data=self.valid_generator,
                         validation_steps=STEP_SIZE_VALID,
-                        epochs=self.epochs)
+                        epochs=self.epochs,
+                        callbacks=[self.plot_losses])
 
     # Save the model in SavedModel format
     def save(self, directory):
