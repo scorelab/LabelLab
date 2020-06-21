@@ -76,8 +76,11 @@ class Register(MethodView):
             response = {"message": "Something went wrong!!"}
             return make_response(jsonify(response)), 500
 
-        response = {"message": "You registered successfully. Please log in.",
-                    "result": user}
+        response = {
+                    "success": True,
+                    "msg": "You registered successfully. Please log in.",
+                    "result": user
+                    }
 
         # return a response notifying the user that they registered
         # successfully
@@ -125,13 +128,83 @@ class Login(MethodView):
         # Generate the access token. This will be used as the
         # authorization header
         response = {
-            "message": "You logged in successfully.",
+            "success": True,
+            "msg": "You logged in successfully.",
             "access_token": access_token,
             "refresh_token": refresh_token,
             "user_details": to_json(user),
         }
         return make_response(jsonify(response)), 200
 
+class Auth(MethodView):
+    """
+    This class-based view handles user 
+    register and access token generation \
+    via 3rd sources like github, google
+    """
+
+    def post(self):
+        # Querying the database with requested email
+        data = request.get_json(silent=True,
+                                force=True)
+
+        try:
+            name = data["name"]
+            user_name = data["user_name"]
+            email = data["email"]
+        except Exception:
+            response = {"message": "Please provide all the required fields."}
+            return make_response(jsonify(response)), 404
+
+        user = find_by_email(email)
+
+        if not user:
+            # There is no user so we'll try to register them
+            user = User(email=email, 
+                        user_name= user_name, 
+                        name=name)
+
+            try:
+                user_new = save(user)
+            except Exception:
+                # An error occured, therefore return a string message
+                # containing the error
+                response = {"message": "Something went wrong!"}
+                return make_response(jsonify(response)), 500
+
+            access_token = create_access_token(identity=user_new['id'], fresh=True)
+            refresh_token = create_refresh_token(user_new['id'])
+
+            if not access_token:
+                response = {"message": "Something went wrong!"}
+                # Return a server error using the HTTP Error Code 500 (Internal
+                # Server Error)
+                return make_response(jsonify(response)), 500
+
+            # Generate the access token. This will be used as the
+            # authorization header
+            response = {
+                "success": True,
+                "msg": "You logged in successfully.",
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "user_details": user_new
+            }
+            return make_response(jsonify(response)), 201
+
+        else:
+            # There is an existing user, Let him login.
+            access_token = create_access_token(identity=user.id, fresh=True)
+            refresh_token = create_refresh_token(user.id)
+
+            response = {
+                "success": True,
+                "msg": "You logged in successfully.",
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "user_details": to_json(user)
+            }
+            return make_response(jsonify(response)), 202
 
 class LogoutAccess(MethodView):
     """

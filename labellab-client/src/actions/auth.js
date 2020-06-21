@@ -13,7 +13,10 @@ import {
   VERIFY_TOKEN_FAILURE,
   UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
-  UPDATE_PASSWORD_FAILURE
+  UPDATE_PASSWORD_FAILURE,
+  OAUTH_LOGIN_REQUEST,
+  OAUTH_LOGIN_SUCCESS,
+  OAUTH_LOGIN_FAILURE
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -164,5 +167,35 @@ export const updatePassword = (email, username, password, resetPasswordToken) =>
   }
   function failure(error) {
     return { type: UPDATE_PASSWORD_FAILURE, error }
+  }
+}
+
+export const OauthUser = (credentials, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('POST', '/api/v1/auth/oauth', credentials)
+      .then(res => {
+        if (res.data && res.data.token) {
+          setToken(TOKEN_TYPE, res.data.token)
+          dispatch(success(res.data.token))
+          callback()
+        }
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: OAUTH_LOGIN_REQUEST }
+  }
+  function success(data) {
+    return { type: OAUTH_LOGIN_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: OAUTH_LOGIN_FAILURE, error }
   }
 }
