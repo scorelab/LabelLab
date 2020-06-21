@@ -190,11 +190,12 @@ class TransferLearningBuilder extends Component {
           </Grid>
         </Card.Content>
         <Card.Content>
-          <div className="transfer-learning-card-bottom-row">
+          <div>
             <Grid columns={3} divided centered>
               <Grid.Row>
                 <Grid.Column>
                   <Dropdown
+                    fluid
                     placeholder="Loss..."
                     selection
                     defaultValue={model.loss}
@@ -206,6 +207,7 @@ class TransferLearningBuilder extends Component {
                 </Grid.Column>
                 <Grid.Column>
                   <Dropdown
+                    fluid
                     placeholder="Optimizer..."
                     selection
                     defaultValue={model.optimizer}
@@ -217,6 +219,7 @@ class TransferLearningBuilder extends Component {
                 </Grid.Column>
                 <Grid.Column>
                   <Dropdown
+                    fluid
                     placeholder="Metric..."
                     selection
                     defaultValue={model.metric}
