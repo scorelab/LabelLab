@@ -12,7 +12,10 @@ import {
   VERIFY_TOKEN_FAILURE,
   UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
-  UPDATE_PASSWORD_FAILURE
+  UPDATE_PASSWORD_FAILURE,
+  OAUTH_LOGIN_REQUEST,
+  OAUTH_LOGIN_SUCCESS,
+  OAUTH_LOGIN_FAILURE
 } from '../constants/index'
 
 const initialState = {
@@ -139,6 +142,32 @@ const auth = (state = initialState, action) => {
         passwordUpdatedMessage: action.payload,
         passwordUpdateError: true
       }
+      case OAUTH_LOGIN_REQUEST:
+        return {
+          ...state,
+          isAuthenticating: true
+        }
+      case OAUTH_LOGIN_SUCCESS:
+        return {
+          ...state,
+          isAuthenticated: true,
+          isAuthenticating: false,
+          statusText: 'You are logged in successfully!',
+          error: false,
+          details: {
+            email: action.payload.email
+          }
+        }
+      case OAUTH_LOGIN_FAILURE:
+        return {
+          ...state,
+          isAuthenticated: false,
+          isAuthenticating: false,
+          statusText:
+            action.error === 'Unauthorize' ? 'LOGIN FAILED!' : null,
+          error: true,
+          errField: action.other
+        }
     default:
       return state
   }
