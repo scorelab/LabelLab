@@ -7,6 +7,7 @@ import LabelSelector from './sub-modules/labelSelector'
 import PreprocessingSelector from './sub-modules/preprocessingSelector'
 import TransferLearningBuilder from './sub-modules/transferLearningBuilder'
 import TrainingGraphs from './sub-modules/trainingGraphs'
+import CustomBuilder from './sub-modules/customBuilder'
 
 import './css/classifierEditor.css'
 
@@ -17,6 +18,8 @@ class ClassifierEditor extends Component {
     switch (source) {
       case 'transfer':
         return <TransferLearningBuilder />
+      case "custom":
+        return <CustomBuilder />
       default:
         return <div>Error loading component</div>
     }
