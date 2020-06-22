@@ -5,6 +5,8 @@ from flask_jwt_extended import (
     get_jwt_identity,
     get_raw_jwt
 )
+
+from api.config import config
 from api.models.Label import Label
 from api.helpers.label import (
     find_by_id, 
@@ -15,6 +17,7 @@ from api.helpers.label import (
     update_label
 )
 
+allowed_labels = config['development'].LABELS_ALLOWED
 
 class CreateLabel(MethodView):
     """This class creates a new Label."""
@@ -35,7 +38,15 @@ class CreateLabel(MethodView):
                 "success": False,
                 "msg": "Please provide all the required fields."
             }
-            return make_response(jsonify(response)), 500
+            return make_response(jsonify(response)), 400
+        
+        if not allowed_labels.index(label_type):
+                print("Error occured: label type not allowed")
+                response = {
+                        "success": False,
+                        "msg": "Label type not allowed."
+                    }
+                return make_response(jsonify(response)), 400
 
         """Save the new Label."""
         try:
@@ -77,7 +88,7 @@ class GetAllLabels(MethodView):
                     "success": False,
                     "msg": "Provide the project_id."
                 }
-                return make_response(jsonify(response)), 500
+                return make_response(jsonify(response)), 400
 
             labels = find_all_by_project_id(project_id)
 
@@ -120,7 +131,7 @@ class LabelInfo(MethodView):
                     "success":False,
                     "msg": "Label id not provided"
                 }
-                return make_response(jsonify(response)), 500
+                return make_response(jsonify(response)), 400
             
             label = find_by_id(label_id)
             response = {
@@ -174,11 +185,20 @@ class LabelInfo(MethodView):
         try:
             label_name = post_data["label_name"]
             label_type = post_data["label_type"]
+
         except Exception:
             response = {
                 "success": False,
                 "msg": "Please provide all the required fields."}
-            return make_response(jsonify(response)), 404
+            return make_response(jsonify(response)), 400
+        
+        if not allowed_labels.index(label_type):
+                print("Error occured: label type not allowed")
+                response = {
+                        "success": False,
+                        "msg": "Label type not allowed."
+                    }
+                return make_response(jsonify(response)), 400
 
         try:
             label = find_by_id(label_id)
