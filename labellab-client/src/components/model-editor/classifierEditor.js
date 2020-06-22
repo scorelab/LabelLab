@@ -8,6 +8,7 @@ import PreprocessingSelector from './sub-modules/preprocessingSelector'
 import TransferLearningBuilder from './sub-modules/transferLearningBuilder'
 import TrainingGraphs from './sub-modules/trainingGraphs'
 import CustomBuilder from './sub-modules/customBuilder'
+import Exporter from "./sub-modules/exporter"
 
 import './css/classifierEditor.css'
 
@@ -48,6 +49,7 @@ class ClassifierEditor extends Component {
             <Header>Export/Test</Header>
           </Segment>
           <TrainingGraphs />
+          <Exporter />
           <Button positive fluid onClick={() => saveModel(model)}>
             Save Changes
           </Button>

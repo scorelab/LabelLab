@@ -15,7 +15,8 @@ import {
   REMOVE_LAYER,
   SAVE_MODEL_REQUEST,
   SAVE_MODEL_SUCCESS,
-  SAVE_MODEL_FAILURE
+  SAVE_MODEL_FAILURE,
+  SET_EXPORT_TYPE
 } from '../constants/index'
 
 const initialState = {
@@ -45,13 +46,22 @@ const initialState = {
     accuracyGraphUrl: '',
     lossGraphUrl: '',
     modelAccuracy: null,
-    modelLoss: null
+    modelLoss: null,
+    exportType: ""
   },
   models: []
 }
 
 const model = (state = initialState, action) => {
   switch (action.type) {
+    case SET_EXPORT_TYPE:
+      return {
+        ...state,
+        model: {
+          ...state.model,
+          exportType: action.payload
+        }
+      }
     case SET_PROJECT_ID:
       return {
         ...state,
