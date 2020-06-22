@@ -1,7 +1,6 @@
 from marshmallow import Schema, fields
 
 from api.extensions import db, ma
-from api.serializers.point import PointSchema
 
 class PointSchema(ma.ModelSchema):
     """

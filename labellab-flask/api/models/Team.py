@@ -10,7 +10,7 @@ class Team(db.Model):
     __tablename__ = "team"
 
     id = db.Column(db.Integer, primary_key=True)
-    teamname = db.Column(db.String(80), nullable=False,)
+    team_name = db.Column(db.String(80), nullable=False,)
     role = db.Column(db.String(128),
                      default = 'Member')
     project_id = db.Column(db.Integer, 
@@ -22,11 +22,11 @@ class Team(db.Model):
                                     cascade="all, save-update, delete",
                                     passive_deletes=True)
     
-    def __init__(self, teamname, role, project_id):
+    def __init__(self, team_name, role, project_id):
         """
         Initializes the team instance
         """
-        self.teamname = teamname
+        self.team_name = team_name
         self.role = role
         self.project_id = project_id
 
@@ -34,14 +34,14 @@ class Team(db.Model):
         """
         Returns the object reprensentation
         """
-        return "<Team %r>" % self.teamname
+        return "<Team %r>" % self.team_name
     
     def to_json(self):
         """
         Returns a JSON object
         """
         team_json = {"teamId": self.id, 
-                     "teamName": self.teamname,
+                     "team_Name": self.team_name,
                      "role": self.role}
         return team_json
     

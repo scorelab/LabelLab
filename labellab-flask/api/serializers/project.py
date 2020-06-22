@@ -8,6 +8,6 @@ class ProjectSchema(ma.ModelSchema):
     """
         
     id = fields.Int(dump_only=True) 
-    projectname = fields.Str()
-    projectdescription = fields.Str()
+    project_name = fields.Str()
+    project_description = fields.Str()
     admin_id = fields.Int(dump_only=True)

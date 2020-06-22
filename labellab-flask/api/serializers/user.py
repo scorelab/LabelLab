@@ -15,5 +15,5 @@ class UserSchema(ma.ModelSchema):
     email = fields.Str() 
     thumbnail = fields.Str() 
     projects = fields.Nested(ProjectSchema, many=True)
-    projectmembers = fields.Nested(ProjectMemberSchema, many=True)
+    project_members = fields.Nested(ProjectMemberSchema, many=True)
     
