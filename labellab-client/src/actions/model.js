@@ -15,15 +15,24 @@ import {
   REMOVE_LAYER,
   SAVE_MODEL_REQUEST,
   SAVE_MODEL_SUCCESS,
-  SAVE_MODEL_FAILURE
+  SAVE_MODEL_FAILURE,
+  SET_EXPORT_TYPE
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
+
 
 export const setProjectId = id => {
   return {
     type: SET_PROJECT_ID,
     payload: id
+  }
+}
+
+export const setExportType = exportType => {
+  return {
+    type: SET_EXPORT_TYPE,
+    payload: exportType
   }
 }
 
