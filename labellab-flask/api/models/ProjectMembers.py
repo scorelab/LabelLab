@@ -44,8 +44,8 @@ class ProjectMember(db.Model):
                                    team_id=team_id).first()
     
     @classmethod
-    def find_by_team_name(cls, teamname):
-        return cls.query.filter_by(teamname=teamname).all()
+    def find_by_team_name(cls, team_name):
+        return cls.query.filter_by(team_name=team_name).all()
     
     @classmethod
     def find_all_teams_of_user(cls, user_id):

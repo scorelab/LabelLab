@@ -25,7 +25,7 @@ class User(db.Model):
                                lazy=True,
                                cascade="all, save-update, delete",
                                passive_deletes=True)
-    projectmembers = db.relationship('ProjectMember', 
+    project_members = db.relationship('ProjectMember', 
                                       backref='user',
                                       lazy=True,
                                       cascade="all, save-update, delete",

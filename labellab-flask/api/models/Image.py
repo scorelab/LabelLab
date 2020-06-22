@@ -15,7 +15,7 @@ class Image(db.Model):
     __tablename__ = "image"
 
     id = db.Column(db.Integer, primary_key=True)
-    imagename = db.Column(db.String(128), nullable=False,)
+    image_name = db.Column(db.String(128), nullable=False,)
     image_url = db.Column(db.String(80), nullable=False,)
     height = db.Column(db.Integer)
     width = db.Column(db.Integer)
@@ -30,11 +30,11 @@ class Image(db.Model):
                                  cascade="all, save-update, delete",
                                  passive_deletes=True)
     
-    def __init__(self, imagename, image_url, height, width, labelled, project_id):
+    def __init__(self, image_name, image_url, height, width, labelled, project_id):
         """
         Initializes the image instance
         """
-        self.imagename = imagename
+        self.image_name = image_name
         self.image_url = image_url
         self.height = height
         self.width = width
@@ -45,4 +45,4 @@ class Image(db.Model):
         """
         Returns the object reprensentation
         """
-        return "<Image %r>" % self.imagename
+        return "<Image %r>" % self.image_name

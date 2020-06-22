@@ -9,7 +9,7 @@ class LabelSchema(ma.ModelSchema):
     """
         
     id = fields.Int(dump_only=True) 
-    labelname = fields.Str()
+    label_name = fields.Str()
     label_type = fields.Str()
     count = fields.Int()
     project_id = fields.Int(dump_only=True)

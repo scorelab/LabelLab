@@ -9,7 +9,7 @@ class TeamSchema(ma.ModelSchema):
     """
         
     id = fields.Int(dump_only=True) 
-    teamname = fields.Str()
+    team_name = fields.Str()
     role = fields.Str()
     project_id = fields.Int(dump_only=True)
     team_members = fields.Nested(ProjectMemberSchema, many=True)

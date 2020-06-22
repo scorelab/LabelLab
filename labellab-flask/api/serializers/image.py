@@ -9,7 +9,7 @@ class ImageSchema(ma.ModelSchema):
     """
         
     id = fields.Int(dump_only=True) 
-    imagename = fields.Str()
+    image_name = fields.Str()
     image_url = fields.Str()
     height = fields.Int()
     width = fields.Int()
