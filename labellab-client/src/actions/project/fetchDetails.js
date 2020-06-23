@@ -12,7 +12,7 @@ import FetchApi from '../../utils/FetchAPI'
 export const fetchAllProject = () => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/project/get/', null, true)
+    FetchApi.get('/api/v1/project/get/')
       .then(res => {
         dispatch(success(res.data.body))
       })
@@ -38,7 +38,7 @@ export const fetchAllProject = () => {
 export const fetchProject = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/project/get/' + data, null, true)
+    FetchApi.get(`/api/v1/project/get/${data}`)
       .then(res => {
         dispatch(success(res.data.body))
         callback()

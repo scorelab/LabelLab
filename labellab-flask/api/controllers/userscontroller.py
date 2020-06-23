@@ -293,7 +293,7 @@ class TokenRefresh(MethodView):
             "msg": "Token refreshed successfully",
             "access_token": access_token,
         }
-        return make_response(jsonify(response)), 200
+        return make_response(jsonify(response)), 201
 
 
 userController = {

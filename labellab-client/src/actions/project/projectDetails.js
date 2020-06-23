@@ -12,7 +12,7 @@ import FetchApi from '../../utils/FetchAPI'
 export const initProject = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/project/create', data, true)
+    FetchApi.post('/api/v1/project/create', data)
       .then(res => {
         dispatch(success(res.data.body))
         callback(res.data.body._id)
@@ -39,7 +39,7 @@ export const initProject = (data, callback) => {
 export const updateProject = (data, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('PUT', '/api/v1/project/update/' + projectId, data, true)
+    FetchApi.put(`/api/v1/project/update/${projectId}`, data)
       .then(res => {
         dispatch(success())
         callback()
