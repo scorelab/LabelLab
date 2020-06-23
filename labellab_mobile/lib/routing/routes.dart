@@ -16,7 +16,6 @@ class Routes {
 
   // Image
   static const uploadImage = "/project/:project_id/upload";
-  static const editImage = "/project/:image_path/edit";
   static const viewImage = "/project/:project_id/view/:image_id";
   static const labelImage = "/project/:project_id/label/:image_id";
 
@@ -51,8 +50,6 @@ class Routes {
 
     router.define(uploadImage,
         handler: uploadImageHandler, transitionType: TransitionType.native);
-    router.define(editImage,
-        handler: editImageHandler, transitionType: TransitionType.native);
     router.define(viewImage,
         handler: viewImageHandler, transitionType: TransitionType.native);
     router.define(labelImage,

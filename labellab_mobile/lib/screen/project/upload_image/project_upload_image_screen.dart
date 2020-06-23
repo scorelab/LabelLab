@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/routing/application.dart';
@@ -93,7 +94,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
                             color: Colors.black54,
                           ),
                           onTap: () {
-                            _gotoEditImage(context, image);
+                            _showImageEdit(context, image);
                           },
                         ),
                         GestureDetector(
@@ -184,14 +185,43 @@ class ProjectUploadImageScreen extends StatelessWidget {
     }).catchError((err) => Logger().e(err.toString()));
   }
 
-  void _gotoEditImage(BuildContext context, UploadImage image) async {
+  void _showImageEdit(BuildContext context, UploadImage image) async {
     final imageIndex =
         Provider.of<ProjectUploadImageBloc>(context).getImageIndex(image);
-    final imagePath = image.image.path.replaceAll(new RegExp('/'), '#');
-    final updatedImage = await Application.router
-        .navigateTo(context, '/project/' + imagePath + "/edit") as File;
 
-    Provider.of<ProjectUploadImageBloc>(context)
-        .updateImage(imageIndex, updatedImage);
+    File editedFile = await ImageCropper.cropImage(
+        sourcePath: image.image.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Edit Image',
+          toolbarColor: Theme.of(context).accentColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        iosUiSettings: IOSUiSettings(
+          title: 'Edit Image',
+        ));
+    if (editedFile != null) {
+      Provider.of<ProjectUploadImageBloc>(context)
+          .updateImage(imageIndex, editedFile);
+    }
   }
 }
