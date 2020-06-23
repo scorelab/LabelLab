@@ -3,13 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
+import 'package:labellab_mobile/model/image.dart' as LabelLab;
+
+typedef void OnUpdateError(String message);
 
 class AddEditLabelDialog extends StatefulWidget {
   final Repository _repository = Repository();
   final String projectId;
   final Label label;
+  final OnUpdateError onError;
 
-  AddEditLabelDialog(this.projectId, {this.label});
+  // To check label selection instances
+  final List<LabelLab.Image> images;
+
+  AddEditLabelDialog(this.projectId, {this.images, this.label, this.onError});
 
   @override
   _AddEditProjectScreenState createState() => _AddEditProjectScreenState();
@@ -18,11 +25,14 @@ class AddEditLabelDialog extends StatefulWidget {
 class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
   String _labelId;
 
-  final TextEditingController _nameController = TextEditingController();
   int _type = 0;
+  // To check whether the type has updated
+  int _previousType;
 
   bool _isLoading = false;
   String _error;
+
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
@@ -80,6 +90,13 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
               ),
               title: Text("Polygon"),
             ),
+            _editing && this._error == null
+                ? Text(
+                    "Please note that to update the label type you must remove all selections of the label",
+                    style: TextStyle(
+                        color: Color(0xff6a6a6a), fontSize: 14, height: 1.5),
+                  )
+                : Container(),
             this._error != null
                 ? Text(
                     this._error,
@@ -115,9 +132,11 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
         Navigator.pop(context, true);
       } else {
         setState(() {
-          _error = message;
+          // _error = message;
           _isLoading = false;
         });
+        widget.onError(message);
+        Navigator.pop(context, false);
       }
     }).catchError((err) {
       if (err is DioError) {
@@ -152,11 +171,25 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       });
     } else {
       // Update the existing label
-      return widget._repository.updateLabel(label).then((res) {
-        if (!res.success) return res.msg;
-        return "Success";
-      });
+      if (checkTypeUpdated(_previousType, _type) &&
+          checkSelectionInstances(label)) {
+        return Future.value("Please remove the selections first");
+      } else {
+        return widget._repository.updateLabel(label).then((res) {
+          if (!res.success) return res.msg;
+          return "Success";
+        });
+      }
     }
+  }
+
+  bool checkTypeUpdated(int previous, int current) {
+    return previous != current;
+  }
+
+  bool checkSelectionInstances(Label currentLabel) {
+    return widget.images.any((image) =>
+        image.labels.any((label) => label.label.id == currentLabel.id));
   }
 
   void _loadLabel() {
@@ -168,6 +201,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       } else {
         _type = 1;
       }
+      _previousType = _type;
     });
   }
 
