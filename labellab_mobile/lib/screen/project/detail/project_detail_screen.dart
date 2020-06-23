@@ -20,6 +20,8 @@ import 'package:labellab_mobile/widgets/group_item.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ProjectDetailState>(
@@ -30,6 +32,7 @@ class ProjectDetailScreen extends StatelessWidget {
         bool _hasImages =
             (_state.project != null) ? _state.project.images.length > 0 : false;
         return Scaffold(
+          key: _scaffoldKey,
           body: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
@@ -129,7 +132,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   : SliverFillRemaining(),
               _state.project != null && _state.project.labels != null
                   ? _buildLabels(
-                      context, _state.project.id, _state.project.labels)
+                      context, _state.project.images, _state.project.labels)
                   : SliverFillRemaining(),
               SliverList(
                 delegate: SliverChildListDelegate([
@@ -397,7 +400,7 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildLabels(
-      BuildContext context, String projectId, List<Label> labels) {
+      BuildContext context, List<LabelLab.Image> images, List<Label> labels) {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       sliver: SliverList(
@@ -412,7 +415,7 @@ class ProjectDetailScreen extends StatelessWidget {
               FlatButton.icon(
                 icon: Icon(Icons.add),
                 label: Text("Add"),
-                onPressed: () => _showAddEditLabelModel(context, null),
+                onPressed: () => _showAddEditLabelModel(context),
               ),
             ],
           ),
@@ -427,7 +430,8 @@ class ProjectDetailScreen extends StatelessWidget {
                         onDeleted: () =>
                             _showLabelDeleteConfirmation(context, label),
                       ),
-                      onTap: () => _showAddEditLabelModel(context, label),
+                      onTap: () => _showAddEditLabelModel(context,
+                          images: images, label: label),
                     );
                   }).toList(),
                 )
@@ -621,21 +625,23 @@ class ProjectDetailScreen extends StatelessWidget {
             name: label.name,
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
-              Provider.of<ProjectDetailBloc>(baseContext)
-                  .deleteLabel(label.labelID);
+              Provider.of<ProjectDetailBloc>(baseContext).deleteLabel(label.id);
               Navigator.of(context).pop(true);
             },
           );
         });
   }
 
-  void _showAddEditLabelModel(BuildContext baseContext, Label label) {
+  void _showAddEditLabelModel(BuildContext baseContext,
+      {String projectId, List<LabelLab.Image> images, Label label}) {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {
         return AddEditLabelDialog(
           Provider.of<ProjectDetailBloc>(baseContext).projectId,
+          images: images,
           label: label,
+          onError: _showErrorSnackbar,
         );
       },
     ).then((bool isSuccess) {
