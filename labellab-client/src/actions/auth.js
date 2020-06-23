@@ -37,6 +37,7 @@ export const login = (username, password, callback) => {
     dispatch(request())
     FetchApi.post('/api/v1/auth/login', data)
       .then(res => {
+        console.log(res)
         if (res.data && res.data.access_token && res.data.refresh_token) {
           const { access_token, refresh_token, body } = res.data
           // Set token to Auth header
