@@ -30,6 +30,7 @@ class DevelopmentConfig(Config):
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # needs to be removed in further versions
+    ML_FILES_DIR = os.path.join(os.path.dirname(basedir),'model_files')
 
 
 class TestingConfig(Config):

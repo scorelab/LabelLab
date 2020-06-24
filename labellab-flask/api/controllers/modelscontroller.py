@@ -1,9 +1,10 @@
 from flask.views import MethodView
-from flask import make_response, request, jsonify, current_app
+from flask import make_response, request, jsonify, current_app, send_from_directory, send_file
 from flask_jwt_extended import jwt_required
 import pandas as pd
 import json
 import os
+import zipfile
 
 from api.config import config
 from api.models.MLModel import MLModel, optional_params
@@ -11,6 +12,76 @@ from api.models.Projects import Project
 from api.models.Label import Label
 from api.models.LabelData import LabelData
 from utils.classifier import Classifier
+
+class Export(MethodView):
+    """
+    This method exports a model
+    """
+    @jwt_required
+    def get(self):
+        """Handle GET request for this view. Url --> /api/models/export"""
+
+        # getting JSON data from request
+        get_data = request.get_json(silent=True, force=True)
+
+        try:
+            model_id = get_data["id"]
+            export_type = get_data["exportType"]
+
+        except Exception as err:
+            response = {"message": "Please provide all the required fields."}
+            return make_response(jsonify(response)), 404
+
+        model = MLModel.find_by_id(model_id)
+
+        if model:
+
+            """Get the required model files."""
+            try:
+
+                if export_type == "savedmodel":
+                    # return the model zip folder
+                    # successfully
+                    zip_file_dir = config["development"].ML_FILES_DIR + f"/models/{model_id}/model.zip"
+                    zipf = zipfile.ZipFile(zip_file_dir,'w', zipfile.ZIP_DEFLATED)
+                    for subdir, dirs, files in os.walk(config["development"].ML_FILES_DIR + f"/models/{model_id}/savedmodel/"):
+                        for file in files:
+                            zipf.write(os.path.join(subdir, file))
+                    zipf.close()
+                    return send_file(zip_file_dir,
+                                    mimetype = 'zip',
+                                    attachment_filename= 'model.zip',
+                                    as_attachment = True)
+                elif export_type == "h5":
+                    # Create model
+                    cl = Classifier()
+                    cl.load_model(f"./model_files/models/{model_id}/savedmodel")
+                    cl.save("./model_files/models", model_id, "h5")
+
+                    # return the model file in h5 format
+                    # successfully
+                    return send_from_directory(config["development"].ML_FILES_DIR + f"/models/{model_id}/h5", filename=f"saved_model.h5", as_attachment=True)
+                else:
+                    # Create model
+                    cl = Classifier()
+                    cl.load_model(f"./model_files/models/{model_id}/savedmodel")
+                    cl.save("./model_files/models", model_id, "onnx")
+
+                    # return the model file in h5 format
+                    # successfully
+                    return send_from_directory(config["development"].ML_FILES_DIR + f"/models/{model_id}/onnx", filename=f"saved_model.onnx", as_attachment=True)
+                
+
+            except Exception as err:
+                print("Error occurred: ", err)
+                response = {"message": "Something went wrong while training!!"}
+                return make_response(jsonify(response)), 500
+        else:
+            # There is no model with the given id.
+            response = {
+                "message": "Model with given id does not exist. Please try again."}
+            return make_response(jsonify(response)), 401
+
 
 class Train(MethodView):
     """
@@ -87,16 +158,16 @@ class Train(MethodView):
                 cl.compile()
 
                 # Set graph directory
-                model.loss_graph_url = f"graphs/{model.id}/loss.jpg"
-                model.accuracy_graph_url = f"graphs/{model.id}/accuracy.jpg"
-                cl.set_graph_directory(f"./public/graphs/{model.id}")
+                model.loss_graph_url = f"./model_files/graphs/{model.id}/loss.jpg"
+                model.accuracy_graph_url = f"./model_files/graphs/{model.id}/accuracy.jpg"
+                cl.set_graph_directory(f"./model_files/graphs/{model.id}")
 
                 # Fit
                 cl.fit()
 
                 # Save the model
-                saved_model_url = f"./api/static/models/{model.project_id}_{model.id}/"
-                cl.save(saved_model_url)
+                saved_model_url = f"./model_files/models/{model.id}/savedmodel"
+                cl.save("./model_files/models", model.id)
                 model.set_saved_model_url(saved_model_url)
                 model.save()
             except Exception as err:
@@ -115,7 +186,6 @@ class Train(MethodView):
             response = {
                 "message": "Model with given id does not exist. Please try again."}
             return make_response(jsonify(response)), 401
-
 
 
 class Save(MethodView):
@@ -192,5 +262,6 @@ class Save(MethodView):
 
 modelController = {
     "save": Save.as_view("save"),
-    "train": Train.as_view("train")
+    "train": Train.as_view("train"),
+    "export": Export.as_view("export")
 }

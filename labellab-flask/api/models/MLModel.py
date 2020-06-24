@@ -53,7 +53,7 @@ class MLModel(db.Model):
                     layers = {"layers": model_data[key]}
                     layers = json.dumps(layers)
                     layers = json.loads(layers)
-                    layers_url = f"./api/static/layers/{self.project_id}_{self.name}.json"
+                    layers_url = f"./model_files/layers/{self.project_id}_{self.name}.json"
                     with open(layers_url, "w") as f:
                         json.dump(layers, f)
                     self.layers_json_url = layers_url
@@ -63,7 +63,7 @@ class MLModel(db.Model):
                     preprocessing_steps = {"steps": model_data[key]}
                     preprocessing_steps = json.dumps(preprocessing_steps)
                     preprocessing_steps = json.loads(preprocessing_steps)
-                    steps_url = f"./api/static/steps/{self.project_id}_{self.name}.json"
+                    steps_url = f"./model_files/steps/{self.project_id}_{self.name}.json"
                     with open(steps_url, "w") as f:
                         json.dump(preprocessing_steps, f)
                     self.preprocessing_steps_json_url = steps_url
