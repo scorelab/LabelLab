@@ -57,8 +57,8 @@ const project = (state = initialState, action) => {
           isinitializing: false
         },
         currentProject: {
-          projectName: action.payload.projectName,
-          images: action.payload.image
+          projectName: action.payload.project_name,
+          images: action.payload.images
         }
       }
     case FETCH_PROJECT_REQUEST:
@@ -83,11 +83,11 @@ const project = (state = initialState, action) => {
           isfetching: false
         },
         currentProject: {
-          projectId: action.payload._id,
-          projectName: action.payload.projectName,
-          projectDescription: action.payload.projectDescription,
-          images: action.payload.image,
-          members: action.payload.members
+          projectId: action.payload.id,
+          projectName: action.payload.project_name,
+          projectDescription: action.payload.project_description,
+          images: action.payload.images,
+          // members: action.payload.members
         }
       }
     case FETCH_PROJECT_ALL_REQUEST:
@@ -111,7 +111,7 @@ const project = (state = initialState, action) => {
         projectActions: {
           isfetching: false
         },
-        allProjects: action.payload.project
+        allProjects: action.payload
       }
     case ADD_MEMBER_REQUEST:
       return {
