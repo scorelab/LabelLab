@@ -2,7 +2,7 @@ from flask import Blueprint
 
 from api.controllers import labelscontroller
 
-labelsprint = Blueprint("users", __name__)
+labelsprint = Blueprint("labels", __name__)
 
 labelsprint.add_url_rule(
     "/label/create/<int:project_id>", 
