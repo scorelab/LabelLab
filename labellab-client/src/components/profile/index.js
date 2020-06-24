@@ -132,14 +132,14 @@ class Profile extends Component {
                     projects.map((project, index) => (
                       <Card
                         key={index}
-                        onClick={() => this.handleClick(project._id)}
+                        onClick={() => this.handleClick(project.id)}
                       >
                         <Card.Content
                           className="card-headers"
-                          header={project.projectName}
+                          header={project.project_name}
                         />
                         <Card.Content
-                          description={project.projectDescription}
+                          description={project.project_description}
                         />
                         <Card.Content extra />
                       </Card>
@@ -160,11 +160,11 @@ class Profile extends Component {
                     <Dropdown.Menu>
                       {projects.map(project => (
                         <Dropdown.Item
-                          key={project._id}
+                          key={project.id}
                           as={Link}
-                          to={'/project/' + project._id + '/analytics'}
+                          to={'/project/' + project.id + '/analytics'}
                         >
-                          {project.projectName}
+                          {project.project_name}
                         </Dropdown.Item>
                       ))}
                     </Dropdown.Menu>

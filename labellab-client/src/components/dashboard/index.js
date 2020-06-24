@@ -120,8 +120,8 @@ class Dashboard extends Component {
   handleProjectSubmit = () => {
     this.props.initProject(
       {
-        projectName: this.state.projectName,
-        projectDescription: this.state.projectDescription
+        project_name: this.state.projectName,
+        project_description: this.state.projectDescription
       },
       this.projectCallback
     )

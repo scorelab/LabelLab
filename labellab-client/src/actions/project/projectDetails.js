@@ -15,7 +15,7 @@ export const initProject = (data, callback) => {
     FetchApi.post('/api/v1/project/create', data)
       .then(res => {
         dispatch(success(res.data.body))
-        callback(res.data.body._id)
+        callback(res.data.body.id)
       })
       .catch(err => {
         if (err.response) {
@@ -39,7 +39,7 @@ export const initProject = (data, callback) => {
 export const updateProject = (data, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.put(`/api/v1/project/update/${projectId}`, data)
+    FetchApi.put(`/api/v1/project/project_info/${projectId}`, data)
       .then(res => {
         dispatch(success())
         callback()

@@ -26,14 +26,14 @@ class PreviousProject extends Component {
             projects.map((project, index) => (
               <Card
                 key={index}
-                onClick={() => this.handleClick(project._id)}
+                onClick={() => this.handleClick(project.id)}
                 color="green"
               >
                 <Card.Content
                   className="card-headers"
-                  header={project.projectName}
+                  header={project.project_name}
                 />
-                <Card.Content description={project.projectDescription} />
+                <Card.Content description={project.project_description} />
               </Card>
             ))
           ) : (
