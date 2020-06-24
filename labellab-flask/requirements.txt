@@ -14,7 +14,6 @@ Click==7.0
 colorama==0.4.3
 configparser==3.7.4
 cycler==0.10.0
-dotenv==0.0.5
 enum34==1.1.6
 Flask==1.1.1
 Flask-Bcrypt==0.7.1
@@ -27,9 +26,6 @@ Flask-SQLAlchemy==2.4.1
 future==0.18.2
 futures==3.2.0
 gast==0.3.3
-google-auth==1.17.2
-google-auth-oauthlib==0.4.1
-google-pasta==0.2.0
 grpcio==1.29.0
 h5py==2.10.0
 idna==2.8
