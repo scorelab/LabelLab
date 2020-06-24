@@ -1,5 +1,6 @@
 import pandas as pd
 import tensorflow as tf
+import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from utils.layer import FlattenLayer, DenseLayer, DropoutLayer, GlobalAveragePooling2DLayer, ActivationLayer, Conv2DLayer, MaxPool2DLayer, get_setting
@@ -14,6 +15,10 @@ class Classifier:
     def __init__(self, type="custom"):
         self.model = tf.keras.models.Sequential()
         self.type = type
+
+    # Load model from a given directory
+    def load_model(self, directory):
+        self.model = tf.keras.models.load_model(directory)
 
     # Create data generators using a pandas dataframe
     def load_data(self, data, directory, test_split):
@@ -187,6 +192,7 @@ class Classifier:
 
     # Set callback to save model URL
     def set_graph_directory(self, plot_directory):
+        tf.io.gfile.mkdir(plot_directory)
         self.plot_losses = TrainingPlot(plot_directory)
 
     # Fit the model and validate
@@ -201,5 +207,19 @@ class Classifier:
                         callbacks=[self.plot_losses])
 
     # Save the model in SavedModel format
-    def save(self, directory):
-        self.model.save(directory)
+    def save(self, directory, model_id, type="savedmodel"):
+        if type == "savedmodel":
+            tf.io.gfile.mkdir(directory)
+            tf.io.gfile.mkdir(directory + f"/{model_id}")
+            tf.io.gfile.mkdir(directory + f"/{model_id}" + "/savedmodel")
+            self.model.save(directory + f"/{model_id}/savedmodel")
+        elif type == "h5":
+            tf.io.gfile.mkdir(directory)
+            tf.io.gfile.mkdir(directory + f"/{model_id}")
+            tf.io.gfile.mkdir(directory + f"/{model_id}" + "/h5")
+            self.model.save(directory + f"/{model_id}/h5/saved_model.h5")
+        else:
+            tf.io.gfile.mkdir(directory)
+            tf.io.gfile.mkdir(directory + f"/{model_id}")
+            tf.io.gfile.mkdir(directory + f"/{model_id}" + "/onnx")
+            os.popen(f"python -m tf2onnx.convert --saved-model {directory}/{model_id}/savedmodel --output {directory}/{model_id}/onnx/saved_model.onnx").read()

@@ -12,6 +12,12 @@ modelsprint.add_url_rule(
 
 modelsprint.add_url_rule(
     "/models/train",
-    view_func=modelscontroller.modelController["save"],
+    view_func=modelscontroller.modelController["train"],
     methods=["POST"]
+)
+
+modelsprint.add_url_rule(
+    "/models/export",
+    view_func=modelscontroller.modelController["export"],
+    methods=["GET"]
 )

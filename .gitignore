@@ -264,8 +264,10 @@ db.sqlite3
 # Flask stuff:
 instance/
 .webassets-cache
-labellab-flask/api/static/steps/*
-labellab-flask/api/static/layers/*
+labellab-flask/model_files/graphs/*
+labellab-flask/model_files/layers/*
+labellab-flask/model_files/models/*
+labellab-flask/model_files/steps/*
 labellab-flask/public/uploads/*
 
 # Scrapy stuff:
