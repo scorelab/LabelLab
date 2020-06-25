@@ -1,0 +1,36 @@
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:labellab_mobile/model/group.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+class GroupItem extends StatelessWidget {
+  final Group group;
+
+  GroupItem(this.group);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: 64,
+        height: 64,
+        child: GridView.count(
+          shrinkWrap: false,
+          crossAxisCount: 2,
+          children: group.images
+              .take(4)
+              .map((image) => Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(image.imageUrl),
+                            fit: BoxFit.cover)),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+}

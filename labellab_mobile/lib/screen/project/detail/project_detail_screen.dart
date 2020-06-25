@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
@@ -14,6 +15,7 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
+import 'package:labellab_mobile/widgets/group_item.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
@@ -30,6 +32,7 @@ class ProjectDetailScreen extends StatelessWidget {
           body: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
+                backgroundColor: Theme.of(context).accentColor,
                 iconTheme: IconThemeData(
                     color: _hasImages ? Colors.white : Colors.black),
                 actionsIconTheme: IconThemeData(
@@ -115,6 +118,12 @@ class ProjectDetailScreen extends StatelessWidget {
                       _state.project.images,
                       _state.isSelecting,
                       _state.selectedImages)
+                  : SliverFillRemaining(),
+              _state.project != null
+                  ? _buildGroupsHeading(context, _state.project.groups)
+                  : SliverFillRemaining(),
+              _state.project != null && _state.project.groups != null
+                  ? _buildGroups(context, _state.project.groups)
                   : SliverFillRemaining(),
               _state.project != null && _state.project.labels != null
                   ? _buildLabels(
@@ -341,6 +350,46 @@ class ProjectDetailScreen extends StatelessWidget {
               ]),
             ),
           );
+  }
+
+  Widget _buildGroupsHeading(BuildContext context, List<Group> groups) {
+    return SliverPadding(
+      padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Groups",
+                style: Theme.of(context).textTheme.title,
+              ),
+              FlatButton.icon(
+                icon: Icon(Icons.add),
+                label: Text("Add"),
+                onPressed: () => _showAddEditGroupsModel(context, null),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildGroups(BuildContext context, List<Group> groups) {
+    return SliverPadding(
+      padding: EdgeInsets.only(bottom: 8, left: 16, right: 16),
+      sliver: SliverGrid.count(
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          crossAxisCount: 4,
+          children: groups
+              .map((group) => InkWell(
+                    child: GroupItem(group),
+                    onTap: _gotoGroupView,
+                  ))
+              .toList()),
+    );
   }
 
   Widget _buildLabels(
@@ -583,4 +632,8 @@ class ProjectDetailScreen extends StatelessWidget {
       }
     });
   }
+
+  void _showAddEditGroupsModel(BuildContext baseContext, Group group) {}
+
+  void _gotoGroupView() {}
 }
