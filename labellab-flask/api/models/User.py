@@ -31,7 +31,7 @@ class User(db.Model):
                                       cascade="all, save-update, delete",
                                       passive_deletes=True)
 
-    def __init__(self, name, username, email, password):
+    def __init__(self, name, username, email, password=None):
         """
         Initializes the user instance
         """

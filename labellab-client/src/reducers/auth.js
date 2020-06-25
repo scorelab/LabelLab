@@ -15,7 +15,13 @@ import {
   UPDATE_PASSWORD_FAILURE,
   OAUTH_LOGIN_REQUEST,
   OAUTH_LOGIN_SUCCESS,
-  OAUTH_LOGIN_FAILURE
+  OAUTH_LOGIN_FAILURE,
+  GITHUB_OAUTH_REQUEST,
+  GITHUB_OAUTH_SUCCESS,
+  GITHUB_OAUTH_FAILURE,
+  GITHUB_OAUTH_CALLBACK_REQUEST,
+  GITHUB_OAUTH_CALLBACK_SUCCESS,
+  GITHUB_OAUTH_CALLBACK_FAILURE
 } from '../constants/index'
 
 const initialState = {
@@ -34,7 +40,8 @@ const initialState = {
   passwordUpdatedMessage: '',
   verificationError: null,
   isEmailSending: false,
-  passwordUpdateError: null
+  passwordUpdateError: null,
+  githubResponse: ''
 }
 
 const auth = (state = initialState, action) => {
@@ -167,6 +174,45 @@ const auth = (state = initialState, action) => {
             action.error === 'Unauthorize' ? 'LOGIN FAILED!' : null,
           error: true,
           errField: action.other
+        }
+      case GITHUB_OAUTH_REQUEST:
+        return {
+          ...state,
+          isAuthenticating: true,
+        }
+      case GITHUB_OAUTH_SUCCESS:
+        return {
+          ...state,
+          error: false,
+          githubResponse: action.payload
+        }
+      case GITHUB_OAUTH_FAILURE:
+         return {
+          ...state,
+          isAuthenticated: false,
+          isAuthenticating: false,
+          statusText:
+            action.error === 'Unauthorize' ? 'LOGIN FAILED!' : null,
+          error: true,
+          errField: action.other
+         }
+      case GITHUB_OAUTH_CALLBACK_REQUEST:
+        return {
+          ...state,
+          isAuthenticating: true,
+        }
+      case GITHUB_OAUTH_CALLBACK_SUCCESS:
+        return {
+          ...state,
+          isAuthenticated: true,
+          isAuthenticating: false,
+          statusText: 'You are logged in successfully!',
+          error: false,
+          details: {
+            email: action.payload.email,
+            name: action.payload.name,
+            username: action.payload.login
+          }
         }
     default:
       return state

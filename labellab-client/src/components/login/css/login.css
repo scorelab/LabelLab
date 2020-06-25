@@ -38,3 +38,12 @@
 .login-form {
   margin-top: 2em;
 }
+
+.github-login {
+    width: 11vw;
+    height: 3rem;
+    background: black;
+    opacity: 0.6;
+    color: white;
+    box-shadow: 0px 1px 4px black;
+}
