@@ -1,6 +1,7 @@
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
+import 'package:labellab_mobile/model/group.dart';
 
 class Project {
   String id;
@@ -9,6 +10,7 @@ class Project {
   List<Member> members;
   List<Image> images;
   List<Label> labels;
+  List<Group> groups;
 
   Project(
       {this.id,
@@ -16,7 +18,8 @@ class Project {
       this.description,
       this.members,
       this.images,
-      this.labels});
+      this.labels,
+      this.groups});
 
   Project.fromJson(dynamic json, {bool isDense = false, String imageEndpoint}) {
     id = json["_id"];
@@ -42,6 +45,21 @@ class Project {
             (label) => Label.fromJson(label),
           )
           .toList();
+    }
+    if (json["groups"] != null && !isDense) {
+      groups = (json["groups"] as List)
+          .map((group) => Group.fromJson(group))
+          .toList();
+    } else {
+      // Mock code to generate groups
+      groups = [
+        Group(
+          id: "thisisarandomid",
+          name: "Test group 1",
+          projectId: id,
+          images: images,
+        )
+      ];
     }
   }
 
