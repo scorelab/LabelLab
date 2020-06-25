@@ -16,7 +16,10 @@ import {
   SAVE_MODEL_REQUEST,
   SAVE_MODEL_SUCCESS,
   SAVE_MODEL_FAILURE,
-  SET_EXPORT_TYPE
+  SET_EXPORT_TYPE,
+  TEST_MODEL_REQUEST,
+  TEST_MODEL_SUCCESS,
+  TEST_MODEL_FAILURE
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -174,5 +177,31 @@ export const saveModel = modelData => {
   }
   function failure(error) {
     return { type: SAVE_MODEL_FAILURE, payload: error }
+  }
+}
+
+export const testModel = modelData => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('POST', '/api/v1/models/test', modelData, true)
+      .then(res => {
+        dispatch(success())
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.message
+            ? dispatch(failure(err.response.message))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: TEST_MODEL_REQUEST }
+  }
+  function success() {
+    return { type: TEST_MODEL_SUCCESS }
+  }
+  function failure(error) {
+    return { type: TEST_MODEL_FAILURE, payload: error }
   }
 }

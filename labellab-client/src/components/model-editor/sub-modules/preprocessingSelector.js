@@ -6,8 +6,6 @@ import {
   Card,
   Header,
   Button,
-  Modal,
-  Dropdown,
   Label,
   Icon,
   Grid,

@@ -16,12 +16,16 @@ import {
   SAVE_MODEL_REQUEST,
   SAVE_MODEL_SUCCESS,
   SAVE_MODEL_FAILURE,
-  SET_EXPORT_TYPE
+  SET_EXPORT_TYPE,
+  TEST_MODEL_REQUEST,
+  TEST_MODEL_FAILURE,
+  TEST_MODEL_SUCCESS
 } from '../constants/index'
 
 const initialState = {
   modelActions: {
     isSaving: false,
+    isTesting: false,
     errors: ''
   },
   model: {
@@ -49,7 +53,9 @@ const initialState = {
     modelLoss: null,
     exportType: ""
   },
-  models: []
+  models: [],
+  testResult: []
+
 }
 
 const model = (state = initialState, action) => {
@@ -157,6 +163,29 @@ const model = (state = initialState, action) => {
         model: action.payload.model,
         modelActions: {
           isSaving: false
+        }
+      }
+    case TEST_MODEL_REQUEST:
+      return {
+        ...state,
+        modelActions: {
+          isTesting: true
+        }
+      }
+    case TEST_MODEL_FAILURE:
+      return {
+        ...state,
+        modelActions: {
+          isTesting: false,
+          errors: action.payload
+        }
+      }
+    case TEST_MODEL_SUCCESS:
+      return {
+        ...state,
+        testResult: action.payload,
+        modelActions: {
+          isTesting: false
         }
       }
     default:

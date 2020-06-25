@@ -1,0 +1,31 @@
+.model-tester-card {
+  text-align: center;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.progress-bar-list {
+  display: 'flex';
+  flex-direction: 'column';
+  width: 100%;
+}
+
+.test-card-top {
+  padding-left: 0.6em;
+  padding-right: 0.6em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-image {
+  max-height: 8em;
+  max-width: 10em;
+}
