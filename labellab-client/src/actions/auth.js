@@ -16,9 +16,16 @@ import {
   UPDATE_PASSWORD_FAILURE,
   OAUTH_LOGIN_REQUEST,
   OAUTH_LOGIN_SUCCESS,
-  OAUTH_LOGIN_FAILURE
+  OAUTH_LOGIN_FAILURE,
+  GITHUB_OAUTH_REQUEST,
+  GITHUB_OAUTH_SUCCESS,
+  GITHUB_OAUTH_FAILURE,
+  GITHUB_OAUTH_CALLBACK_REQUEST,
+  GITHUB_OAUTH_CALLBACK_SUCCESS,
+  GITHUB_OAUTH_CALLBACK_FAILURE
 } from '../constants/index'
 
+import axios from 'axios'
 import FetchApi from '../utils/FetchAPI'
 import { setToken, removeToken} from '../utils/token'
 
@@ -31,9 +38,13 @@ export const login = (username, password, callback) => {
     dispatch(request())
     FetchApi('POST', '/api/v1/auth/login', data)
       .then(res => {
-        if (res.data && res.data.token) {
-          setToken(TOKEN_TYPE, res.data.token)
-          dispatch(success(res.data.token))
+        if (res.data && res.data.access_token && res.data.refresh_token) {
+          const { access_token, refresh_token, body } = res.data
+          // Set token to Auth header
+          setAuthToken(access_token)
+          //Save to localstorage
+          saveAllTokens({ access_token, refresh_token, body })
+          dispatch(success(body))
           callback()
         }
       })
@@ -59,9 +70,23 @@ export const login = (username, password, callback) => {
 export const logout = callback => {
   return dispatch => {
     dispatch(request())
-    removeToken(TOKEN_TYPE)
-    dispatch(success())
-    callback()
+    FetchApi.post('/api/v1/auth/logout_access', {})
+    .then(() => {
+      FetchApi.post('/api/v1/auth/logout_refresh', {})
+        .then(() => {
+          // Remove tokens from local storage
+         setAuthToken(false)
+         removeAllTokens()
+         dispatch(success())
+         callback()
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    })
+    .catch(err => {
+      console.error(err)
+    })
   }
 
   function request() {
@@ -173,11 +198,15 @@ export const updatePassword = (email, username, password, resetPasswordToken) =>
 export const OauthUser = (credentials, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/auth/oauth', credentials)
+    FetchApi.post('/api/v1/auth/oauth', credentials)
       .then(res => {
-        if (res.data && res.data.token) {
-          setToken(TOKEN_TYPE, res.data.token)
-          dispatch(success(res.data.token))
+        if (res.data && res.data.access_token && res.data.refresh_token) {
+          const { access_token, refresh_token, body } = res.data
+          // Set token to Auth header
+          setAuthToken(access_token)
+          //Save to localstorage
+          saveAllTokens({ access_token, refresh_token, body })
+          dispatch(success(body))
           callback()
         }
       })
@@ -197,5 +226,73 @@ export const OauthUser = (credentials, callback) => {
   }
   function failure(error) {
     return { type: OAUTH_LOGIN_FAILURE, error }
+  }
+}
+
+export const GithubOauth = (credentials, callback) => {
+  return dispatch => {
+    const config = {
+      headers: {
+        'content-type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Accept': 'application/json'
+      }
+    };
+    dispatch(request())
+    axios.post('https://github.com/login/oauth/access_token', credentials, config)
+      .then(res => {
+        dispatch(success(res))
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: GITHUB_OAUTH_REQUEST }
+  }
+  function success(data) {
+    return { type: GITHUB_OAUTH_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: GITHUB_OAUTH_FAILURE, error }
+  }
+}
+
+export const GithubOauthCallback = (access_token, callback) => {
+  return dispatch => {
+    const config = {
+      headers: {
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Accept': 'application/json',
+        'Authorization': 'token ' + access_token
+      }
+    };
+    dispatch(request())
+    axios.get('https://api.github.com/user', config)
+      .then(res => {
+        dispatch(success(res.data))
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: GITHUB_OAUTH_CALLBACK_REQUEST }
+  }
+  function success(data) {
+    return { type: GITHUB_OAUTH_CALLBACK_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: GITHUB_OAUTH_CALLBACK_FAILURE, error }
   }
 }
