@@ -11,6 +11,7 @@ import CustomBuilder from './sub-modules/customBuilder'
 import Exporter from "./sub-modules/exporter"
 
 import './css/classifierEditor.css'
+import ModelTester from './sub-modules/modelTester'
 
 class ClassifierEditor extends Component {
   getBuilderType = () => {
@@ -49,6 +50,7 @@ class ClassifierEditor extends Component {
             <Header>Export/Test</Header>
           </Segment>
           <TrainingGraphs />
+          <ModelTester />
           <Exporter />
           <Button positive fluid onClick={() => saveModel(model)}>
             Save Changes
