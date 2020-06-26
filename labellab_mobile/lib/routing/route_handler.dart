@@ -17,6 +17,8 @@ import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_screen.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_screen.dart';
+import 'package:labellab_mobile/screen/project/view_group/project_view_group_bloc.dart';
+import 'package:labellab_mobile/screen/project/view_group/project_view_group_screen.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_image/project_view_image_screen.dart';
 import 'package:labellab_mobile/screen/project/view_image_path/project_image_path_bloc.dart';
@@ -103,6 +105,16 @@ var viewImageHandler = Handler(
         params['project_id'].first, params['image_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectViewImageScreen(),
+  );
+});
+
+var viewGroupHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ProjectViewGroupBloc>(
+    builder: (context) => ProjectViewGroupBloc(
+        params['project_id'].first, params['group_id'].first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ProjectViewGroupScreen(),
   );
 });
 

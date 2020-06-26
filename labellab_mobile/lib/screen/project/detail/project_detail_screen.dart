@@ -120,12 +120,13 @@ class ProjectDetailScreen extends StatelessWidget {
                       _state.isSelecting,
                       _state.selectedImages)
                   : SliverFillRemaining(),
-              _state.project != null
-                  ? _buildGroupsHeading(context, _state.project.groups)
-                  : SliverFillRemaining(),
-              _state.project != null && _state.project.groups != null
-                  ? _buildGroups(context, _state.project.groups)
-                  : SliverFillRemaining(),
+              // _state.project != null
+              //     ? _buildGroupsHeading(context, _state.project.groups)
+              //     : SliverFillRemaining(),
+              // _state.project != null && _state.project.groups != null
+              //     ? _buildGroups(
+              //         context, _state.project.id, _state.project.groups)
+              //     : SliverFillRemaining(),
               _state.project != null && _state.project.labels != null
                   ? _buildLabels(
                       context, _state.project.id, _state.project.labels)
@@ -377,17 +378,19 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGroups(BuildContext context, List<Group> groups) {
+  Widget _buildGroups(
+      BuildContext context, String projectId, List<Group> groups) {
     return SliverPadding(
       padding: EdgeInsets.only(bottom: 8, left: 16, right: 16),
       sliver: SliverGrid.count(
           mainAxisSpacing: 8,
           crossAxisSpacing: 8,
-          crossAxisCount: 4,
+          crossAxisCount: 2,
+          childAspectRatio: 2,
           children: groups
               .map((group) => InkWell(
                     child: GroupItem(group),
-                    onTap: _gotoGroupView,
+                    onTap: () => _gotoViewGroup(context, projectId, group.id),
                   ))
               .toList()),
     );
@@ -566,6 +569,14 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
+  void _gotoViewGroup(BuildContext context, String projectId, String groupId) {
+    Application.router
+        .navigateTo(context, "/project/$projectId/group/$groupId")
+        .whenComplete(() {
+      Provider.of<ProjectDetailBloc>(context).refresh();
+    });
+  }
+
   void _showProjectDeleteConfirmation(
       BuildContext baseContext, Project project) {
     showDialog<bool>(
@@ -649,6 +660,4 @@ class ProjectDetailScreen extends StatelessWidget {
       }
     });
   }
-
-  void _gotoGroupView() {}
 }

@@ -50,6 +50,7 @@ abstract class LabelLabAPI {
   // Group
   Future<ApiResponse> createGroup(String token, String projectId, Group group);
   Future<ApiResponse> updateGroup(String token, Group group);
+  Future<Group> getGroup(String token, String groupId);
 
   // Label
   Future<List<Label>> getLabels(String token, String projectId);
