@@ -423,6 +423,23 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<Group> getGroup(String token, String id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_GROUP + "/$id/get", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return Group.fromJson(response.data['body']);
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+  @override
   Future<List<Label>> getLabels(String token, String projectId) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},

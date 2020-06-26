@@ -198,6 +198,11 @@ class Repository {
     return _api.updateGroup(accessToken, group);
   }
 
+  Future<Group> getGroup(String groupId) {
+    if (accessToken == null) return Future(null);
+    return _api.getGroup(accessToken, groupId);
+  }
+
   // Label
   Future<ApiResponse> createLabel(String projectId, Label label) {
     if (accessToken == null) return Future(null);

@@ -52,14 +52,7 @@ class Project {
           .toList();
     } else {
       // Mock code to generate groups
-      groups = [
-        Group(
-          id: "thisisarandomid",
-          name: "Test group 1",
-          projectId: id,
-          images: images,
-        )
-      ];
+      groups = [Group.mock(id, images)];
     }
   }
 

@@ -22,4 +22,10 @@ class Group {
       "projectId": projectId,
     };
   }
+
+  // Creates a mock group for testing
+  Group.mock(this.projectId, this.images) {
+    id = "thisisarandomid";
+    name = "Test group 1";
+  }
 }
