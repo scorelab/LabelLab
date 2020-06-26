@@ -25,10 +25,10 @@ Some of the highlighting features of it are:<br/>
 1. First we need to upload an image and then select the `edit` option on the right next to the image.<br/>
 ![Image of project->images](https://github.com/scorelab/labellab/reference/images/edit-elephant-1.png)
 2. Then we need to create labels and give them name according to the users needs and labels can be on two types:<br/>
-![Image of labels in project sidebar](https://github.com/scorelab/labellab/reference/images/labels.png)
-*Bounding-box<br/>
-![Image of an example of bounding box](https://github.com/scorelab/labellab/reference/images/bounding-box.png)
-*Polygon figure<br/>
+![Image of labels in project sidebar](https://github.com/scorelab/labellab/reference/images/labels.png)<br/>
+* Bounding-box<br/>
+![Image of an example of bounding box](https://github.com/scorelab/labellab/reference/images/bounding-box.png)<br/>
+* Polygon figure<br/>
 ![Image of an example of polygon figure](https://github.com/scorelab/labellab/reference/images/polygon.png)
 3. The when we open the labeller we can choose any of the above two types of labels to label an image.<br/>
 ![Image of an example of polygon figure](https://github.com/scorelab/labellab/reference/images/labeller.png)
