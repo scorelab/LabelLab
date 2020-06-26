@@ -6,6 +6,7 @@ import 'package:labellab_mobile/data/remote/dto/register_response.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
@@ -45,6 +46,10 @@ abstract class LabelLabAPI {
   Future<ApiResponse> deleteImage(String token, String imageId);
   Future<ApiResponse> deleteImages(String token, List<String> imageIds);
   Future<List<Location>> getImagePath(String token, String imageId);
+
+  // Group
+  Future<ApiResponse> createGroup(String token, String projectId, Group group);
+  Future<ApiResponse> updateGroup(String token, Group group);
 
   // Label
   Future<List<Label>> getLabels(String token, String projectId);

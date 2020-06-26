@@ -10,6 +10,7 @@ import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
@@ -51,6 +52,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove";
 
   static const ENDPOINT_IMAGE = "image";
+
+  static const ENDPOINT_GROUP = "group";
 
   static const ENDPOINT_LABEL = "label";
 
@@ -388,6 +391,35 @@ class LabelLabAPIImpl extends LabelLabAPI {
               .map((location) => Location.fromJson(location))
               .toList(),
         );
+  }
+
+  @override
+  Future<ApiResponse> createGroup(String token, String projectId, Group group) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    final data = {
+      "group": group.toMap(),
+    };
+    return _dio
+        .post(API_URL + ENDPOINT_GROUP + "/$projectId/create",
+            options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> updateGroup(String token, Group group) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .put(API_URL + ENDPOINT_GROUP + "/${group.id}/update",
+            options: options, data: group.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
   }
 
   @override
