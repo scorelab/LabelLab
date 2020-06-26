@@ -1,5 +1,4 @@
 import 'package:labellab_mobile/model/image.dart';
-import 'package:labellab_mobile/model/project.dart';
 
 class Group {
   String id;

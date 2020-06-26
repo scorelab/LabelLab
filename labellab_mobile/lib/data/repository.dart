@@ -10,6 +10,7 @@ import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 import 'package:labellab_mobile/model/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
@@ -184,6 +185,17 @@ class Repository {
   Future<List<Location>> getImagePath(String imageId) {
     if (accessToken == null) return Future(null);
     return _api.getImagePath(accessToken, imageId);
+  }
+
+  // Group
+  Future<ApiResponse> createGroup(String projectId, Group group) {
+    if (accessToken == null) return Future(null);
+    return _api.createGroup(accessToken, projectId, group);
+  }
+
+  Future<ApiResponse> updateGroup(Group group) {
+    if (accessToken == null) return Future(null);
+    return _api.updateGroup(accessToken, group);
   }
 
   // Label

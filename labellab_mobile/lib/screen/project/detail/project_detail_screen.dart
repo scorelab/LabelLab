@@ -10,6 +10,7 @@ import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/add_edit_group/add_edit_group.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
@@ -633,7 +634,21 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _showAddEditGroupsModel(BuildContext baseContext, Group group) {}
+  void _showAddEditGroupsModel(BuildContext baseContext, Group group) {
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return AddEditGroupDialog(
+          Provider.of<ProjectDetailBloc>(baseContext).projectId,
+          group: group,
+        );
+      },
+    ).then((bool isSuccess) {
+      if (isSuccess) {
+        Provider.of<ProjectDetailBloc>(baseContext).refresh();
+      }
+    });
+  }
 
   void _gotoGroupView() {}
 }
