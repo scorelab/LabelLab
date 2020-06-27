@@ -180,7 +180,7 @@ class Dashboard extends Component {
             <Button
               icon
               positive
-              className=""
+              className="create-project"
               onClick={this.handleCreateProject}
               labelPosition="left"
             >
