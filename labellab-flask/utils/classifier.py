@@ -1,7 +1,9 @@
 import pandas as pd
+import numpy as np
 import tensorflow as tf
+import json
 import os
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array 
 
 from utils.layer import FlattenLayer, DenseLayer, DropoutLayer, GlobalAveragePooling2DLayer, ActivationLayer, Conv2DLayer, MaxPool2DLayer, get_setting
 from utils.preprocessing import get_preprocessing_steps
@@ -206,8 +208,15 @@ class Classifier:
                         epochs=self.epochs,
                         callbacks=[self.plot_losses])
 
-    # Save the model in SavedModel format
+    # Save the model in given format
     def save(self, directory, model_id, type="savedmodel"):
+        # Save the class indices for use during prediction
+        model_classes = json.dumps(self.train_generator.class_indices)
+        model_classes = json.loads(model_classes)
+        model_classes_url = directory + f"/{model_id}/model_classes.json"
+        with open(model_classes_url, "w") as f:
+            json.dump(model_classes, f)
+
         if type == "savedmodel":
             tf.io.gfile.mkdir(directory)
             tf.io.gfile.mkdir(directory + f"/{model_id}")
@@ -223,3 +232,29 @@ class Classifier:
             tf.io.gfile.mkdir(directory + f"/{model_id}")
             tf.io.gfile.mkdir(directory + f"/{model_id}" + "/onnx")
             os.popen(f"python -m tf2onnx.convert --saved-model {directory}/{model_id}/savedmodel --output {directory}/{model_id}/onnx/saved_model.onnx").read()
+
+    # Test the model on an image
+    def evaluate(self, directory, classes_directory, model_id, file):
+        tf.io.gfile.mkdir(directory)
+        tf.io.gfile.mkdir(directory + f"/{model_id}")
+        file.save(directory + f"/{model_id}/testfile.PNG")
+
+        img_path = directory + f"/{model_id}/testfile.PNG"
+        img = load_img(img_path, target_size=TARGET_SIZE)
+        x = img_to_array(img)
+        x = np.expand_dims(x, axis=0)
+
+        preds = self.model.predict(x)
+        preds = preds[0].tolist()
+
+        with open(classes_directory + f"/{model_id}/model_classes.json") as f:
+            model_classes = json.load(f)
+
+        result = {}
+
+        for key, value in model_classes.items():
+            if preds[value] >= 0:
+                result[key] = preds[value]
+
+        return result
+        

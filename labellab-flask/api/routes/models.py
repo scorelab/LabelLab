@@ -21,3 +21,9 @@ modelsprint.add_url_rule(
     view_func=modelscontroller.modelController["export"],
     methods=["GET"]
 )
+
+modelsprint.add_url_rule(
+    "/models/test/<int:model_id>",
+    view_func=modelscontroller.modelController["test"],
+    methods=["POST"]
+)
