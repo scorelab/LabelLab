@@ -206,7 +206,7 @@ export const OauthUser = (credentials, callback) => {
           setAuthToken(access_token)
           //Save to localstorage
           saveAllTokens({ access_token, refresh_token, body })
-          dispatch(success(body))
+          dispatch(success(res.data))
           callback()
         }
       })

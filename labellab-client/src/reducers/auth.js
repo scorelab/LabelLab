@@ -159,10 +159,10 @@ const auth = (state = initialState, action) => {
           ...state,
           isAuthenticated: true,
           isAuthenticating: false,
-          statusText: 'You are logged in successfully!',
+          statusText: action.payload.msg,
           error: false,
           details: {
-            email: action.payload.email
+            email: action.payload.body.email
           }
         }
       case OAUTH_LOGIN_FAILURE:
@@ -170,8 +170,7 @@ const auth = (state = initialState, action) => {
           ...state,
           isAuthenticated: false,
           isAuthenticating: false,
-          statusText:
-            action.error === 'Unauthorize' ? 'LOGIN FAILED!' : null,
+          statusText: action.err,
           error: true,
           errField: action.other
         }
