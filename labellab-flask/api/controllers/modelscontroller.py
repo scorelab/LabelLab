@@ -13,6 +13,51 @@ from api.models.Label import Label
 from api.models.LabelData import LabelData
 from utils.classifier import Classifier
 
+class Test(MethodView):
+    """
+    This method tests a trained model using an image
+    """
+
+    @jwt_required
+    def post(self, model_id):
+        """Handle POST request for this view. Url --> /api/models/test/<int:model_id>"""
+
+        try:
+            model_id = model_id
+            image = request.files['imagefile']
+
+        except Exception as err:
+            response = {"message": "Please provide all the required fields."}
+            return make_response(jsonify(response)), 404
+
+        model = MLModel.find_by_id(model_id)
+
+        if model:
+
+            """Load the classifier and use image for testing."""
+            try:
+                # Load model
+                cl = Classifier()
+                cl.load_model(f"./model_files/models/{model_id}/savedmodel")
+                test_result = cl.evaluate(config["development"].ML_FILES_DIR + "/test_img", config["development"].ML_FILES_DIR + "/models", model_id, image)
+
+            except Exception as err:
+                print("Error occurred: ", err)
+                response = {"message": "Something went wrong while training!!"}
+                return make_response(jsonify(response)), 500
+
+            response = {"result": test_result}
+
+            # return a response notifying the user that the model has been tested
+            # successfully
+            return make_response(jsonify(response)), 201
+        else:
+            # There is no model with the given id.
+            response = {
+                "message": "Model with given id does not exist. Please try again."}
+            return make_response(jsonify(response)), 401
+
+
 class Export(MethodView):
     """
     This method exports a model
@@ -263,5 +308,6 @@ class Save(MethodView):
 modelController = {
     "save": Save.as_view("save"),
     "train": Train.as_view("train"),
-    "export": Export.as_view("export")
+    "export": Export.as_view("export"),
+    "test": Test.as_view("test")
 }
