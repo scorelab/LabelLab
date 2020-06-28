@@ -17,6 +17,7 @@ class Label(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label_name = db.Column(db.String(128), nullable=False,)
     label_type = db.Column(db.String(80), nullable=False,)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     count = db.Column(db.Integer,
                    default = 0)
     project_id = db.Column(db.Integer, 
