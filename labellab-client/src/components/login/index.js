@@ -134,6 +134,7 @@ class LoginIndex extends Component {
                 <label>E-mail address</label>
                 <Input
                   type="text"
+                  className="email"
                   placeholder="E-mail address"
                   name="email"
                   value={email}
@@ -152,6 +153,7 @@ class LoginIndex extends Component {
                 <Input
                   type={this.state.showPassword ? 'text' : 'password'}
                   placeholder="Password"
+                  className="password"
                   name="password"
                   value={password}
                   onChange={this.handleChange}
