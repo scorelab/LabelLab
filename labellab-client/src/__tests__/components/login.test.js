@@ -44,7 +44,7 @@ describe('Login Component', () => {
         const component = findByTestAttr(wrapper, 'email');
         expect(component.length).toBe(1);
     })
-    it('Should have a email form', () => {
+    it('Should have a password form', () => {
         const component = findByTestAttr(wrapper, 'password');
         expect(component.length).toBe(1);
     })
