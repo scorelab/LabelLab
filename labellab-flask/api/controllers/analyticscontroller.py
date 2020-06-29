@@ -115,7 +115,7 @@ class CountLabel(MethodView):
             return make_response(jsonify(response)), 500
 
 
-labelController = {
+analyticsController = {
     "time_label": TimeLabel.as_view("time_label"),
     "label_counts": CountLabel.as_view("label_counts")
 }
