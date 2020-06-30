@@ -55,7 +55,7 @@ class GetAllTeams(MethodView):
 
             response = {
             "success": True,
-            "msg": "Projects fetched successfully.",
+            "msg": "Teams fetched successfully.",
             "body": all_teams
             }
 
