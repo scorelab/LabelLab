@@ -19,7 +19,10 @@ import {
   SET_EXPORT_TYPE,
   TEST_MODEL_REQUEST,
   TEST_MODEL_SUCCESS,
-  TEST_MODEL_FAILURE
+  TEST_MODEL_FAILURE,
+  UPLOAD_MODEL_REQUEST,
+  UPLOAD_MODEL_SUCCESS,
+  UPLOAD_MODEL_FAILURE
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -203,5 +206,31 @@ export const testModel = modelData => {
   }
   function failure(error) {
     return { type: TEST_MODEL_FAILURE, payload: error }
+  }
+}
+
+export const uploadModel = modelData => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('POST', '/api/v1/models/upload', modelData, true)
+      .then(res => {
+        dispatch(success())
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.message
+            ? dispatch(failure(err.response.message))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: UPLOAD_MODEL_REQUEST }
+  }
+  function success() {
+    return { type: UPLOAD_MODEL_SUCCESS }
+  }
+  function failure(error) {
+    return { type: UPLOAD_MODEL_FAILURE, payload: error }
   }
 }

@@ -5,9 +5,10 @@ import { Grid, Segment, Header, Button } from 'semantic-ui-react'
 
 import LabelSelector from './sub-modules/labelSelector'
 import PreprocessingSelector from './sub-modules/preprocessingSelector'
-import TransferLearningBuilder from './sub-modules/transferLearningBuilder'
-import TrainingGraphs from './sub-modules/trainingGraphs'
 import CustomBuilder from './sub-modules/customBuilder'
+import TransferLearningBuilder from './sub-modules/transferLearningBuilder'
+import UploadBuilder from './sub-modules/uploadBuilder'
+import TrainingGraphs from './sub-modules/trainingGraphs'
 import Exporter from "./sub-modules/exporter"
 
 import './css/classifierEditor.css'
@@ -22,6 +23,8 @@ class ClassifierEditor extends Component {
         return <TransferLearningBuilder />
       case "custom":
         return <CustomBuilder />
+      case "upload":
+        return <UploadBuilder />
       default:
         return <div>Error loading component</div>
     }

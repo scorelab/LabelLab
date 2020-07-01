@@ -1,0 +1,17 @@
+.upload-model-card {
+  text-align: center;
+}
+
+.question-icon {
+  cursor: pointer;
+  padding: 1em;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}

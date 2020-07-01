@@ -19,7 +19,10 @@ import {
   SET_EXPORT_TYPE,
   TEST_MODEL_REQUEST,
   TEST_MODEL_FAILURE,
-  TEST_MODEL_SUCCESS
+  TEST_MODEL_SUCCESS,
+  UPLOAD_MODEL_REQUEST,
+  UPLOAD_MODEL_FAILURE,
+  UPLOAD_MODEL_SUCCESS
 } from '../constants/index'
 
 const initialState = {
@@ -184,6 +187,28 @@ const model = (state = initialState, action) => {
       return {
         ...state,
         testResult: action.payload,
+        modelActions: {
+          isTesting: false
+        }
+      }
+    case UPLOAD_MODEL_REQUEST:
+      return {
+        ...state,
+        modelActions: {
+          isTesting: true
+        }
+      }
+    case UPLOAD_MODEL_FAILURE:
+      return {
+        ...state,
+        modelActions: {
+          isTesting: false,
+          errors: action.payload
+        }
+      }
+    case UPLOAD_MODEL_SUCCESS:
+      return {
+        ...state,
         modelActions: {
           isTesting: false
         }
