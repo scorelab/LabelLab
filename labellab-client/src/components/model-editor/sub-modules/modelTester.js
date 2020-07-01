@@ -32,7 +32,7 @@ class ModelTester extends React.Component {
         return (
             <Card centered className="model-tester-card" fluid>
                 <Card.Content>
-                    <Header as="h1">Test</Header>
+                    <Header>Test</Header>
                 </Card.Content>
                 <Card.Content>
                     <div className="test-card-top">
