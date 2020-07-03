@@ -12,7 +12,7 @@ import FetchApi from '../../utils/FetchAPI'
 export const addMember = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/project/add/' + data.projectId, data, true)
+    FetchApi.post('/api/v1/project/add_project_member/' + data.projectId, data)
       .then(res => {
         dispatch(success())
         callback()
@@ -39,10 +39,9 @@ export const addMember = (data, callback) => {
 export const memberDelete = (email, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi(
-      'POST',
+    FetchApi.post(
       '/api/v1/project/remove/' + projectId,
-      { memberEmail: email },
+      { member_email: email },
       true
     )
       .then(res => {

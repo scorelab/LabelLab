@@ -9,7 +9,7 @@ import FetchApi from '../utils/FetchAPI'
 export const userRegister = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/auth/register', data)
+    FetchApi.post('/api/v1/auth/register', data)
       .then(() => {
         dispatch(success())
         callback()
