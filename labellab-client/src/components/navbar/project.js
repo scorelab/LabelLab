@@ -19,9 +19,9 @@ import './css/navbar.css'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
-const resultRenderer = ({ imageName, createdAt }) => (
+const resultRenderer = ({ image_name, createdAt }) => (
   <>
-    <Label content={imageName} />
+    <Label content={image_name} />
     <Label content={new Date(createdAt).toISOString().substring(0, 10)} />
   </>
 )
@@ -37,7 +37,7 @@ class ProjectNavbar extends Component {
   handleResultSelect = (e, { result }) => {
     const { projectId } = this.props.project
     this.setState({
-      value: result.imageName,
+      value: result.image_name,
       projectId: projectId
     })
     this.props.history.push('/project/' + projectId + '/images/#' + result._id)
@@ -50,7 +50,7 @@ class ProjectNavbar extends Component {
       if (this.state.value.length < 1) return this.setState(initialState)
 
       const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
-      const isMatch = result => re.test(result.imageName)
+      const isMatch = result => re.test(result.image_name)
 
       this.setState({
         isLoading: false,
@@ -158,15 +158,15 @@ ProjectNavbar.propTypes = {
 }
 
 const mapStateToProps = state => {
-  const imageName = state.projects.currentProject.images
-    ? state.projects.currentProject.images.map(image => image.imageName)
+  const image_name = state.projects.currentProject.images
+    ? state.projects.currentProject.images.map(image => image.image_name)
     : null
   return {
     labels: state.labels.labels,
     project: state.projects.currentProject,
     user: state.user.userDetails,
     isfetching: state.user.userActions.isfetching,
-    imageName
+    image_name
   }
 }
 

@@ -15,7 +15,7 @@ export const initProject = (data, callback) => {
     FetchApi.post('/api/v1/project/create', data)
       .then(res => {
         dispatch(success(res.data.body))
-        callback(res.data.body.id)
+        callback(res.data.body.project.id)
       })
       .catch(err => {
         if (err.response) {

@@ -14,6 +14,7 @@ class LabelItem extends Component {
   render() {
     const { index, label, options } = this.props
     const { onChange, onDelete, onUpdate } = this.props
+    console.log(label)
     return (
       <Table.Row key={index}>
         <Table.Cell collapsing>
@@ -23,7 +24,7 @@ class LabelItem extends Component {
           <Input
             placeholder="Label name"
             control="input"
-            defaultValue={label.name}
+            defaultValue={label.label_name}
             onChange={e => {
               onChange('name', e.target.value)
               this.setState({
@@ -35,7 +36,7 @@ class LabelItem extends Component {
         <Table.Cell>
           <Select
             options={options}
-            defaultValue={label.type}
+            defaultValue={label.label_type}
             onChange={(e, change) => {
               onChange('type', change.value)
               this.setState({

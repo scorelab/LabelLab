@@ -233,7 +233,7 @@ class LabelingApp extends Component {
   render() {
     const {
       labels,
-      imageUrl,
+      image_url,
       projectUrl,
       // reference,
       onBack,
@@ -337,7 +337,7 @@ class LabelingApp extends Component {
           <div style={{ flex: 4, display: 'flex', flexDirection: 'column' }}>
             <div style={{ position: 'relative', height: '100%' }}>
               <Canvas
-                url={imageUrl}
+                url={image_url}
                 height={height}
                 width={width}
                 figures={allFigures}

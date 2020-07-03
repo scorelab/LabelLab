@@ -77,6 +77,7 @@ const project = (state = initialState, action) => {
         }
       }
     case FETCH_PROJECT_SUCCESS:
+      console.log(action.payload)
       return {
         ...state,
         projectActions: {

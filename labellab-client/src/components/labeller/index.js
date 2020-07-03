@@ -47,7 +47,7 @@ class LabelingLoader extends Component {
     const len = allImages && allImages.length
     allImages &&
       allImages.map((image, index) => {
-        if (image._id === match.params.imageId) {
+        if (image.id === match.params.imageId) {
           if (index === 0) {
             if (len <= 1) {
               this.setState(
@@ -94,17 +94,17 @@ class LabelingLoader extends Component {
     const props = {
       onBack: () => {
         return !disableBack
-          ? history.push(`/labeller/${match.params.projectId}/${prev._id}`)
+          ? history.push(`/labeller/${match.params.projectId}/${prev.id}`)
           : null
       },
       onSkip: () => {
         return !disableNext
-          ? history.push(`/labeller/${match.params.projectId}/${next._id}`)
+          ? history.push(`/labeller/${match.params.projectId}/${next.id}`)
           : null
       },
       onLabelChange: this.pushUpdate.bind(this)
     }
-    const title = image && image.imageName
+    const title = image && image.image_name
     return (
       <DocumentMeta title={title}>
         {labelActions.isfetching || imageActions.isfetching ? (
@@ -115,12 +115,12 @@ class LabelingLoader extends Component {
           <LabelingApp
             labels={lab}
             labelData={(img && img.labelData) || {}}
-            imageUrl={
+            image_url={
               process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
-                ? image.imageUrl
-                : `${process.env.REACT_APP_HOST}:${
+                ? image.image_url
+                : `http://${process.env.REACT_APP_HOST}:${
                     process.env.REACT_APP_SERVER_PORT
-                  }/static/uploads/${image.imageUrl}?${Date.now()}`
+                  }/static/uploads/${image.project_id}/${image.image_url}`
             }
             projectUrl={`/project/${match.params.projectId}/images`}
             demo={false}

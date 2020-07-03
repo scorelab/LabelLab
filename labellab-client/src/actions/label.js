@@ -22,7 +22,7 @@ import FetchApi from '../utils/FetchAPI'
 export const fetchLabels = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/label/' + projectId + '/get', null, true)
+    FetchApi.get('/api/v1/label/get/' + projectId)
       .then(res => {
         dispatch(success(res.data.body))
         callback()
@@ -49,11 +49,9 @@ export const fetchLabels = (projectId, callback) => {
 export const createLabel = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi(
-      'POST',
-      '/api/v1/label/' + data.projectId + '/create',
-      { label: data },
-      true
+    FetchApi.post(
+      '/api/v1/label/create/' + data.projectId,
+      data
     )
       .then(res => {
         dispatch(success())
@@ -107,7 +105,7 @@ export const updateLabels = (image_id, labelData) => {
 export const updateALabel = (label_id, labelData ,callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('PUT', '/api/v1/label/' + label_id + '/update', labelData, true)
+    FetchApi.put('/api/v1/label/label_info/' + label_id, labelData)
       .then(res => {
         dispatch(success())
         callback()

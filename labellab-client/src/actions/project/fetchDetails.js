@@ -38,7 +38,7 @@ export const fetchAllProject = () => {
 export const fetchProject = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.get(`/api/v1/project/project_info${data}`)
+    FetchApi.get(`/api/v1/project/project_info/${data}`)
       .then(res => {
         dispatch(success(res.data.body))
         callback()

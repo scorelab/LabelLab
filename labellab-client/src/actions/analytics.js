@@ -12,11 +12,8 @@ import FetchApi from '../utils/FetchAPI'
 export const getTimeLabel = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi(
-      'GET',
-      '/api/v1/analytics/' + projectId + '/timeLabel/get',
-      null,
-      true
+    FetchApi.get(
+      '/api/v1/time_label/get/' + projectId
     )
       .then(res => {
         dispatch(success(res.data.body))
@@ -44,11 +41,8 @@ export const getTimeLabel = (projectId, callback) => {
 export const getLabelCount = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi(
-      'GET',
-      '/api/v1/analytics/' + projectId + '/labelCount/get',
-      null,
-      true
+    FetchApi.get(
+      '/api/v1/label_counts/get/' + projectId
     )
       .then(res => {
         dispatch(success(res.data.body))
