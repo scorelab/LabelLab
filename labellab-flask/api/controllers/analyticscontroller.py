@@ -3,6 +3,7 @@ from flask import make_response, request, jsonify, current_app
 from flask_jwt_extended import (
     jwt_required
 )
+from datetime import datetime
 
 from api.config import config
 from api.models.Label import Label
@@ -32,18 +33,18 @@ class TimeLabel(MethodView):
             return make_response(jsonify(response)), 400
         try:
             labels = find_all_by_project_id(project_id)
-            if labels is None:
+            if not labels:
                 response = {
                     "success": False,
                     "msg": "No labels present in project."
                 }
-                return make_response(jsonify(response)), 400
+                return make_response(jsonify(response)), 200
             
             label_data = []
             for label in labels:
-                timestamp = label["created_at"]
-                month = timestamp.strftime("%m")
-                label_data.append(month)
+                date_time =  datetime.strptime(label["created_at"], '%Y-%m-%d %H:%M:%S')
+                month = date_time.strftime("%m")
+                label_data.append(int(month))
 
             data = {
                 "labels": get_months(6),
@@ -62,7 +63,8 @@ class TimeLabel(MethodView):
                 }
             return make_response(jsonify(response)), 200
 
-        except Exception:
+        except Exception as err:
+            print(err)
             response = {
                 "success": False,
                 "msg": "Something went wrong!"
@@ -88,12 +90,13 @@ class CountLabel(MethodView):
 
             labels = find_all_by_project_id(project_id)
 
-            if labels is None:
+            if not labels:
                 response = {
                     "success": False,
-                    "msg": "No labels present in this project."
+                    "msg": "No labels present in this project.",
+                    "body": {}
                 }
-                return make_response(jsonify(response)), 400
+                return make_response(jsonify(response)), 200
 
             count_data = get_label_counts(labels)
 

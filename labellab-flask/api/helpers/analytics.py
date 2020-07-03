@@ -35,7 +35,7 @@ months = [
 def get_color(num):
     final = []
 
-    for i in range(len(num)):
+    for i in range(num):
         final.append(colors[i%len(colors)])
 
     return final
@@ -45,7 +45,7 @@ def get_months(num):
     current_date = datetime.now()
     current_month = current_date.strftime("%m")
 
-    start = len(months) + current_month
+    start = len(months) + int(current_month)
     end = start - num
 
     for i in range(start, end, -1):
@@ -60,7 +60,7 @@ def get_label_data(label_data):
     current_month = current_date.strftime("%m")
 
     for i in range(len(label_data)):
-        final[current_month - label_data[i]]++
+        final[int(current_month) - label_data[i]]+=1
     
     return final
 
@@ -77,7 +77,7 @@ def get_label_counts(labels):
     }
 
     for label in labels:
-        count_data["labels"].append(label["name"])
+        count_data["labels"].append(label["label_name"])
         if label["count"]:
             count_data["datasets"][0]["data"].append(label["count"])
         else:
