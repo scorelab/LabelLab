@@ -40,7 +40,7 @@ class CreateLabel(MethodView):
             }
             return make_response(jsonify(response)), 400
         
-        if not allowed_labels.index(label_type):
+        if label_type not in allowed_labels:
                 print("Error occured: label type not allowed")
                 response = {
                         "success": False,
@@ -92,12 +92,13 @@ class GetAllLabels(MethodView):
 
             labels = find_all_by_project_id(project_id)
 
-            if labels is None:
+            if not labels:
                 response = {
                     "success": False,
-                    "msg": "Labels not found."
+                    "msg": "Labels not found.",
+                    "body": {}
                 }
-                return make_response(jsonify(response)), 404
+                return make_response(jsonify(response)), 200
 
             response = {
                 "success": True,
@@ -178,21 +179,20 @@ class LabelInfo(MethodView):
 
     @jwt_required
     def put(self, label_id):
-        """Handle PUT request for this view. Url --> /api/v1/Label/update"""
+        """Handle PUT request for this view. Url --> /api/v1/Label/<int:label_id>"""
         # getting JSON data from request
         post_data = request.get_json(silent=True,
                                      force=True)
         try:
             label_name = post_data["label_name"]
             label_type = post_data["label_type"]
-
         except Exception:
             response = {
                 "success": False,
                 "msg": "Please provide all the required fields."}
             return make_response(jsonify(response)), 400
         
-        if not allowed_labels.index(label_type):
+        if label_type not in allowed_labels:
                 print("Error occured: label type not allowed")
                 response = {
                         "success": False,

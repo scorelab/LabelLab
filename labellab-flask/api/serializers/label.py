@@ -13,5 +13,6 @@ class LabelSchema(ma.ModelSchema):
     label_type = fields.Str()
     count = fields.Int()
     project_id = fields.Int(dump_only=True)
+    created_at = fields.DateTime(format='%Y-%m-%d %H:%M:%S', dump_only=True)
     labelsdata = fields.Nested(LabelDataSchema, many=True)
     

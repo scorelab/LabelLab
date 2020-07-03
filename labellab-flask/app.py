@@ -17,6 +17,5 @@ app = create_app(os.getenv("FLASK_CONFIG") or "default")
 def default_route(path):
     return render_template('index.html')
 
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
