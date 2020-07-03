@@ -106,7 +106,7 @@ class GetAllImages(MethodView):
         try:
             images = find_images(project_id)
 
-            if images is None:
+            if not images:
                 response = {
                     "success": False,
                     "msg": "Images not found."

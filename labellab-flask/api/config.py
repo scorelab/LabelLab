@@ -18,7 +18,7 @@ class Config:
     JWT_SECRET_KEY = os.environ.get("SECRET_KEY") or "very big secret"
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh"]
-    LABELS_ALLOWED = ["rectangle","polygon"]
+    LABELS_ALLOWED = ["bbox","polygon"]
     @staticmethod
     def init_app(app):
         pass

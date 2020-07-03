@@ -108,7 +108,7 @@ class TeamInfo(MethodView):
         current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
         
-        if not roles.index("admin"):
+        if "admin" not in roles:
             print("Error occured: user not admin")
             response = {
                     "success": False,
@@ -144,7 +144,7 @@ class TeamInfo(MethodView):
         current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
         
-        if not roles.index("admin"):
+        if "admin" not in roles:
             print("Error occured: user not admin")
             response = {
                     "success": False,
@@ -214,7 +214,7 @@ class AddTeamMember(MethodView):
         current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
 
-        if not roles.index("admin"):
+        if "admin" not in roles:
             print("Error occured: user not admin")
             response = {
                     "success": False,
@@ -279,7 +279,7 @@ class RemoveTeamMember(MethodView):
         current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
 
-        if not roles.index("admin"):
+        if "admin" not in roles:
             print("Error occured: user not admin")
             response = {
                     "success": False,

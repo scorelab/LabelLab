@@ -1,6 +1,8 @@
 from marshmallow import Schema, fields
 
 from api.extensions import db, ma
+from api.serializers.image import ImageSchema
+from api.serializers.label import LabelSchema
 
 class ProjectSchema(ma.ModelSchema):
     """
@@ -11,3 +13,5 @@ class ProjectSchema(ma.ModelSchema):
     project_name = fields.Str()
     project_description = fields.Str()
     admin_id = fields.Int(dump_only=True)
+    images = fields.Nested(ImageSchema, many=True)
+    labels = fields.Nested(LabelSchema, many=True)

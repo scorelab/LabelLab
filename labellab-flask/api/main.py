@@ -1,3 +1,4 @@
+import os 
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -6,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
 
 from api.config import config
-from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics
+from api.routes import users, projects, models, mlclassifiers, images, labels, teams, analytics, static
 from api.extensions import db, migrate, jwt, ma
 from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier
 
@@ -14,7 +15,8 @@ def create_app(config_name):
     try:
         app = Flask(
             __name__,
-            static_folder="../build/static",
+            static_folder=config[config_name].UPLOAD_FOLDER,
+            static_url_path='',
             template_folder="../build"
         )
         app.config.from_object(config[config_name])
@@ -48,6 +50,7 @@ def register_blueprint(app):
     app.register_blueprint(teams.teamsprint, url_prefix="/api/v1")
     app.register_blueprint(images.imagesprint, url_prefix="/api/v1")
     app.register_blueprint(analytics.analyticsprint, url_prefix="/api/v1")
+    app.register_blueprint(static.staticprint, url_prefix="/static/uploads")
     return None
 
 

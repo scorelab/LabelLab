@@ -277,7 +277,7 @@ class AddProjectMember(MethodView):
         current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
 
-        if not roles.index("admin"):
+        if "admin" not in roles:
             print("Error occured: user not admin")
             response = {
                     "success": False,
@@ -286,8 +286,9 @@ class AddProjectMember(MethodView):
             return make_response(jsonify(response)), 403
 
         try:
-            user_email = post_data["memberEmail"]
-            team_name = post_data["teamName"]
+            user_email = post_data["member_email"]
+            team_name = post_data["team_name"]
+            role = post_data["role"]
 
         except KeyError as err:
             response = {
@@ -329,7 +330,7 @@ class AddProjectMember(MethodView):
                 try:
                     team = Team(team_name=team_name,
                                 project_id=project_id,
-                                user_id=user['id'])
+                                role=role)
                     team_exist = save_team(team)
                 except Exception as err:
                     print("Error occured: ",err)
@@ -385,7 +386,7 @@ class RemoveProjectMember(MethodView):
         current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
 
-        if not roles.index("admin"):
+        if "admin" not in roles:
             print("Error occured: user not admin")
             response = {
                     "success": False,
@@ -394,7 +395,7 @@ class RemoveProjectMember(MethodView):
             return make_response(jsonify(response)), 403
 
         try:
-            user_email = post_data["memberEmail"]
+            user_email = post_data["member_email"]
 
         except KeyError as err:
             response = {
