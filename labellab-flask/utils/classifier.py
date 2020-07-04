@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 import json
 import os
+import zipfile
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array 
 
 from utils.layer import FlattenLayer, DenseLayer, DropoutLayer, GlobalAveragePooling2DLayer, ActivationLayer, Conv2DLayer, MaxPool2DLayer, get_setting
@@ -11,6 +12,19 @@ from utils.trainingplot import TrainingPlot
 
 TARGET_SIZE = (256, 256)
 INPUT_SIZE = (256, 256, 3)
+
+def save_uploaded_model(model_file, directory, model_id):
+    # Create directory
+    tf.io.gfile.mkdir(directory)
+    tf.io.gfile.mkdir(directory + f"/{model_id}")
+    tf.io.gfile.mkdir(directory + f"/{model_id}" + "/savedmodel")
+
+    # Save the zip file
+    model_file.save(directory + f"/{model_id}/savedmodel/savedmodel.zip")
+
+    # Unzip and save
+    with zipfile.ZipFile(directory + f"/{model_id}/savedmodel/savedmodel.zip", 'r') as zip_ref:
+        zip_ref.extractall(directory + f"/{model_id}/")
 
 class Classifier:
     #Constructor

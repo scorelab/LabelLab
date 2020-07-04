@@ -27,3 +27,9 @@ modelsprint.add_url_rule(
     view_func=modelscontroller.modelController["test"],
     methods=["POST"]
 )
+
+modelsprint.add_url_rule(
+    "/models/upload/<int:model_id>",
+    view_func=modelscontroller.modelController["upload"],
+    methods=["POST"]
+)
