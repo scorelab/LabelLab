@@ -11,7 +11,49 @@ from api.models.MLModel import MLModel, optional_params
 from api.models.Projects import Project
 from api.models.Label import Label
 from api.models.LabelData import LabelData
-from utils.classifier import Classifier
+from utils.classifier import Classifier, save_uploaded_model
+
+class Upload(MethodView):
+    """
+    This method saves an uploaded model file
+    """
+
+    @jwt_required
+    def post(self, model_id):
+        """Handle POST request for this view. Url --> /api/models/upload/<int:model_id>"""
+
+        try:
+            model_id = model_id
+            model_file = request.files['modelfile']
+
+        except Exception as err:
+            response = {"message": "Please provide all the required fields."}
+            return make_response(jsonify(response)), 404
+
+        model = MLModel.find_by_id(model_id)
+
+        if model:
+
+            """Unzip the model folder and save"""
+            try:
+                # Convert the model to saved model format and save
+                save_uploaded_model(model_file, "./model_files/models", model_id)
+
+            except Exception as err:
+                print("Error occurred: ", err)
+                response = {"message": "Something went wrong while uploading!!"}
+                return make_response(jsonify(response)), 500
+
+            response = {"message": "Your model has been successfully uploaded!"}
+
+            # return a response notifying the user that the model has been tested
+            # successfully
+            return make_response(jsonify(response)), 201
+        else:
+            # There is no model with the given id.
+            response = {
+                "message": "Model with given id does not exist. Please try again."}
+            return make_response(jsonify(response)), 401
 
 class Test(MethodView):
     """
@@ -189,15 +231,16 @@ class Train(MethodView):
                 cl.load_data(data=image_df, directory=path, test_split=model.test)
 
                 # Set the layers
-                if model.source == "transfer":
-                    cl.set_transfer_source(model.transfer_source)
-                elif model.source == "upload":
-                    pass
+                if model.source == "upload":
+                    cl.load_model(f"./model_files/models/{model_id}/savedmodel")
+                else:
+                    if model.source == "transfer":
+                        cl.set_transfer_source(model.transfer_source)
+                        
+                    with open(model.layers_json_url) as f:
+                        layers_data = json.load(f)
 
-                with open(model.layers_json_url) as f:
-                    layers_data = json.load(f)
-
-                cl.add_layers(layers_data)
+                    cl.add_layers(layers_data)
 
                 # Compile
                 cl.compile()
@@ -309,5 +352,6 @@ modelController = {
     "save": Save.as_view("save"),
     "train": Train.as_view("train"),
     "export": Export.as_view("export"),
-    "test": Test.as_view("test")
+    "test": Test.as_view("test"),
+    "upload": Upload.as_view("upload"),
 }
