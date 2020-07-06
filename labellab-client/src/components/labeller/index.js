@@ -74,11 +74,32 @@ class LabelingLoader extends Component {
         }
       })
   }
-  pushUpdate(labelData) {
+  pushUpdate(labeldata) {
     const { match, updateLabels } = this.props
-    labelData.projectId = match.params.projectId
-    updateLabels(match.params.imageId, labelData)
+    labeldata.projectId = match.params.projectId
+    const labels_data = []
+    Object.keys(labeldata.labels).forEach(function(key) {
+      const value = labeldata.labels[key]
+      value.map(obj=>{
+        obj.label_id = key
+        labels_data.push(obj)
+      })
+  });
+  let labelled
+  if(labeldata.labels.length >0){
+    labelled = true
+  }else{
+    labelled = false
   }
+    const data = {
+      height: labeldata.height,
+      width: labeldata.width,
+      labels: labels_data,
+      project_id: labeldata.projectId,
+      labelled: labelled
+    }
+    updateLabels(match.params.imageId, data)
+}
   render() {
     const {
       match,
@@ -114,7 +135,7 @@ class LabelingLoader extends Component {
         ) : lab.length > 0 ? (
           <LabelingApp
             labels={lab}
-            labelData={(img && img.labelData) || {}}
+            labeldata={(img && img.labeldata) || {}}
             image_url={
               process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
                 ? image.image_url
@@ -186,8 +207,8 @@ const mapDispatchToProps = dispatch => {
     fetchProjectImage: (imageId, callback) => {
       return dispatch(fetchProjectImage(imageId, callback))
     },
-    updateLabels: (imageId, labelData) => {
-      return dispatch(updateLabels(imageId, labelData))
+    updateLabels: (imageId, labeldata) => {
+      return dispatch(updateLabels(imageId, labeldata))
     },
     setNextPrev: (next, prev) => {
       return dispatch(setNextPrev(next, prev))

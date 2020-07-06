@@ -342,10 +342,10 @@ const Row = ({
         <span className="labelDropdown">
           <Dropdown text="Labels">
             <Dropdown.Menu>
-              {Object.keys(image.labelData).map((key, index) =>
-                image.labelData[key].length !== 0 ? (
+              {Object.keys(image.labeldata).map((key, index) =>
+                image.labeldata[key].length !== 0 ? (
                   <Dropdown.Item
-                    text={key + '  ' + image.labelData[key].length}
+                    text={key + '  ' + image.labeldata[key].length}
                     key={index}
                   />
                 ) : null
