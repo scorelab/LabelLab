@@ -19,7 +19,7 @@ class Image(db.Model):
     project_id = db.Column(db.Integer, 
                         db.ForeignKey('project.id', ondelete="cascade", onupdate="cascade"),
                         nullable=False)
-    labelsdata = db.relationship('LabelData', 
+    labeldata = db.relationship('LabelData', 
                                  backref='image',
                                  lazy=True,
                                  cascade="all, save-update, delete",

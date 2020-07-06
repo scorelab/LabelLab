@@ -13,5 +13,6 @@ class ImageSchema(ma.ModelSchema):
     image_url = fields.Str()
     height = fields.Int()
     width = fields.Int()
+    labelled = fields.Bool()
     project_id = fields.Int(dump_only=True)
-    labelsdata = fields.Nested(LabelDataSchema, many=True)
+    labeldata = fields.Nested(LabelDataSchema, many=True)

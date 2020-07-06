@@ -27,3 +27,8 @@ imagesprint.add_url_rule(
     view_func=imagescontroller.imageController["delete_images"], 
     methods=["POST"]
 )
+imagesprint.add_url_rule(
+    "/image/update/<int:image_id>", 
+    view_func=imagescontroller.imageController["update_labels"], 
+    methods=["PUT"]
+)

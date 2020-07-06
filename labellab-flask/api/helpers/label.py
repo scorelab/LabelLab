@@ -36,6 +36,10 @@ def find_all_by_project_id(project_id):
     labels = Label.query.filter_by(project_id=project_id).all()
     return labels_schema.dump(labels).data
 
+def get_label_type(label_id):
+    label = Label.query.get(label_id)
+    return label.label_type
+
 def update_label(label_id, data):
     """
     update label using its id.

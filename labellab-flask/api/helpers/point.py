@@ -25,6 +25,16 @@ def find_by_labeldata_id(labeldata_id):
     points = Point.query.filter_by(labeldata_id=labeldata_id).all()
     return points_schema.dump(points).data
 
+def update_point(point_id, data):
+    """
+    update point using its id.
+    """
+    point = Point.query.get(point_id)
+    point.x_coordinate = data['x_coordinate']
+    point.y_coordinate = data['y_coordinate']
+    db.session.commit()
+    return point_schema.dump(point).data
+
 def delete_by_id(_id):
     """
     Delete Point by their id

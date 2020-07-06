@@ -23,7 +23,7 @@ class Label(db.Model):
     project_id = db.Column(db.Integer, 
                         db.ForeignKey('project.id', ondelete="cascade", onupdate="cascade"),
                         nullable=False)
-    labelsdata = db.relationship('LabelData', 
+    labeldata = db.relationship('LabelData', 
                                  backref='label',
                                  lazy=True,
                                  cascade="all, save-update, delete",
