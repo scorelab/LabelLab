@@ -10,17 +10,18 @@ class Point(db.Model):
     """
     __tablename__ = "point"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(45), primary_key=True)
     y_coordinate = db.Column(db.Float, nullable=False)
     x_coordinate = db.Column(db.Float, nullable=False)
-    labeldata_id = db.Column(db.Integer, 
+    labeldata_id = db.Column(db.String(45), 
                       db.ForeignKey('labeldata.id', ondelete="cascade", onupdate="cascade"),
                       nullable=False)
     
-    def __init__(self, y_coordinate, x_coordinate, labeldata_id):
+    def __init__(self, id, y_coordinate, x_coordinate, labeldata_id):
         """
         Initializes the Point instance
         """
+        self.id = id
         self.labeldata_id = labeldata_id
         self.y_coordinate = y_coordinate
         self.x_coordinate = x_coordinate

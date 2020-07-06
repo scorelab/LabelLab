@@ -23,13 +23,49 @@ def find_by_image_id(image_id):
     query labeldata on their image_id
     """
     labeldatas = LabelData.query.filter_by(image_id=image_id).all()
-    return labeldatas_schema.dump(labeldatas).data
+    labels = labeldatas_schema.dump(labeldatas).data
+    format_data = []
+    for label_id in labels:
+        if labels[label_id]:
+            for i in range(len(labels[label_id])):
+                labels[label_id][i]['label_id'] = int(label_id)
+                format_data.append(labels[label_id][i])
+    labels = format_data
+    return labels
 
 def find_by_label_id(label_id):
     """
     query labeldata on their label id.
     """
     labeldatas = LabelData.query.filter_by(label_id=label_id).all()
+    labels = labeldatas_schema.dump(labeldatas).data
+    format_data = []
+    for label_id in labels:
+        if labels[label_id]:
+            for i in range(len(labels[label_id])):
+                labels[label_id][i]['label_id'] = int(label_id)
+                format_data.append(labels[label_id][i])
+    labels = format_data
+    return labels
+
+def update_labeldata(labeldata_id, data):
+    """
+    update labeldata using its id.
+    """
+    labeldata = LabelData.query.get(labeldata_id)
+    labeldata.label_id = data['label_id']
+    db.session.commit()
+    labeldatas = find_by_image_id(labeldata.image_id)
+    return labeldatas
+
+def update_labeldata(labeldata_id, data):
+    """
+    update labeldata using its id.
+    """
+    labeldata = LabelData.query.get(labeldata_id)
+    labeldata.label_id = data['label_id']
+    db.session.commit()
+    labeldatas = find_by_image_id(labeldata.image_id)
     return labeldatas_schema.dump(labeldatas).data
 
 def delete_by_id(_id):

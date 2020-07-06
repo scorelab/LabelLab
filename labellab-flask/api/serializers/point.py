@@ -7,7 +7,7 @@ class PointSchema(ma.ModelSchema):
     Serializer class for Point
     """
         
-    id = fields.Int(dump_only=True) 
-    y_coordinate = fields.Float()
-    x_coordinate = fields.Float()
-    labeldata_id = fields.Int(dump_only=True)
+    id = fields.Str(dump_only=True) 
+    lng = fields.Float(attribute="y_coordinate")
+    lat = fields.Float(attribute="x_coordinate")
+    labeldata_id = fields.Str(dump_only=True)

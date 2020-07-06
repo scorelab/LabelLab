@@ -11,7 +11,7 @@ class LabelData(db.Model):
     """
     __tablename__ = "labeldata"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(45), primary_key=True)
     months_passed = db.Column(db.Integer)
     image_id = db.Column(db.Integer, 
                       db.ForeignKey('image.id', ondelete="cascade", onupdate="cascade"),
@@ -25,10 +25,11 @@ class LabelData(db.Model):
                              cascade="all, save-update, delete",
                              passive_deletes=True)
     
-    def __init__(self, image_id, label_id):
+    def __init__(self, id, image_id, label_id):
         """
         Initializes the LabelData instance
         """
+        self.id = id
         self.image_id = image_id
         self.label_id = label_id
 

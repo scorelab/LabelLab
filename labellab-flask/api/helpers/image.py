@@ -81,6 +81,22 @@ def get_dimensions(file):
         "width": width
     }
 
+def update_image(image_id, data):
+    """
+    update image using its id.
+    """
+    image = Image.query.get(image_id)
+    if data.get('image_name') is not None:
+        image.image_name = data['image_name']
+    if data.get('labelled') is not None:
+        image.labelled = data['labelled']
+    if data.get('height') is not None:
+        image.height = data['height']
+    if data.get('width') is not None:
+        image.width = data['width']
+    db.session.commit()
+    return image_schema.dump(image).data
+
 def convert_and_save(file, project_id, image_url):
     """
     convert the base64 string to image and then save it
