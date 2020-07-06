@@ -197,8 +197,8 @@ const mapDispatchToProps = dispatch => {
     deleteLabel: (labelId, callback) => {
       return dispatch(deleteLabel(labelId, callback))
     },
-    updateALabel: (labelId, labelData, callback) => {
-      return dispatch(updateALabel(labelId, labelData, callback))
+    updateALabel: (labelId, labeldata, callback) => {
+      return dispatch(updateALabel(labelId, labeldata, callback))
     }
   }
 }

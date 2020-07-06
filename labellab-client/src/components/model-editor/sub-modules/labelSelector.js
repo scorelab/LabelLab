@@ -58,7 +58,7 @@ class LabelSelector extends Component {
                   removeLabel={() => removeLabel(model.labels, label.id)}
                   images={images.filter(
                     image =>
-                      image.labelData && image.labelData[label.id].length > 0
+                      image.labeldata && image.labeldata[label.id].length > 0
                   )}
                 />
               )

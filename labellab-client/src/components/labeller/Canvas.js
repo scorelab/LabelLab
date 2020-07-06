@@ -96,7 +96,7 @@ class Canvas extends Component {
         break
 
       default:
-        throw new Error('unknown event type ' + eventType)
+        throw new Error('unknown event label_type ' + eventType)
     }
   }
 
@@ -122,7 +122,7 @@ class Canvas extends Component {
   }
 
   renderFigure(figure, options) {
-    const Comp = figure.type === 'bbox' ? BBoxFigure : PolygonFigure
+    const Comp = figure.label_type === 'bbox' ? BBoxFigure : PolygonFigure
 
     return (
       <Comp
@@ -197,15 +197,15 @@ class Canvas extends Component {
           }
           if (drawing) {
             if (key === 'f') {
-              const { type, points } = unfinishedFigure
-              if (type === 'polygon' && points.length >= 3) {
+              const { label_type, points } = unfinishedFigure
+              if (label_type === 'polygon' && points.length >= 3) {
                 this.handleChange('end', {})
               }
             }
           } else {
             if (key === 'c') {
               if (selectedFigureId && this.getSelectedFigure()) {
-                onReassignment(this.getSelectedFigure().type)
+                onReassignment(this.getSelectedFigure().label_type)
               }
             } else if (key === 'backspace' || key === 'del') {
               if (selectedFigureId && this.getSelectedFigure()) {
@@ -239,13 +239,13 @@ class Canvas extends Component {
 
     let renderedTrace = null
     const selectedFigure = this.getSelectedFigure()
-    if (selectedFigure && selectedFigure.type === 'polygon') {
+    if (selectedFigure && selectedFigure.label_type === 'polygon') {
       const trace = selectedFigure.tracingOptions
         ? selectedFigure.tracingOptions.trace || []
         : []
       const figure = {
         id: 'trace',
-        type: 'line',
+        label_type: 'line',
         points: trace
       }
       const traceOptions = {

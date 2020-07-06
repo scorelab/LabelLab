@@ -5,13 +5,13 @@ export function withHistory(Comp) {
   return class HistoryLayer extends Component {
     constructor(props) {
       super(props)
-      const { labelData, labels } = props
+      const { labeldata, labels } = props
       let figures = {}
 
       labels.map(label => (figures[label.id] = []))
       figures.__temp = []
-      Object.keys(labelData).forEach(key => {
-        figures[key] = (figures[key] || []).concat(labelData[key])
+      Object.keys(labeldata).forEach(key => {
+        figures[key] = (figures[key] || []).concat(labeldata[key])
       })
       figures = this.flipY(figures)
       this.state = {
@@ -27,7 +27,7 @@ export function withHistory(Comp) {
       const f = {}
       Object.keys(figures).forEach(label => {
         f[label] = figures[label].map(figure => {
-          if (figure.type !== 'polygon' && figure.type !== 'bbox') return figure
+          if (figure.label_type !== 'polygon' && figure.label_type !== 'bbox') return figure
 
           let tracingOptions
           if (figure.tracingOptions && figure.tracingOptions.enabled) {

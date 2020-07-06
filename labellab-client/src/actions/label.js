@@ -76,10 +76,10 @@ export const createLabel = (data, callback) => {
   }
 }
 
-export const updateLabels = (image_id, labelData) => {
+export const updateLabels = (image_id, labeldata) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('PUT', '/api/v1/image/' + image_id + '/update', labelData, true)
+    FetchApi.put('/api/v1/image/update/' + image_id, labeldata)
       .then(res => {
         dispatch(success())
       })
@@ -102,10 +102,10 @@ export const updateLabels = (image_id, labelData) => {
   }
 }
 
-export const updateALabel = (label_id, labelData ,callback) => {
+export const updateALabel = (label_id, labeldata ,callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.put('/api/v1/label/label_info/' + label_id, labelData)
+    FetchApi.put('/api/v1/label/label_info/' + label_id, labeldata)
       .then(res => {
         dispatch(success())
         callback()
