@@ -264,12 +264,11 @@ db.sqlite3
 # Flask stuff:
 instance/
 .webassets-cache
-labellab-flask/model_files/graphs/*
-labellab-flask/model_files/layers/*
-labellab-flask/model_files/models/*
-labellab-flask/model_files/steps/*
-labellab-flask/model_files/test_img/*
-labellab-flask/public/uploads/*
+labellab-flask/ml_files/graphs/*
+labellab-flask/ml_files/layers/*
+labellab-flask/ml_files/models/*
+labellab-flask/ml_files/steps/*
+labellab-flask/ml_files/test_img/*
 
 # Scrapy stuff:
 .scrapy
