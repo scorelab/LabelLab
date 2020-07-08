@@ -26,7 +26,7 @@ class Project(db.Model):
                              lazy=True,
                              cascade="all, save-update, delete",
                              passive_deletes=True)
-    models = db.relationship('MLModel',
+    models = db.relationship('MLClassifier',
                              backref='project',
                              lazy=True,
                              cascade="all, save-update, delete",

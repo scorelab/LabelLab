@@ -1,18 +1,72 @@
-from datetime import datetime
-from flask import current_app
+import json
+import shutil
+from os import path, mkdir
 
-from api.extensions import db, Base
-from api.models.Projects import Project
+from api.extensions import db
+from api.helpers.label import find_by_id as find_label
 from api.models.Label import Label
 
-import json
 
 optional_params = ["id", "name", "type", "source", "preprocessingSteps", "layers", "train", "test", "validation", "epochs",
                    "batch_size", "learning_rate", "loss", "optimizer", "metric", "loss_graph_url", "accuracy_graph_url", "saved_model_url", "transfer_source", "labels"]
 
-class MLModel(db.Model):
+basedir = path.abspath(path.curdir)
+
+def set_layers(model_data):
+    layers = {"layers": model_data["layers"]}
+    layers = json.dumps(layers)
+    layers = json.loads(layers)
+
+    model_id = model_data["id"]
+    layers_dir = path.join(basedir,'ml_files', "layers", str(model_id))
+    layers_url = f"./ml_files/layers/{model_id}/layers.json"
+
+    if not path.isdir(layers_dir):
+        mkdir(layers_dir)
+    with open(layers_url, "w") as f:
+        json.dump(layers, f)
+    return layers_url
+
+def set_preprocessing_steps(model_data):
+    preprocessing_steps = {"steps": model_data["preprocessingSteps"]}
+    preprocessing_steps = json.dumps(preprocessing_steps)
+    preprocessing_steps = json.loads(preprocessing_steps)
+
+    model_id = model_data["id"]
+    steps_dir = path.join(basedir,'ml_files', "steps", str(model_id))
+    steps_url = f"./ml_files/steps/{model_id}/steps.json"
+
+    if not path.isdir(steps_dir):
+        mkdir(steps_dir)
+    with open(steps_url, "w") as f:
+        json.dump(preprocessing_steps, f)
+    return steps_url
+
+def set_labels(model_data):
+    label_ids = []
+    labels = []
+    for label_id in model_data["labels"]:
+        label = Label.query.filter_by(id=label_id).first()
+        if label:
+            labels.append(label)
+            label_ids.append(label.id)
+    return labels, label_ids
+
+def delete_ml_classifier_files(ml_classifier_id):
+    delete_file(path.join(basedir,'ml_files', "graphs", str(ml_classifier_id)))
+    delete_file(path.join(basedir,'ml_files', "models", str(ml_classifier_id)))
+    delete_file(path.join(basedir,'ml_files', "layers", str(ml_classifier_id)))
+    delete_file(path.join(basedir,'ml_files', "steps", str(ml_classifier_id)))
+
+def delete_file(file_path):
+    if path.exists(file_path):
+        shutil.rmtree(file_path)
+    else:
+        print(f"The file '{file_path}' does not exist")
+
+class MLClassifier(db.Model):
     """
-    This model holds information about a model
+    This model holds information about a classifier
     """
     __tablename__ = "model"
 
@@ -44,52 +98,19 @@ class MLModel(db.Model):
         self.name = model_data["name"]
         self.type = model_data["type"]
         self.source = model_data["source"]
-        self.project_id = model_data["project_id"].id
+        self.project_id = model_data["project_id"]["id"]
         
         for key in optional_params:
             if key in model_data:
                 if key is "layers":
-                    self.layers = model_data[key]
-                    layers = {"layers": model_data[key]}
-                    layers = json.dumps(layers)
-                    layers = json.loads(layers)
-                    layers_url = f"./model_files/layers/{self.project_id}_{self.name}.json"
-                    with open(layers_url, "w") as f:
-                        json.dump(layers, f)
-                    self.layers_json_url = layers_url
+                    self.layers_json_url = set_layers(model_data)
 
                 if key is "preprocessingSteps":
-                    self.preprocessing_steps = model_data[key]
-                    preprocessing_steps = {"steps": model_data[key]}
-                    preprocessing_steps = json.dumps(preprocessing_steps)
-                    preprocessing_steps = json.loads(preprocessing_steps)
-                    steps_url = f"./model_files/steps/{self.project_id}_{self.name}.json"
-                    with open(steps_url, "w") as f:
-                        json.dump(preprocessing_steps, f)
-                    self.preprocessing_steps_json_url = steps_url
+                    self.preprocessing_steps_json_url = set_preprocessing_steps(model_data)
                     
                 if key is "labels":
-                    self.label_ids = []
-                    if "id" not in model_data:
-                        for label_id in model_data[key]:
-                            label = Label.find_by_id_in_project(label_id, self.project_id)
-                            if label:
-                                self.labels.append(label)
-                                self.label_ids.append(label.id)
-                    else:
-                        model = self.find_by_id(self.id)
-                        if model:
-                            for label in model.labels:
-                                model.labels.remove(label)
-                                db.session.commit()
-                            # TODO: Ensure frontend sends ID instead of label name
-                            # TODO: Refactor based on new label and image controllers
-                            for label_id in model_data[key]:
-                                label = Label.find_by_id_in_project(label_id, self.project_id)
-                                if label:
-                                    model.labels.append(label)
-                                    db.session.commit()
-                                    self.label_ids.append(label.id)
+                    self.labels, self.label_ids = set_labels(model_data)
+                        
                 else:
                     self[key] = model_data[key]
             else:
@@ -143,33 +164,4 @@ class MLModel(db.Model):
         """
         Returns the object representation
         """
-        return "<MLModel %r>" % self.name
-
-    def to_json(self):
-        """
-        Returns a JSON object
-        """
-        model_json = {"id": self.id, "name": self.name, "type": self.type,
-                      "source": self.source, "project_id": self.project_id, "preprocessingSteps": self.preprocessing_steps, "layers": self.layers, "train": f'{self.train}', "test": f'{self.test}', "validation": f'{self.validation}', "epochs": self.epochs, "batch_size": self.batch_size, "learning_rate": f'{self.learning_rate}', "loss": self.loss, "metric": self.metric, "optimizer": self.optimizer, "loss_graph_url": self.loss_graph_url, "accuracy_graph_url": self.accuracy_graph_url, "saved_model_url": self.saved_model_url, "transfer_source": self.transfer_source, "labels": self.label_ids}
-        return model_json
-
-    def set_saved_model_url(self, url):
-        self.saved_model_url = url
-
-    @classmethod
-    def find_by_id(cls, _id):
-        return cls.query.filter_by(id=_id).first()
-
-    def save(self):
-        """
-        Save a model to the database.
-        This includes creating a new user and editing one.
-        """
-        if self.id is None:
-            db.session.add(self)
-            db.session.commit()
-        else:
-            model = self.find_by_id(self.id)
-            for key in optional_params:
-                model[key] = self[key]
-            db.session.commit()
+        return "<MLClassifier %r>" % self.name
