@@ -301,7 +301,7 @@ class LabelingApp extends Component {
       figures[label.id].forEach(figure => {
         if (
           toggles[label.id] &&
-          (label.type === 'bbox' || label.type === 'polygon')
+          (label.label_type === 'bbox' || label.label_type === 'polygon')
         ) {
           allFigures.push({
             color: colors[i],

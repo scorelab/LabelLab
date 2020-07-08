@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper'
+import { genId, colors } from './utils'
 
 export function withHistory(Comp) {
   return class HistoryLayer extends Component {
@@ -38,7 +39,6 @@ export function withHistory(Comp) {
           } else {
             tracingOptions = figure.tracingOptions
           }
-
           return {
             ...figure,
             points: this.transformPoints(figure.points),
@@ -51,9 +51,11 @@ export function withHistory(Comp) {
 
     transformPoints = points => {
       const { height } = this.props
-      return points.map(({ lat, lng }) => ({
+      return points.map(({ lat, lng, id, labeldata_id }) => ({
         lat: height - lat,
-        lng
+        lng,
+        id: id || genId(),
+        labeldata_id
       }))
     }
 

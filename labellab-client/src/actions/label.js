@@ -81,7 +81,8 @@ export const updateLabels = (image_id, labeldata) => {
     dispatch(request())
     FetchApi.put('/api/v1/image/update/' + image_id, labeldata)
       .then(res => {
-        dispatch(success())
+        dispatch(success(res.data.body))
+        window.location.reload()
       })
       .catch(err => {
         if (err.response) {
@@ -94,8 +95,8 @@ export const updateLabels = (image_id, labeldata) => {
   function request() {
     return { type: UPDATE_LABEL_REQUEST }
   }
-  function success() {
-    return { type: UPDATE_LABEL_SUCCESS }
+  function success(data) {
+    return { type: UPDATE_LABEL_SUCCESS, payload: data }
   }
   function failure(error) {
     return { type: UPDATE_LABEL_FAILURE, payload: error }

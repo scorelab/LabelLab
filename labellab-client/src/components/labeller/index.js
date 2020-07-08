@@ -76,30 +76,11 @@ class LabelingLoader extends Component {
   }
   pushUpdate(labeldata) {
     const { match, updateLabels } = this.props
-    labeldata.projectId = match.params.projectId
-    const labels_data = []
-    Object.keys(labeldata.labels).forEach(function(key) {
-      const value = labeldata.labels[key]
-      value.map(obj=>{
-        obj.label_id = key
-        labels_data.push(obj)
-      })
-  });
-  let labelled
-  if(labeldata.labels.length >0){
-    labelled = true
-  }else{
-    labelled = false
+    labeldata.project_id = match.params.projectId
+    labeldata.labelled = true
+    updateLabels(match.params.imageId, labeldata)
   }
-    const data = {
-      height: labeldata.height,
-      width: labeldata.width,
-      labels: labels_data,
-      project_id: labeldata.projectId,
-      labelled: labelled
-    }
-    updateLabels(match.params.imageId, data)
-}
+  
   render() {
     const {
       match,
