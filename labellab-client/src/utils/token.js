@@ -1,19 +1,54 @@
-// @param: user type is required is every function
-export function hasToken(user_type) {
-  const token = getToken(user_type)
+import axios from 'axios'
+ // token can be of refresh type or access type
+
+export function hasToken(token_type) {
+  const token = getToken(token_type)
   return !!token
 }
-export function getToken(user_type) {
-  return localStorage.getItem(user_type)
+export function getToken(token) {
+  return localStorage.getItem(token)
 }
-export function removeToken(user_type) {
-  if (getToken(user_type)) {
-    localStorage.removeItem(user_type)
+
+export const setAuthToken = token => {
+  if (token) {
+    // Apply authorization token to every request if logged in
+    axios.defaults.headers.common['Authorization'] = token
+  } else {
+    // Delete auth header
+    delete axios.defaults.headers.common['Authorization']
   }
 }
-export function setToken(user_type, token, boolean = false) {
-  localStorage.setItem(user_type, token)
-  if (boolean) {
-    window.location.href = '/login'
+
+export const saveAllTokens = tokens => {
+  if (
+    tokens &&
+    tokens.access_token &&
+    tokens.refresh_token &&
+    tokens.body
+  ) {
+    //Setting the tokens to local storage
+    localStorage.setItem('access_token', tokens.access_token)
+    localStorage.setItem('refresh_token', tokens.refresh_token)
+    localStorage.setItem('user_details', JSON.stringify(tokens.body))
+  }
+}
+
+export const saveAcessToken = token => {
+  if (token) {
+    //Setting the access token to local storage
+    localStorage.setItem('access_token', token)
+  }
+}
+
+export const removeAllTokens = () => {
+  // deleting the present tokens
+  if (hasToken('access_token')) {
+    localStorage.removeItem('access_token')
+  }
+  if(hasToken('refresh_token')){
+    localStorage.removeItem('refresh_token')
+  }
+  if(hasToken('user_details')){
+    localStorage.removeItem('user_details')
   }
 }

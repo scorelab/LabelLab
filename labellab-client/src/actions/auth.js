@@ -4,7 +4,6 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
-  TOKEN_TYPE,
   SEND_EMAIL_REQUEST,
   SENT_EMAIL_SUCCESS,
   EMAIL_SENT_FAILURE,
@@ -27,7 +26,7 @@ import {
 
 import axios from 'axios'
 import FetchApi from '../utils/FetchAPI'
-import { setToken, removeToken} from '../utils/token'
+import { setAuthToken, saveAllTokens, removeAllTokens } from '../utils/token'
 
 export const login = (username, password, callback) => {
   return dispatch => {
@@ -36,7 +35,7 @@ export const login = (username, password, callback) => {
       password: password
     }
     dispatch(request())
-    FetchApi('POST', '/api/v1/auth/login', data)
+    FetchApi.post('/api/v1/auth/login', data)
       .then(res => {
         if (res.data && res.data.access_token && res.data.refresh_token) {
           const { access_token, refresh_token, body } = res.data
@@ -92,7 +91,7 @@ export const logout = callback => {
   function request() {
     return { type: LOGOUT_REQUEST }
   }
-  function success(data) {
+  function success() {
     return { type: LOGOUT_SUCCESS }
   }
 }
