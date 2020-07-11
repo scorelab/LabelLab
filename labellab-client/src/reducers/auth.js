@@ -190,8 +190,7 @@ const auth = (state = initialState, action) => {
           ...state,
           isAuthenticated: false,
           isAuthenticating: false,
-          statusText:
-            action.error === 'Unauthorize' ? 'LOGIN FAILED!' : null,
+          statusText: action.payload.msg,
           error: true,
           errField: action.other
          }
@@ -205,7 +204,7 @@ const auth = (state = initialState, action) => {
           ...state,
           isAuthenticated: true,
           isAuthenticating: false,
-          statusText: 'You are logged in successfully!',
+          statusText: action.payload.msg,
           error: false,
           details: {
             email: action.payload.email,

@@ -176,7 +176,7 @@ class Auth(MethodView):
 
         try:
             name = data["name"]
-            user_name = data["user_name"]
+            username = data["username"]
             email = data["email"]
         except KeyError as err:
             response = {
@@ -190,7 +190,7 @@ class Auth(MethodView):
         if not user:
             # There is no user so we'll try to register them
             user = User(email=email, 
-                        user_name= user_name, 
+                        username= username, 
                         name=name)
 
             try:
@@ -302,4 +302,5 @@ userController = {
     "logout_access": LogoutAccess.as_view("logout_access"),
     "logout_refresh": LogoutRefresh.as_view("logout_refresh"),
     "token_refresh": TokenRefresh.as_view("token_refresh"),
+    "oauth": Auth.as_view("oauth")
 }
