@@ -622,12 +622,6 @@ paths:
         - Project
       summary: Create a single project
       operationId: createProject
-      parameters:
-        - schema:
-            type: string
-          name: projectId
-          in: path
-          required: true
       responses:
         "201":
           description: Created
@@ -666,12 +660,6 @@ paths:
         - Project
       summary: Get project by user token
       operationId: getProjectByToken
-      parameters:
-        - schema:
-            type: string
-          name: labelId
-          in: path
-          required: true
       responses:
         "200":
           description: Success
@@ -799,12 +787,6 @@ paths:
       summary: searches inventory
       operationId: getUser
       description: Test description
-      parameters:
-        - schema:
-            type: string
-          name: labelId
-          in: path
-          required: true
       responses:
         "200":
           description: Success
@@ -823,12 +805,6 @@ paths:
       summary: adds an inventory item
       operationId: updateUser
       description: Test description
-      parameters:
-        - schema:
-            type: string
-          name: labelId
-          in: path
-          required: true
       responses:
         "201":
           description: Created
@@ -869,12 +845,6 @@ paths:
       summary: searches inventory
       operationId: getUserCount
       description: Test description
-      parameters:
-        - schema:
-            type: string
-          name: labelId
-          in: path
-          required: true
       responses:
         "200":
           description: Success
