@@ -9,6 +9,7 @@ import 'package:labellab_mobile/screen/project/upload_image/project_upload_image
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -147,42 +148,47 @@ class ProjectUploadImageScreen extends StatelessWidget {
   }
 
   void _selectImages(BuildContext context) async {
-    List<UploadImage> uploadImages = List<UploadImage>();
+    if (await Permission.accessMediaLocation.request().isGranted) {
+      List<UploadImage> uploadImages = List<UploadImage>();
 
-    MultiImagePicker.pickImages(
-      maxImages: 100,
-      enableCamera: true,
-      materialOptions: MaterialOptions(
-        actionBarTitle: "Select Images",
-        actionBarColor: "#00a89f",
-        statusBarColor: "#a2a2a2",
-        useDetailsView: false,
-      ),
-    ).then((images) {
-      // Emmits upload images
-      Observable.fromIterable(images).flatMap((image) {
-        // To create a temp image file
-        Future<File> fetchImageFile = image.getByteData().then((byteData) {
-          return getTemporaryDirectory().then((tempDir) {
-            return new File(tempDir.path + '/' + image.name).writeAsBytes(
-                byteData.buffer.asUint8List(
-                    byteData.offsetInBytes, byteData.lengthInBytes));
+      MultiImagePicker.pickImages(
+        maxImages: 100,
+        enableCamera: true,
+        materialOptions: MaterialOptions(
+          actionBarTitle: "Select Images",
+          actionBarColor: "#00a89f",
+          statusBarColor: "#a2a2a2",
+          useDetailsView: false,
+        ),
+      ).then((images) {
+        // Emmits upload images
+        Observable.fromIterable(images).flatMap((image) {
+          // To create a temp image file
+          Future<File> fetchImageFile = image.getByteData().then((byteData) {
+            return getTemporaryDirectory().then((tempDir) {
+              return new File(tempDir.path + '/' + image.name).writeAsBytes(
+                  byteData.buffer.asUint8List(
+                      byteData.offsetInBytes, byteData.lengthInBytes));
+            });
           });
+
+          // To read image metadata
+          Future<Metadata> fetchMetadata = image.metadata;
+
+          return Future.wait([fetchImageFile, fetchMetadata]).then((result) {
+            return UploadImage(
+                name: image.name, image: result.first, metadata: result.last);
+          }).asStream();
+        }).doOnDone(() {
+          Provider.of<ProjectUploadImageBloc>(context)
+              .selectImages(uploadImages);
+        }).listen((uploadImage) {
+          uploadImages.add(uploadImage);
         });
-
-        // To read image metadata
-        Future<Metadata> fetchMetadata = image.metadata;
-
-        return Future.wait([fetchImageFile, fetchMetadata]).then((result) {
-          return UploadImage(
-              name: image.name, image: result.first, metadata: result.last);
-        }).asStream();
-      }).doOnDone(() {
-        Provider.of<ProjectUploadImageBloc>(context).selectImages(uploadImages);
-      }).listen((uploadImage) {
-        uploadImages.add(uploadImage);
-      });
-    }).catchError((err) => Logger().e(err.toString()));
+      }).catchError((err) => Logger().e(err.toString()));
+    } else {
+      Logger().e("Permission denied");
+    }
   }
 
   void _showImageEdit(BuildContext context, UploadImage image) async {
