@@ -23,7 +23,7 @@ dependencies:
   provider: ^2.0.1+1
   flutter_signin_button: ^0.2.8
   font_awesome_flutter: ^8.2.0
-  dio: ^2.1.7
+  dio: ^3.0.9
   shared_preferences: ^0.5.3+1
   sqflite: ^1.1.0
   image_picker: ^0.6.0+9

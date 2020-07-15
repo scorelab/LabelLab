@@ -244,7 +244,7 @@ class LabelToolScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text("Select label",
-                      style: Theme.of(context).textTheme.title),
+                      style: Theme.of(context).textTheme.headline6),
                   FlatButton.icon(
                     icon: Icon(Icons.add),
                     label: Text("Add"),
