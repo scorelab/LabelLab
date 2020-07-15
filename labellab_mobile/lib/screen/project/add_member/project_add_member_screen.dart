@@ -71,7 +71,7 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
                           "Results",
-                          style: Theme.of(context).textTheme.subtitle,
+                          style: Theme.of(context).textTheme.subtitle2,
                         ),
                       )
                     : Container(),

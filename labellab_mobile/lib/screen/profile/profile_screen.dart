@@ -97,14 +97,14 @@ class ProfileScreen extends StatelessWidget {
         ),
         Text(
           user.name,
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
         ),
         SizedBox(
           height: 8,
         ),
         Text(
           user.email,
-          style: Theme.of(context).textTheme.subhead,
+          style: Theme.of(context).textTheme.subtitle1,
         ),
       ],
     );

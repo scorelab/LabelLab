@@ -71,10 +71,8 @@ class ProjectDetailScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(
-                                "Images",
-                                style: Theme.of(context).textTheme.title,
-                              ),
+                              Text("Images",
+                                  style: Theme.of(context).textTheme.headline6),
                               Container(
                                 child: Row(
                                   children: <Widget>[
@@ -128,7 +126,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0, left: 16),
                     child: Text(
                       "Members",
-                      style: Theme.of(context).textTheme.title,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                   ),
                 ]),
@@ -219,7 +217,7 @@ class ProjectDetailScreen extends StatelessWidget {
         children: <Widget>[
           Text(
             "Info",
-            style: Theme.of(context).textTheme.title,
+            style: Theme.of(context).textTheme.headline6,
           ),
           SizedBox(
             height: 8,
@@ -356,7 +354,7 @@ class ProjectDetailScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Labels",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
               FlatButton.icon(
                 icon: Icon(Icons.add),
