@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
-import 'package:labellab_mobile/model/image.dart' as LabelLab;
 
 typedef void OnUpdateError(String message);
 
@@ -11,12 +10,8 @@ class AddEditLabelDialog extends StatefulWidget {
   final Repository _repository = Repository();
   final String projectId;
   final Label label;
-  final OnUpdateError onError;
 
-  // To check label selection instances
-  final List<LabelLab.Image> images;
-
-  AddEditLabelDialog(this.projectId, {this.images, this.label, this.onError});
+  AddEditLabelDialog(this.projectId, {this.label});
 
   @override
   _AddEditProjectScreenState createState() => _AddEditProjectScreenState();
@@ -26,8 +21,6 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
   String _labelId;
 
   int _type = 0;
-  // To check whether the type has updated
-  int _previousType;
 
   bool _isLoading = false;
   String _error;
@@ -60,49 +53,12 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
               labelText: "Label name",
               textCapitalization: TextCapitalization.words,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Text("Type"),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.all(0),
-              leading: Radio(
-                value: 0,
-                groupValue: _type,
-                onChanged: (_) {
-                  setState(() {
-                    _type = 0;
-                  });
-                },
-              ),
-              title: Text("Rectangle"),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.all(0),
-              leading: Radio(
-                value: 1,
-                groupValue: _type,
-                onChanged: (_) {
-                  setState(() {
-                    _type = 1;
-                  });
-                },
-              ),
-              title: Text("Polygon"),
-            ),
-            _editing && this._error == null
+            _error != null
                 ? Text(
-                    "Please note that to update the label type you must remove all selections of the label",
-                    style: TextStyle(
-                        color: Color(0xff6a6a6a), fontSize: 14, height: 1.5),
+                    _error,
+                    style: TextStyle(color: Colors.redAccent),
                   )
-                : Container(),
-            this._error != null
-                ? Text(
-                    this._error,
-                    style: TextStyle(color: Colors.red),
-                  )
-                : Container(),
+                : Container()
           ],
         ),
       ),
@@ -135,7 +91,6 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
           // _error = message;
           _isLoading = false;
         });
-        widget.onError(message);
         Navigator.pop(context, false);
       }
     }).catchError((err) {
@@ -171,25 +126,11 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       });
     } else {
       // Update the existing label
-      if (checkTypeUpdated(_previousType, _type) &&
-          checkSelectionInstances(label)) {
-        return Future.value("Please remove the selections first");
-      } else {
-        return widget._repository.updateLabel(label).then((res) {
-          if (!res.success) return res.msg;
-          return "Success";
-        });
-      }
+      return widget._repository.updateLabel(label).then((res) {
+        if (!res.success) return res.msg;
+        return "Success";
+      });
     }
-  }
-
-  bool checkTypeUpdated(int previous, int current) {
-    return previous != current;
-  }
-
-  bool checkSelectionInstances(Label currentLabel) {
-    return widget.images.any((image) =>
-        image.labels.any((label) => label.label.id == currentLabel.id));
   }
 
   void _loadLabel() {
@@ -201,7 +142,6 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       } else {
         _type = 1;
       }
-      _previousType = _type;
     });
   }
 

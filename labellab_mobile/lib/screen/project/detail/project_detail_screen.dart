@@ -430,8 +430,8 @@ class ProjectDetailScreen extends StatelessWidget {
                         onDeleted: () =>
                             _showLabelDeleteConfirmation(context, label),
                       ),
-                      onTap: () => _showAddEditLabelModel(context,
-                          images: images, label: label),
+                      onTap: () =>
+                          _showAddEditLabelModel(context, label: label),
                     );
                   }).toList(),
                 )
@@ -633,15 +633,13 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   void _showAddEditLabelModel(BuildContext baseContext,
-      {String projectId, List<LabelLab.Image> images, Label label}) {
+      {String projectId, Label label}) {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {
         return AddEditLabelDialog(
           Provider.of<ProjectDetailBloc>(baseContext).projectId,
-          images: images,
           label: label,
-          onError: _showErrorSnackbar,
         );
       },
     ).then((bool isSuccess) {
