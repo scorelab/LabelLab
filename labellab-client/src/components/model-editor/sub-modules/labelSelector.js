@@ -58,7 +58,7 @@ class LabelSelector extends Component {
                   removeLabel={() => removeLabel(model.labels, label.id)}
                   images={images.filter(
                     image =>
-                      image.labelData && image.labelData[label.id].length > 0
+                      image.labeldata && image.labeldata[label.id].length > 0
                   )}
                 />
               )
@@ -162,11 +162,11 @@ const LabelCard = props => {
     var imageTags = []
 
     for (var i = 0; i < Math.min(3, images.length); i++) {
-      const imageUrl = `${process.env.REACT_APP_HOST}:${
+      const image_url = `${process.env.REACT_APP_HOST}:${
         process.env.REACT_APP_SERVER_PORT
-      }/static/uploads/${images[i].imageUrl}?${Date.now()}`
+      }/static/uploads/${images[i].project_id}/${images[i].image_url}`
 
-      const imageTag = <img key={i} className="label-image" src={imageUrl} />
+      const imageTag = <img key={i} className="label-image" src={image_url} />
       imageTags.push(imageTag)
     }
 

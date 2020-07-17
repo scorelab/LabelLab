@@ -72,7 +72,7 @@ const user = (state = initialState, action) => {
           email: action.payload.email,
           username: action.payload.username,
           thumbnail: action.payload.thumbnail,
-          profileImage: action.payload.profileImage
+          profileImage: action.payload.thumbnail
         }
       }
     case SET_USER_DATA_FAILURE:
@@ -96,9 +96,9 @@ const user = (state = initialState, action) => {
           isfetching: false
         },
         userProfile: {
-          totalProjects: action.payload.totalProjects,
-          totalLabels: action.payload.totalLabels,
-          totalImages: action.payload.totalImages
+          totalProjects: action.payload.total_projects,
+          totalLabels: action.payload.total_labels,
+          totalImages: action.payload.total_images
         }
       }
     case FETCH_COUNT_FAILURE:

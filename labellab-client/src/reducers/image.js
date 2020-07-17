@@ -8,7 +8,10 @@ import {
   DELETE_IMAGE_FAILURE,
   DELETE_IMAGE_REQUEST,
   DELETE_IMAGE_SUCCESS,
-  SET_IMAGE_STATE
+  SET_IMAGE_STATE,
+  UPDATE_LABEL_REQUEST,
+  UPDATE_LABEL_SUCCESS,
+  UPDATE_LABEL_FAILURE,
 } from '../constants/index'
 
 const initialState = {
@@ -102,6 +105,17 @@ const user = (state = initialState, action) => {
         nextImage: action.payload.next,
         prevImage: action.payload.prev
       }
+      case UPDATE_LABEL_SUCCESS:
+        return {
+          ...state,
+          currentImage: {
+            ...state.currentImage,
+            labeldata: action.payload.labeldata,
+            width: action.payload.width,
+            height: action.payload.height,
+            labelled: action.payload.labelled
+          },
+        }
     default:
       return state
   }

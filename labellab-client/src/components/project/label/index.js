@@ -50,8 +50,8 @@ class LabelIndex extends Component {
     const { project, createLabel } = this.props
     e.preventDefault()
     let data = {
-      name: this.state.name,
-      type: this.state.type,
+      label_name: this.state.name,
+      label_type: this.state.type,
       projectId: project.projectId
     }
     createLabel(data, this.callback)
@@ -68,15 +68,15 @@ class LabelIndex extends Component {
   onUpdate = value => {
     const { updateALabel } = this.props
     let data = {
-      name: this.state.name,
-      type: this.state.type
+      label_name: this.state.name,
+      label_type: this.state.type
     }
     updateALabel(value.id, data, this.callback)
   }
 
   handleDelete = value => {
     const { project, deleteLabel, fetchLabels } = this.props
-    deleteLabel(value._id, fetchLabels(project.projectId))
+    deleteLabel(value.id, fetchLabels(project.projectId))
   }
   render() {
     const value = {
@@ -107,9 +107,10 @@ class LabelIndex extends Component {
             </Table.Header>
 
             <Table.Body>
-              {labels.map((label, index) => (
+              {labels.length && 
+                labels.length !== 0 ? labels.map((label, index) => (
                 <LabelItem
-                  key={label._id}
+                  key={label.id}
                   index={index}
                   label={label}
                   options={options}
@@ -117,7 +118,9 @@ class LabelIndex extends Component {
                   onDelete={this.handleDelete}
                   onUpdate={this.onUpdate}
                 />
-              ))}
+              )):<div>
+                There are no labels present
+                </div>}
             </Table.Body>
           </Table>
         )}
@@ -194,8 +197,8 @@ const mapDispatchToProps = dispatch => {
     deleteLabel: (labelId, callback) => {
       return dispatch(deleteLabel(labelId, callback))
     },
-    updateALabel: (labelId, labelData, callback) => {
-      return dispatch(updateALabel(labelId, labelData, callback))
+    updateALabel: (labelId, labeldata, callback) => {
+      return dispatch(updateALabel(labelId, labeldata, callback))
     }
   }
 }

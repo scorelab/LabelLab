@@ -21,6 +21,8 @@ import googleIcon from '../../static/icons/search.svg'
 import githubIcon from '../../static/icons/github-logo.svg'
 import { hasToken } from '../../utils/token'
 import { TOKEN_TYPE } from '../../constants/index'
+import GoogleContainer from './GoogleOAuth'
+import GitHubContainer from './GithubOAuth'
 import './css/login.css'
 
 class LoginIndex extends Component {
@@ -201,24 +203,8 @@ class LoginIndex extends Component {
           <Divider horizontal>Or</Divider>
 
           <div className="login-oauth-icon">
-            <div className="login-icons">
-              <a
-                href={
-                  `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/auth/google`
-                }
-              >
-                <Image src={googleIcon} />
-              </a>
-            </div>
-            <div className="login-icons">
-              <a
-                href={
-                  `${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/auth/github`
-                }
-              >
-                <Image src={githubIcon} />
-              </a>
-            </div>
+            <GoogleContainer/>
+            <GitHubContainer/>
           </div>
         </div>
       </div>

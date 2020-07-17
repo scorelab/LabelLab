@@ -14,9 +14,9 @@ export function withLoadImageData(Comp) {
     }
 
     componentDidUpdate(prevProps) {
-      const { imageUrl, demo } = this.props
+      const { image_url, demo } = this.props
 
-      if (imageUrl !== prevProps.imageUrl) {
+      if (image_url !== prevProps.image_url) {
         const img = new Image()
         img.crossOrigin = 'anonymous'
         const setState = this.setState.bind(this)
@@ -54,7 +54,7 @@ export function withLoadImageData(Comp) {
             document.addEventListener('DOMContentLoaded', resetImage)
           }
         }
-        img.src = imageUrl
+        img.src = image_url
       }
     }
 

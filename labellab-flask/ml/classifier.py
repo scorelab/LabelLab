@@ -3,14 +3,28 @@ import numpy as np
 import tensorflow as tf
 import json
 import os
+import zipfile
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array 
 
-from utils.layer import FlattenLayer, DenseLayer, DropoutLayer, GlobalAveragePooling2DLayer, ActivationLayer, Conv2DLayer, MaxPool2DLayer, get_setting
-from utils.preprocessing import get_preprocessing_steps
-from utils.trainingplot import TrainingPlot
+from ml.layer import FlattenLayer, DenseLayer, DropoutLayer, GlobalAveragePooling2DLayer, ActivationLayer, Conv2DLayer, MaxPool2DLayer, get_setting
+from ml.preprocessing import get_preprocessing_steps
+from ml.trainingplot import TrainingPlot
 
 TARGET_SIZE = (256, 256)
 INPUT_SIZE = (256, 256, 3)
+
+def save_uploaded_model(model_file, directory, model_id):
+    # Create directory
+    tf.io.gfile.mkdir(directory)
+    tf.io.gfile.mkdir(directory + f"/{model_id}")
+    tf.io.gfile.mkdir(directory + f"/{model_id}" + "/savedmodel")
+
+    # Save the zip file
+    model_file.save(directory + f"/{model_id}/savedmodel.zip")
+
+    # Unzip and save
+    with zipfile.ZipFile(directory + f"/{model_id}/savedmodel.zip", 'r') as zip_ref:
+        zip_ref.extractall(directory + f"/{model_id}/")
 
 class Classifier:
     #Constructor
@@ -210,26 +224,25 @@ class Classifier:
 
     # Save the model in given format
     def save(self, directory, model_id, type="savedmodel"):
+        # Create directory for savinf model files
+        tf.io.gfile.mkdir(directory)
+        tf.io.gfile.mkdir(directory + f"/{model_id}")
+
         # Save the class indices for use during prediction
-        model_classes = json.dumps(self.train_generator.class_indices)
-        model_classes = json.loads(model_classes)
-        model_classes_url = directory + f"/{model_id}/model_classes.json"
-        with open(model_classes_url, "w") as f:
-            json.dump(model_classes, f)
+        if hasattr(self, "train_generator"):
+            model_classes = json.dumps(self.train_generator.class_indices)
+            model_classes = json.loads(model_classes)
+            model_classes_url = directory + f"/{model_id}/model_classes.json"
+            with open(model_classes_url, "w") as f:
+                json.dump(model_classes, f)
 
         if type == "savedmodel":
-            tf.io.gfile.mkdir(directory)
-            tf.io.gfile.mkdir(directory + f"/{model_id}")
             tf.io.gfile.mkdir(directory + f"/{model_id}" + "/savedmodel")
             self.model.save(directory + f"/{model_id}/savedmodel")
         elif type == "h5":
-            tf.io.gfile.mkdir(directory)
-            tf.io.gfile.mkdir(directory + f"/{model_id}")
             tf.io.gfile.mkdir(directory + f"/{model_id}" + "/h5")
             self.model.save(directory + f"/{model_id}/h5/saved_model.h5")
         else:
-            tf.io.gfile.mkdir(directory)
-            tf.io.gfile.mkdir(directory + f"/{model_id}")
             tf.io.gfile.mkdir(directory + f"/{model_id}" + "/onnx")
             os.popen(f"python -m tf2onnx.convert --saved-model {directory}/{model_id}/savedmodel --output {directory}/{model_id}/onnx/saved_model.onnx").read()
 

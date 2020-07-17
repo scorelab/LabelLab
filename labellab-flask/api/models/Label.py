@@ -28,7 +28,7 @@ class Label(db.Model):
                                  lazy=True,
                                  cascade="all, save-update, delete",
                                  passive_deletes=True)
-    models = db.relationship("MLModel", 
+    models = db.relationship("MLClassifier", 
                              secondary=model_has_label, 
                              backref=db.backref("labels", lazy="dynamic"))
     

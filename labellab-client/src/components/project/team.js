@@ -21,7 +21,7 @@ class TeamIndex extends Component {
     super(props)
     this.state = {
       open: false,
-      memberEmail: ''
+      member_email: ''
     }
   }
   handleAddMember = () => {
@@ -36,12 +36,12 @@ class TeamIndex extends Component {
   }
   handleMemberSubmit = () => {
     const { project, addMember } = this.props
-    const { memberEmail } = this.state
+    const { member_email } = this.state
     this.setState({
       check: true
     })
     let data = {
-      memberEmail: memberEmail,
+      member_email: member_email,
       projectId: project.projectId
     }
     addMember(data, this.fetchProjectCallback)
@@ -58,7 +58,7 @@ class TeamIndex extends Component {
   }
   updateState = data => {
     this.setState({
-      memberEmail: data
+      member_email: data
     })
   }
   render() {

@@ -16,8 +16,8 @@ import { withHistory } from './LabelingAppHistoryHOC'
 import { withLoadImageData } from './LoadImageDataHOC'
 
 /*
- type Figure = {
-   type: 'bbox' | 'polygon';
+ label_type Figure = {
+   label_type: 'bbox' | 'polygon';
    points: [{ lat: Number, lng: Number }];
    ?color: Color;
  };
@@ -37,7 +37,7 @@ class LabelingApp extends Component {
       selectedFigureId: null,
 
       // UI
-      reassigning: { status: false, type: null, }
+      reassigning: { status: false, label_type: null, }
     }
 
     this.canvasRef = React.createRef()
@@ -60,7 +60,7 @@ class LabelingApp extends Component {
     const { labels } = this.props
 
     const labelIdx = labels.findIndex(label => label.id === selected)
-    const type = labels[labelIdx].type
+    const label_type = labels[labelIdx].label_type
     const color = colors[labelIdx]
 
     pushState(
@@ -68,7 +68,7 @@ class LabelingApp extends Component {
         unfinishedFigure: {
           id: null,
           color,
-          type,
+          label_type,
           points: []
         }
       }),
@@ -81,7 +81,7 @@ class LabelingApp extends Component {
       this.setState({ selectedFigureId: figureId })
     } else {
       this.setState({
-        reassigning: { status: false, type: null },
+        reassigning: { status: false, label_type: null },
         selectedFigureId: null
       })
     }
@@ -106,7 +106,7 @@ class LabelingApp extends Component {
                 $push: [
                   {
                     id: figure.id || genId(),
-                    type: figure.type,
+                    label_type: figure.label_type,
                     points: figure.points
                   }
                 ]
@@ -147,7 +147,7 @@ class LabelingApp extends Component {
       //               1,
       //               {
       //                 id: figure.id,
-      //                 type: figure.type,
+      //                 label_type: figure.label_type,
       //                 points: figure.points,
       //                 tracingOptions
       //               }
@@ -170,7 +170,7 @@ class LabelingApp extends Component {
                     1,
                     {
                       id: figure.id,
-                      type: figure.type,
+                      label_type: figure.label_type,
                       points: figure.points
                     }
                   ]
@@ -196,8 +196,8 @@ class LabelingApp extends Component {
           state => ({ unfinishedFigure: figure }),
           () => {
             const { unfinishedFigure } = this.props
-            const { type, points } = unfinishedFigure
-            if (type === 'bbox' && points.length >= 2) {
+            const { label_type, points } = unfinishedFigure
+            if (label_type === 'bbox' && points.length >= 2) {
               this.handleChange('new', unfinishedFigure)
             }
           }
@@ -216,7 +216,7 @@ class LabelingApp extends Component {
                 {
                   id: figure.id,
                   points: figure.points,
-                  type: figure.type,
+                  label_type: figure.label_type,
                   tracingOptions: figure.tracingOptions
                 }
               ]
@@ -226,14 +226,14 @@ class LabelingApp extends Component {
         break
 
       default:
-        throw new Error('unknown event type ' + eventType)
+        throw new Error('unknown event label_type ' + eventType)
     }
   }
 
   render() {
     const {
       labels,
-      imageUrl,
+      image_url,
       projectUrl,
       // reference,
       onBack,
@@ -272,10 +272,10 @@ class LabelingApp extends Component {
               this.handleChange('recolor', figure, selected)
             }
 
-            this.setState({ reassigning: { status: false, type: null } })
+            this.setState({ reassigning: { status: false, label_type: null } })
           },
-          filter: label => label.type === reassigning.type,
-          labelData: figures
+          filter: label => label.label_type === reassigning.label_type,
+          labeldata: figures
         }
       : {
           title: 'Labeling',
@@ -292,7 +292,7 @@ class LabelingApp extends Component {
             pushState(state => ({
               figures: update(figures, { [labelId]: { $set: newValue } })
             })),
-          labelData: figures,
+          labeldata: figures,
           onHome: () => this.props.history.push(projectUrl)
         }
     // let selectedFigure = null;
@@ -301,16 +301,15 @@ class LabelingApp extends Component {
       figures[label.id].forEach(figure => {
         if (
           toggles[label.id] &&
-          (label.type === 'bbox' || label.type === 'polygon')
+          (label.label_type === 'bbox' || label.label_type === 'polygon')
         ) {
           allFigures.push({
             color: colors[i],
             points: figure.points,
             id: figure.id,
-            type: figure.type,
+            label_type: label.label_type,
             tracingOptions: figure.tracingOptions
           })
-
           // if (figure.id === selectedFigureId) {
           //   selectedFigure = { ...figure, color: colors[i] };
           // }
@@ -337,14 +336,14 @@ class LabelingApp extends Component {
           <div style={{ flex: 4, display: 'flex', flexDirection: 'column' }}>
             <div style={{ position: 'relative', height: '100%' }}>
               <Canvas
-                url={imageUrl}
+                url={image_url}
                 height={height}
                 width={width}
                 figures={allFigures}
                 unfinishedFigure={unfinishedFigure}
                 onChange={this.handleChange}
-                onReassignment={type =>
-                  this.setState({ reassigning: { status: true, type } })
+                onReassignment={label_type =>
+                  this.setState({ reassigning: { status: true, label_type } })
                 }
                 onSelectionChange={this.handleSelectionChange}
                 ref={this.canvasRef}

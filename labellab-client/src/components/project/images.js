@@ -24,13 +24,13 @@ class ImagesIndex extends Component {
     this.state = {
       images: [],
       file: '',
-      imageNames: [],
+      image_names: [],
       projectId: '',
       showform: false,
       format: '',
       maxSizeError: '',
       selectedList: [],
-      imageUrls: [],
+      image_urls: [],
       photoIndex: 0,
       isOpen: false
     }
@@ -45,8 +45,8 @@ class ImagesIndex extends Component {
           images: [...prevState.images, reader.result],
           file: file,
           format: file.type,
-          imageNames: [...prevState.imageNames, file.name],
-          imageUrls: [...prevState.imageUrls, URL.createObjectURL(file)]
+          image_names: [...prevState.image_names, file.name],
+          image_urls: [...prevState.image_urls, URL.createObjectURL(file)]
         }))
       }
       reader.readAsDataURL(file)
@@ -63,14 +63,14 @@ class ImagesIndex extends Component {
       return
     }
     const { project, fetchProject, submitImage } = this.props
-    const { imageNames, images, format } = this.state
+    const { image_names, images, format } = this.state
     if (this.state.file && this.state.file.size > 101200) {
       this.setState({
         maxSizeError: 'max sized reached'
       })
     } else {
       let data = {
-        imageNames: imageNames,
+        image_names: image_names,
         images: images,
         projectId: project.projectId,
         format: format
@@ -79,7 +79,7 @@ class ImagesIndex extends Component {
         this.setState({
           showform: false,
           images: [],
-          imageNames: []
+          image_names: []
         })
         fetchProject(project.projectId)
       })
@@ -110,17 +110,17 @@ class ImagesIndex extends Component {
   }
   handleNameChange = e => {
     const value = e.target.value
-    this.setState({ imageNames: [value] })
+    this.setState({ image_names: [value] })
   }
   removeImage = () => {
     this.setState({
       images: [],
       file: '',
-      imageNames: [],
+      image_names: [],
       showform: !this.state.showform,
       format: '',
       maxSizeError: '',
-      imageUrls: [],
+      image_urls: [],
       photoIndex: 0,
       isOpen: false
     })
@@ -128,7 +128,7 @@ class ImagesIndex extends Component {
 
   render() {
     const { imageActions, project } = this.props
-    const { showform, imageName, imageUrls } = this.state
+    const { showform, image_name, image_urls } = this.state
     const { photoIndex, isOpen } = this.state
     return (
       <div>
@@ -162,32 +162,32 @@ class ImagesIndex extends Component {
               <Form.Field>
                 <label>Image Name</label>
                 <input
-                  name="imageName"
-                  value={imageName}
+                  name="image_name"
+                  value={image_name}
                   onChange={this.handleNameChange}
                   placeholder="Image Name"
                 />
               </Form.Field>
             )}
-            {imageUrls && isOpen ? (
+            {image_urls && isOpen ? (
               <Lightbox
-                mainSrc={imageUrls[photoIndex]}
-                nextSrc={imageUrls[(photoIndex + 1) % imageUrls.length]}
+                mainSrc={image_urls[photoIndex]}
+                nextSrc={image_urls[(photoIndex + 1) % image_urls.length]}
                 prevSrc={
-                  imageUrls[
-                    (photoIndex + imageUrls.length - 1) % imageUrls.length
+                  image_urls[
+                    (photoIndex + image_urls.length - 1) % image_urls.length
                   ]
                 }
                 onCloseRequest={() => this.setState({ isOpen: false })}
                 onMovePrevRequest={() =>
                   this.setState({
                     photoIndex:
-                      (photoIndex + imageUrls.length - 1) % imageUrls.length
+                      (photoIndex + image_urls.length - 1) % image_urls.length
                   })
                 }
                 onMoveNextRequest={() =>
                   this.setState({
-                    photoIndex: (photoIndex + 1) % imageUrls.length
+                    photoIndex: (photoIndex + 1) % image_urls.length
                   })
                 }
               />
@@ -243,7 +243,7 @@ class ImagesIndex extends Component {
                       imageId={index}
                       onSelect={this.handleSelected}
                       selected={this.state.selectedList.includes(
-                        project.images[index]._id
+                        project.images[index].id
                       )}
                       isLast={index === project.images.length - 1}
                     />
@@ -318,7 +318,7 @@ const Row = ({
     <Table.Cell width={1}>
       <Checkbox
         onClick={() => {
-          onSelect(image._id)
+          onSelect(image.id)
         }}
         checked={selected}
       />
@@ -328,24 +328,24 @@ const Row = ({
         rel={'external'}
         href={
           process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
-            ? image.imageUrl
+            ? image.image_url
             : 'http://' +
               process.env.REACT_APP_HOST +
               ':' +
               process.env.REACT_APP_SERVER_PORT +
-              `/static/uploads/${image.imageUrl}?${Date.now()}`
+              `/static/uploads/${image.project_id}/${image.image_url}`
         }
       >
-        {image.imageName}
+        {image.image_name}
       </a>
       {image.labelled ? (
         <span className="labelDropdown">
           <Dropdown text="Labels">
             <Dropdown.Menu>
-              {Object.keys(image.labelData).map((key, index) =>
-                image.labelData[key].length !== 0 ? (
+              {Object.keys(image.labeldata).map((key, index) =>
+                image.labeldata[key].length !== 0 ? (
                   <Dropdown.Item
-                    text={key + '  ' + image.labelData[key].length}
+                    text={key + '  ' + image.labeldata[key].length}
                     key={index}
                   />
                 ) : null
@@ -357,7 +357,7 @@ const Row = ({
     </Table.Cell>
     <Table.Cell width={3}>
       <div>
-        <Link to={`/labeller/${projectId}/${image._id}`}>
+        <Link to={`/labeller/${projectId}/${image.id}`}>
           <Button icon="pencil" label="Edit" size="tiny" />
         </Link>
         <Button
@@ -367,7 +367,7 @@ const Row = ({
           label="Delete"
           size="tiny"
           onClick={async () => {
-            await onSelect(image._id)
+            await onSelect(image.id)
             onDelete()
           }}
         />

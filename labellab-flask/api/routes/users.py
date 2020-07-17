@@ -15,3 +15,39 @@ usersprint.add_url_rule(
     view_func=userscontroller.userController["register"], 
     methods=["POST"]
 )
+
+usersprint.add_url_rule(
+    "/auth/logout_access",
+    view_func=userscontroller.userController["logout_access"],
+    methods=["POST"]
+)
+
+usersprint.add_url_rule(
+    "/auth/logout_refresh",
+    view_func=userscontroller.userController["logout_refresh"],
+    methods=["POST"]
+)
+
+usersprint.add_url_rule(
+    "/auth/token_refresh",
+    view_func=userscontroller.userController["token_refresh"],
+    methods=["POST"]
+)
+
+usersprint.add_url_rule(
+    "/auth/oauth",
+    view_func=userscontroller.userController["oauth"],
+    methods=["POST"]
+)
+
+usersprint.add_url_rule(
+    "/users/info",
+    view_func=userscontroller.userController["user"],
+    methods=["GET"]
+)
+
+usersprint.add_url_rule(
+    "/users/count_info",
+    view_func=userscontroller.userController["count_info"],
+    methods=["GET"]
+)

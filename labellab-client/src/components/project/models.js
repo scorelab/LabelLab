@@ -75,7 +75,7 @@ class ModelsIndex extends Component {
   }
 
   render() {
-    const { project, setName, setType, setSource } = this.props
+    const { project, models, setName, setType, setSource } = this.props
     const { modelType, modelSource, open } = this.state
 
     return (
@@ -141,12 +141,11 @@ class ModelsIndex extends Component {
           </Table.Header>
 
           <Table.Body>
-            {project &&
-              project.models &&
-              project.models.map((model, index) => (
+            {models &&
+              models.map((model, index) => (
                 <Table.Row key={index}>
                   <Table.Cell>
-                    <Header as="h4">{index}</Header>
+                    <Header as="h4">{index + 1}</Header>
                   </Table.Cell>
                   <Table.Cell>
                     <Header as="h4">{model.name}</Header>
@@ -154,7 +153,7 @@ class ModelsIndex extends Component {
                   <Table.Cell>
                     <Header as="h4">{model.type}</Header>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell collapsing>
                     <Link
                       to={`/model_editor/${model.type}/${model.source}/${project.projectId}/${model._id}`}
                     >
@@ -167,6 +166,12 @@ class ModelsIndex extends Component {
                       onClick={null}
                       basic
                       negative
+                    />
+                    <Button
+                      icon="eye"
+                      label="Test"
+                      size="tiny"
+                      onClick={null}
                     />
                   </Table.Cell>
                 </Table.Row>
@@ -189,7 +194,8 @@ ModelsIndex.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    project: state.projects.currentProject
+    project: state.projects.currentProject,
+    models: state.model.models
   }
 }
 

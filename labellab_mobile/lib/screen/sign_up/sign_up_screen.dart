@@ -35,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: <Widget>[
                 Text(
                   "Sign Up",
-                  style: Theme.of(context).textTheme.headline,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Form(
                   key: _key,
