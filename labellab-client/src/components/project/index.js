@@ -56,6 +56,10 @@ const Models = Loadable({
   loader: () => import('./models'),
   loading: Loading
 })
+const PathTracking = Loadable({
+  loader: () => import('./path-tracking'),
+  loading: Loading
+})
 
 class ProjectIndex extends Component {
   constructor(props) {
@@ -122,6 +126,18 @@ class ProjectIndex extends Component {
                 exact
                 path={`${match.path}/models`}
                 component={Models}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/path-tracking`}
+                component={props=>
+                  <PathTracking
+                    isMarkerShown
+                    googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.GOOGLE_MAPS_API_KEY}`}
+                    loadingElement={<div style={{ height: `100%` }} />}
+                    containerElement={<div style={{ height: `400px` }} />}
+                    mapElement={<div style={{ height: `100%` }} />}
+                  />}
               />
             </Switch>
           </div>
