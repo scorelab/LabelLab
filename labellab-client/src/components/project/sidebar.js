@@ -108,7 +108,30 @@ class ProjectSidebar extends Component {
               >
                 Project Models
                 </Menu.Item>
-            </Menu>
+                <Menu.Item
+                  as={Link}
+                  to={`/project/${project.projectId}/path-tracking`}
+                  name="path-tracking"
+                  active={activeItem === 'pat-tracking'}
+                  onClick={this.handleItemClick}
+                >
+                  Image Path Tracking
+                </Menu.Item>
+              </Menu>
+            </div>
+
+            <Button
+              negative
+              basic
+              className="delete-project-button"
+              onClick={this.handleOpen}
+              content="Delete Project"
+            />
+            <Confirm
+              open={this.state.open}
+              onCancel={this.handleClose}
+              onConfirm={this.handleDeleteProject}
+            />
           </div>
 
           <Button
@@ -124,7 +147,6 @@ class ProjectSidebar extends Component {
             onConfirm={this.handleDeleteProject}
           />
         </div>
-      </div>
     )
   }
 }

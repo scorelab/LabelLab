@@ -62,6 +62,7 @@
     "react-dom": "^16.8.6",
     "react-github-login": "^1.0.3",
     "react-google-login": "^5.1.20",
+    "react-google-maps": "^9.4.5",
     "react-hot-keys": "^1.2.2",
     "react-image-crop": "^8.6.4",
     "react-image-lightbox": "^5.1.1",
