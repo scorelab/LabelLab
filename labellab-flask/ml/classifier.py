@@ -68,43 +68,48 @@ class Classifier:
     # If transfer learning, set the correct Keras Application source
     def set_transfer_source(self, source):
         self.type = "transfer"
-        input = tf.keras.layers.Input(shape=INPUT_SIZE)
-        if source is "DenseNet121":
-            self.base_model = tf.keras.applications.DenseNet121(include_top=False, input_tensor=input)
-        elif source is "DenseNet169":
-            self.base_model = tf.keras.applications.DenseNet169(include_top=False, input_tensor=input)
-        elif source is "DenseNet201":
-            self.base_model = tf.keras.applications.DenseNet201(include_top=False, input_tensor=input)
-        elif source is "InceptionResNetV2":
-            self.base_model = tf.keras.applications.InceptionResNetV2(include_top=False, input_tensor=input)
-        elif source is "InceptionV3":
-            self.base_model = tf.keras.applications.InceptionV3(include_top=False, input_tensor=input)
-        elif source is "MobileNet":
-            self.base_model = tf.keras.applications.MobileNet(include_top=False, input_tensor=input)
-        elif source is "MobileNetV2":
-            self.base_model = tf.keras.applications.MobileNetV2(include_top=False, input_tensor=input)
-        elif source is "NASNetLarge":
-            self.base_model = tf.keras.applications.NASNetLarge(include_top=False, input_tensor=input)
-        elif source is "NASNetMobile":
-            self.base_model = tf.keras.applications.NASNetMobile(include_top=False, input_tensor=input)
-        elif source is "ResNet50":
-            self.base_model = tf.keras.applications.ResNet50(include_top=False, input_tensor=input)
-        elif source is "ResNet50V2":
-            self.base_model = tf.keras.applications.ResNet50V2(include_top=False, input_tensor=input)
-        elif source is "ResNet101":
-            self.base_model = tf.keras.applications.ResNet101(include_top=False, input_tensor=input)
-        elif source is "ResNet101V2":
-            self.base_model = tf.keras.applications.ResNet101V2(include_top=False, input_tensor=input)
-        elif source is "ResNet152":
-            self.base_model = tf.keras.applications.ResNet152(include_top=False, input_tensor=input)
-        elif source is "ResNet152V2":
-            self.base_model = tf.keras.applications.ResNet152V2(include_top=False, input_tensor=input)
-        elif source is "VGG16":
-            self.base_model = tf.keras.applications.VGG16(include_top=False, input_tensor=input)
-        elif source is "VGG19":
-            self.base_model = tf.keras.applications.VGG19(include_top=False, input_tensor=input)
-        elif source is "Xception":
-            self.base_model = tf.keras.applications.Xception(include_top=False, input_tensor=input)
+        if "ml_files" in source:
+            self.base_model = tf.keras.models.load_model(source)
+            for layer in self.base_model.layers:
+                layer.trainable = False
+        else:
+            input = tf.keras.layers.Input(shape=INPUT_SIZE)
+            if source is "DenseNet121":
+                self.base_model = tf.keras.applications.DenseNet121(include_top=False, input_tensor=input)
+            elif source is "DenseNet169":
+                self.base_model = tf.keras.applications.DenseNet169(include_top=False, input_tensor=input)
+            elif source is "DenseNet201":
+                self.base_model = tf.keras.applications.DenseNet201(include_top=False, input_tensor=input)
+            elif source is "InceptionResNetV2":
+                self.base_model = tf.keras.applications.InceptionResNetV2(include_top=False, input_tensor=input)
+            elif source is "InceptionV3":
+                self.base_model = tf.keras.applications.InceptionV3(include_top=False, input_tensor=input)
+            elif source is "MobileNet":
+                self.base_model = tf.keras.applications.MobileNet(include_top=False, input_tensor=input)
+            elif source is "MobileNetV2":
+                self.base_model = tf.keras.applications.MobileNetV2(include_top=False, input_tensor=input)
+            elif source is "NASNetLarge":
+                self.base_model = tf.keras.applications.NASNetLarge(include_top=False, input_tensor=input)
+            elif source is "NASNetMobile":
+                self.base_model = tf.keras.applications.NASNetMobile(include_top=False, input_tensor=input)
+            elif source is "ResNet50":
+                self.base_model = tf.keras.applications.ResNet50(include_top=False, input_tensor=input)
+            elif source is "ResNet50V2":
+                self.base_model = tf.keras.applications.ResNet50V2(include_top=False, input_tensor=input)
+            elif source is "ResNet101":
+                self.base_model = tf.keras.applications.ResNet101(include_top=False, input_tensor=input)
+            elif source is "ResNet101V2":
+                self.base_model = tf.keras.applications.ResNet101V2(include_top=False, input_tensor=input)
+            elif source is "ResNet152":
+                self.base_model = tf.keras.applications.ResNet152(include_top=False, input_tensor=input)
+            elif source is "ResNet152V2":
+                self.base_model = tf.keras.applications.ResNet152V2(include_top=False, input_tensor=input)
+            elif source is "VGG16":
+                self.base_model = tf.keras.applications.VGG16(include_top=False, input_tensor=input)
+            elif source is "VGG19":
+                self.base_model = tf.keras.applications.VGG19(include_top=False, input_tensor=input)
+            elif source is "Xception":
+                self.base_model = tf.keras.applications.Xception(include_top=False, input_tensor=input)
         
     def set_learning_rate(self, learning_rate):
         self.learning_rate = learning_rate

@@ -39,6 +39,13 @@ mlclassifiersprint.add_url_rule(
     methods=["GET"]
 )
 
+# Get all trained models in a project
+mlclassifiersprint.add_url_rule(
+    "/mlclassifier/trained/<int:project_id>",
+    view_func=mlclassifierscontroller.mlclassifiercontroller["get_trained_models"],
+    methods=["GET"]
+)
+
 # Train a saved model
 mlclassifiersprint.add_url_rule(
     "/mlclassifier/train/<int:mlclassifier_id>",

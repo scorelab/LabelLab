@@ -247,6 +247,45 @@ class GetAllModels(MethodView):
             return make_response(jsonify(response)), 500
 
 
+class GetTrainedModels(MethodView):
+    """This class gets all trained models related to a particular project."""
+    @jwt_required
+    def get(self, project_id):
+        """Handle GET request for this view. Url --> /api/v1/mlclassifier/trained/<int:project_id>"""
+        try:
+            if not project_id:
+                response = {
+                    "success":False,
+                    "msg": "Project ID not provided"
+                }
+                return make_response(jsonify(response)), 400
+            
+            models = find_ml_classifiers(project_id)
+            project_models = []
+            for model in models:
+                if model["saved_model_url"] is not None:
+                    project_models.append({
+                        "name": model["name"],
+                        "transfer_source": model["saved_model_url"]
+                    })
+
+            response = {
+                "success": True,
+                "msg": "Trained models found",
+                "body": project_models
+            }
+            return make_response(jsonify(response)), 200
+        
+        except Exception:
+            response = {
+                "success":False,
+                "msg": "Something went wrong!"
+                }
+            # Return a server error using the HTTP Error Code 500 (Internal
+            # Server Error)
+            return make_response(jsonify(response)), 500
+
+
 # TODO: Test again once labeller backend is merged (custom, transfer, and upload)
 class Train(MethodView):
     """
@@ -306,13 +345,13 @@ class Train(MethodView):
             cl.load_data(data=image_df, directory=path, test_split=ml_classifier.test)
 
             # Set the layers
-            if model.source == "upload":
+            if ml_classifier.source == "upload":
                 cl.load_model(f"./model_files/models/{model_id}/savedmodel")
             else:
-                if model.source == "transfer":
-                    cl.set_transfer_source(model.transfer_source)
+                if ml_classifier.source == "transfer":
+                    cl.set_transfer_source(ml_classifier.transfer_source)
                     
-                with open(model.layers_json_url) as f:
+                with open(ml_classifier.layers_json_url) as f:
                     layers_data = json.load(f)
 
                 cl.add_layers(layers_data)
@@ -335,7 +374,7 @@ class Train(MethodView):
 
             # Save the model
             cl.save("./ml_files/models", ml_classifier.id)
-            saved_model_url = f"./model_files/models/{mlclassifier_id}/savedmodel"
+            saved_model_url = f"./ml_files/models/{mlclassifier_id}/savedmodel"
             ml_classifier = update_ml_classifier({
                 "id": mlclassifier_id,
                 "saved_model_url": saved_model_url
@@ -546,6 +585,7 @@ mlclassifiercontroller = {
     "create": CreateMLClassifier.as_view("create"),
     "mlclassifier": MLClassifierInfo.as_view("mlclassifier"),
     "get_all_models": GetAllModels.as_view("get_all_models"),
+    "get_trained_models": GetTrainedModels.as_view("get_trained_models"),
     "train": Train.as_view("train"),
     "test": Test.as_view("test"),
     "export": Export.as_view("export"),
