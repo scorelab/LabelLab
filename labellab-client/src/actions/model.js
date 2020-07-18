@@ -22,7 +22,10 @@ import {
   TEST_MODEL_FAILURE,
   UPLOAD_MODEL_REQUEST,
   UPLOAD_MODEL_SUCCESS,
-  UPLOAD_MODEL_FAILURE
+  UPLOAD_MODEL_FAILURE,
+  GET_TRAINED_MODELS_REQUEST,
+  GET_TRAINED_MODELS_FAILURE,
+  GET_TRAINED_MODELS_SUCCESS,
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -160,7 +163,7 @@ export const removeLayer = (layers, layerToRemove) => {
 export const saveModel = modelData => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/models/save', modelData, true)
+    FetchApi('POST', '/api/v1/mlclassifier/save', modelData, true)
       .then(res => {
         dispatch(success())
       })
@@ -186,7 +189,7 @@ export const saveModel = modelData => {
 export const testModel = modelData => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/models/test', modelData, true)
+    FetchApi('POST', '/api/v1/mlclassifier/test', modelData, true)
       .then(res => {
         dispatch(success())
       })
@@ -212,7 +215,7 @@ export const testModel = modelData => {
 export const uploadModel = modelData => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/models/upload', modelData, true)
+    FetchApi('POST', '/api/v1/mlclassifier/upload', modelData, true)
       .then(res => {
         dispatch(success())
       })
@@ -232,5 +235,31 @@ export const uploadModel = modelData => {
   }
   function failure(error) {
     return { type: UPLOAD_MODEL_FAILURE, payload: error }
+  }
+}
+
+export const getTraiendModels = projectId => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi('GET', '/api/v1/mlclassifier/trained/' + projectId, null, true)
+      .then(res => {
+        dispatch(success())
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.message
+            ? dispatch(failure(err.response.message))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: GET_TRAINED_MODELS_REQUEST }
+  }
+  function success() {
+    return { type: GET_TRAINED_MODELS_SUCCESS }
+  }
+  function failure(error) {
+    return { type: GET_TRAINED_MODELS_FAILURE, payload: error }
   }
 }

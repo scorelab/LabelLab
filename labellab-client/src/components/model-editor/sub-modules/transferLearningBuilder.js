@@ -18,7 +18,8 @@ import {
   setTransferLearningSource,
   addLayer,
   editLayer,
-  removeLayer
+  removeLayer,
+  getTraiendModels
 } from '../../../actions/model'
 import lossOptions from './options/lossOptions'
 import optimizerOptions from './options/optimizerOptions'
@@ -34,15 +35,46 @@ class TransferLearningBuilder extends Component {
 
     this.state = {
       modalOpen: false,
-      editingLayer: null
+      editingLayer: null,
+      trainedModelMap: {},
+      transferLearningOptions: this.getDropdownOptions(
+        transferLearningOptions
+      )
     }
 
     this.lossDropdownOptions = this.getDropdownOptions(lossOptions)
     this.optimizerDropdownOptions = this.getDropdownOptions(optimizerOptions)
     this.metricDropdownOptions = this.getDropdownOptions(metricOptions)
-    this.transferLearningOptions = this.getDropdownOptions(
-      transferLearningOptions
-    )
+  }
+
+  componentDidMount() {
+    const { getTraiendModels, project } = this.props;
+    const { transferLearningOptions } = this.state;
+    const trainedModels = getTraiendModels(project.projectId)
+
+    if (trainedModels && trainedModels.length > 0) {
+      const trainedModelMap = {}
+      // Create a mapping between trained model name and trained model path
+      trainedModels.forEach(trainedModel => {
+        trainedModelMap[trainedModel["name"]] = trainedModel["transfer_source"]
+      })
+
+      // Make an array of trained model names
+      const trainedModelNames = trainedModels.map(trainedModel => trainedModel.name)
+
+      // Create options based on trained model names
+      const trainedModelOptions = this.getDropdownOptions(
+        trainedModelNames
+      )
+
+      // Append trained model options to transfer learning options
+      const combinedTransferLearningOptions = transferLearningOptions.concat(trainedModelOptions)
+
+      this.setState({
+        trainedModelMap,
+        transferLearningOptions: combinedTransferLearningOptions
+      })
+    }
   }
 
   toggleModal = () => {
@@ -76,7 +108,7 @@ class TransferLearningBuilder extends Component {
       editLayer,
       removeLayer
     } = this.props
-    const { modalOpen } = this.state
+    const { modalOpen, transferLearningOptions, trainedModelMap } = this.state
 
     return (
       <Card centered fluid className="transfer-learning-card">
@@ -161,9 +193,14 @@ class TransferLearningBuilder extends Component {
                   placeholder="Choose model to learn on..."
                   selection
                   defaultValue={model.transferSource}
-                  options={this.transferLearningOptions}
-                  onChange={(event, { value }) =>
-                    setTransferLearningSource('transferFrom', value)
+                  options={transferLearningOptions}
+                  onChange={(event, { value }) => {
+                    if (value in trainedModelMap) {
+                      setTransferLearningSource('transferFrom', trainedModelMap[value])
+                    } else {
+                      setTransferLearningSource('transferFrom', value)
+                    }
+                  }
                   }
                 />
                 <br />
@@ -279,11 +316,13 @@ TransferLearningBuilder.propTypes = {
   addLayer: PropTypes.func.isRequired,
   editLayer: PropTypes.func.isRequired,
   removeLayer: PropTypes.func.isRequired,
+  getTraiendModels: PropTypes.func.isRequired,
   model: PropTypes.object
 }
 
 const mapStateToProps = state => ({
-  model: state.model.model
+  model: state.model.model,
+  project: state.projects.currentProject
 })
 
 export default connect(
@@ -293,6 +332,7 @@ export default connect(
     setTransferLearningSource,
     addLayer,
     editLayer,
-    removeLayer
+    removeLayer,
+    getTraiendModels
   }
 )(TransferLearningBuilder)

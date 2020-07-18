@@ -22,13 +22,17 @@ import {
   TEST_MODEL_SUCCESS,
   UPLOAD_MODEL_REQUEST,
   UPLOAD_MODEL_FAILURE,
-  UPLOAD_MODEL_SUCCESS
+  UPLOAD_MODEL_SUCCESS,
+  GET_TRAINED_MODELS_REQUEST,
+  GET_TRAINED_MODELS_FAILURE,
+  GET_TRAINED_MODELS_SUCCESS,
 } from '../constants/index'
 
 const initialState = {
   modelActions: {
     isSaving: false,
     isTesting: false,
+    isFetching: false,
     errors: ''
   },
   model: {
@@ -58,7 +62,6 @@ const initialState = {
   },
   models: [],
   testResult: []
-
 }
 
 const model = (state = initialState, action) => {
@@ -212,6 +215,29 @@ const model = (state = initialState, action) => {
         modelActions: {
           isTesting: false
         }
+      }
+    case GET_TRAINED_MODELS_REQUEST:
+      return {
+        ...state,
+        modelActions: {
+          isFetching: true
+        }
+      }
+    case GET_TRAINED_MODELS_FAILURE:
+      return {
+        ...state,
+        modelActions: {
+          isFetching: false,
+          errors: action.payload
+        }
+      }
+    case GET_TRAINED_MODELS_SUCCESS:
+      return {
+        ...state,
+        modelActions: {
+          isFetching: false
+        },
+        models: action.payload
       }
     default:
       return state
