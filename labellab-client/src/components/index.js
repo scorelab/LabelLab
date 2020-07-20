@@ -87,7 +87,7 @@ class App extends Component {
               component={Labeller}
             />
             <PrivateRoute
-              path={`/model_editor/:type/:source/:projectId`}
+              path={`/model_editor/:type/:source/:projectId/:modelId`}
               component={ModelEditor}
             />
             <PrivateRoute path={`/project/:projectId`} component={Project} />

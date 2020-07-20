@@ -8,6 +8,12 @@ import { testModel } from '../../../actions/model'
 import './css/modelTester.css';
 
 class ModelTester extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            image: null
+        }
+    }
 
     handleUploadImage = (ev) => {
         ev.preventDefault();
@@ -28,6 +34,7 @@ class ModelTester extends React.Component {
     render() {
 
         const { testResult } = this.props;
+        const { image } = this.state
 
         return (
             <Card centered className="model-tester-card" fluid>
@@ -48,8 +55,8 @@ class ModelTester extends React.Component {
                         <label className="ui button" htmlFor="inputfile">
                             Choose a file
                         </label>
-                        {this.uploadInput && (
-                            <img className="preview-image" src={this.state.image} />
+                        {this.uploadInput && image && (
+                            <img className="preview-image" src={image} />
                         )}
                     </div>
                     <br />

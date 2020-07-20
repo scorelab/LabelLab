@@ -31,15 +31,15 @@ class ClassifierEditor extends Component {
   }
 
   render() {
-    const { labels, images, model, saveModel } = this.props
+    const { model, editModel } = this.props
 
-    return (
+    return model ?
       <Grid stackable columns={3}>
         <Grid.Column width={4}>
           <Segment className="classifier-column-heading">
             <Header>Classes</Header>
           </Segment>
-          <LabelSelector labels={labels} images={images} />
+          <LabelSelector />
         </Grid.Column>
         <Grid.Column width={7}>
           <Segment className="classifier-column-heading">
@@ -55,20 +55,17 @@ class ClassifierEditor extends Component {
           <TrainingGraphs />
           <ModelTester />
           <Exporter />
-          <Button positive fluid onClick={() => saveModel(model)}>
+          <Button positive fluid onClick={() => editModel(model, model.id)}>
             Save Changes
           </Button>
         </Grid.Column>
-      </Grid>
-    )
+      </Grid> : <div />
   }
 }
 
 ClassifierEditor.propTypes = {
-  labels: PropTypes.array,
-  images: PropTypes.array,
   model: PropTypes.object,
-  saveModel: PropTypes.func
+  editModel: PropTypes.func
 }
 
 const mapStateToProps = state => ({

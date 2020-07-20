@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import {
   Button,
   Container,
@@ -17,7 +17,10 @@ import {
   setProjectId,
   setName,
   setType,
-  setSource
+  setSource,
+  createModel,
+  getProjectModels,
+  deleteModel
 } from '../../actions'
 import './css/models.css'
 
@@ -59,8 +62,10 @@ class ModelsIndex extends Component {
   }
 
   componentDidMount() {
-    const { setProjectId, project } = this.props
+    const { setProjectId, getProjectModels, project } = this.props
+
     setProjectId(project.projectId)
+    getProjectModels(project.projectId)
   }
 
   fetchProjectCallback = () => {
@@ -75,7 +80,7 @@ class ModelsIndex extends Component {
   }
 
   render() {
-    const { project, models, setName, setType, setSource } = this.props
+    const { project, model, models, setName, setType, setSource, createModel, deleteModel, getProjectModels, history } = this.props
     const { modelType, modelSource, open } = this.state
 
     return (
@@ -117,11 +122,10 @@ class ModelsIndex extends Component {
             />
           </Modal.Content>
           <Modal.Actions>
-            <Link
-              to={`/model_editor/${modelType}/${modelSource}/${project.projectId}`}
-            >
-              <Button positive>Create</Button>
-            </Link>
+            <Button positive onClick={() => createModel(model,
+              (modelId) => history.push(`/model_editor/${modelType}/${modelSource}/${project.projectId}/${modelId}`))}
+            >Create
+            </Button>
           </Modal.Actions>
         </Modal>
 
@@ -155,7 +159,7 @@ class ModelsIndex extends Component {
                   </Table.Cell>
                   <Table.Cell collapsing>
                     <Link
-                      to={`/model_editor/${model.type}/${model.source}/${project.projectId}/${model._id}`}
+                      to={`/model_editor/${model.type}/${model.source}/${project.projectId}/${model.id}`}
                     >
                       <Button icon="pencil" label="Edit" size="tiny" />
                     </Link>
@@ -163,7 +167,9 @@ class ModelsIndex extends Component {
                       icon="trash"
                       label="Delete"
                       size="tiny"
-                      onClick={null}
+                      onClick={() => {
+                        deleteModel(model.id, () => getProjectModels(project.projectId))
+                      }}
                       basic
                       negative
                     />
@@ -189,12 +195,18 @@ ModelsIndex.propTypes = {
   setProjectId: PropTypes.func.isRequired,
   setName: PropTypes.func.isRequired,
   setType: PropTypes.func.isRequired,
-  setSource: PropTypes.func.isRequired
+  setSource: PropTypes.func.isRequired,
+  getProjectModels: PropTypes.func.isRequired,
+  deleteModel: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }),
 }
 
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,
+    model: state.model.model,
     models: state.model.models
   }
 }
@@ -215,10 +227,19 @@ const mapDispatchToProps = dispatch => {
     },
     setSource: source => {
       return dispatch(setSource(source))
+    },
+    createModel: (model, callback) => {
+      return dispatch(createModel(model, callback))
+    },
+    getProjectModels: id => {
+      return dispatch(getProjectModels(id))
+    },
+    deleteModel: (id, callback) => {
+      return dispatch(deleteModel(id, callback))
     }
   }
 }
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ModelsIndex)
+)(withRouter(ModelsIndex))

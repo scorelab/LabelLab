@@ -104,6 +104,7 @@ class TransferLearningBuilder extends Component {
     const {
       model,
       setModelParameter,
+      setTransferLearningSource,
       addLayer,
       editLayer,
       removeLayer
@@ -135,7 +136,7 @@ class TransferLearningBuilder extends Component {
                   fluid
                   placeholder="Epochs..."
                   size="mini"
-                  value={model.epochs}
+                  defaultValue={model.epochs}
                   onChange={e => setModelParameter('epochs', e.target.value)}
                 />
                 <br />
@@ -156,7 +157,7 @@ class TransferLearningBuilder extends Component {
                   fluid
                   placeholder="Batch Size..."
                   size="mini"
-                  value={model.batchSize}
+                  defaultValue={model.batchSize}
                   onChange={e => setModelParameter('batchSize', e.target.value)}
                 />
                 <br />
@@ -178,7 +179,7 @@ class TransferLearningBuilder extends Component {
                   fluid
                   placeholder="Learning Rate..."
                   size="mini"
-                  value={model.learningRate}
+                  defaultValue={model.learningRate}
                   onChange={e =>
                     setModelParameter('learningRate', e.target.value)
                   }
@@ -196,15 +197,15 @@ class TransferLearningBuilder extends Component {
                   options={transferLearningOptions}
                   onChange={(event, { value }) => {
                     if (value in trainedModelMap) {
-                      setTransferLearningSource('transferFrom', trainedModelMap[value])
+                      setTransferLearningSource(trainedModelMap[value])
                     } else {
-                      setTransferLearningSource('transferFrom', value)
+                      setTransferLearningSource(value)
                     }
                   }
                   }
                 />
                 <br />
-                {model.layers.map((layer, index) => {
+                {model.layers && model.layers.map((layer, index) => {
                   return (
                     <Layer
                       key={index}

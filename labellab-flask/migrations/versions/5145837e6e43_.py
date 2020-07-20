@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 3d57d00ce82c
+Revision ID: 5145837e6e43
 Revises: 
-Create Date: 2020-06-28 17:46:05.214138
+Create Date: 2020-07-26 01:17:22.671669
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3d57d00ce82c'
+revision = '5145837e6e43'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -97,7 +97,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('labeldata',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.String(length=45), nullable=False),
     sa.Column('months_passed', sa.Integer(), nullable=True),
     sa.Column('image_id', sa.Integer(), nullable=False),
     sa.Column('label_id', sa.Integer(), nullable=False),
@@ -121,10 +121,10 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('point',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.String(length=45), nullable=False),
     sa.Column('y_coordinate', sa.Float(), nullable=False),
     sa.Column('x_coordinate', sa.Float(), nullable=False),
-    sa.Column('labeldata_id', sa.Integer(), nullable=False),
+    sa.Column('labeldata_id', sa.String(length=45), nullable=False),
     sa.ForeignKeyConstraint(['labeldata_id'], ['labeldata.id'], onupdate='cascade', ondelete='cascade'),
     sa.PrimaryKeyConstraint('id')
     )

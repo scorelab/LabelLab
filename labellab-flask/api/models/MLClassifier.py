@@ -8,9 +8,14 @@ from api.models.Label import Label
 
 
 optional_params = ["id", "name", "type", "source", "preprocessingSteps", "layers", "train", "test", "validation", "epochs",
-                   "batch_size", "learning_rate", "loss", "optimizer", "metric", "loss_graph_url", "accuracy_graph_url", "saved_model_url", "transfer_source", "labels"]
+                   "batchSize", "learningRate", "loss", "optimizer", "metric", "lossGraphUrl", "accuracyGraphUrl", "savedModelUrl", "transferSource", "labels"]
 
 basedir = path.abspath(path.curdir)
+
+def get_layers(layers_dir):
+    with open(layers_dir) as f:
+        layers = json.load(f)
+    return layers["layers"]
 
 def set_layers(model_data):
     layers = {"layers": model_data["layers"]}
@@ -26,6 +31,11 @@ def set_layers(model_data):
     with open(layers_url, "w") as f:
         json.dump(layers, f)
     return layers_url
+
+def get_preprocessing_steps(steps_dir):
+    with open(steps_dir) as f:
+        preprocessing_steps = json.load(f)
+    return preprocessing_steps["steps"]
 
 def set_preprocessing_steps(model_data):
     preprocessing_steps = {"steps": model_data["preprocessingSteps"]}

@@ -26,7 +26,17 @@ import {
   GET_TRAINED_MODELS_REQUEST,
   GET_TRAINED_MODELS_FAILURE,
   GET_TRAINED_MODELS_SUCCESS,
+  GET_PROJECT_MODELS_REQUEST,
+  GET_PROJECT_MODELS_FAILURE,
+  GET_PROJECT_MODELS_SUCCESS,
+  DELETE_MODEL_SUCCESS,
+  DELETE_MODEL_FAILURE,
+  DELETE_MODEL_REQUEST,
+  GET_MODEL_REQUEST,
+  GET_MODEL_FAILURE,
+  GET_MODEL_SUCCESS,
 } from '../constants/index'
+import camelCase from "camelcase"
 
 const initialState = {
   modelActions: {
@@ -64,7 +74,23 @@ const initialState = {
   testResult: []
 }
 
+const keysToCamelCase = data => {
+  const newData = {}
+
+  for (var key in data) {
+    newData[camelCase(key)] = data[key]
+  }
+
+  return newData
+}
+
 const model = (state = initialState, action) => {
+
+  // This needs to be done since the backend passes variables in camelcase
+  if (action.payload && action.payload.constructor == Object) {
+    action.payload = keysToCamelCase(action.payload)
+  }
+
   switch (action.type) {
     case SET_EXPORT_TYPE:
       return {
@@ -136,7 +162,10 @@ const model = (state = initialState, action) => {
     case SET_TRANSFER_SOURCE:
       return {
         ...state,
-        transferSource: action.payload
+        model: {
+          ...state.model,
+          transferSource: action.payload
+        }
       }
     case EDIT_LAYER:
     case ADD_LAYER:
@@ -166,9 +195,32 @@ const model = (state = initialState, action) => {
     case SAVE_MODEL_SUCCESS:
       return {
         ...state,
-        model: action.payload.model,
+        model: action.payload,
         modelActions: {
           isSaving: false
+        }
+      }
+    case GET_MODEL_REQUEST:
+      return {
+        ...state,
+        modelActions: {
+          isFetching: true
+        }
+      }
+    case GET_MODEL_FAILURE:
+      return {
+        ...state,
+        modelActions: {
+          isFetching: false,
+          errors: action.payload
+        }
+      }
+    case GET_MODEL_SUCCESS:
+      return {
+        ...state,
+        model: action.payload,
+        modelActions: {
+          isFetching: false
         }
       }
     case TEST_MODEL_REQUEST:
@@ -216,14 +268,18 @@ const model = (state = initialState, action) => {
           isTesting: false
         }
       }
+    case GET_PROJECT_MODELS_REQUEST:
     case GET_TRAINED_MODELS_REQUEST:
+    case DELETE_MODEL_REQUEST:
       return {
         ...state,
         modelActions: {
           isFetching: true
         }
       }
+    case GET_PROJECT_MODELS_FAILURE:
     case GET_TRAINED_MODELS_FAILURE:
+    case DELETE_MODEL_FAILURE:
       return {
         ...state,
         modelActions: {
@@ -231,7 +287,9 @@ const model = (state = initialState, action) => {
           errors: action.payload
         }
       }
+    case GET_PROJECT_MODELS_SUCCESS:
     case GET_TRAINED_MODELS_SUCCESS:
+    case DELETE_MODEL_SUCCESS:
       return {
         ...state,
         modelActions: {

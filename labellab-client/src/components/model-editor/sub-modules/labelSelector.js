@@ -34,8 +34,8 @@ class LabelSelector extends Component {
 
   getModelLabelDetails = () => {
     const { labels, model } = this.props
-    const detailedLabels = labels.filter(label =>
-      model.labels.includes(label.id)
+    const detailedLabels = labels.length && labels.filter(label =>
+      model.labels && model.labels.includes(label.id)
     )
     return detailedLabels
   }
@@ -92,16 +92,16 @@ class AddLabelModal extends Component {
     this.dropdownOptions = []
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     const { labels } = this.props
 
-    const validOptions = labels.filter(label => label.count > 0)
+    const validOptions = labels.length ? labels.filter(label => label.count > 0) : []
 
     this.dropdownOptions = validOptions.map((label, index) => {
       return {
-        key: label.name,
-        text: label.name,
-        value: label.name,
+        key: label.label_name,
+        text: label.label_name,
+        value: label.label_name,
         id: label.id
       }
     })
@@ -164,7 +164,7 @@ const LabelCard = props => {
     for (var i = 0; i < Math.min(3, images.length); i++) {
       const image_url = `${process.env.REACT_APP_HOST}:${
         process.env.REACT_APP_SERVER_PORT
-      }/static/uploads/${images[i].project_id}/${images[i].image_url}`
+        }/static/uploads/${images[i].project_id}/${images[i].image_url}`
 
       const imageTag = <img key={i} className="label-image" src={image_url} />
       imageTags.push(imageTag)
@@ -179,16 +179,17 @@ const LabelCard = props => {
     <Card fluid className="label-card">
       <div className="label-header-row">
         <p className="label-name">
-          {label.name}
+          {label.label_name}
           <Icon
             className="label-type-icon"
             size="small"
-            name={iconMapping[label.type]}
+            name={iconMapping[label.label_type]}
           />
         </p>
         <Icon
           name="close"
-          size="big"
+          color="red"
+          size="large"
           className="label-delete-icon"
           onClick={removeLabel}
         ></Icon>
@@ -213,7 +214,9 @@ LabelSelector.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  model: state.model.model
+  model: state.model.model,
+  labels: state.labels.labels,
+  images: state.projects.currentProject.images
 })
 
 export default withRouter(

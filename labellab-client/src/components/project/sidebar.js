@@ -56,78 +56,74 @@ class ProjectSidebar extends Component {
     const { activeItem } = this.state
     return (
       <div className="sidebar-parent">
-        {project.images ? (
-          <div className="sidebar-container">
-            {this.props.children}
-            <div className="sidebar-menu-parent">
-              <Menu vertical size="large">
-                <Menu.Item
-                  as={Link}
-                  to={`/project/${project.projectId}/team`}
-                  name="team"
-                  active={activeItem === 'team'}
-                  onClick={this.handleItemClick}
-                >
-                  Project Team
+        <div className="sidebar-container">
+          {this.props.children}
+          <div className="sidebar-menu-parent">
+            <Menu vertical size="large">
+              <Menu.Item
+                as={Link}
+                to={`/project/${project.projectId}/team`}
+                name="team"
+                active={activeItem === 'team'}
+                onClick={this.handleItemClick}
+              >
+                Project Team
                 </Menu.Item>
 
-                <Menu.Item
-                  as={Link}
-                  to={`/project/${project.projectId}/images`}
-                  name="images"
-                  active={activeItem === 'images'}
-                  onClick={this.handleItemClick}
-                >
-                  Project Images
-                  <Label>{project.images.length}</Label>
-                </Menu.Item>
+              <Menu.Item
+                as={Link}
+                to={`/project/${project.projectId}/images`}
+                name="images"
+                active={activeItem === 'images'}
+                onClick={this.handleItemClick}
+              >
+                Project Images
+                  {project.images && <Label>{project.images.length}</Label>}
+              </Menu.Item>
 
-                <Menu.Item
-                  as={Link}
-                  to={`/project/${project.projectId}/analytics`}
-                  name="analytics"
-                  active={activeItem === 'analytics'}
-                  onClick={this.handleItemClick}
-                >
-                  Project Analytics
+              <Menu.Item
+                as={Link}
+                to={`/project/${project.projectId}/analytics`}
+                name="analytics"
+                active={activeItem === 'analytics'}
+                onClick={this.handleItemClick}
+              >
+                Project Analytics
                 </Menu.Item>
-                <Menu.Item
-                  as={Link}
-                  to={`/project/${project.projectId}/labels`}
-                  name="labels"
-                  active={activeItem === 'labels'}
-                  onClick={this.handleItemClick}
-                >
-                  Project Labels
+              <Menu.Item
+                as={Link}
+                to={`/project/${project.projectId}/labels`}
+                name="labels"
+                active={activeItem === 'labels'}
+                onClick={this.handleItemClick}
+              >
+                Project Labels
                 </Menu.Item>
-                <Menu.Item
-                  as={Link}
-                  to={`/project/${project.projectId}/models`}
-                  name="models"
-                  active={activeItem === 'models'}
-                  onClick={this.handleItemClick}
-                >
-                  Project Models
+              <Menu.Item
+                as={Link}
+                to={`/project/${project.projectId}/models`}
+                name="models"
+                active={activeItem === 'models'}
+                onClick={this.handleItemClick}
+              >
+                Project Models
                 </Menu.Item>
-              </Menu>
-            </div>
-
-            <Button
-              negative
-              basic
-              className="delete-project-button"
-              onClick={this.handleOpen}
-              content="Delete Project"
-            />
-            <Confirm
-              open={this.state.open}
-              onCancel={this.handleClose}
-              onConfirm={this.handleDeleteProject}
-            />
+            </Menu>
           </div>
-        ) : (
-          <div />
-        )}
+
+          <Button
+            negative
+            basic
+            className="delete-project-button"
+            onClick={this.handleOpen}
+            content="Delete Project"
+          />
+          <Confirm
+            open={this.state.open}
+            onCancel={this.handleClose}
+            onConfirm={this.handleDeleteProject}
+          />
+        </div>
       </div>
     )
   }

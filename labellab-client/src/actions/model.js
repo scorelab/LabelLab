@@ -26,6 +26,15 @@ import {
   GET_TRAINED_MODELS_REQUEST,
   GET_TRAINED_MODELS_FAILURE,
   GET_TRAINED_MODELS_SUCCESS,
+  GET_PROJECT_MODELS_REQUEST,
+  GET_PROJECT_MODELS_SUCCESS,
+  GET_PROJECT_MODELS_FAILURE,
+  DELETE_MODEL_REQUEST,
+  DELETE_MODEL_SUCCESS,
+  DELETE_MODEL_FAILURE,
+  GET_MODEL_REQUEST,
+  GET_MODEL_SUCCESS,
+  GET_MODEL_FAILURE,
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -67,7 +76,10 @@ export const setSource = sourceType => {
 }
 
 export const addLabel = (labels, labelToAdd) => {
-  if (!labels.includes(labelToAdd)) {
+  if (!labels) {
+    labels = [labelToAdd]
+  }
+  else if (!labels.includes(labelToAdd)) {
     labels.push(labelToAdd)
   }
 
@@ -87,7 +99,10 @@ export const removeLabel = (labels, labelToRemove) => {
 }
 
 export const addPreprocessingStep = (steps, stepToAdd) => {
-  if (steps.filter(step => step.name === stepToAdd.name).length <= 0) {
+  if (!steps) {
+    steps = [stepToAdd]
+  }
+  else if (steps.filter(step => step.name === stepToAdd.name).length <= 0) {
     steps.push(stepToAdd)
   }
 
@@ -134,7 +149,11 @@ export const setTransferLearningSource = value => {
 }
 
 export const addLayer = (layers, layer) => {
-  layers.push(layer)
+  if (!layers) {
+    layers = [layer]
+  } else {
+    layers.push(layer)
+  }
 
   return {
     type: ADD_LAYER,
@@ -160,17 +179,97 @@ export const removeLayer = (layers, layerToRemove) => {
   }
 }
 
-export const saveModel = modelData => {
+export const getProjectModels = projectId => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/mlclassifier/save', modelData, true)
+    FetchApi.get('/api/v1/mlclassifier/all/' + projectId)
       .then(res => {
-        dispatch(success())
+        dispatch(success(res.data.body))
       })
       .catch(err => {
         if (err.response) {
-          err.response.message
-            ? dispatch(failure(err.response.message))
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: GET_PROJECT_MODELS_REQUEST }
+  }
+  function success(data) {
+    return { type: GET_PROJECT_MODELS_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: GET_PROJECT_MODELS_FAILURE, payload: error }
+  }
+}
+
+export const getModel = modelId => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.get('/api/v1/mlclassifier/' + modelId)
+      .then(res => {
+        dispatch(success(res.data.body))
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: GET_MODEL_REQUEST }
+  }
+  function success(data) {
+    return { type: GET_MODEL_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: GET_MODEL_FAILURE, payload: error }
+  }
+}
+
+export const deleteModel = (modelId, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.delete('/api/v1/mlclassifier/' + modelId, null)
+      .then(res => {
+        dispatch(success())
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: DELETE_MODEL_REQUEST }
+  }
+  function success() {
+    return { type: DELETE_MODEL_SUCCESS }
+  }
+  function failure(error) {
+    return { type: DELETE_MODEL_FAILURE, payload: error }
+  }
+}
+
+export const createModel = (modelData, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.post('/api/v1/mlclassifier', modelData)
+      .then(res => {
+        dispatch(success(res.data.body.model))
+        callback(res.data.body.id)
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
             : dispatch(failure(err.response.statusText, null))
         }
       })
@@ -178,8 +277,34 @@ export const saveModel = modelData => {
   function request() {
     return { type: SAVE_MODEL_REQUEST }
   }
-  function success() {
-    return { type: SAVE_MODEL_SUCCESS }
+  function success(data) {
+    return { type: SAVE_MODEL_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: SAVE_MODEL_FAILURE, payload: error }
+  }
+}
+
+export const editModel = (modelData, modelId) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.put('/api/v1/mlclassifier/' + modelId, modelData)
+      .then(res => {
+        dispatch(success(res.data.body))
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: SAVE_MODEL_REQUEST }
+  }
+  function success(data) {
+    return { type: SAVE_MODEL_SUCCESS, payload: data }
   }
   function failure(error) {
     return { type: SAVE_MODEL_FAILURE, payload: error }
@@ -189,7 +314,7 @@ export const saveModel = modelData => {
 export const testModel = modelData => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/mlclassifier/test', modelData, true)
+    FetchApi.post('/api/v1/mlclassifier/test', modelData, true)
       .then(res => {
         dispatch(success())
       })
@@ -215,7 +340,7 @@ export const testModel = modelData => {
 export const uploadModel = modelData => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/mlclassifier/upload', modelData, true)
+    FetchApi.post('/api/v1/mlclassifier/upload', modelData, true)
       .then(res => {
         dispatch(success())
       })
@@ -241,7 +366,7 @@ export const uploadModel = modelData => {
 export const getTraiendModels = projectId => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/mlclassifier/trained/' + projectId, null, true)
+    FetchApi.get('/api/v1/mlclassifier/trained/' + projectId, null, true)
       .then(res => {
         dispatch(success())
       })
