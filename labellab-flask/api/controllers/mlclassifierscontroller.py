@@ -25,7 +25,7 @@ from api.helpers.mlclassifier import (
 ml_files_dir = config["development"].ML_FILES_DIR
 
 class CreateMLClassifier(MethodView):
-    """This class saves a new classifier model."""
+    """This class creates a new classifier model."""
     @jwt_required
     def post(self):
         """
@@ -41,11 +41,6 @@ class CreateMLClassifier(MethodView):
             model_data["type"] = post_data["type"]
             model_data["source"] = post_data["source"]
             model_data["project_id"] = find_project(post_data["projectId"])
-
-            # Add the optional params if the request contains them
-            for param in optional_params:
-                if param in post_data:
-                    model_data[param] = post_data[param]
 
         except KeyError as err:
             response = {
@@ -65,7 +60,7 @@ class CreateMLClassifier(MethodView):
 
         # Saving the classifier model to the database
         try:
-            # Save model with necessary fields first
+            # Save model with necessary fields 
             ml_classifier = MLClassifier({
                 "name": model_data["name"],
                 "type": model_data["type"],
@@ -73,10 +68,6 @@ class CreateMLClassifier(MethodView):
                 "project_id": model_data["project_id"],
             })
             saved_ml_classifier = save_ml_classifier(ml_classifier)
-            model_data["id"] = saved_ml_classifier["id"]
-
-            # Save model with the rest of the fields
-            saved_ml_classifier = update_ml_classifier(model_data)
 
             response = {
                 "success": True,
@@ -165,7 +156,6 @@ class MLClassifierInfo(MethodView):
             model_data["name"] = post_data["name"]
             model_data["type"] = post_data["type"]
             model_data["source"] = post_data["source"]
-            model_data["project_id"] = find_project(post_data["projectId"])
 
             # Add the optional params if the request contains them
             for param in optional_params:
@@ -176,15 +166,6 @@ class MLClassifierInfo(MethodView):
             response = {
                 "success": False,
                 "msg": f'{str(err)} key is not present'
-            }
-            return make_response(jsonify(response)), 400
-
-        project_id = post_data["projectId"]
-
-        if not project_id:
-            response = {
-                "success": False,
-                "msg": "Project ID is not provided."
             }
             return make_response(jsonify(response)), 400
 
@@ -228,6 +209,7 @@ class GetAllModels(MethodView):
                     "id": model["id"],
                     "name": model["name"],
                     "type": model["type"],
+                    "source": model["source"]
                 })
 
             response = {

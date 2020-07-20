@@ -3,7 +3,9 @@ from api.models.MLClassifier import (
     MLClassifier, 
     optional_params, 
     set_layers, 
+    get_layers,
     set_preprocessing_steps, 
+    get_preprocessing_steps,
     set_labels,
     delete_ml_classifier_files
 )
@@ -34,6 +36,11 @@ def find_by_id(_id):
     classifier_data = ml_classifier_schema.dump(ml_classifier).data
     if(len(label_ids) > 0):
         classifier_data["labels"] = label_ids
+    if("preprocessing_steps_json_url" in classifier_data and ml_classifier.preprocessing_steps_json_url is not None):
+        classifier_data["preprocessingSteps"] = get_preprocessing_steps(ml_classifier.preprocessing_steps_json_url)
+    if("layers_json_url" in classifier_data and ml_classifier.layers_json_url is not None):
+        classifier_data["layers"] = get_layers(ml_classifier.layers_json_url)
+    
     return classifier_data
 
 def find_all_by_project_id(_project_id):
@@ -62,28 +69,27 @@ def update(classifier_data):
     if "name" in classifier_data: ml_classifier.name = classifier_data["name"]
     if "type" in classifier_data: ml_classifier.type = classifier_data["type"]
     if "source" in classifier_data: ml_classifier.source = classifier_data["source"]
-    if "project_id" in classifier_data: ml_classifier.project_id = classifier_data["project_id"]["id"]
     if "train" in classifier_data: ml_classifier.train = classifier_data["train"]
     if "test" in classifier_data: ml_classifier.test = classifier_data["test"]
     if "validation" in classifier_data: ml_classifier.validation = classifier_data["validation"]
     if "epochs" in classifier_data: ml_classifier.epochs = classifier_data["epochs"]
-    if "batch_size" in classifier_data: ml_classifier.batch_size = classifier_data["batch_size"]
-    if "learning_rate" in classifier_data: ml_classifier.learning_rate = classifier_data["learning_rate"]
+    if "batchSize" in classifier_data: ml_classifier.batch_size = classifier_data["batchSize"]
+    if "learningRate" in classifier_data: ml_classifier.learning_rate = classifier_data["learningRate"]
     if "loss" in classifier_data: ml_classifier.loss = classifier_data["loss"]
     if "optimizer" in classifier_data: ml_classifier.optimizer = classifier_data["optimizer"]
     if "metric" in classifier_data: ml_classifier.metric = classifier_data["metric"]
-    if "loss_graph_url" in classifier_data: ml_classifier.loss_graph_url = classifier_data["loss_graph_url"]
-    if "accuracy_graph_url" in classifier_data: ml_classifier.accuracy_graph_url = classifier_data["accuracy_graph_url"]
-    if "saved_model_url" in classifier_data: ml_classifier.saved_model_url = classifier_data["saved_model_url"]
-    if "transfer_source" in classifier_data: ml_classifier.transfer_source = classifier_data["transfer_source"]
+    if "lossGraphUrl" in classifier_data: ml_classifier.loss_graph_url = classifier_data["lossGraphUrl"]
+    if "accuracyGraphUrl" in classifier_data: ml_classifier.accuracy_graph_url = classifier_data["accuracyGraphUrl"]
+    if "savedModelUrl" in classifier_data: ml_classifier.saved_model_url = classifier_data["savedModelUrl"]
+    if "transferSource" in classifier_data: ml_classifier.transfer_source = classifier_data["transferSource"]
     if "preprocessingSteps" in classifier_data: ml_classifier.preprocessing_steps_json_url = set_preprocessing_steps(classifier_data)
     if "layers" in classifier_data: ml_classifier.layers_json_url = set_layers(classifier_data)
-    if "preprocessing_steps_json_url" in classifier_data: ml_classifier.preprocessing_steps_json_url = classifier_data["preprocessing_steps_json_url"]
-    if "layers_json_url" in classifier_data: ml_classifier.layers_json_url = classifier_data["layers_json_url"]
+    if "preprocessingStepsJsonUrl" in classifier_data: ml_classifier.preprocessing_steps_json_url = classifier_data["preprocessingStepsJsonUrl"]
+    if "layersJsonUrl" in classifier_data: ml_classifier.layers_json_url = classifier_data["layersJsonUrl"]
 
     ml_classifier.labels = []
 
-    if "labels" in classifier_data:
+    if "labels" in classifier_data and classifier_data["labels"] is not None:
         label_ids = []
         for label_id in classifier_data["labels"]:
             label = Label.query.get(label_id)
@@ -95,6 +101,10 @@ def update(classifier_data):
     classifier_data = ml_classifier_schema.dump(ml_classifier).data
     if("label_ids" in locals() and len(label_ids) > 0):
         classifier_data["labels"] = label_ids
+    if(ml_classifier.preprocessing_steps_json_url is not None):
+        classifier_data["preprocessingSteps"] = get_preprocessing_steps(ml_classifier.preprocessing_steps_json_url)
+    if(ml_classifier.layers_json_url is not None):
+        classifier_data["layers"] = get_layers(ml_classifier.layers_json_url)
     return classifier_data
 
 def save(ml_classifier):
@@ -103,7 +113,4 @@ def save(ml_classifier):
     """
     db.session.add(ml_classifier)
     db.session.commit()
-    classifier_data = ml_classifier_schema.dump(ml_classifier).data
-    if (hasattr(ml_classifier, "label_ids") and ml_classifier.label_ids is not None):
-        classifier_data["labels"] = ml_classifier.label_ids
-    return classifier_data
+    return ml_classifier_schema.dump(ml_classifier).data

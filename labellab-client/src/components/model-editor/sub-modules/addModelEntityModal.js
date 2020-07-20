@@ -15,7 +15,7 @@ class AddModelEntityModal extends Component {
     this.dropdownOptions = []
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     if (this.dropdownOptions.length === 0) {
       this.dropdownOptions = this.getEntityOptions(this.props.options)
     }

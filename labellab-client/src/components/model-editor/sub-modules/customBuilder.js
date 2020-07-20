@@ -98,7 +98,7 @@ class CustomBuilder extends Component {
                                     fluid
                                     placeholder="Epochs..."
                                     size="mini"
-                                    value={model.epochs}
+                                    defaultValue={model.epochs}
                                     onChange={e => setModelParameter('epochs', e.target.value)}
                                 />
                                 <br />
@@ -119,7 +119,7 @@ class CustomBuilder extends Component {
                                     fluid
                                     placeholder="Batch Size..."
                                     size="mini"
-                                    value={model.batchSize}
+                                    defaultValue={model.batchSize}
                                     onChange={e => setModelParameter('batchSize', e.target.value)}
                                 />
                                 <br />
@@ -141,7 +141,7 @@ class CustomBuilder extends Component {
                                     fluid
                                     placeholder="Learning Rate..."
                                     size="mini"
-                                    value={model.learningRate}
+                                    defaultValue={model.learningRate}
                                     onChange={e =>
                                         setModelParameter('learningRate', e.target.value)
                                     }
@@ -151,7 +151,7 @@ class CustomBuilder extends Component {
                                 <Button positive>Train</Button>
                             </Grid.Column>
                             <Grid.Column width={12}>
-                                {model.layers.map((layer, index) => {
+                                {model.layers && model.layers.map((layer, index) => {
                                     return (
                                         <Layer
                                             key={index}

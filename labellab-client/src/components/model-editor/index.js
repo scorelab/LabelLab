@@ -4,9 +4,7 @@ import PropTypes from 'prop-types'
 import Loadable from 'react-loadable'
 import Loader from '../loading/index'
 
-import { fetchLabels } from '../../actions/label'
-import { fetchProject } from '../../actions/project/fetchDetails'
-import { saveModel } from '../../actions/model'
+import { fetchLabels, fetchProject, editModel, getModel } from '../../actions/index'
 
 import './css/modelEditor.css'
 
@@ -22,23 +20,22 @@ const ClassifierEditor = Loadable({
 
 class ModelEditor extends Component {
   componentDidMount() {
-    const { fetchLabels, fetchProject, match } = this.props
+    const { fetchLabels, fetchProject, getModel, match } = this.props
 
+    getModel(match.params.modelId)
     fetchLabels(match.params.projectId)
     fetchProject(match.params.projectId)
   }
 
   getEditorType = () => {
-    const { match, labels, project, saveModel } = this.props
+    const { match, editModel } = this.props
 
     switch (match.params.type) {
       case 'classifier':
         return (
           <ClassifierEditor
-            labels={labels}
-            images={project.images}
             source={match.params.source}
-            saveModel={saveModel}
+            editModel={editModel}
           />
         )
       default:
@@ -52,14 +49,11 @@ class ModelEditor extends Component {
 }
 
 ModelEditor.propTypes = {
-  labels: PropTypes.array,
   fetchLabels: PropTypes.func,
-  fetchProject: PropTypes.func,
-  saveModel: PropTypes.func
+  fetchProject: PropTypes.func
 }
 
 const mapStateToProps = state => ({
-  labels: state.labels.labels,
   project: state.projects.currentProject
 })
 
@@ -71,9 +65,12 @@ const mapDispatchToProps = dispatch => {
     fetchProject: projectId => {
       return dispatch(fetchProject(projectId))
     },
-    saveModel: modelData => {
-      return dispatch(saveModel(modelData))
-    }
+    editModel: (model, modelId) => {
+      return dispatch(editModel(model, modelId))
+    },
+    getModel: modelId => {
+      return dispatch(getModel(modelId))
+    },
   }
 }
 

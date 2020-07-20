@@ -71,7 +71,7 @@ class PreprocessingSelector extends Component {
           </div>
         </Card.Content>
         <Card.Content>
-          {model.preprocessingSteps.map((step, index) => {
+          {model.preprocessingSteps && model.preprocessingSteps.map((step, index) => {
             return (
               <PreprocessingStep
                 key={index}
@@ -96,36 +96,36 @@ class PreprocessingSelector extends Component {
                 <Grid.Column>
                   <Input
                     label="Train"
-                    placeholder="60%"
+                    placeholder="0.6"
                     fluid
                     size="mini"
                     className="train-test-split-option"
                     name="train"
-                    value={model.train}
+                    defaultValue={model.train}
                     onChange={this.handleChange}
                   />
                 </Grid.Column>
                 <Grid.Column>
                   <Input
                     label="Validation"
-                    placeholder="20%"
+                    placeholder="0.2"
                     fluid
                     size="mini"
                     className="train-test-split-option"
                     name="validation"
-                    value={model.validation}
+                    defaultValue={model.validation}
                     onChange={this.handleChange}
                   />
                 </Grid.Column>
                 <Grid.Column>
                   <Input
                     label="Test"
-                    placeholder="20%"
+                    placeholder="0.2"
                     fluid
                     size="mini"
                     className="train-test-split-option"
                     name="test"
-                    value={model.test}
+                    defaultValue={model.test}
                     onChange={this.handleChange}
                   />
                 </Grid.Column>
