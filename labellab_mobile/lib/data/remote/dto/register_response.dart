@@ -1,4 +1,3 @@
-
 class RegisterResponse {
   String msg;
   String errField;
