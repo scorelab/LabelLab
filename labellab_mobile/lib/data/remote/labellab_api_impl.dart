@@ -6,6 +6,7 @@ import 'package:labellab_mobile/config.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/data/remote/dto/register_response.dart';
+import 'package:labellab_mobile/data/remote/fake_server/fake_server.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
@@ -22,8 +23,11 @@ import 'package:labellab_mobile/model/user.dart';
 
 class LabelLabAPIImpl extends LabelLabAPI {
   Dio _dio;
+  FakeServer _fake;
 
-  LabelLabAPIImpl() : _dio = Dio();
+  LabelLabAPIImpl()
+      : _dio = Dio(),
+        _fake = FakeServer();
 
   /// BASE_URL - Change according to current labellab server
   static const String BASE_URL = API_BASE_URL;
@@ -178,8 +182,10 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        final project = Project.fromJson(response.data['body'],
+        Project project = Project.fromJson(response.data['body'],
             imageEndpoint: STATIC_UPLOADS_URL);
+        _fake.initGroup(project.id, project.images);
+        project.groups = _fake.getGroups;
         return project;
       } else {
         throw Exception("Request unsuccessfull");
@@ -424,19 +430,21 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<Group> getGroup(String token, String id) {
-    Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
-    );
-    return _dio
-        .get(API_URL + ENDPOINT_GROUP + "/$id/get", options: options)
-        .then((response) {
-      final bool isSuccess = response.data['success'];
-      if (isSuccess) {
-        return Group.fromJson(response.data['body']);
-      } else {
-        throw Exception("Request unsuccessfull");
-      }
-    });
+    // Options options = Options(
+    //   headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    // );
+    // return _dio
+    //     .get(API_URL + ENDPOINT_GROUP + "/$id/get", options: options)
+    //     .then((response) {
+    //   final bool isSuccess = response.data['success'];
+    //   if (isSuccess) {
+    //     return Group.fromJson(response.data['body']);
+    //   } else {
+    //     throw Exception("Request unsuccessfull");
+    //   }
+    // });
+
+    return Future.delayed(Duration(seconds: 1)).then((value) => _fake.getGroup);
   }
 
   @override

@@ -14,7 +14,7 @@ class ProjectViewGroupBloc {
   bool _isLoading = false;
 
   ProjectViewGroupBloc(this.projectId, this.groupId) {
-    // fetchGroup();
+    fetchGroup();
   }
 
   void fetchGroup() {
