@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:labellab_mobile/data/repository.dart';
-import 'package:labellab_mobile/model/api_response.dart';
+import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
 import 'package:logger/logger.dart';
