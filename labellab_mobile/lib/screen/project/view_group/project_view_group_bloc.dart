@@ -14,10 +14,14 @@ class ProjectViewGroupBloc {
   bool _isLoading = false;
 
   ProjectViewGroupBloc(this.projectId, this.groupId) {
-    fetchGroup();
+    _loadGroup();
   }
 
-  void fetchGroup() {
+  void refresh() {
+    _loadGroup();
+  }
+
+  void _loadGroup() {
     if (_isLoading) return;
     _isLoading = true;
     _stateController.add(ProjectViewGroupState.loading(group: _group));

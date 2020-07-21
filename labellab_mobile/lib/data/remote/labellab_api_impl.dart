@@ -416,6 +416,20 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<ApiResponse> addGroupImages(
+      String token, String projectId, String groupId, List<String> images) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .put(API_URL + ENDPOINT_GROUP + "/$groupId/add-images",
+            options: options, data: images)
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
   Future<ApiResponse> updateGroup(String token, Group group) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
