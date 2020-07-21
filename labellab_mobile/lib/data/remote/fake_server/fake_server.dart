@@ -6,7 +6,7 @@ class FakeServer {
 
   void initGroup(String projectId, List<Image> images) {
     _instanceGroup.projectId = projectId;
-    _instanceGroup.images = images;
+    _instanceGroup.images = [images.first, images.last];
   }
 
   Group get getGroup => _instanceGroup;

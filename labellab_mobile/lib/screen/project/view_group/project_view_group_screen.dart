@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/view_group/project_view_group_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_group/project_view_group_state.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +49,8 @@ class ProjectViewGroupScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                onTap: () => _gotoViewImage(
+                                    context, _state.group.projectId, image.id),
                               );
                             }).toList(),
                           )
@@ -55,7 +58,10 @@ class ProjectViewGroupScreen extends StatelessWidget {
                             child: Text("No images so far"),
                           ),
                   ),
-            floatingActionButton: _buildFloatingActionButton(),
+            floatingActionButton: _buildFloatingActionButton(
+                context,
+                Provider.of<ProjectViewGroupBloc>(context).projectId,
+                Provider.of<ProjectViewGroupBloc>(context).groupId),
           );
         } else {
           return Container();
@@ -82,17 +88,33 @@ class ProjectViewGroupScreen extends StatelessWidget {
     ];
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget _buildFloatingActionButton(
+      BuildContext context, String projectId, String groupId) {
     return FloatingActionButton(
       child: Icon(
         Icons.add,
         color: Colors.white,
       ),
-      onPressed: _showAddMoreImagesModel,
+      onPressed: () => _gotoAddMoreImages(context, projectId, groupId),
     );
+  }
+
+  void _gotoViewImage(BuildContext context, String projectId, String imageId) {
+    Application.router
+        .navigateTo(context, "/project/$projectId/view/$imageId")
+        .whenComplete(() {
+      Provider.of<ProjectViewGroupBloc>(context).refresh();
+    });
   }
 
   void _gotoTrainGroup() {}
 
-  void _showAddMoreImagesModel() {}
+  void _gotoAddMoreImages(
+      BuildContext context, String projectId, String groupId) {
+    Application.router
+        .navigateTo(context, "/project/$projectId/group/$groupId/add")
+        .whenComplete(() {
+      Provider.of<ProjectViewGroupBloc>(context).refresh();
+    });
+  }
 }

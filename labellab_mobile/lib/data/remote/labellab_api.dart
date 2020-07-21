@@ -49,6 +49,8 @@ abstract class LabelLabAPI {
 
   // Group
   Future<ApiResponse> createGroup(String token, String projectId, Group group);
+  Future<ApiResponse> addGroupImages(
+      String token, String projectId, String groupId, List<String> images);
   Future<ApiResponse> updateGroup(String token, Group group);
   Future<Group> getGroup(String token, String groupId);
 

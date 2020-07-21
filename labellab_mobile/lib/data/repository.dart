@@ -193,6 +193,12 @@ class Repository {
     return _api.createGroup(accessToken, projectId, group);
   }
 
+  Future<ApiResponse> addGroupImages(
+      String projectId, String groupId, List<String> images) {
+    if (accessToken == null) return Future(null);
+    return _api.addGroupImages(accessToken, projectId, groupId, images);
+  }
+
   Future<ApiResponse> updateGroup(Group group) {
     if (accessToken == null) return Future(null);
     return _api.updateGroup(accessToken, group);
