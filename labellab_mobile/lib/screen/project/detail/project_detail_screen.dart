@@ -120,13 +120,13 @@ class ProjectDetailScreen extends StatelessWidget {
                       _state.isSelecting,
                       _state.selectedImages)
                   : SliverFillRemaining(),
-              // _state.project != null
-              //     ? _buildGroupsHeading(context, _state.project.groups)
-              //     : SliverFillRemaining(),
-              // _state.project != null && _state.project.groups != null
-              //     ? _buildGroups(
-              //         context, _state.project.id, _state.project.groups)
-              //     : SliverFillRemaining(),
+              _state.project != null
+                  ? _buildGroupsHeading(context, _state.project.groups)
+                  : SliverFillRemaining(),
+              _state.project != null && _state.project.groups != null
+                  ? _buildGroups(
+                      context, _state.project.id, _state.project.groups)
+                  : SliverFillRemaining(),
               _state.project != null && _state.project.labels != null
                   ? _buildLabels(
                       context, _state.project.id, _state.project.labels)
