@@ -55,8 +55,8 @@ describe("Project Reducer", () => {
   });
 
   it("Should initialize a project", () => {
-    const mockPayload = { projectName: "project1", 
-                          image: { imageName: "image1", imageUrl: "image/url.png", image: "some_base64_image"}
+    const mockPayload = { project_name: "project1", 
+                          images: { image_name: "image1", image_url: "image/url.png", image: "some_base64_image"}
                         }
     const newState = project(initState, {
       type: INITIALIZE_PROJECT_SUCCESS,
@@ -68,8 +68,8 @@ describe("Project Reducer", () => {
             isinitializing: false
           },
         currentProject: {
-        projectName: mockPayload.projectName,
-        images: mockPayload.image
+        projectName: mockPayload.project_name,
+        images: mockPayload.images
         }
     });
   });
@@ -87,10 +87,10 @@ describe("Project Reducer", () => {
   });
 
   it("Should fetch a project", () => {
-    const mockPayload = { projectId: 1,
-                          projectName: "project1", 
-                          projectDescription: "desc",
-                          image: { imageName: "image1", imageUrl: "image/url.png", image: "some_base64_image"},
+    const mockPayload = { id: 1,
+                          project_name: "project1", 
+                          project_description: "desc",
+                          images: { image_name: "image1", image_url: "image/url.png", image: "some_base64_image"},
                           members: [{ member: 1, projectId: 1, role: "member"}, { member: 2, projectId: 1, role: "admin"}]
                         }
     const newState = project(initState, {
@@ -103,11 +103,11 @@ describe("Project Reducer", () => {
             isfetching: false
           },
         currentProject: {
-        projectId: mockPayload.id,
-        projectName: mockPayload.projectName,
-        projectDescription: mockPayload.projectDescription,
-        images: mockPayload.image,
-        members: mockPayload.members
+          projectId: mockPayload.id,
+          projectName: mockPayload.project_name,
+          projectDescription: mockPayload.project_description,
+          images: mockPayload.images,
+          members: mockPayload.members
         }
     });
   });
@@ -125,7 +125,7 @@ describe("Project Reducer", () => {
   });
 
   it("Should fetch all projects", () => {
-    const mockPayload = {project:[
+    const mockPayload = [
                         { 
                             projectId: 1,
                             projectName: "project1", 
@@ -147,7 +147,7 @@ describe("Project Reducer", () => {
                             image: { imageName: "image3", imageUrl: "image3/url.png", image: "some_base64_image_3"},
                             members: [{ member: 1, projectId: 1, role: "member"}, { member: 2, projectId: 1, role: "admin"}]
                         }
-                        ]}
+                        ]
     const newState = project(initState, {
       type: FETCH_PROJECT_ALL_SUCCESS,
       payload: mockPayload
@@ -157,7 +157,7 @@ describe("Project Reducer", () => {
         projectActions: {
             isfetching: false
         },
-        allProjects: mockPayload.project
+        allProjects: mockPayload
     });
   });  
   

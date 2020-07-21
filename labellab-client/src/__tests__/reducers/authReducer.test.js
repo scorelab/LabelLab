@@ -20,6 +20,7 @@ const initState = {
     isLoading: false,
     emailRecievedMessage: '',
     verifyTokenMessage: '',
+    githubResponse: '',
     passwordUpdatedMessage: '',
     verificationError: null,
     isEmailSending: false,
