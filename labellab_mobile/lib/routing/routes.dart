@@ -30,6 +30,9 @@ class Routes {
   static const classify = "/classify/:by";
   static const classification = "/classification/:id";
 
+  // Model
+  static const train = "/train/:group_id";
+
   static void configureRouter(Router router) {
     router.define(main, handler: mainHandler);
     router.define(login,
@@ -71,5 +74,8 @@ class Routes {
         handler: classifyHandler, transitionType: TransitionType.native);
     router.define(classification,
         handler: classificationHandler, transitionType: TransitionType.native);
+
+    router.define(train,
+        handler: modelTrainHandler, transitionType: TransitionType.native);
   }
 }
