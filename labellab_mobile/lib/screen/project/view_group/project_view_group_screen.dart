@@ -20,7 +20,8 @@ class ProjectViewGroupScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(_state.isLoading ? "" : _state.group.name),
               elevation: 0,
-              actions: _buildActions(context),
+              actions: _buildActions(
+                  context, _state.group != null ? _state.group.id : null),
             ),
             body: _state.isLoading
                 ? LinearProgressIndicator(
@@ -70,11 +71,11 @@ class ProjectViewGroupScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildActions(BuildContext context) {
+  List<Widget> _buildActions(BuildContext context, String groupId) {
     return [
       PopupMenuButton<int>(
         onSelected: (int value) {
-          _gotoTrainGroup();
+          _gotoTrainGroup(context, groupId);
         },
         itemBuilder: (context) {
           return [
@@ -107,7 +108,9 @@ class ProjectViewGroupScreen extends StatelessWidget {
     });
   }
 
-  void _gotoTrainGroup() {}
+  void _gotoTrainGroup(BuildContext context, String groupId) {
+    Application.router.navigateTo(context, '/train/$groupId');
+  }
 
   void _gotoAddMoreImages(
       BuildContext context, String projectId, String groupId) {

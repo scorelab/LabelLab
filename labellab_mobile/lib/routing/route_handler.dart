@@ -28,6 +28,8 @@ import 'package:labellab_mobile/screen/project/view_image_path/project_image_pat
 import 'package:labellab_mobile/screen/project/view_more_images/project_more_images_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_more_images/project_more_images_screen.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
+import 'package:labellab_mobile/screen/train/model_train_bloc.dart';
+import 'package:labellab_mobile/screen/train/model_train_screen.dart';
 import 'package:provider/provider.dart';
 
 var mainHandler = Handler(
@@ -165,5 +167,14 @@ var classificationHandler = Handler(
     builder: (context) => ClassificationBloc(params['id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ClassificationScreen(),
+  );
+});
+
+var modelTrainHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ModelTrainBloc>(
+    builder: (context) => ModelTrainBloc(params['group_id'].first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ModelTrainScreen(),
   );
 });
