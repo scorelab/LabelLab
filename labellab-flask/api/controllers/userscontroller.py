@@ -20,7 +20,9 @@ from api.helpers.user import (
     save, 
     to_json, 
     get_data,
-    get_user_roles
+    get_user_roles,
+    get_projectmembers,
+    search_user
 )
 
 class Register(MethodView):
@@ -126,7 +128,7 @@ class Login(MethodView):
         # Get the user object using their email (unique to every user)
         # print(dir(User.User))
         user = find_by_email(email)
-
+        get_projectmembers(1)
         if not user:
             # User does not exist. Therefore, we return an error msg
             response = {
@@ -359,6 +361,27 @@ class CountInfo(MethodView):
         }
         return make_response(jsonify(response)), 200
 
+class SearchUsers(MethodView):
+    """This class-based view handles the Users search"""
+
+    @jwt_required
+    def get(self,query):
+
+        if query is None or "":
+            response = {
+                "success": False,
+                "msg": "No user input"
+            }
+            return make_response(jsonify(response)), 400
+
+        users = search_user(query)
+        response = {
+            "success": True,
+            "msg": "Users fetched.",
+            "body": users
+        }
+        return make_response(jsonify(response)), 200
+
 userController = {
     "register": Register.as_view("register"),
     "login": Login.as_view("login"),
@@ -367,5 +390,6 @@ userController = {
     "token_refresh": TokenRefresh.as_view("token_refresh"),
     "oauth": Auth.as_view("oauth"),
     "user": UserInfo.as_view("user"),
-    "count_info": CountInfo.as_view("count_info")
+    "count_info": CountInfo.as_view("count_info"),
+    "search_users": SearchUsers.as_view("search_users")
 }

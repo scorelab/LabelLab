@@ -5,7 +5,7 @@ from api.controllers import teamscontroller
 teamsprint = Blueprint("teams", __name__)
 
 teamsprint.add_url_rule(
-    "/team/get", 
+    "/team/get/<int:project_id>", 
     view_func=teamscontroller.teamController["get_all_teams"], 
     methods=["GET"]
 )

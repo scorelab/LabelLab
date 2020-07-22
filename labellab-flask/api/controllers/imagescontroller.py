@@ -10,6 +10,9 @@ from flask_jwt_extended import (
 from api.models.Image import Image
 from api.models.LabelData import LabelData
 from api.models.Point import Point
+from api.helpers.user import (
+    get_user_roles
+)
 from api.helpers.image import (
     convert_and_save,
     get_dimensions,
@@ -40,10 +43,20 @@ class SubmitImage(MethodView):
         Handle POST request for this view.
         Url --> /api/v1/image/create/<int:project_id>
         """
+        current_user = get_jwt_identity()
+        roles = get_user_roles(current_user, project_id)
+
+        if "admin" not in roles:
+            if "images" not in roles:
+                print("Error occured: user not admin or has images role")
+                response = {
+                        "success": False,
+                        "msg": "User neither has 'admin' nor 'images' role."
+                    }
+                return make_response(jsonify(response)), 403
         # getting JSON data from request
         post_data = request.get_json(silent=True,
                                      force=True)
-        current_user = get_jwt_identity()
         try:
             images = post_data["images"]
             image_names = post_data["image_names"]
@@ -182,10 +195,21 @@ class DeleteImages(MethodView):
     """
     This methods deletes images.
     Handle POST request for this view. 
-    Url --> /api/v1/image/delete
+    Url --> /api/v1/image/delete/<int:project_id>
     """
     @jwt_required
-    def post(self):
+    def post(self, project_id):
+        current_user = get_jwt_identity()
+        roles = get_user_roles(current_user, project_id)
+
+        if "admin" not in roles:
+            if "images" not in roles:
+                print("Error occured: user not admin or has images role")
+                response = {
+                        "success": False,
+                        "msg": "User neither has 'admin' nor 'images' role."
+                    }
+                return make_response(jsonify(response)), 403
         post_data = request.get_json(silent=True,
                                      force=True)
 
@@ -223,13 +247,13 @@ class UpdateLabels(MethodView):
     """
     This methods updates labels.
     Handle PUT request for this view. 
-    Url --> /api/v1/image/update/<int:image_id>
+    Url --> /api/v1/image/update/<int:image_id>/
     """
     @jwt_required
     def put(self, image_id):
+        current_user = get_jwt_identity()
         post_data = request.get_json(silent=True,
                                      force=True)
-
         try:
             labels = post_data["labels"]
             height = post_data["height"]
@@ -245,6 +269,17 @@ class UpdateLabels(MethodView):
             return make_response(jsonify(response)), 400
         
         try:
+            roles = get_user_roles(current_user, project_id)
+
+            if "admin" not in roles:
+                if "image labelling" not in roles:
+                    print("Error occured: user not admin or has image labelling role")
+                    response = {
+                            "success": False,
+                            "msg": "User neither has 'admin' nor 'image labelling' role."
+                        }
+                    return make_response(jsonify(response)), 403
+
             format_data = []
             for label_id in labels:
                 if labels[label_id]:

@@ -88,7 +88,7 @@ const project = (state = initialState, action) => {
           projectName: action.payload.project_name,
           projectDescription: action.payload.project_description,
           images: action.payload.images,
-          // members: action.payload.members
+          members: action.payload.members
         }
       }
     case FETCH_PROJECT_ALL_REQUEST:
