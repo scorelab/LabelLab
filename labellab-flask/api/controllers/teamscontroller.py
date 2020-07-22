@@ -14,6 +14,7 @@ from api.helpers.user import (
     to_json
 )
 from api.helpers.team import (
+    find_all,
     save as save_team, 
     find_by_id,
     delete_by_id as delete_team,
@@ -30,12 +31,12 @@ class GetAllTeams(MethodView):
     """This class-based view handles fetching of all teams in which the logged in user is a part"""
     
     @jwt_required
-    def get(self):
-        """Handle GET request for this view. Url ---> /api/v1/team/get"""
+    def get(self, project_id):
+        """Handle GET request for this view. Url ---> /api/v1/team/get/<int:project_id>"""
         current_user = get_jwt_identity()
         
         try:
-            data = get_data(current_user)
+            all_teams = find_all(project_id)
 
             if not data:
                 response = {
@@ -43,8 +44,6 @@ class GetAllTeams(MethodView):
                     "msg": "Data not found"
                 }
                 return make_response(jsonify(response)), 404
-
-            all_teams = data["all_teams"]
 
             if not all_teams:
                 response = {

@@ -51,3 +51,9 @@ usersprint.add_url_rule(
     view_func=userscontroller.userController["count_info"],
     methods=["GET"]
 )
+
+usersprint.add_url_rule(
+    '/users/search/<string:query>',
+    view_func=userscontroller.userController["search_users"],
+    methods=["GET"]
+)

@@ -10,11 +10,19 @@ import {
   Modal,
   Dimmer,
   Loader,
-  Message
+  Message,
+  Dropdown
 } from 'semantic-ui-react'
 import { addMember, fetchProject, memberDelete } from '../../actions'
 import SearchUser from './searchUser.js'
 import './css/team.css'
+
+const teamsOptions = [
+  { key: 1, value: 'images', role:'images', text: 'images' },
+  { key: 2, value: 'labels',  role:'labels', text: 'labels' },
+  { key: 3, value: 'image labelling', role:'image labelling', text: 'image labelling' },
+  { key: 4, value: 'models', role:'models', text: 'models' }
+]
 
 class TeamIndex extends Component {
   constructor(props) {
@@ -30,19 +38,23 @@ class TeamIndex extends Component {
     })
   }
   handleChange = e => {
+    console.log(e.target)
     this.setState({
       [e.target.name]: e.target.value
     })
   }
+  handleDropDownChange = (e, { name, value }) => this.setState({ [name]: value })
   handleMemberSubmit = () => {
     const { project, addMember } = this.props
-    const { member_email } = this.state
+    const { member_email, team, role } = this.state
     this.setState({
       check: true
     })
     let data = {
       member_email: member_email,
-      projectId: project.projectId
+      projectId: project.projectId,
+      team_name: team,
+      role: team
     }
     addMember(data, this.fetchProjectCallback)
     this.close()
@@ -64,6 +76,7 @@ class TeamIndex extends Component {
   render() {
     const { project, actions, history, user } = this.props
     const { open } = this.state
+    console.log(project)
     return (
       <Container>
         {actions.errors ? (
@@ -93,6 +106,13 @@ class TeamIndex extends Component {
           </Modal.Content>
           <Modal.Actions>
             <SearchUser history={history} updateState={this.updateState} />
+            <Dropdown 
+            name='team' 
+            placeholder='Team' 
+            search 
+            selection 
+            options={teamsOptions} 
+            onChange={this.handleDropDownChange}/>
             <Button
               positive
               onClick={this.handleMemberSubmit}
@@ -105,6 +125,7 @@ class TeamIndex extends Component {
             <Table.Row>
               <Table.HeaderCell singleLine>Project Members</Table.HeaderCell>
               <Table.HeaderCell>Role</Table.HeaderCell>
+              <Table.HeaderCell>Team</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
@@ -115,19 +136,22 @@ class TeamIndex extends Component {
               project.members.map((member, index) => (
                 <Table.Row key={index}>
                   <Table.Cell>
-                    <Header as="h4">{member.member.name}</Header>
+                    <Header as="h4">{member.name}</Header>
                   </Table.Cell>
                   <Table.Cell>
-                    <Header as="h4">{member.role}</Header>
+                    <Header as="h4">{member.team_role}</Header>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Header as="h4">{member.team_name}</Header>
                   </Table.Cell>
 
                   <Table.Cell collapsing>
-                    {member.role !== 'Admin' &&
-                    member.member.email !== user.userDetails.email ? (
+                    {member.team_role !== 'admin' &&
+                    member.email !== user.email ? (
                       <Icon
                         className="team-remove-user-icon"
                         name="user delete"
-                        onClick={() => this.handleDelete(member.member.email)}
+                        onClick={() => this.handleDelete(member.email)}
                       />
                     ) : null}
                   </Table.Cell>

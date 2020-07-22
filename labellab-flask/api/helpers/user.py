@@ -118,6 +118,36 @@ def get_teams_of_user_in_project(user_id, project_id):
         
     return all_team_ids
 
+def get_projectmembers(project_id):
+    all_members = []
+    queries = db.session.query(
+           Project, Team, ProjectMember, User
+        ).join(
+            Team, Project.id == Team.project_id
+        ).join(
+            ProjectMember, Team.id == ProjectMember.team_id
+        ).join(
+            User, ProjectMember.user_id == User.id
+        ).filter(
+            Project.id == project_id
+        )
+    for member in queries:
+        team_role = team_schema.dump(member.Team).data["role"]
+        team_name = team_schema.dump(member.Team).data["team_name"]
+        project_id = team_schema.dump(member.Team).data["project_id"]
+        name = user_schema.dump(member.User).data["name"]
+        email = user_schema.dump(member.User).data["email"]
+        data = {
+            "team_role": team_role,
+            "team_name": team_name,
+            "project_id": project_id,
+            "name": name,
+            "email": email
+        }
+        all_members.append(data)
+    print(all_members)
+    return all_members
+
 def save(user):
     """
     Save a user to the database.
@@ -131,3 +161,11 @@ def save(user):
     user_detail["all_projects"] = data["all_projects"]
 
     return user_detail
+
+def search_user(email_query):
+    """
+    search user on their email
+    """
+    search = "%{}%".format(email_query)
+    users = User.query.filter(User.email.like(search)).all()
+    return users_schema.dump(users).data

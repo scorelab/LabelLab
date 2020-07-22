@@ -21,6 +21,7 @@ from api.helpers.user import (
     find_by_user_id, 
     to_json, 
     get_user_roles, 
+    get_projectmembers,
     get_teams_of_user_in_project
 )
 from api.helpers.team import (
@@ -88,6 +89,8 @@ class CreateProject(MethodView):
                                     team_id=team_new['id'])
             project_member_new = save_project_member(project_member)
             
+            project_new['members'] = get_projectmembers(project_new['id'])
+
             res = {
                 "project": project_new,
                 "team": team_new,
@@ -171,6 +174,7 @@ class ProjectInfo(MethodView):
                 return make_response(jsonify(response)), 400
             
             project = find_by_project_id(project_id)
+            project['members'] = get_projectmembers(project_id)
             response = {
                 "success": True,
                 "msg": "Project found",
@@ -232,6 +236,7 @@ class ProjectInfo(MethodView):
 
         try:
             project = find_by_project_id(project_id)
+            project['members'] = get_projectmembers(project_id)
 
             if not project:
                 response = {
@@ -307,6 +312,15 @@ class AddProjectMember(MethodView):
                 }
                 return make_response(jsonify(response)), 404
             
+            roles = get_user_roles(user['id'], project_id)
+            if "admin" in roles:
+                print("Error occured: user already admin")
+                response = {
+                        "success": False,
+                        "msg": "User already admin."
+                    }
+                return make_response(jsonify(response)), 400
+
             team_exist = find_by_team_name(team_name)
 
             if team_exist:

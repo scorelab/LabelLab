@@ -8,6 +8,9 @@ from flask_jwt_extended import (
 
 from api.config import config
 from api.models.Label import Label
+from api.helpers.user import (
+    get_user_roles
+)
 from api.helpers.label import (
     find_by_id, 
     find_by_label_name, 
@@ -28,6 +31,18 @@ class CreateLabel(MethodView):
         Url --> /api/v1/label/create/<int:project_id>
         """
         # getting JSON data from request
+        current_user = get_jwt_identity()
+        roles = get_user_roles(current_user, project_id)
+
+        if "admin" not in roles:
+             if "labels" not in roles:
+                print("Error occured: user not admin or has labels role")
+                response = {
+                        "success": False,
+                        "msg": "User neither has 'admin' nor 'labels' role."
+                    }
+                return make_response(jsonify(response)), 403
+
         post_data = request.get_json(silent=True,
                                      force=True)
         try:
@@ -122,10 +137,10 @@ class LabelInfo(MethodView):
     """
     This methods gets, deletes and updates the info of a particular Label.
     Handle GET, DELETE, PUT request for this view. 
-    Url --> /api/v1/label/label_info/<int:label_id>
+    Url --> /api/v1/label/label_info/<int:label_id>/<int:project_id>
     """
     @jwt_required
-    def get(self, label_id):
+    def get(self, label_id, project_id):
         try:
             if not label_id:
                 response = {
@@ -152,7 +167,19 @@ class LabelInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
-    def delete(self, label_id):
+    def delete(self, label_id, project_id):
+
+        current_user = get_jwt_identity()
+        roles = get_user_roles(current_user, project_id)
+
+        if "admin" not in roles:
+             if "labels" not in roles:
+                print("Error occured: user not admin or has labels role")
+                response = {
+                        "success": False,
+                        "msg": "User neither has 'admin' nor 'labels' role."
+                    }
+                return make_response(jsonify(response)), 403
         try:
             if not label_id:
                 response = {
@@ -178,14 +205,28 @@ class LabelInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
-    def put(self, label_id):
-        """Handle PUT request for this view. Url --> /api/v1/Label/<int:label_id>"""
+    def put(self, label_id, project_id):
+        """Handle PUT request for this view. Url --> /api/v1/Label/<int:label_id>/<int:project_id>"""
         # getting JSON data from request
+        current_user = get_jwt_identity()
+        roles = get_user_roles(current_user, project_id)
+
+        if "admin" not in roles:
+             if "labels" not in roles:
+                print("Error occured: user not admin or has role of labels")
+                response = {
+                        "success": False,
+                        "msg": "User neither has 'admin' nor 'labels' role."
+                    }
+                return make_response(jsonify(response)), 403
+
         post_data = request.get_json(silent=True,
                                      force=True)
         try:
+            
             label_name = post_data["label_name"]
             label_type = post_data["label_type"]
+
         except Exception:
             response = {
                 "success": False,

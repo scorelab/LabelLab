@@ -51,7 +51,7 @@ class SearchUser extends Component {
             title: user.name,
             description: user.email,
             email: user.email,
-            id: user._id
+            id: user.id
           })
         : null
     )

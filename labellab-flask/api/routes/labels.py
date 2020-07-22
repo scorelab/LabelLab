@@ -17,7 +17,7 @@ labelsprint.add_url_rule(
 )
 
 labelsprint.add_url_rule(
-    "/label/label_info/<int:label_id>", 
+    "/label/label_info/<int:label_id>/<int:project_id>", 
     view_func=labelscontroller.labelController["label"], 
     methods=["GET","DELETE","PUT"]
 )
