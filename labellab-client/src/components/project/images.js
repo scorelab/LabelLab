@@ -1,7 +1,10 @@
+import ReactDOM from 'react-dom';
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 import {
   Table,
   Button,
@@ -10,7 +13,9 @@ import {
   Loader,
   Icon,
   Checkbox,
-  Dropdown
+  Dropdown,
+  Modal,
+  Image
 } from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
 import Lightbox from 'react-image-lightbox'
@@ -32,7 +37,13 @@ class ImagesIndex extends Component {
       selectedList: [],
       image_urls: [],
       photoIndex: 0,
-      isOpen: false
+      isOpen: false,
+      number_of_images: 0,
+      crop: {
+        unit: '%',
+        width: 30,
+        aspect: 16 / 9,
+      }
     }
   }
   handleImageChange = e => {
@@ -53,7 +64,8 @@ class ImagesIndex extends Component {
     })
     this.setState({
       showform: !this.state.showform,
-      isOpen: true
+      isOpen: true,
+      number_of_images: files.length
     })
   }
 
@@ -124,12 +136,105 @@ class ImagesIndex extends Component {
       photoIndex: 0,
       isOpen: false
     })
+  }    
+  onImageLoaded = image => {
+    this.imageRef = image;
+  };
+
+  onCropComplete = crop => {
+    this.makeClientCrop(crop);
+  };
+
+  onCropChange = (crop, percentCrop) => {
+    this.setState({ crop });
+  };
+
+  async makeClientCrop(crop) {
+    if (this.imageRef && crop.width && crop.height) {
+      const croppedImage = await this.getCroppedImg(
+        this.imageRef,
+        crop,
+        this.state.image_names[0]
+      );
+      const croppedImageURL = await this.getCroppedImgURL(
+        this.imageRef,
+        crop,
+        this.state.image_names[0]
+      );
+      const new_cropped_image = []
+      new_cropped_image.push(croppedImage)
+      this.setState({
+        images: new_cropped_image, 
+        croppedImageUrl: croppedImageURL,
+        format: 'image/jpeg'
+      });
+    }
   }
 
+  getCroppedImgURL(image, crop, fileName) {
+    const canvas = document.createElement('canvas');
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx = canvas.getContext('2d');
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    );
+
+    const base64Image = canvas.toDataURL('image/jpeg');
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (!blob) {
+          //reject(new Error('Canvas is empty'));
+          console.error('Canvas is empty');
+          return;
+        }
+        blob.name = fileName;
+        window.URL.revokeObjectURL(this.fileUrl);
+        this.fileUrl = window.URL.createObjectURL(blob);
+        resolve(this.fileUrl);
+      }, 'image/jpeg');
+    });
+  }
+
+  getCroppedImg(image, crop, fileName) {
+    const canvas = document.createElement('canvas');
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx = canvas.getContext('2d');
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    );
+
+    return canvas.toDataURL('image/jpeg');
+  }
   render() {
     const { imageActions, project } = this.props
-    const { showform, image_name, image_urls } = this.state
+    const { showform, image_name, image_urls, number_of_images, images } = this.state
     const { photoIndex, isOpen } = this.state
+    const { crop, croppedImageUrl } = this.state;
     return (
       <div>
         {imageActions.isdeleting ? (
@@ -156,7 +261,6 @@ class ImagesIndex extends Component {
           <Form
             className="file-submit-form"
             encType="multiple/form-data"
-            onSubmit={this.handleSubmit}
           >
             {this.state.images.length == 1 && (
               <Form.Field>
@@ -192,7 +296,7 @@ class ImagesIndex extends Component {
                 }
               />
             ) : null}
-            <Button loading={imageActions.isposting} type="submit">
+            <Button onClick={this.handleSubmit} loading={imageActions.isposting} type="submit">
               Submit
             </Button>
             <Button onClick={this.removeImage} type="delete">
@@ -201,6 +305,28 @@ class ImagesIndex extends Component {
             <Button onClick={() => this.setState({ isOpen: true })}>
               View
             </Button>
+            {
+              number_of_images === 1?
+              <Modal trigger={<Button>Crop</Button>}>
+                <Modal.Header>Crop Image</Modal.Header>
+                <Modal.Content>
+                {images[0] && (
+                  <ReactCrop
+                    src={image_urls[0]}
+                    crop={crop}
+                    ruleOfThirds
+                    onImageLoaded={this.onImageLoaded}
+                    onComplete={this.onCropComplete}
+                    onChange={this.onCropChange}
+                  />
+                )}
+                {croppedImageUrl && (
+                  <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
+                )}
+                </Modal.Content>
+              </Modal>:
+              null
+            }
             {this.state.maxSizeError ? (
               <div className="max-size-error">
                 The size of the file should not be greater than 101Kb!

@@ -63,6 +63,7 @@
     "react-github-login": "^1.0.3",
     "react-google-login": "^5.1.20",
     "react-hot-keys": "^1.2.2",
+    "react-image-crop": "^8.6.4",
     "react-image-lightbox": "^5.1.1",
     "react-leaflet": "^2.2.0",
     "react-leaflet-control": "^2.1.1",
