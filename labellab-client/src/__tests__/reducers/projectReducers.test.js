@@ -107,7 +107,7 @@ describe("Project Reducer", () => {
           projectName: mockPayload.project_name,
           projectDescription: mockPayload.project_description,
           images: mockPayload.images,
-          // members: mockPayload.members
+          members: mockPayload.members
         }
     });
   });
