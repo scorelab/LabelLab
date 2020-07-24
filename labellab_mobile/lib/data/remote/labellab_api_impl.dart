@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:charts_common/src/data/series.dart';
 import 'package:dio/dio.dart';
 import 'package:labellab_mobile/config.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
@@ -593,5 +594,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
         throw Exception("Request unsuccessfull");
       }
     });
+  }
+
+  @override
+  Future<List<Series>> getResults(String token) {
+    return Future.delayed(Duration(seconds: 2))
+        .then((value) => _fake.getResults);
   }
 }
