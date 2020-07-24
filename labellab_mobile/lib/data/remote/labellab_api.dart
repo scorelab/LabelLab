@@ -16,6 +16,7 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 abstract class LabelLabAPI {
   Future<LoginResponse> login(AuthUser user);
@@ -72,4 +73,7 @@ abstract class LabelLabAPI {
   Future<List<Classification>> getClassifications(String token);
   Future<Classification> getClassification(String token, String id);
   Future<ApiResponse> deleteClassification(String token, String id);
+
+  // Train
+  Future<List<charts.Series>> getResults(String token);
 }
