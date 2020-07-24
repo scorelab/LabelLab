@@ -22,6 +22,7 @@ import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class Repository {
   LabelLabAPI _api;
@@ -311,6 +312,11 @@ class Repository {
         });
       });
     });
+  }
+
+  Future<List<charts.Series>> getResults() {
+    if (accessToken == null) return Future(null);
+    return _api.getResults(accessToken);
   }
 
   // Singleton
