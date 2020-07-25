@@ -7,6 +7,7 @@ from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
 
 from api.config import config
+from api import commands
 from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static
 from api.extensions import db, migrate, jwt, ma
 from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier
@@ -24,6 +25,7 @@ def create_app(config_name):
 
         register_additional_extensions(app)
         register_blueprint(app)
+        register_commands(app)
         register_shellcontext(app)
 
         return app
@@ -53,6 +55,9 @@ def register_blueprint(app):
     app.register_blueprint(static.staticprint, url_prefix="/static/uploads")
     return None
 
+def register_commands(app):
+    """Register Click commands."""
+    app.cli.add_command(commands.test)
 
 def register_shellcontext(app):
     """Register shell context objects."""
