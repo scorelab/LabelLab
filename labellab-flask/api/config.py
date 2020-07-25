@@ -40,9 +40,13 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "TEST_DATABASE_URL"
-    )
+    from sqlalchemy_utils.functions import database_exists, create_database
+    if not database_exists("mysql+pymysql://" + "root" + ":" + "password" + "@" + "localhost" + "/test_labellab"):
+        create_database("mysql+pymysql://" + "root" + ":" + "password" + "@" + "localhost" + "/test_labellab")
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://" + "root" + ":" + "password" + "@" + "localhost" + "/test_labellab"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # needs to be removed in further versions
+    UPLOAD_FOLDER = imagesdir
 
 
 class ProductionConfig(Config):
