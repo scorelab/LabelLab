@@ -5,6 +5,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
     get_raw_jwt
 )
+from api.config import config
 from api.models.Team import Team
 from api.models.ProjectMembers import ProjectMember
 from api.helpers.user import (
@@ -27,18 +28,19 @@ from api.helpers.projectmember import (
     count_users_in_team
 )
             
+allowed_teams = config['development'].TEAMS_ALLOWED
+
 class GetAllTeams(MethodView):
     """This class-based view handles fetching of all teams in which the logged in user is a part"""
     
     @jwt_required
     def get(self, project_id):
         """Handle GET request for this view. Url ---> /api/v1/team/get/<int:project_id>"""
-        current_user = get_jwt_identity()
         
         try:
             all_teams = find_all(project_id)
 
-            if not data:
+            if not all_teams:
                 response = {
                     "success": False,
                     "msg": "Data not found"
@@ -161,6 +163,13 @@ class TeamInfo(MethodView):
             return make_response(jsonify(response)), 400
         
         try:
+            if role not in allowed_teams:
+                response = {
+                    "success": False,
+                    "msg": "Team role is not allowed."
+                }
+                return make_response(jsonify(response)), 400
+
             if not (team_id):
                 response = {
                     "success": False,
@@ -287,7 +296,7 @@ class RemoveTeamMember(MethodView):
             return make_response(jsonify(response)), 403
 
         try:
-            user_email = post_data["memberEmail"]
+            user_email = post_data["member_email"]
 
         except KeyError as err:
             response = {

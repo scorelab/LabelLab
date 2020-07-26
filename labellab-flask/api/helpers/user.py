@@ -132,12 +132,14 @@ def get_projectmembers(project_id):
             Project.id == project_id
         )
     for member in queries:
+        team_id = team_schema.dump(member.Team).data["id"]
         team_role = team_schema.dump(member.Team).data["role"]
         team_name = team_schema.dump(member.Team).data["team_name"]
         project_id = team_schema.dump(member.Team).data["project_id"]
         name = user_schema.dump(member.User).data["name"]
         email = user_schema.dump(member.User).data["email"]
         data = {
+            "team_id": team_id,
             "team_role": team_role,
             "team_name": team_name,
             "project_id": project_id,

@@ -16,7 +16,13 @@ import {
   DELETE_MEMBER_SUCCESS,
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_REQUEST,
-  DELETE_PROJECT_SUCCESS
+  DELETE_PROJECT_SUCCESS,
+  FETCH_TEAMS_FAILURE,
+  FETCH_TEAMS_REQUEST,
+  FETCH_TEAMS_SUCCESS,
+  DELETE_TEAM_FAILURE,
+  DELETE_TEAM_REQUEST,
+  DELETE_TEAM_SUCCESS
 } from '../constants/index'
 const initialState = {
   projectActions: {
@@ -77,13 +83,13 @@ const project = (state = initialState, action) => {
         }
       }
     case FETCH_PROJECT_SUCCESS:
-      console.log(action.payload)
       return {
         ...state,
         projectActions: {
           isfetching: false
         },
         currentProject: {
+          ...state.currentProject,
           projectId: action.payload.id,
           projectName: action.payload.project_name,
           projectDescription: action.payload.project_description,
@@ -181,6 +187,57 @@ const project = (state = initialState, action) => {
         projectActions: {
           isdeletingproject: false,
           msg: 'Project removed successfully'
+        }
+      }
+    case FETCH_TEAMS_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: true
+        }
+      }
+    case FETCH_TEAMS_SUCCESS:
+      console.log(action.payload)
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false
+        },
+        currentProject: {
+          ...state.currentProject,
+          teams: action.payload
+        }
+      }
+    case FETCH_TEAMS_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false,
+          errors: action.payload
+        }
+      }
+    case DELETE_TEAM_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: true
+        }
+      }
+    case DELETE_TEAM_SUCCESS:
+      console.log(action.payload)
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: false,
+          msg: 'Team removed successfully'
+        }
+      }
+    case DELETE_TEAM_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: false,
+          errors: action.payload
         }
       }
     default:
