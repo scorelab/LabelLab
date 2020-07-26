@@ -1,21 +1,20 @@
 import {
     FETCH_TEAMS_FAILURE,
-    FETCH_TEAM_REQUEST,
-    FETCH_TEAM_SUCCESS,
-    DELETE_MEMBER_FAILURE,
-    DELETE_MEMBER_REQUEST,
-    DELETE_MEMBER_SUCCESS
+    FETCH_TEAMS_REQUEST,
+    FETCH_TEAMS_SUCCESS,
+    DELETE_TEAM_FAILURE,
+    DELETE_TEAM_REQUEST,
+    DELETE_TEAM_SUCCESS
   } from '../../constants/index'
   
   import FetchApi from '../../utils/FetchAPI'
   
-  export const allTeams = (data, callback) => {
+  export const fetchAllTeams = projectId => {
     return dispatch => {
       dispatch(request())
-      FetchApi.get('/team/get/' + data.projectId)
+      FetchApi.get('/api/v1/team/get/' + projectId)
         .then(res => {
-          dispatch(success(res.data))
-          callback()
+          dispatch(success(res.data.body))
         })
         .catch(err => {
           if (err.response) {
@@ -26,10 +25,10 @@ import {
         })
     }
     function request() {
-      return { type: FETCH_TEAM_REQUEST }
+      return { type: FETCH_TEAMS_REQUEST }
     }
     function success(data) {
-      return { type: FETCH_TEAM_SUCCESS, payload: data }
+      return { type: FETCH_TEAMS_SUCCESS, payload: data }
     }
     function failure(error) {
       return { type: FETCH_TEAMS_FAILURE, payload: error }
@@ -39,10 +38,8 @@ import {
   export const teamDelete = (team_id, projectId, callback) => {
     return dispatch => {
       dispatch(request())
-      FetchApi.post(
-        '/api/v1/team/team_info/' + projectId + team_id,
-        { member_email: email },
-        true
+      FetchApi.delete(
+        '/api/v1/team/team_info/' + projectId + '/' + team_id
       )
         .then(res => {
           dispatch(success())
@@ -57,13 +54,13 @@ import {
         })
     }
     function request() {
-      return { type: DELETE_MEMBER_REQUEST }
+      return { type: DELETE_TEAM_REQUEST }
     }
     function success() {
-      return { type: DELETE_MEMBER_SUCCESS }
+      return { type: DELETE_TEAM_SUCCESS }
     }
     function failure(error) {
-      return { type: DELETE_MEMBER_FAILURE, payload: error }
+      return { type: DELETE_TEAM_FAILURE, payload: error }
     }
   }
   

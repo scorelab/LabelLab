@@ -5,6 +5,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
     get_raw_jwt
 )
+from api.config import config
 from api.models.Projects import Project
 from api.models.Team import Team
 from api.models.ProjectMembers import ProjectMember
@@ -36,6 +37,8 @@ from api.helpers.projectmember import (
     count_users_in_team
 )
 
+
+allowed_teams = config['development'].TEAMS_ALLOWED
 
 class CreateProject(MethodView):
     """This class creates a new project."""
@@ -303,6 +306,13 @@ class AddProjectMember(MethodView):
             return make_response(jsonify(response)), 400
 
         try:
+            if role not in allowed_teams:
+                response = {
+                    "success": False,
+                    "msg": "Team role is not allowed."
+                }
+                return make_response(jsonify(response)), 400
+
             user_obj = find_by_email(user_email)
             user = to_json(user_obj)
             if not user:

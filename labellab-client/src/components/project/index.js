@@ -8,7 +8,8 @@ import {
   fetchProject,
   getTimeLabel,
   getLabelCount,
-  fetchLabels
+  fetchLabels,
+  fetchAllTeams
 } from '../../actions/index'
 import Load from '../loading/index'
 import './css/index.css'
@@ -67,12 +68,14 @@ class ProjectIndex extends Component {
       fetchProject,
       fetchTimeLabel,
       fetchLabels,
-      fetchLabelCount
+      fetchLabelCount,
+      fetchAllTeams
     } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
     fetchLabels(match.params.projectId)
     fetchLabelCount(match.params.projectId)
+    fetchAllTeams(match.params.projectId)
   }
   render() {
     const { match, actions, history, actionsLabel } = this.props
@@ -136,7 +139,8 @@ ProjectIndex.propTypes = {
   fetchTimeLabel: PropTypes.func,
   match: PropTypes.object,
   actionsLabel: PropTypes.object,
-  fetchLabels: PropTypes.func
+  fetchLabels: PropTypes.func,
+  fetchAllTeams: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -160,6 +164,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchLabelCount: projectId => {
       return dispatch(getLabelCount(projectId))
+    },
+    fetchAllTeams: projectId => {
+      return dispatch(fetchAllTeams(projectId))
     }
   }
 }

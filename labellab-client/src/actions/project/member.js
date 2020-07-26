@@ -36,11 +36,11 @@ export const addMember = (data, callback) => {
   }
 }
 
-export const memberDelete = (email, projectId, callback) => {
+export const memberDelete = (email, projectId, teamId, callback) => {
   return dispatch => {
     dispatch(request())
     FetchApi.post(
-      '/api/v1/project/remove_project_member/' + projectId,
+      '/api/v1/team/remove_team_member/' + projectId + '/' + teamId,
       { member_email: email },
       true
     )
