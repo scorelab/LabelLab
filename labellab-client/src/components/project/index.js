@@ -9,6 +9,7 @@ import {
   getTimeLabel,
   getLabelCount,
   fetchLabels,
+  fetchCoordinates,
   fetchAllTeams
 } from '../../actions/index'
 import Load from '../loading/index'
@@ -73,12 +74,14 @@ class ProjectIndex extends Component {
       fetchTimeLabel,
       fetchLabels,
       fetchLabelCount,
+      fetchCoordinates,
       fetchAllTeams
     } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
     fetchLabels(match.params.projectId)
     fetchLabelCount(match.params.projectId)
+    fetchCoordinates(match.params.projectId)
     fetchAllTeams(match.params.projectId)
   }
   render() {
@@ -133,7 +136,7 @@ class ProjectIndex extends Component {
                 component={props=>
                   <PathTracking
                     isMarkerShown
-                    googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.GOOGLE_MAPS_API_KEY}`}
+                    googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`}
                     loadingElement={<div style={{ height: `100%` }} />}
                     containerElement={<div style={{ height: `400px` }} />}
                     mapElement={<div style={{ height: `100%` }} />}
@@ -180,6 +183,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchLabelCount: projectId => {
       return dispatch(getLabelCount(projectId))
+    },
+    fetchCoordinates: projectId => {
+      return dispatch(fetchCoordinates(projectId))
     },
     fetchAllTeams: projectId => {
       return dispatch(fetchAllTeams(projectId))

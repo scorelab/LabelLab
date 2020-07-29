@@ -45,8 +45,8 @@ def remove_image(image_id):
     project_id = image['project_id']
     image_url = image['image_url']
     parent_dir = config['development'].UPLOAD_FOLDER
-    directory = f"{project_id}/{image_url}"
-    path = os.path.join(parent_dir, directory)
+    directory = os.path.join(parent_dir,str(project_id))
+    path = os.path.join(directory, image_url)
     try:
         os.remove(path)
         return path
@@ -67,14 +67,11 @@ def delete_by_image_name(image_name):
     Image.query.filter_by(image_name=image_name).delete()
     db.session.commit()
 
-def get_dimensions(file):
+def get_dimensions(image):
     """
     get dimensions of an image
     """
-    starter = file.find(',')
-    image_data = file[starter+1:]
-    image_data = bytes(image_data, encoding="ascii")
-    image = image_pil.open(BytesIO(base64.b64decode(image_data)))
+    image = image_pil.open(image)
     width, height = image.size
     return {
         "height": height,
@@ -97,14 +94,16 @@ def update_image(image_id, data):
     db.session.commit()
     return image_schema.dump(image).data
 
-def convert_and_save(file, project_id, image_url):
+def get_path(image_url, project_id):
+    parent_dir = config['development'].UPLOAD_FOLDER
+    directory = os.path.join(parent_dir,str(project_id))
+    path = os.path.join(directory, image_url)
+    return path
+    
+def convert_and_save(image, project_id, image_url):
     """
     convert the base64 string to image and then save it
     """
-    starter = file.find(',')
-    image_data = file[starter+1:]
-    image_data = bytes(image_data, encoding="ascii")
-    image = image_pil.open(BytesIO(base64.b64decode(image_data)))
     parent_dir = config['development'].UPLOAD_FOLDER
     directory = f"{project_id}"
     dir_path = os.path.join(parent_dir, directory)
@@ -115,7 +114,6 @@ def convert_and_save(file, project_id, image_url):
     path = os.path.join(dir_path,f"{image_url}")
     try:
         image.save(path)
-        return path
     except Exception as err:
         return f"Error occured: {err}"
 

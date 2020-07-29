@@ -36,7 +36,13 @@ from api.helpers.projectmember import (
     delete_by_user_id_team_id, 
     count_users_in_team
 )
+from api.helpers.image import (
+    find_all_by_project_id as find_images,
+    get_path
+)
+from path_tracking.extract_exif import ImageMetaData
 
+allowed_teams = config['development'].TEAMS_ALLOWED
 
 allowed_teams = config['development'].TEAMS_ALLOWED
 
@@ -464,6 +470,52 @@ class RemoveProjectMember(MethodView):
                 "msg": "Something went wrong!!"}
             return make_response(jsonify(response)), 500
 
+class GetCoordinates(MethodView):
+    """
+    This class-based view handles fetching of all the coordinates for polylines
+    fillings.
+    """
+    
+    @jwt_required
+    def get(self, project_id):
+        """Handle GET request for this view. Url ---> /api/v1/project/polylines/<int:project_id>"""
+        
+        try:
+            images = find_images(project_id)
+
+            if not images:
+                response = {
+                    "success": False,
+                    "msg": "Images not found"}
+                return make_response(jsonify(response)), 404
+
+            coordinates = []
+            for image in images:
+                image_path = get_path(image['image_url'], project_id)
+                meta_data =  ImageMetaData(image_path)
+                latlng = meta_data.get_lat_lng()
+                if not all(latlng):
+                    coordinates.append([])
+                else:
+                    latlng_list = list(latlng)
+                    coordinates.append(latlng_list)
+
+            response = {
+                "success": True,
+                "msg": "Coordinates fetched successfully.",
+                "body": coordinates
+            }
+
+            return make_response(jsonify(response)), 200
+
+        except Exception as err:
+            print("Error occured: ", err)
+            response = {
+                "success": False,
+                "msg": "Data could not be fetched"
+            }
+
+            return make_response(jsonify(response)), 500
 
 projectController = {
     "createproject": CreateProject.as_view("createproject"),
@@ -471,4 +523,5 @@ projectController = {
     "project": ProjectInfo.as_view("project"),
     "add_project_member": AddProjectMember.as_view("add_project_member"),
     "remove_project_member": RemoveProjectMember.as_view("remove_project_member"),
+    "get_coordinates": GetCoordinates.as_view("get_coordinates")
 }

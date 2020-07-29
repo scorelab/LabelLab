@@ -54,13 +54,8 @@ class SubmitImage(MethodView):
                         "msg": "User neither has 'admin' nor 'images' role."
                     }
                 return make_response(jsonify(response)), 403
-        # getting JSON data from request
-        post_data = request.get_json(silent=True,
-                                     force=True)
         try:
-            images = post_data["images"]
-            image_names = post_data["image_names"]
-            format = post_data["format"]
+            images = request.files.getlist("images")
 
         except KeyError as err:
             response = {
@@ -79,15 +74,14 @@ class SubmitImage(MethodView):
             }
             return make_response(jsonify(response)), 400
 
-        ext = format.split('/')[1]
-
         # Saving the images on the server and 
         # then saving them to the database.
         try:
             images_new = []
             for i in range(len(images)):
                 image = images[i]
-                image_name = image_names[i]
+                image_name = image.filename.split('.')[0]
+                ext = image.filename.split('.')[1]
                 now = datetime.now()
                 timestamp = datetime.timestamp(now)
                 image_url = f"{user_id}_{image_name}_{timestamp}.{ext}"
