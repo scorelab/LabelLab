@@ -13,10 +13,10 @@ import {
 
 import FetchApi from '../utils/FetchAPI'
 
-export const submitImage = (data, callback) => {
+export const submitImage = (data, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.post('/api/v1/image/create/' + data.projectId, data)
+    FetchApi.post('/api/v1/image/create/' + projectId, data)
       .then(res => {
         dispatch(success(res.data.body))
         callback()

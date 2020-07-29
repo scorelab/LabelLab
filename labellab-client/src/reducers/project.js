@@ -17,6 +17,9 @@ import {
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_REQUEST,
   DELETE_PROJECT_SUCCESS,
+  FETCH_COORDINATES_FAILURE,
+  FETCH_COORDINATES_REQUEST,
+  FETCH_COORDINATES_SUCCESS,
   FETCH_TEAMS_FAILURE,
   FETCH_TEAMS_REQUEST,
   FETCH_TEAMS_SUCCESS,
@@ -189,6 +192,32 @@ const project = (state = initialState, action) => {
           msg: 'Project removed successfully'
         }
       }
+    case FETCH_COORDINATES_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: true
+        }
+      }
+    case FETCH_COORDINATES_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false
+        },
+        currentProject: {
+          ...state.currentProject,
+          coordinates: action.payload
+        }
+      }
+    case FETCH_COORDINATES_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false,
+          errors: action.payload
+        }
+      }
     case FETCH_TEAMS_REQUEST:
       return {
         ...state,
@@ -197,7 +226,6 @@ const project = (state = initialState, action) => {
         }
       }
     case FETCH_TEAMS_SUCCESS:
-      console.log(action.payload)
       return {
         ...state,
         projectActions: {
@@ -224,7 +252,6 @@ const project = (state = initialState, action) => {
         }
       }
     case DELETE_TEAM_SUCCESS:
-      console.log(action.payload)
       return {
         ...state,
         projectActions: {

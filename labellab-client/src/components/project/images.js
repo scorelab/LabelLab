@@ -49,8 +49,11 @@ class ImagesIndex extends Component {
   handleImageChange = e => {
     e.preventDefault()
     let files = e.target.files
+    let formData =  new FormData()
     Array.from(files).forEach(file => {
       let reader = new FileReader()
+      formData.append('images', file)
+      formData.append('image_names', file.name)
       reader.onloadend = () => {
         this.setState(prevState => ({
           images: [...prevState.images, reader.result],
@@ -62,8 +65,11 @@ class ImagesIndex extends Component {
       }
       reader.readAsDataURL(file)
     })
+    formData.append('format',this.state.format)
+    formData.append('project_id',this.props.project.projectId)
     this.setState({
       showform: !this.state.showform,
+      formData: formData,
       isOpen: true,
       number_of_images: files.length
     })
@@ -75,22 +81,17 @@ class ImagesIndex extends Component {
       return
     }
     const { project, fetchProject, submitImage } = this.props
-    const { image_names, images, format } = this.state
+    const { formData } = this.state
     if (this.state.file && this.state.file.size > 101200) {
       this.setState({
         maxSizeError: 'max sized reached'
       })
     } else {
-      let data = {
-        image_names: image_names,
-        images: images,
-        projectId: project.projectId,
-        format: format
-      }
-      submitImage(data, () => {
+      submitImage(formData, project.projectId, () => {
         this.setState({
           showform: false,
           images: [],
+          formData: null,
           image_names: []
         })
         fetchProject(project.projectId)
