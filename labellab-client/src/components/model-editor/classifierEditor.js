@@ -16,11 +16,11 @@ import ModelTester from './sub-modules/modelTester'
 
 class ClassifierEditor extends Component {
   getBuilderType = () => {
-    const { source } = this.props
+    const { source, projectId } = this.props
 
     switch (source) {
       case 'transfer':
-        return <TransferLearningBuilder />
+        return <TransferLearningBuilder projectId={projectId} />
       case "custom":
         return <CustomBuilder />
       case "upload":
@@ -65,7 +65,8 @@ class ClassifierEditor extends Component {
 
 ClassifierEditor.propTypes = {
   model: PropTypes.object,
-  editModel: PropTypes.func
+  editModel: PropTypes.func,
+  projectId: PropTypes.number.isRequired,
 }
 
 const mapStateToProps = state => ({

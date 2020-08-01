@@ -35,6 +35,9 @@ import {
   GET_MODEL_REQUEST,
   GET_MODEL_FAILURE,
   GET_MODEL_SUCCESS,
+  TRAIN_MODEL_REQUEST,
+  TRAIN_MODEL_FAILURE,
+  TRAIN_MODEL_SUCCESS,
 } from '../constants/index'
 import camelCase from "camelcase"
 
@@ -201,6 +204,7 @@ const model = (state = initialState, action) => {
         }
       }
     case GET_MODEL_REQUEST:
+    case TRAIN_MODEL_REQUEST:
       return {
         ...state,
         modelActions: {
@@ -208,6 +212,7 @@ const model = (state = initialState, action) => {
         }
       }
     case GET_MODEL_FAILURE:
+    case TRAIN_MODEL_FAILURE:
       return {
         ...state,
         modelActions: {
@@ -216,6 +221,7 @@ const model = (state = initialState, action) => {
         }
       }
     case GET_MODEL_SUCCESS:
+    case TRAIN_MODEL_SUCCESS:
       return {
         ...state,
         model: action.payload,

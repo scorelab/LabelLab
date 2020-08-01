@@ -35,6 +35,9 @@ import {
   GET_MODEL_REQUEST,
   GET_MODEL_SUCCESS,
   GET_MODEL_FAILURE,
+  TRAIN_MODEL_REQUEST,
+  TRAIN_MODEL_SUCCESS,
+  TRAIN_MODEL_FAILURE,
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -311,6 +314,32 @@ export const editModel = (modelData, modelId) => {
   }
 }
 
+export const trainModel = (modelId) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.post('/api/v1/mlclassifier/train/' + modelId, null)
+      .then(res => {
+        dispatch(success(res.data.body))
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: TRAIN_MODEL_REQUEST }
+  }
+  function success(data) {
+    return { type: TRAIN_MODEL_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: TRAIN_MODEL_FAILURE, payload: error }
+  }
+}
+
 export const testModel = modelData => {
   return dispatch => {
     dispatch(request())
@@ -363,12 +392,13 @@ export const uploadModel = modelData => {
   }
 }
 
-export const getTraiendModels = projectId => {
+export const getTrainedModels = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
     FetchApi.get('/api/v1/mlclassifier/trained/' + projectId, null, true)
       .then(res => {
-        dispatch(success())
+        dispatch(success(res.data.body))
+        callback(res.data.body)
       })
       .catch(err => {
         if (err.response) {
@@ -381,8 +411,8 @@ export const getTraiendModels = projectId => {
   function request() {
     return { type: GET_TRAINED_MODELS_REQUEST }
   }
-  function success() {
-    return { type: GET_TRAINED_MODELS_SUCCESS }
+  function success(data) {
+    return { type: GET_TRAINED_MODELS_SUCCESS, payload: data }
   }
   function failure(error) {
     return { type: GET_TRAINED_MODELS_FAILURE, payload: error }

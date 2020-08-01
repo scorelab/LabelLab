@@ -72,64 +72,65 @@ class Classifier:
             self.base_model = tf.keras.models.load_model(source)
             for layer in self.base_model.layers:
                 layer.trainable = False
+                layer._name = f'{layer.name}_base'
         else:
             input = tf.keras.layers.Input(shape=INPUT_SIZE)
-            if source is "DenseNet121":
+            if source == "DenseNet121":
                 self.base_model = tf.keras.applications.DenseNet121(include_top=False, input_tensor=input)
-            elif source is "DenseNet169":
+            elif source == "DenseNet169":
                 self.base_model = tf.keras.applications.DenseNet169(include_top=False, input_tensor=input)
-            elif source is "DenseNet201":
+            elif source == "DenseNet201":
                 self.base_model = tf.keras.applications.DenseNet201(include_top=False, input_tensor=input)
-            elif source is "InceptionResNetV2":
+            elif source == "InceptionResNetV2":
                 self.base_model = tf.keras.applications.InceptionResNetV2(include_top=False, input_tensor=input)
-            elif source is "InceptionV3":
+            elif source == "InceptionV3":
                 self.base_model = tf.keras.applications.InceptionV3(include_top=False, input_tensor=input)
-            elif source is "MobileNet":
+            elif source == "MobileNet":
                 self.base_model = tf.keras.applications.MobileNet(include_top=False, input_tensor=input)
-            elif source is "MobileNetV2":
+            elif source == "MobileNetV2":
                 self.base_model = tf.keras.applications.MobileNetV2(include_top=False, input_tensor=input)
-            elif source is "NASNetLarge":
+            elif source == "NASNetLarge":
                 self.base_model = tf.keras.applications.NASNetLarge(include_top=False, input_tensor=input)
-            elif source is "NASNetMobile":
+            elif source == "NASNetMobile":
                 self.base_model = tf.keras.applications.NASNetMobile(include_top=False, input_tensor=input)
-            elif source is "ResNet50":
+            elif source == "ResNet50":
                 self.base_model = tf.keras.applications.ResNet50(include_top=False, input_tensor=input)
-            elif source is "ResNet50V2":
+            elif source == "ResNet50V2":
                 self.base_model = tf.keras.applications.ResNet50V2(include_top=False, input_tensor=input)
-            elif source is "ResNet101":
+            elif source == "ResNet101":
                 self.base_model = tf.keras.applications.ResNet101(include_top=False, input_tensor=input)
-            elif source is "ResNet101V2":
+            elif source == "ResNet101V2":
                 self.base_model = tf.keras.applications.ResNet101V2(include_top=False, input_tensor=input)
-            elif source is "ResNet152":
+            elif source == "ResNet152":
                 self.base_model = tf.keras.applications.ResNet152(include_top=False, input_tensor=input)
-            elif source is "ResNet152V2":
+            elif source == "ResNet152V2":
                 self.base_model = tf.keras.applications.ResNet152V2(include_top=False, input_tensor=input)
-            elif source is "VGG16":
+            elif source == "VGG16":
                 self.base_model = tf.keras.applications.VGG16(include_top=False, input_tensor=input)
-            elif source is "VGG19":
+            elif source == "VGG19":
                 self.base_model = tf.keras.applications.VGG19(include_top=False, input_tensor=input)
-            elif source is "Xception":
+            elif source == "Xception":
                 self.base_model = tf.keras.applications.Xception(include_top=False, input_tensor=input)
         
     def set_learning_rate(self, learning_rate):
-        self.learning_rate = learning_rate
+        self.learning_rate = float(learning_rate)
 
     def set_optimizer(self, optimizer):
-        if optimizer is "Adadelta":
+        if optimizer == "Adadelta":
             self.optimizer = tf.keras.optimizers.Adadelta(learning_rate=self.learning_rate)
-        if optimizer is "Adagrad":
+        if optimizer == "Adagrad":
             self.optimizer = tf.keras.optimizers.Adagrad(learning_rate=self.learning_rate)
-        if optimizer is "Adam":
+        if optimizer == "Adam":
             self.optimizer = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
-        if optimizer is "Adamax":
+        if optimizer == "Adamax":
             self.optimizer = tf.keras.optimizers.Adamax(learning_rate=self.learning_rate)
-        if optimizer is "Ftrl":
+        if optimizer == "Ftrl":
             self.optimizer = tf.keras.optimizers.Ftrl(learning_rate=self.learning_rate)
-        if optimizer is "Nadam":
+        if optimizer == "Nadam":
             self.optimizer = tf.keras.optimizers.Nadam(learning_rate=self.learning_rate)
-        if optimizer is "RMSProp":
+        if optimizer == "RMSProp":
             self.optimizer = tf.keras.optimizers.RMSProp(learning_rate=self.learning_rate)
-        if optimizer is "SGD":
+        if optimizer == "SGD":
             self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.learning_rate)
 
     def set_loss(self, loss):
@@ -140,14 +141,14 @@ class Classifier:
         
     def set_metrics(self, metric):
         self.metrics = []
-        if metric is "Accuracy":
+        if metric == "Accuracy":
             self.metrics.append("accuracy")
 
     def set_batch_size(self, batch_size):
-        self.batch_size = batch_size
+        self.batch_size = int(batch_size)
 
     def set_epochs(self, epochs):
-        self.epochs = epochs
+        self.epochs = int(epochs)
 
     # Create image data generator and add augmentation steps
     def add_preprocessing_steps(self, steps, validation_split):
@@ -192,19 +193,19 @@ class Classifier:
     # Get initialized layer object based on settings
     def get_layer_object(self, layer, input_shape=None):
         layer_name = layer["name"]
-        if layer_name is "GlobalAveragePooling2D":
+        if layer_name == "GlobalAveragePooling2D":
             return GlobalAveragePooling2DLayer().get_layer()
-        elif layer_name is "Flatten":
+        elif layer_name == "Flatten":
             return FlattenLayer().get_layer()
-        elif layer_name is "Dense":
+        elif layer_name == "Dense":
             return DenseLayer(layer["settings"]).get_layer()
-        elif layer_name is "Dropout":
+        elif layer_name == "Dropout":
             return DropoutLayer(layer["settings"]).get_layer()
-        elif layer_name is "Activation":
+        elif layer_name == "Activation":
             return ActivationLayer(layer["settings"]).get_layer()
-        elif layer_name is "Conv2D":
+        elif layer_name == "Conv2D":
             return Conv2DLayer(layer["settings"], input_shape).get_layer()
-        elif layer_name is "MaxPool2D":
+        elif layer_name == "MaxPool2D":
             return MaxPool2DLayer(layer["settings"]).get_layer()
 
     # Compile the model
