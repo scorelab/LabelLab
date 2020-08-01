@@ -17,7 +17,8 @@ import {
     setModelParameter,
     addLayer,
     editLayer,
-    removeLayer
+    removeLayer,
+    trainModel
 } from '../../../actions/model'
 import lossOptions from './options/lossOptions'
 import optimizerOptions from './options/optimizerOptions'
@@ -69,7 +70,8 @@ class CustomBuilder extends Component {
             setModelParameter,
             addLayer,
             editLayer,
-            removeLayer
+            removeLayer,
+            trainModel
         } = this.props
         const { modalOpen } = this.state
 
@@ -148,7 +150,7 @@ class CustomBuilder extends Component {
                                 />
                                 <br />
                                 <br />
-                                <Button positive>Train</Button>
+                                <Button positive onClick={() => trainModel(model.id)}>Train</Button>
                             </Grid.Column>
                             <Grid.Column width={12}>
                                 {model.layers && model.layers.map((layer, index) => {
@@ -262,6 +264,7 @@ CustomBuilder.propTypes = {
     addLayer: PropTypes.func.isRequired,
     editLayer: PropTypes.func.isRequired,
     removeLayer: PropTypes.func.isRequired,
+    trainModel: PropTypes.func.isRequired,
     model: PropTypes.object
 }
 
@@ -275,6 +278,7 @@ export default connect(
         setModelParameter,
         addLayer,
         editLayer,
-        removeLayer
+        removeLayer,
+        trainModel
     }
 )(CustomBuilder)

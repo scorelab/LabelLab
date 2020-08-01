@@ -18,14 +18,14 @@ class DenseLayer:
         self.settings = settings
 
     def get_layer(self):
-        return tf.keras.layers.Dense(get_setting(self.settings, "Units"))
+        return tf.keras.layers.Dense(int(get_setting(self.settings, "Units")))
 
 class DropoutLayer:
     def __init__(self, settings):
         self.settings = settings
 
     def get_layer(self):
-        return tf.keras.layers.Dropout(get_setting(self.settings, "Rate"))
+        return tf.keras.layers.Dropout(float(get_setting(self.settings, "Rate")))
 
 class ActivationLayer:
     def __init__(self, settings):
@@ -40,10 +40,10 @@ class Conv2DLayer:
         self.input_shape = input_shape
 
     def get_layer(self):
-        filters = get_setting(self.settings, "Filters")
-        kernel_size = get_setting(self.settings, "Kernel Size")
-        x_strides = get_setting(self.settings, "X Strides")
-        y_strides = get_setting(self.settings, "Y Strides")
+        filters = int(get_setting(self.settings, "Filters"))
+        kernel_size = (int(get_setting(self.settings, "Kernel Size")), int(get_setting(self.settings, "Kernel Size")))
+        x_strides = int(get_setting(self.settings, "X Strides"))
+        y_strides = int(get_setting(self.settings, "Y Strides"))
         if self.input_shape is not None:
             return tf.keras.layers.Conv2D(filters=filters,
                                     kernel_size=kernel_size, 
@@ -59,6 +59,6 @@ class MaxPool2DLayer:
         self.settings = settings
 
     def get_layer(self):
-        pool_size_x = get_setting(self.settings, "Pool Size Y")
-        pool_size_y = get_setting(self.settings, "Pool Size X")
+        pool_size_x = int(get_setting(self.settings, "Pool Size Y"))
+        pool_size_y = int(get_setting(self.settings, "Pool Size X"))
         return tf.keras.layers.MaxPool2D(pool_size=(pool_size_x, pool_size_y))

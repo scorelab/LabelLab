@@ -19,7 +19,8 @@ import {
   addLayer,
   editLayer,
   removeLayer,
-  getTraiendModels
+  getTrainedModels,
+  trainModel
 } from '../../../actions/model'
 import lossOptions from './options/lossOptions'
 import optimizerOptions from './options/optimizerOptions'
@@ -48,9 +49,15 @@ class TransferLearningBuilder extends Component {
   }
 
   componentDidMount() {
-    const { getTraiendModels, project } = this.props;
+    const { getTrainedModels, projectId } = this.props;
+    getTrainedModels(projectId, this.setCombinedTransferLearningOptions)
+  }
+
+  setCombinedTransferLearningOptions = (models) => {
+
     const { transferLearningOptions } = this.state;
-    const trainedModels = getTraiendModels(project.projectId)
+
+    const trainedModels = models
 
     if (trainedModels && trainedModels.length > 0) {
       const trainedModelMap = {}
@@ -107,7 +114,8 @@ class TransferLearningBuilder extends Component {
       setTransferLearningSource,
       addLayer,
       editLayer,
-      removeLayer
+      removeLayer,
+      trainModel
     } = this.props
     const { modalOpen, transferLearningOptions, trainedModelMap } = this.state
 
@@ -186,7 +194,7 @@ class TransferLearningBuilder extends Component {
                 />
                 <br />
                 <br />
-                <Button positive>Train</Button>
+                <Button positive onClick={() => trainModel(model.id)}>Train</Button>
               </Grid.Column>
               <Grid.Column width={12}>
                 <Dropdown
@@ -317,8 +325,10 @@ TransferLearningBuilder.propTypes = {
   addLayer: PropTypes.func.isRequired,
   editLayer: PropTypes.func.isRequired,
   removeLayer: PropTypes.func.isRequired,
-  getTraiendModels: PropTypes.func.isRequired,
-  model: PropTypes.object
+  getTrainedModels: PropTypes.func.isRequired,
+  trainModel: PropTypes.func.isRequired,
+  model: PropTypes.object,
+  projectId: PropTypes.number.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -334,6 +344,7 @@ export default connect(
     addLayer,
     editLayer,
     removeLayer,
-    getTraiendModels
+    getTrainedModels,
+    trainModel
   }
 )(TransferLearningBuilder)

@@ -298,9 +298,10 @@ class Train(MethodView):
             # Go through each label in the model
             for label in ml_classifier.labels:
                 # Go through each instance of the label
-                for labeldata in label.labelsdata:
-                    image = Image.query.get()
-                    image_df.append({"imagename": image.image_url,
+                label_data = LabelData.query.filter_by(label_id=label.id).all()
+                for data in label_data:
+                    image = Image.query.filter_by(id=data.image_id).first()
+                    image_df = image_df.append({"imagename": image.image_url,
                                     "label": label.label_name
                                     }, ignore_index=True)
 
@@ -319,11 +320,11 @@ class Train(MethodView):
                 preprocessing_data = json.load(f)
 
             # Add image preprocessing
-            cl.add_preprocessing_steps(preprocessing_data, ml_classifier.validation)
+            cl.add_preprocessing_steps(preprocessing_data["steps"], ml_classifier.validation)
 
             # Load the data
             parent_dir = config['development'].UPLOAD_FOLDER
-            path = os.path.join(parent_dir, ml_classifier.project_id)
+            path = os.path.join(parent_dir, str(ml_classifier.project_id))
             cl.load_data(data=image_df, directory=path, test_split=ml_classifier.test)
 
             # Set the layers
@@ -336,19 +337,14 @@ class Train(MethodView):
                 with open(ml_classifier.layers_json_url) as f:
                     layers_data = json.load(f)
 
-                cl.add_layers(layers_data)
-
-            with open(ml_classifier.layers_json_url) as f:
-                layers_data = json.load(f)
-
-            cl.add_layers(layers_data)
+                cl.add_layers(layers_data["layers"])
 
             # Compile
             cl.compile()
 
             # Set graph directory
-            ml_classifier.loss_graph_url = f"./ml_files/graphs/{ml_classifier.id}/loss.jpg"
-            ml_classifier.accuracy_graph_url = f"./ml_files/graphs/{ml_classifier.id}/accuracy.jpg"
+            ml_classifier.loss_graph_url = f"/ml_files/graphs/{ml_classifier.id}/loss.jpg"
+            ml_classifier.accuracy_graph_url = f"/ml_files/graphs/{ml_classifier.id}/accuracy.jpg"
             cl.set_graph_directory(f"./ml_files/graphs/{ml_classifier.id}")
 
             # Fit
@@ -357,15 +353,15 @@ class Train(MethodView):
             # Save the model
             cl.save("./ml_files/models", ml_classifier.id)
             saved_model_url = f"./ml_files/models/{mlclassifier_id}/savedmodel"
-            ml_classifier = update_ml_classifier({
+            ml_classifier_data = update_ml_classifier({
                 "id": mlclassifier_id,
-                "saved_model_url": saved_model_url
+                "savedModelUrl": saved_model_url
             })
 
             response = {
                 "success": True,
                 "msg": "ML Classifier trained successfully.",
-                "body": trained_ml_classifier_data
+                "body": ml_classifier_data
             }
 
             return make_response(jsonify(response)), 200

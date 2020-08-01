@@ -80,7 +80,7 @@ class LabelingLoader extends Component {
     labeldata.labelled = true
     updateLabels(match.params.imageId, labeldata)
   }
-  
+
   render() {
     const {
       match,
@@ -106,7 +106,7 @@ class LabelingLoader extends Component {
       },
       onLabelChange: this.pushUpdate.bind(this)
     }
-    const title = image && image.image_name
+    const title = image && image.imageName
     return (
       <DocumentMeta title={title}>
         {labelActions.isfetching || imageActions.isfetching ? (
@@ -121,28 +121,28 @@ class LabelingLoader extends Component {
               process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
                 ? image.image_url
                 : `http://${process.env.REACT_APP_HOST}:${
-                    process.env.REACT_APP_SERVER_PORT
-                  }/static/uploads/${image.project_id}/${image.image_url}`
+                process.env.REACT_APP_SERVER_PORT
+                }/static/uploads/${image.projectId}/${image.imageUrl}`
             }
             projectUrl={`/project/${match.params.projectId}/images`}
             demo={false}
             {...props}
           />
         ) : (
-          <Modal size="small" open>
-            <Modal.Content>
-              <p>
-                It seems that you have not created any labels in the project.
-                Click on the below button to create labels!
+              <Modal size="small" open>
+                <Modal.Content>
+                  <p>
+                    It seems that you have not created any labels in the project.
+                    Click on the below button to create labels!
               </p>
-            </Modal.Content>
-            <Modal.Actions>
-              <Link to={`/project/${match.params.projectId}}/labels`}>
-                <Button positive content="Create Labels" />
-              </Link>
-            </Modal.Actions>
-          </Modal>
-        )}
+                </Modal.Content>
+                <Modal.Actions>
+                  <Link to={`/project/${match.params.projectId}}/labels`}>
+                    <Button positive content="Create Labels" />
+                  </Link>
+                </Modal.Actions>
+              </Modal>
+            )}
       </DocumentMeta>
     )
   }

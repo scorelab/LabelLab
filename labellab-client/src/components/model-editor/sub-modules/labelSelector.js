@@ -56,9 +56,9 @@ class LabelSelector extends Component {
                   key={index}
                   label={label}
                   removeLabel={() => removeLabel(model.labels, label.id)}
-                  images={images.filter(
+                  images={images && images.filter(
                     image =>
-                      image.labeldata && image.labeldata[label.id].length > 0
+                      image.labeldata && image.labeldata[label.id] && image.labeldata[label.id].length > 0
                   )}
                 />
               )
@@ -95,7 +95,7 @@ class AddLabelModal extends Component {
   UNSAFE_componentWillReceiveProps() {
     const { labels } = this.props
 
-    const validOptions = labels.length ? labels.filter(label => label.count > 0) : []
+    const validOptions = labels.length ? labels.filter(label => label.labeldata[label.id].length > 0) : []
 
     this.dropdownOptions = validOptions.map((label, index) => {
       return {
@@ -162,7 +162,7 @@ const LabelCard = props => {
     var imageTags = []
 
     for (var i = 0; i < Math.min(3, images.length); i++) {
-      const image_url = `${process.env.REACT_APP_HOST}:${
+      const image_url = `http://${process.env.REACT_APP_HOST}:${
         process.env.REACT_APP_SERVER_PORT
         }/static/uploads/${images[i].project_id}/${images[i].image_url}`
 
@@ -196,10 +196,10 @@ const LabelCard = props => {
       </div>
 
       <Divider />
-      {getLabelImageElements()}
+      {images && getLabelImageElements()}
       <Divider />
       <div className="label-count">
-        <Label>{label.count} Images</Label>
+        <Label>{label.labeldata[label.id].length} Images</Label>
       </div>
     </Card>
   )

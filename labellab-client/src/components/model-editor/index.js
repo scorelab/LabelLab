@@ -28,7 +28,7 @@ class ModelEditor extends Component {
   }
 
   getEditorType = () => {
-    const { match, editModel } = this.props
+    const { match, editModel, project } = this.props
 
     switch (match.params.type) {
       case 'classifier':
@@ -36,6 +36,7 @@ class ModelEditor extends Component {
           <ClassifierEditor
             source={match.params.source}
             editModel={editModel}
+            projectId={project.projectId}
           />
         )
       default:
