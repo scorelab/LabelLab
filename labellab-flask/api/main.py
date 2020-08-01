@@ -8,7 +8,7 @@ from flask_marshmallow import Marshmallow
 
 from api.config import config
 from api import commands
-from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static
+from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files
 from api.extensions import db, migrate, jwt, ma
 from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier
 
@@ -53,6 +53,7 @@ def register_blueprint(app):
     app.register_blueprint(images.imagesprint, url_prefix="/api/v1")
     app.register_blueprint(analytics.analyticsprint, url_prefix="/api/v1")
     app.register_blueprint(static.staticprint, url_prefix="/static/uploads")
+    app.register_blueprint(ml_files.mlfilesprint, url_prefix="/ml_files")
     return None
 
 def register_commands(app):

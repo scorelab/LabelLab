@@ -87,9 +87,8 @@ def update(classifier_data):
     if "preprocessingStepsJsonUrl" in classifier_data: ml_classifier.preprocessing_steps_json_url = classifier_data["preprocessingStepsJsonUrl"]
     if "layersJsonUrl" in classifier_data: ml_classifier.layers_json_url = classifier_data["layersJsonUrl"]
 
-    ml_classifier.labels = []
-
-    if "labels" in classifier_data and classifier_data["labels"] is not None:
+    if "labels" in classifier_data:
+        ml_classifier.labels = []
         label_ids = []
         for label_id in classifier_data["labels"]:
             label = Label.query.get(label_id)
@@ -101,6 +100,13 @@ def update(classifier_data):
     classifier_data = ml_classifier_schema.dump(ml_classifier).data
     if("label_ids" in locals() and len(label_ids) > 0):
         classifier_data["labels"] = label_ids
+    else:
+        labels = Label.query.filter(Label.models.any(id=classifier_data["id"])).all()
+        if len(labels) > 0:
+            label_ids = []
+            for label in labels:
+                label_ids.append(label.id)
+            classifier_data["labels"] = label_ids
     if(ml_classifier.preprocessing_steps_json_url is not None):
         classifier_data["preprocessingSteps"] = get_preprocessing_steps(ml_classifier.preprocessing_steps_json_url)
     if(ml_classifier.layers_json_url is not None):

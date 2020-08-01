@@ -18,14 +18,18 @@ class TrainingGraphs extends Component {
             <div className="training-graphs">
               {model.lossGraphUrl && (
                 <img
-                  src={model.lossGraphUrl}
+                  src={`http://${process.env.REACT_APP_HOST}:${
+                    process.env.REACT_APP_SERVER_PORT
+                    }${model.lossGraphUrl}`}
                   alt="Loss graph"
                   className="training-graph"
                 />
               )}
               {model.accuracyGraphUrl && (
                 <img
-                  src={model.accuracyGraphUrl}
+                  src={`http://${process.env.REACT_APP_HOST}:${
+                    process.env.REACT_APP_SERVER_PORT
+                    }${model.accuracyGraphUrl}`}
                   alt="Accuracy graph"
                   className="training-graph"
                 />

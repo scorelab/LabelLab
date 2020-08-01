@@ -22,9 +22,27 @@ class TrainingPlot(tf.keras.callbacks.Callback):
 
         self.logs.append(logs)
         self.losses.append(logs.get('loss'))
-        self.acc.append(logs.get('acc'))
+        self.acc.append(logs.get('accuracy'))
         self.val_losses.append(logs.get('val_loss'))
-        self.val_acc.append(logs.get('val_acc'))
+        self.val_acc.append(logs.get('val_accuracy'))
+
+        if len(self.acc) > 1:
+
+            N = np.arange(0, len(self.acc))
+
+            plt.style.use("seaborn")
+
+            plt.figure()
+            plt.plot(N, self.acc, label = "train_acc")
+            plt.plot(N, self.val_acc, label = "val_acc")
+            plt.title("Model Accuracy")
+            plt.xlabel("Epoch")
+            plt.ylabel("Accuracy")
+            plt.legend()
+
+            plt.savefig(f"{self.directory}/accuracy.jpg")
+            plt.close()
+
 
         if len(self.losses) > 1:
 
@@ -41,16 +59,4 @@ class TrainingPlot(tf.keras.callbacks.Callback):
             plt.legend()
 
             plt.savefig(f"{self.directory}/loss.jpg")
-
-            plt.clf()
-
-            plt.figure()
-            plt.plot(N, self.acc, label = "train_acc")
-            plt.plot(N, self.val_acc, label = "val_acc")
-            plt.title("Model Accuracy")
-            plt.xlabel("Epoch")
-            plt.ylabel("Accuracy")
-            plt.legend()
-
-            plt.savefig(f"{self.directory}/accuracy.jpg")
             plt.close()
