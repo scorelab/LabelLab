@@ -13,7 +13,8 @@ import {
 } from 'semantic-ui-react'
 import {
     setModelParameter,
-    uploadModel
+    uploadModel,
+    trainModel
 } from '../../../actions/model'
 import lossOptions from './options/lossOptions'
 import optimizerOptions from './options/optimizerOptions'
@@ -56,15 +57,15 @@ class UploadBuilder extends Component {
 
         const data = new FormData();
         data.append('modelFile', this.uploadInput.files[0]);
-        data.append('modelId', model.id);
 
-        uploadModel(data)
+        uploadModel(data, model.id)
     }
 
     render() {
         const {
             model,
             setModelParameter,
+            trainModel
         } = this.props
 
         const { fileName } = this.state
@@ -144,7 +145,7 @@ class UploadBuilder extends Component {
                                 />
                                 <br />
                                 <br />
-                                <Button positive>Train</Button>
+                                <Button positive onClick={() => trainModel(model.id)}>Train</Button>
                             </Grid.Column>
                             <Grid.Column width={12}>
                                 <div className="test-card-top">
@@ -222,6 +223,7 @@ class UploadBuilder extends Component {
 UploadBuilder.propTypes = {
     setModelParameter: PropTypes.func.isRequired,
     uploadModel: PropTypes.func.isRequired,
+    trainModel: PropTypes.func.isRequired,
     model: PropTypes.object
 }
 
@@ -233,6 +235,7 @@ export default connect(
     mapStateToProps,
     {
         setModelParameter,
-        uploadModel
+        uploadModel,
+        trainModel
     }
 )(UploadBuilder)
