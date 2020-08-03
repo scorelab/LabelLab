@@ -366,10 +366,10 @@ export const testModel = modelData => {
   }
 }
 
-export const uploadModel = modelData => {
+export const uploadModel = (modelData, modelId) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.post('/api/v1/mlclassifier/upload', modelData, true)
+    FetchApi.post(`/api/v1/mlclassifier/upload/${modelId}`, modelData, true)
       .then(res => {
         dispatch(success())
       })

@@ -268,7 +268,6 @@ class GetTrainedModels(MethodView):
             return make_response(jsonify(response)), 500
 
 
-# TODO: Test again once labeller backend is merged (custom, transfer, and upload)
 class Train(MethodView):
     """
     This class trains a saved model
@@ -329,7 +328,7 @@ class Train(MethodView):
 
             # Set the layers
             if ml_classifier.source == "upload":
-                cl.load_model(f"./model_files/models/{model_id}/savedmodel")
+                cl.load_model(f"./ml_files/models/{mlclassifier_id}/savedmodel")
             else:
                 if ml_classifier.source == "transfer":
                     cl.set_transfer_source(ml_classifier.transfer_source)
@@ -516,7 +515,7 @@ class Upload(MethodView):
 
         try:
             mlclassifier_id = mlclassifier_id
-            model_file = request.files['modelfile']
+            model_file = request.files['modelFile']
 
         except Exception as err:
             response = {
