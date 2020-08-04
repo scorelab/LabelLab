@@ -62,7 +62,7 @@ mlclassifiersprint.add_url_rule(
 
 # Export a model in specified format
 mlclassifiersprint.add_url_rule(
-    "/mlclassifier/export/<int:mlclassifier_id>",
+    "/mlclassifier/export/<int:mlclassifier_id>/<string:export_type>",
     view_func=mlclassifierscontroller.mlclassifiercontroller["export"],
     methods=["GET"]
 )
