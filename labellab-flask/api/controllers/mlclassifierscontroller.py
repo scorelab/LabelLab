@@ -1,5 +1,5 @@
 from flask.views import MethodView
-from flask import make_response, request, jsonify, current_app, send_from_directory, send_file
+from flask import make_response, request, jsonify, current_app, send_file
 from flask_jwt_extended import jwt_required
 import pandas as pd
 import json
@@ -432,17 +432,15 @@ class Test(MethodView):
 class Export(MethodView):
     """This class exports a model."""
     @jwt_required
-    def get(self, mlclassifier_id):
+    def get(self, mlclassifier_id, export_type):
         """
         Handle GET request for this view.
-        Url --> /api/v1/mlclassifer/export/<int:mlclassifier_id>
+        Url --> /api/v1/mlclassifer/export/<int:mlclassifier_id>/<string:export_type>
         """
-        # getting JSON data from request
-        post_data = request.get_json(silent=True, force=True)
 
         try:
             mlclassifier_id = mlclassifier_id
-            export_type = post_data["exportType"]
+            export_type = export_type
 
         except Exception as err:
             response = {
@@ -465,28 +463,32 @@ class Export(MethodView):
                         for file in files:
                             zipf.write(os.path.join(subdir, file))
                     zipf.close()
-                    return send_file(zip_file_dir,
-                                    mimetype = 'zip',
-                                    attachment_filename= 'model.zip',
-                                    as_attachment = True)
+                    
+                    # store the zipped saved model url
+                    model_url = f'ml_files/models/{mlclassifier_id}/model.zip'
                 elif export_type == "h5":
                     # Create model
                     cl = Classifier()
                     cl.load_model(f"./ml_files/models/{mlclassifier_id}/savedmodel")
                     cl.save("./ml_files/models", mlclassifier_id, "h5")
 
-                    # return the model file in h5 format
-                    # successfully
-                    return send_from_directory(ml_files_dir + f"/models/{mlclassifier_id}/h5", filename=f"saved_model.h5", as_attachment=True)
+                    # store the h5 model url
+                    model_url = f'ml_files/models/{mlclassifier_id}/h5/saved_model.h5'
                 else:
                     # Create model
                     cl = Classifier()
                     cl.load_model(f"./ml_files/models/{mlclassifier_id}/savedmodel")
                     cl.save("./ml_files/models", mlclassifier_id, "onnx")
 
-                    # return the model file in h5 format
-                    # successfully
-                    return send_from_directory(ml_files_dir + f"/models/{mlclassifier_id}/onnx", filename=f"saved_model.onnx", as_attachment=True)
+                    # save the onnx model url
+                    model_url = f'ml_files/models/{mlclassifier_id}/onnx/saved_model.onnx'
+
+                response = {
+                    "success": True,
+                    "msg": "Model converted",
+                    "body": model_url
+                }
+                return make_response(jsonify(response)), 200
 
             except Exception as err:
                 print("Error occured: ", err)

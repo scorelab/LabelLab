@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Header, Card, Grid, Button, Radio, Form } from 'semantic-ui-react'
-import { setExportType } from '../../../actions/model'
+import { setExportType, exportModel } from '../../../actions'
 
 import './css/exporter.css'
 
@@ -11,7 +11,7 @@ class Exporter extends Component {
         this.props.setExportType(value)
     }
     render() {
-        const { model } = this.props
+        const { model, exportModel } = this.props
         return (
             <Card centered fluid className="exporter-card">
                 <Card.Content>
@@ -50,7 +50,9 @@ class Exporter extends Component {
                                 </Form.Field>
                             </Form>
                         </Grid.Column>
-                        <Grid.Column><Button content="Export" /></Grid.Column>
+                        <Grid.Column><Button content="Export" onClick={() => {
+                            exportModel(model.exportType, model.id)
+                        }} /></Grid.Column>
                     </Grid>}
                 </Card.Content>
             </Card>
@@ -61,6 +63,7 @@ class Exporter extends Component {
 Exporter.propTypes = {
     model: PropTypes.object,
     setExportType: PropTypes.func.isRequired,
+    exportModel: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -69,5 +72,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { setExportType }
+    { setExportType, exportModel }
 )(Exporter)

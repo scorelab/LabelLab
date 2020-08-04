@@ -38,6 +38,9 @@ import {
   TRAIN_MODEL_REQUEST,
   TRAIN_MODEL_SUCCESS,
   TRAIN_MODEL_FAILURE,
+  EXPORT_MODEL_REQUEST,
+  EXPORT_MODEL_SUCCESS,
+  EXPORT_MODEL_FAILURE,
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -363,6 +366,40 @@ export const testModel = modelData => {
   }
   function failure(error) {
     return { type: TEST_MODEL_FAILURE, payload: error }
+  }
+}
+
+export const exportModel = (exportType, modelId) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.get(`/api/v1/mlclassifier/export/${modelId}/${exportType}`)
+      .then(res => {
+        const url = `http://${process.env.REACT_APP_HOST}:${
+          process.env.REACT_APP_SERVER_PORT
+          }/${res.data.body}`
+        const link = document.createElement('a');
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+        dispatch(success())
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.message
+            ? dispatch(failure(err.response.message))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: EXPORT_MODEL_REQUEST }
+  }
+  function success() {
+    return { type: EXPORT_MODEL_SUCCESS }
+  }
+  function failure(error) {
+    return { type: EXPORT_MODEL_FAILURE, payload: error }
   }
 }
 
