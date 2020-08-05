@@ -343,12 +343,12 @@ export const trainModel = (modelId) => {
   }
 }
 
-export const testModel = modelData => {
+export const testModel = (modelData, modelId) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.post('/api/v1/mlclassifier/test', modelData, true)
+    FetchApi.post('/api/v1/mlclassifier/test/' + modelId, modelData, true)
       .then(res => {
-        dispatch(success())
+        dispatch(success(res.data.body))
       })
       .catch(err => {
         if (err.response) {
@@ -361,8 +361,8 @@ export const testModel = modelData => {
   function request() {
     return { type: TEST_MODEL_REQUEST }
   }
-  function success() {
-    return { type: TEST_MODEL_SUCCESS }
+  function success(data) {
+    return { type: TEST_MODEL_SUCCESS, payload: data }
   }
   function failure(error) {
     return { type: TEST_MODEL_FAILURE, payload: error }
