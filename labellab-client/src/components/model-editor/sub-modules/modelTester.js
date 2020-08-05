@@ -28,7 +28,7 @@ class ModelTester extends React.Component {
         data.append('image', this.uploadInput.files[0]);
         data.append('modelId', model.id);
 
-        testModel(data)
+        testModel(data, model.id)
     }
 
     render() {
@@ -60,16 +60,18 @@ class ModelTester extends React.Component {
                         )}
                     </div>
                     <br />
-                    {testResult && testResult.length > 0 && (
+                    {testResult && Object.keys(testResult).length > 0 && (
                         <Grid centered fluid style={{ margin: '1em' }}>
                             <div className="progress-bar-list">
-                                {testResult.map((prediction, index) => (
-                                    <div key={index}>
-                                        <Progress percent={prediction.probability * 100}>
-                                            {prediction.name}
-                                        </Progress>
-                                    </div>
-                                ))}
+                                {
+                                    Object.keys(testResult).map((category, index) => {
+                                        return <div key={index}>
+                                            <Progress percent={testResult[category] * 100} progress>
+                                                {category}
+                                            </Progress>
+                                        </div>
+                                    })
+                                }
                             </div>
                         </Grid>
                     )}
@@ -81,7 +83,7 @@ class ModelTester extends React.Component {
 
 ModelTester.propTypes = {
     model: PropTypes.object,
-    testResult: PropTypes.array,
+    testResult: PropTypes.object,
     testModel: PropTypes.func.isRequired,
 }
 

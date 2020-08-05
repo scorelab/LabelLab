@@ -74,7 +74,7 @@ const initialState = {
     exportType: ""
   },
   models: [],
-  testResult: []
+  testResult: {}
 }
 
 const keysToCamelCase = data => {

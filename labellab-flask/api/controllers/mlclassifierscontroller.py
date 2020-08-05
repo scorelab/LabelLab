@@ -386,7 +386,7 @@ class Test(MethodView):
 
         try:
             mlclassifier_id = mlclassifier_id
-            image = request.files['imagefile']
+            image = request.files['image']
 
         except Exception as err:
             response = {
