@@ -23,6 +23,7 @@ import {
   deleteModel
 } from '../../actions'
 import './css/models.css'
+import ModelTester from '../model-editor/sub-modules/modelTester'
 
 class ModelsIndex extends Component {
   constructor(props) {
@@ -31,7 +32,9 @@ class ModelsIndex extends Component {
     this.state = {
       modelType: 'classifier',
       modelSource: 'transfer',
-      open: false
+      open: false,
+      testing: false,
+      selectedModelId: 0
     }
 
     this.modelTypes = [
@@ -73,6 +76,13 @@ class ModelsIndex extends Component {
     fetchProject(project.projectId)
   }
 
+  openTestingModal = (modelId) => {
+    this.setState({
+      selectedModelId: modelId,
+      testing: true
+    })
+  }
+
   toggleOpen = () => {
     this.setState(prevState => ({
       open: !prevState.open
@@ -81,7 +91,7 @@ class ModelsIndex extends Component {
 
   render() {
     const { project, model, models, setName, setType, setSource, createModel, deleteModel, getProjectModels, history } = this.props
-    const { modelType, modelSource, open } = this.state
+    const { modelType, modelSource, open, testing, selectedModelId } = this.state
 
     return (
       <Container>
@@ -128,6 +138,16 @@ class ModelsIndex extends Component {
             </Button>
           </Modal.Actions>
         </Modal>
+
+        <TestModelModal
+          open={testing}
+          toggleOpen={() => {
+            this.setState({
+              testing: false
+            })
+          }}
+          modelId={selectedModelId}
+        />
 
         <Button positive onClick={this.toggleOpen}>
           Create New Model
@@ -177,7 +197,7 @@ class ModelsIndex extends Component {
                       icon="eye"
                       label="Test"
                       size="tiny"
-                      onClick={null}
+                      onClick={() => this.openTestingModal(model.id)}
                     />
                   </Table.Cell>
                 </Table.Row>
@@ -187,6 +207,16 @@ class ModelsIndex extends Component {
       </Container>
     )
   }
+}
+
+const TestModelModal = (props) => {
+  const { open, toggleOpen, modelId } = props;
+  console.log(modelId)
+  return <Modal size="small" open={open} onClose={toggleOpen}>
+    <Modal.Content>
+      <ModelTester modelId={modelId} />
+    </Modal.Content>
+  </Modal>
 }
 
 ModelsIndex.propTypes = {
