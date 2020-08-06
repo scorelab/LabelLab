@@ -18,7 +18,7 @@ class ModelTester extends React.Component {
     handleUploadImage = (ev) => {
         ev.preventDefault();
 
-        const { testModel, model } = this.props
+        const { testModel, model, modelId } = this.props
 
         this.setState({
             image: URL.createObjectURL(this.uploadInput.files[0]),
@@ -26,9 +26,9 @@ class ModelTester extends React.Component {
 
         const data = new FormData();
         data.append('image', this.uploadInput.files[0]);
-        data.append('modelId', model.id);
+        data.append('modelId', model.id || modelId);
 
-        testModel(data, model.id)
+        testModel(data, model.id || modelId)
     }
 
     render() {
