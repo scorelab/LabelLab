@@ -9,7 +9,7 @@ class User {
   User({this.id, this.name, this.username, this.email});
 
   User.fromJson(dynamic json, {imageEndpoint, hasProjects = false}) {
-    id = json["_id"];
+    id = json["id"].toString();
     name = json["name"] != null ? json["name"] : json["username"];
     username = json["username"];
     email = json["email"];
