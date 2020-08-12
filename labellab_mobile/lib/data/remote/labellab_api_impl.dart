@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:labellab_mobile/config.dart';
+import 'package:labellab_mobile/data/interceptor/token_interceptor.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
+import 'package:labellab_mobile/data/remote/dto/refresh_response.dart';
 import 'package:labellab_mobile/data/remote/dto/register_response.dart';
 import 'package:labellab_mobile/data/remote/fake_server/fake_server.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
@@ -20,14 +22,19 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:logger/logger.dart';
 
 class LabelLabAPIImpl extends LabelLabAPI {
   Dio _dio;
   FakeServer _fake;
 
-  LabelLabAPIImpl()
-      : _dio = Dio(),
-        _fake = FakeServer();
+  LabelLabAPIImpl() {
+    _dio = Dio();
+    _fake = FakeServer();
+
+    _dio.interceptors.clear();
+    _dio.interceptors.add(RetryOnAuthFailInterceptor(_dio));
+  }
 
   /// BASE_URL - Change according to current labellab server
   static const String BASE_URL = API_BASE_URL;
@@ -40,6 +47,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   // Endpoints
   static const ENDPOINT_LOGIN = "auth/login";
+  static const ENDPOINT_REFRESH = "auth/token_refresh";
   static const ENDPOINT_LOGIN_GOOGLE = "auth/google/mobile";
   static const ENDPOINT_LOGIN_GITHUB = "auth/github";
   static const ENDPOINT_REGISTER = "auth/register";
@@ -73,6 +81,19 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .post(API_URL + ENDPOINT_LOGIN, data: user.toMap())
         .then((response) {
       return LoginResponse(response.data);
+    });
+  }
+
+  @override
+  Future<RefreshResponse> refreshToken(String refreshToken) {
+    Options options = Options(
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + refreshToken});
+
+    return _dio
+        .post(API_URL + ENDPOINT_REFRESH, options: options)
+        .then((response) => RefreshResponse(response.data))
+        .catchError((err) {
+      Logger().e(err);
     });
   }
 

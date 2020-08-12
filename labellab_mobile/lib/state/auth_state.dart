@@ -74,7 +74,7 @@ class AuthState with ChangeNotifier {
   }
 
   Future<bool> _loadUserData(LoginResponse response) {
-    print("Success: " + response.token);
+    print("Success: " + response.accessToken);
     return _respository.usersInfo().then((User user) {
       this.user = user;
       notifyListeners();

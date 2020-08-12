@@ -5,6 +5,7 @@ import 'package:labellab_mobile/data/local/project_provider.dart';
 import 'package:labellab_mobile/data/local/user_provider.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
+import 'package:labellab_mobile/data/remote/dto/refresh_response.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 import 'package:labellab_mobile/data/remote/dto/api_response.dart';
@@ -19,6 +20,7 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
@@ -31,9 +33,9 @@ class Repository {
 
   Future<bool> initToken() {
     return SharedPreferences.getInstance().then((pref) {
-      String token = pref.getString("token");
-      if (token != null) {
-        accessToken = token;
+      String accessTokenStored = pref.getString("access_token");
+      if (accessTokenStored != null) {
+        accessToken = accessTokenStored;
         return true;
       } else {
         return false;
@@ -42,33 +44,51 @@ class Repository {
   }
 
   Future<LoginResponse> login(AuthUser user) {
-    return _api.login(user).then((response) => _storeAccessToken(response));
+    return _api.login(user).then((response) => _storeTokens(response));
   }
 
   Future<LoginResponse> loginWithGoogle(GoogleUserRequest user) {
     return _api
         .loginWithGoogle(user)
-        .then((response) => _storeAccessToken(response));
+        .then((response) => _storeTokens(response));
   }
 
   Future<LoginResponse> loginWithGithub(String code) {
     return _api
         .loginWithGithub(code)
-        .then((response) => _storeAccessToken(response));
+        .then((response) => _storeTokens(response));
   }
 
-  LoginResponse _storeAccessToken(LoginResponse response) {
-    this.accessToken = response.token;
+  LoginResponse _storeTokens(LoginResponse response) {
+    this.accessToken = response.accessToken;
     SharedPreferences.getInstance().then((pref) {
-      pref.setString("token", response.token);
+      pref.setString("access_token", response.accessToken);
+      pref.setString("refresh_token", response.refreshToken);
     });
     return response;
+  }
+
+  Future<bool> refreshToken() {
+    return SharedPreferences.getInstance().then((pref) {
+      final String refreshToken = pref.getString('refresh_token');
+
+      _api.refreshToken(refreshToken).then((response) {
+        this.accessToken = response.accessToken;
+        pref.setString("access_token", response.accessToken);
+        Logger().i("Token updated");
+        return true;
+      }).catchError((err) {
+        Logger().e(err);
+      });
+      return false;
+    });
   }
 
   Future<void> logout() {
     this.accessToken = null;
     return SharedPreferences.getInstance().then((pref) async {
-      pref.setString("token", null);
+      pref.setString("access_token", null);
+      pref.setString("refresh_token", null);
       await _userProvider.delete();
     });
   }
