@@ -1,3 +1,4 @@
+import os
 from flask.views import MethodView
 from flask import make_response, request, jsonify, current_app
 from flask_jwt_extended import (
@@ -28,7 +29,7 @@ from api.helpers.projectmember import (
     count_users_in_team
 )
             
-allowed_teams = config['development'].TEAMS_ALLOWED
+allowed_teams = config[os.getenv("FLASK_CONFIG") or "development"].TEAMS_ALLOWED
 
 class GetAllTeams(MethodView):
     """This class-based view handles fetching of all teams in which the logged in user is a part"""

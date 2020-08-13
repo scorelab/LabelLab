@@ -59,12 +59,15 @@ def register_blueprint(app):
 def register_commands(app):
     """Register Click commands."""
     app.cli.add_command(commands.test)
+    app.cli.add_command(commands.clean)
+    app.cli.add_command(commands.urls)
+    app.cli.add_command(commands.deploy)
 
 def register_shellcontext(app):
     """Register shell context objects."""
 
     def shell_context():
         """Shell context objects."""
-        return {"db": db, "User": models.User}
+        return {"db": db, "User": User}
 
     app.shell_context_processor(shell_context)
