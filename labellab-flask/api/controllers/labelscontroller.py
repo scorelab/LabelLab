@@ -1,3 +1,4 @@
+import os
 from flask.views import MethodView
 from flask import make_response, request, jsonify, current_app
 from flask_jwt_extended import (
@@ -20,7 +21,7 @@ from api.helpers.label import (
     update_label
 )
 
-allowed_labels = config['development'].LABELS_ALLOWED
+allowed_labels = config[os.getenv("FLASK_CONFIG") or "development"].LABELS_ALLOWED
 
 class CreateLabel(MethodView):
     """This class creates a new Label."""

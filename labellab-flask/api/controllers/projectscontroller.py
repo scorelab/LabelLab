@@ -1,3 +1,4 @@
+import os
 from flask.views import MethodView
 from flask import make_response, request, jsonify, current_app
 from flask_jwt_extended import (
@@ -42,9 +43,7 @@ from api.helpers.image import (
 )
 from path_tracking.extract_exif import ImageMetaData
 
-allowed_teams = config['development'].TEAMS_ALLOWED
-
-allowed_teams = config['development'].TEAMS_ALLOWED
+allowed_teams = config[os.getenv("FLASK_CONFIG") or "development"].TEAMS_ALLOWED
 
 class CreateProject(MethodView):
     """This class creates a new project."""

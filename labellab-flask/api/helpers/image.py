@@ -44,7 +44,7 @@ def remove_image(image_id):
     image = find_by_id(image_id)
     project_id = image['project_id']
     image_url = image['image_url']
-    parent_dir = config['development'].UPLOAD_FOLDER
+    parent_dir = config[os.getenv("FLASK_CONFIG") or "development"].UPLOAD_FOLDER
     directory = os.path.join(parent_dir,str(project_id))
     path = os.path.join(directory, image_url)
     try:
@@ -95,7 +95,7 @@ def update_image(image_id, data):
     return image_schema.dump(image).data
 
 def get_path(image_url, project_id):
-    parent_dir = config['development'].UPLOAD_FOLDER
+    parent_dir = config[os.getenv("FLASK_CONFIG") or "development"].UPLOAD_FOLDER
     directory = os.path.join(parent_dir,str(project_id))
     path = os.path.join(directory, image_url)
     return path
@@ -104,7 +104,7 @@ def convert_and_save(image, project_id, image_url):
     """
     convert the base64 string to image and then save it
     """
-    parent_dir = config['development'].UPLOAD_FOLDER
+    parent_dir = config[os.getenv("FLASK_CONFIG") or "development"].UPLOAD_FOLDER
     directory = f"{project_id}"
     dir_path = os.path.join(parent_dir, directory)
     try: 
