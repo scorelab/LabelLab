@@ -57,6 +57,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
+  static const ENDPOINT_PROJECT_INFO = "project/project_info";
   static const ENDPOINT_PROJECT_CREATE = "project/create";
   static const ENDPOINT_PROJECT_UPDATE = "project/update";
   static const ENDPOINT_PROJECT_DELETE = "project/delete";
@@ -199,14 +200,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .get(API_URL + ENDPOINT_PROJECT_GET + "/$id", options: options)
+        .get(API_URL + ENDPOINT_PROJECT_INFO + "/$id", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
         Project project = Project.fromJson(response.data['body'],
             imageEndpoint: STATIC_UPLOADS_URL);
-        _fake.initGroup(project.id, project.images);
-        project.groups = _fake.getGroups;
+
+        // _fake.initGroup(project.id, project.images);
+        // project.groups = _fake.getGroups;
         return project;
       } else {
         throw Exception("Request unsuccessfull");
@@ -224,7 +226,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return (response.data['body']['project'] as List<dynamic>)
+        return (response.data['body'] as List<dynamic>)
             .map((item) => Project.fromJson(item, isDense: true))
             .toList();
       } else {

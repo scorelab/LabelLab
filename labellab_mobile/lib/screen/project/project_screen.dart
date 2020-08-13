@@ -12,13 +12,10 @@ import 'package:provider/provider.dart';
 import 'project_state.dart';
 
 class ProjectScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Provider
-          .of<ProjectBloc>(context)
-          .projects,
+      stream: Provider.of<ProjectBloc>(context).projects,
       initialData: ProjectState.loading(),
       builder: (context, AsyncSnapshot<ProjectState> snapshot) {
         final ProjectState state = snapshot.data;
@@ -44,36 +41,33 @@ class ProjectScreen extends StatelessWidget {
                 children: <Widget>[
                   state.isLoading
                       ? LinearProgressIndicator(
-                    backgroundColor: Theme
-                        .of(context)
-                        .canvasColor,
-                  )
+                          backgroundColor: Theme.of(context).canvasColor,
+                        )
                       : Container(
-                    height: 6,
-                  ),
+                          height: 6,
+                        ),
                   state.error != null
                       ? ListTile(
-                    title: Text(state.error),
-                  )
+                          title: Text(state.error),
+                        )
                       : Container(),
                   state.projects != null
                       ? Column(
-                    children: state.projects
-                        .map((project) =>
-                        ProjectItem(
-                          project,
-                          onItemTapped: () {
-                            _gotoProjectDetail(context, project.id);
-                          },
-                          onEditSelected: () {
-                            _gotoEditProject(context, project.id);
-                          },
-                          onDeleteSelected: () {
-                            _showDeleteConfirmation(context, project);
-                          },
-                        ))
-                        .toList(),
-                  )
+                          children: state.projects
+                              .map((project) => ProjectItem(
+                                    project,
+                                    onItemTapped: () {
+                                      _gotoProjectDetail(context, project.id);
+                                    },
+                                    onEditSelected: () {
+                                      _gotoEditProject(context, project.id);
+                                    },
+                                    onDeleteSelected: () {
+                                      _showDeleteConfirmation(context, project);
+                                    },
+                                  ))
+                              .toList(),
+                        )
                       : Container(),
                 ],
               ),
@@ -94,8 +88,8 @@ class ProjectScreen extends StatelessWidget {
               centerTitle: true,
               elevation: 0,
             ),
-            body: EmptyPlaceholder(
-                description: "Your projects will appear here"),
+            body:
+                EmptyPlaceholder(description: "Your projects will appear here"),
             floatingActionButton: FloatingActionButton(
               heroTag: "project_add_tag",
               child: Icon(

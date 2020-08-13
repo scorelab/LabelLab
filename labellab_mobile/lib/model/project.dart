@@ -5,6 +5,7 @@ import 'package:labellab_mobile/model/group.dart';
 
 class Project {
   String id;
+  String adminId;
   String name;
   String description;
   List<Member> members;
@@ -14,6 +15,7 @@ class Project {
 
   Project(
       {this.id,
+      this.adminId,
       this.name,
       this.description,
       this.members,
@@ -22,9 +24,10 @@ class Project {
       this.groups});
 
   Project.fromJson(dynamic json, {bool isDense = false, String imageEndpoint}) {
-    id = json["_id"];
-    name = json["projectName"];
-    description = json["projectDescription"];
+    id = json["id"].toString();
+    adminId = json["admin_id"].toString();
+    name = json["project_name"];
+    description = json["project_description"];
     if (json["members"] != null && !isDense) {
       members = (json["members"] as List)
           .map(
@@ -32,8 +35,8 @@ class Project {
           )
           .toList();
     }
-    if (json["image"] != null && !isDense) {
-      images = (json["image"] as List)
+    if (json["images"] != null && !isDense) {
+      images = (json["images"] as List)
           .map(
             (image) => Image.fromJson(image, imageEndpoint: imageEndpoint),
           )
@@ -46,20 +49,18 @@ class Project {
           )
           .toList();
     }
-    if (json["groups"] != null && !isDense) {
-      groups = (json["groups"] as List)
-          .map((group) => Group.fromJson(group))
-          .toList();
-    } else {
-      // Mock code to generate groups
-      groups = [Group.mock(id, images)];
-    }
+    groups = [];
+    // if (json["groups"] != null && !isDense) {
+    //   groups = (json["groups"] as List)
+    //       .map((group) => Group.fromJson(group))
+    //       .toList();
+    // }
   }
 
   Map<String, dynamic> toMap() {
     return {
-      "projectName": name,
-      "projectDescription": description,
+      "project_name": name,
+      "project_description": description,
     };
   }
 }

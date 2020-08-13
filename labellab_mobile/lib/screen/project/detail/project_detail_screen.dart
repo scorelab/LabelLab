@@ -17,6 +17,7 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart'
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/group_item.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
@@ -37,10 +38,8 @@ class ProjectDetailScreen extends StatelessWidget {
             slivers: <Widget>[
               SliverAppBar(
                 backgroundColor: Theme.of(context).accentColor,
-                iconTheme: IconThemeData(
-                    color: _hasImages ? Colors.white : Colors.black),
-                actionsIconTheme: IconThemeData(
-                    color: _hasImages ? Colors.white : Colors.black),
+                iconTheme: IconThemeData(color: Colors.white),
+                actionsIconTheme: IconThemeData(color: Colors.white),
                 expandedHeight: 200,
                 elevation: 2,
                 pinned: true,
@@ -49,8 +48,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   centerTitle: true,
                   title: Text(
                     _state.project != null ? _state.project.name : "",
-                    style: TextStyle(
-                        color: _hasImages ? Colors.white : Colors.black),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 actions: _buildActions(context, _state.project),
@@ -124,11 +122,14 @@ class ProjectDetailScreen extends StatelessWidget {
                       _state.selectedImages)
                   : SliverFillRemaining(),
               _state.project != null
-                  ? _buildGroupsHeading(context, _state.project.groups)
+                  ? _buildGroupsHeading(context)
                   : SliverFillRemaining(),
               _state.project != null && _state.project.groups != null
                   ? _buildGroups(
                       context, _state.project.id, _state.project.groups)
+                  : SliverFillRemaining(),
+              _state.project != null
+                  ? _buildLabelsHeading(context)
                   : SliverFillRemaining(),
               _state.project != null && _state.project.labels != null
                   ? _buildLabels(
@@ -351,13 +352,13 @@ class ProjectDetailScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                _buildErrorPlaceholder(context, "No images yet"),
+                _buildEmptyPlaceholder(context, "No images yet"),
               ]),
             ),
           );
   }
 
-  Widget _buildGroupsHeading(BuildContext context, List<Group> groups) {
+  Widget _buildGroupsHeading(BuildContext context) {
     return SliverPadding(
       padding: EdgeInsets.only(top: 8, left: 16, right: 16),
       sliver: SliverList(
@@ -367,7 +368,7 @@ class ProjectDetailScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Groups",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
               FlatButton.icon(
                 icon: Icon(Icons.add),
@@ -384,18 +385,49 @@ class ProjectDetailScreen extends StatelessWidget {
   Widget _buildGroups(
       BuildContext context, String projectId, List<Group> groups) {
     return SliverPadding(
-      padding: EdgeInsets.only(bottom: 8, left: 16, right: 16),
-      sliver: SliverGrid.count(
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          crossAxisCount: 2,
-          childAspectRatio: 2,
-          children: groups
-              .map((group) => InkWell(
-                    child: GroupItem(group),
-                    onTap: () => _gotoViewGroup(context, projectId, group.id),
-                  ))
-              .toList()),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate([
+            groups.length > 0
+                ? SliverGrid.count(
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    crossAxisCount: 2,
+                    childAspectRatio: 2,
+                    children: groups
+                        .map((group) => InkWell(
+                              child: GroupItem(group),
+                              onTap: () =>
+                                  _gotoViewGroup(context, projectId, group.id),
+                            ))
+                        .toList(),
+                  )
+                : _buildEmptyPlaceholder(context, "No Groups yet"),
+          ]),
+        ));
+  }
+
+  Widget _buildLabelsHeading(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Labels",
+                style: Theme.of(context).textTheme.title,
+              ),
+              FlatButton.icon(
+                icon: Icon(Icons.add),
+                label: Text("Add"),
+                onPressed: () => _showAddEditLabelModel(context),
+              ),
+            ],
+          ),
+        ]),
+      ),
     );
   }
 
@@ -405,20 +437,6 @@ class ProjectDetailScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                "Labels",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              FlatButton.icon(
-                icon: Icon(Icons.add),
-                label: Text("Add"),
-                onPressed: () => _showAddEditLabelModel(context),
-              ),
-            ],
-          ),
           labels.length > 0
               ? Wrap(
                   spacing: 8,
@@ -435,7 +453,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     );
                   }).toList(),
                 )
-              : _buildErrorPlaceholder(context, "No labels yet"),
+              : _buildEmptyPlaceholder(context, "No labels yet"),
         ]),
       ),
     );
@@ -449,13 +467,13 @@ class ProjectDetailScreen extends StatelessWidget {
         delegate: SliverChildListDelegate(
           members.map((member) {
             return ListTile(
-              title: Text(member.member.name),
-              subtitle: Text(member.member.email),
-              trailing: _currentUser.id != member.member.id
+              title: Text(member.name),
+              subtitle: Text(member.email),
+              trailing: _currentUser.name != member.name
                   ? PopupMenuButton<int>(
                       onSelected: (value) {
                         if (value == 0) {
-                          _showRemoveMemberConfirmation(context, member.member);
+                          _showRemoveMemberConfirmation(context, member);
                         }
                       },
                       itemBuilder: (context) {
@@ -475,7 +493,7 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorPlaceholder(BuildContext context, String description) {
+  Widget _buildEmptyPlaceholder(BuildContext context, String description) {
     return Row(
       children: <Widget>[
         Icon(
@@ -601,16 +619,16 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _showRemoveMemberConfirmation(BuildContext baseContext, User user) {
+  void _showRemoveMemberConfirmation(BuildContext baseContext, Member member) {
     showDialog<bool>(
         context: baseContext,
         builder: (context) {
           return DeleteConfirmDialog(
-            name: user.name,
+            name: member.name,
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
               Provider.of<ProjectDetailBloc>(baseContext)
-                  .removeUser(user.email);
+                  .removeUser(member.email);
               Navigator.of(context).pop(true);
             },
           );
