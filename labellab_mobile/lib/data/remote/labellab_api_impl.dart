@@ -206,9 +206,6 @@ class LabelLabAPIImpl extends LabelLabAPI {
       if (isSuccess) {
         Project project = Project.fromJson(response.data['body'],
             imageEndpoint: STATIC_UPLOADS_URL);
-
-        // _fake.initGroup(project.id, project.images);
-        // project.groups = _fake.getGroups;
         return project;
       } else {
         throw Exception("Request unsuccessfull");
@@ -296,40 +293,44 @@ class LabelLabAPIImpl extends LabelLabAPI {
   @override
   Future<ApiResponse> uploadImage(
       String token, String projectId, UploadImage image) async {
-    final imageBytes = image.image.readAsBytesSync();
-    final encodedBytes = base64Encode(imageBytes);
+    // final imageBytes = image.image.readAsBytesSync();
+    // final encodedBytes = base64Encode(imageBytes);
 
-    final takenAt = (image.metadata != null &&
-            image.metadata.exif != null &&
-            image.metadata.exif.dateTime != null)
-        ? image.metadata.exif.dateTime
-        : "";
-    final latitude = (image.metadata != null &&
-            image.metadata.gps != null &&
-            image.metadata.gps.gpsLatitude != null)
-        ? image.metadata.gps.gpsLatitude
-        : "";
-    final longitude = (image.metadata != null &&
-            image.metadata.gps != null &&
-            image.metadata.gps.gpsLongitude != null)
-        ? image.metadata.gps.gpsLongitude
-        : "";
+    // final takenAt = (image.metadata != null &&
+    //         image.metadata.exif != null &&
+    //         image.metadata.exif.dateTime != null)
+    //     ? image.metadata.exif.dateTime
+    //     : "";
+    // final latitude = (image.metadata != null &&
+    //         image.metadata.gps != null &&
+    //         image.metadata.gps.gpsLatitude != null)
+    //     ? image.metadata.gps.gpsLatitude
+    //     : "";
+    // final longitude = (image.metadata != null &&
+    //         image.metadata.gps != null &&
+    //         image.metadata.gps.gpsLongitude != null)
+    //     ? image.metadata.gps.gpsLongitude
+    //     : "";
 
-    final data = {
-      "projectId": projectId,
-      "imageNames": ["Image"],
-      "images": ["base64," + encodedBytes],
-      "format": "image/jpg",
-      "metadata": {
-        "takenAt": takenAt,
-        "latitude": latitude,
-        "longitude": longitude
-      }
-    };
+    // final data = {
+    //   "projectId": projectId,
+    //   "imageNames": ["Image"],
+    //   "images": ["base64," + encodedBytes],
+    //   "format": "image/jpg",
+    //   "metadata": {
+    //     "takenAt": takenAt,
+    //     "latitude": latitude,
+    //     "longitude": longitude
+    //   }
+    // };
+
+    FormData data = FormData.fromMap(
+        {"images": await MultipartFile.fromFile(image.image.path)});
+
     Options options =
         Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     return _dio
-        .post(API_URL + ENDPOINT_IMAGE + "/$projectId/create",
+        .post(API_URL + ENDPOINT_IMAGE + "/create/$projectId",
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
@@ -342,7 +343,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .get(API_URL + ENDPOINT_IMAGE + "/$id/get", options: options)
+        .get(API_URL + ENDPOINT_IMAGE + "/get_image/$id", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
@@ -490,15 +491,16 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .get(API_URL + ENDPOINT_LABEL + "/$projectId/get", options: options)
+        .get(API_URL + ENDPOINT_LABEL + "/get/$projectId", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return (response.data['body']['labels'] as List<dynamic>)
+        return (response.data['body'] as List<dynamic>)
             .map((item) => Label.fromJson(item))
             .toList();
       } else {
-        throw Exception("Request unsuccessfull");
+        return List.from([]);
+        // throw Exception("Request unsuccessfull");
       }
     });
   }
@@ -508,12 +510,9 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
-    final data = {
-      "label": label.toMap(),
-    };
     return _dio
-        .post(API_URL + ENDPOINT_LABEL + "/$projectId/create",
-            options: options, data: data)
+        .post(API_URL + ENDPOINT_LABEL + "/create/$projectId",
+            options: options, data: label.toMap())
         .then((response) {
       return ApiResponse(response.data);
     });

@@ -53,12 +53,42 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
               labelText: "Label name",
               textCapitalization: TextCapitalization.words,
             ),
-            _error != null
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text("Type"),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(0),
+              leading: Radio(
+                value: 0,
+                groupValue: _type,
+                onChanged: (_) {
+                  setState(() {
+                    _type = 0;
+                  });
+                },
+              ),
+              title: Text("Rectangle"),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(0),
+              leading: Radio(
+                value: 1,
+                groupValue: _type,
+                onChanged: (_) {
+                  setState(() {
+                    _type = 1;
+                  });
+                },
+              ),
+              title: Text("Polygon"),
+            ),
+            this._error != null
                 ? Text(
-                    _error,
-                    style: TextStyle(color: Colors.redAccent),
+                    this._error,
+                    style: TextStyle(color: Colors.red),
                   )
-                : Container()
+                : Container(),
           ],
         ),
       ),
@@ -82,7 +112,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
     final Label _label = Label();
     _label.id = _labelId;
     _label.name = _nameController.text;
-    _label.type = _type == 0 ? "Rectangle" : "Polygon";
+    _label.type = _type == 0 ? LabelType.RECTANGLE : LabelType.POLYGON;
     _updateLogic(_label).then((String message) {
       if (message == "Success") {
         Navigator.pop(context, true);
