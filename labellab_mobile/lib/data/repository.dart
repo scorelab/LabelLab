@@ -34,7 +34,9 @@ class Repository {
   Future<bool> initToken() {
     return SharedPreferences.getInstance().then((pref) {
       String accessTokenStored = pref.getString("access_token");
-      if (accessTokenStored != null) {
+      String refreshTokenStored = pref.getString("refresh_token");
+
+      if (accessTokenStored != null && refreshTokenStored != null) {
         accessToken = accessTokenStored;
         return true;
       } else {
@@ -72,15 +74,15 @@ class Repository {
     return SharedPreferences.getInstance().then((pref) {
       final String refreshToken = pref.getString('refresh_token');
 
-      _api.refreshToken(refreshToken).then((response) {
+      return _api.refreshToken(refreshToken).then((response) {
         this.accessToken = response.accessToken;
         pref.setString("access_token", response.accessToken);
         Logger().i("Token updated");
         return true;
       }).catchError((err) {
         Logger().e(err);
+        return false;
       });
-      return false;
     });
   }
 
@@ -102,9 +104,9 @@ class Repository {
     });
   }
 
-  Future<User> usersInfoLocal() {
-    return _userProvider.getUser();
-  }
+  // Future<User> usersInfoLocal() {
+  //   return _userProvider.getUser();
+  // }
 
   Future<User> usersInfo() {
     if (accessToken == null) return Future(null);
@@ -135,22 +137,22 @@ class Repository {
     return _api.getProject(accessToken, id);
   }
 
-  Future<List<Project>> getProjectsLocal() {
-    return _projectProvider.open().then((_) {
-      return _projectProvider.getProjects().then((projects) {
-        _projectProvider.close();
-        return projects;
-      });
-    });
-  }
+  // Future<List<Project>> getProjectsLocal() {
+  //   return _projectProvider.open().then((_) {
+  //     return _projectProvider.getProjects().then((projects) {
+  //       _projectProvider.close();
+  //       return projects;
+  //     });
+  //   });
+  // }
 
   Future<List<Project>> getProjects() {
     if (accessToken == null) return Future(null);
     return _api.getProjects(accessToken).then((projects) {
-      _projectProvider.open().then((_) async {
-        await _projectProvider.replaceProjects(projects);
-        _projectProvider.close();
-      });
+      // _projectProvider.open().then((_) async {
+      //   await _projectProvider.replaceProjects(projects);
+      //   _projectProvider.close();
+      // });
       return projects;
     });
   }
@@ -267,32 +269,32 @@ class Repository {
     });
   }
 
-  Future<List<Classification>> getClassificationsLocal() {
-    return _classificationProvider.open().then((_) {
-      return _classificationProvider
-          .getClassifications()
-          .then((classifications) {
-        _classificationProvider.close();
-        return classifications;
-      });
-    });
-  }
+  // Future<List<Classification>> getClassificationsLocal() {
+  //   return _classificationProvider.open().then((_) {
+  //     return _classificationProvider
+  //         .getClassifications()
+  //         .then((classifications) {
+  //       _classificationProvider.close();
+  //       return classifications;
+  //     });
+  //   });
+  // }
 
   Future<Classification> getClassification(String id) {
     if (accessToken == null) return Future(null);
     return _api.getClassification(accessToken, id);
   }
 
-  Future<Classification> getClassificationLocal(String id) {
-    return _classificationProvider.open().then((_) {
-      return _classificationProvider
-          .getClassification(id)
-          .then((classification) {
-        _classificationProvider.close();
-        return classification;
-      });
-    });
-  }
+  // Future<Classification> getClassificationLocal(String id) {
+  //   return _classificationProvider.open().then((_) {
+  //     return _classificationProvider
+  //         .getClassification(id)
+  //         .then((classification) {
+  //       _classificationProvider.close();
+  //       return classification;
+  //     });
+  //   });
+  // }
 
   Future<bool> deleteClassification(String id) {
     if (accessToken == null) return Future(null);
