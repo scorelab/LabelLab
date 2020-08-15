@@ -59,7 +59,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_INFO = "project/project_info";
   static const ENDPOINT_PROJECT_CREATE = "project/create";
-  static const ENDPOINT_PROJECT_UPDATE = "project/update";
+  static const ENDPOINT_PROJECT_UPDATE = "project/project_info";
   static const ENDPOINT_PROJECT_DELETE = "project/delete";
   static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add";
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove";
@@ -357,12 +357,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> updateImage(
-      String token, Image image, List<LabelSelection> selections) {
+  Future<ApiResponse> updateImage(String token, String projectId, Image image,
+      List<LabelSelection> selections) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     final data = {
+      "project_id": projectId,
+      "labelled": true,
       "labels": selections.map((selection) {
         return selection.toMap();
       }).toList(),
@@ -370,7 +372,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       "height": image.height,
     };
     return _dio
-        .put(API_URL + ENDPOINT_IMAGE + "/${image.id}/update",
+        .put(API_URL + ENDPOINT_IMAGE + "/update/${image.id}",
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
@@ -378,7 +380,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> deleteImage(String token, String imageId) {
+  Future<ApiResponse> deleteImage(
+      String token, String projectId, String imageId) {
     final data = {
       "images": [imageId]
     };
@@ -386,7 +389,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .delete(API_URL + ENDPOINT_IMAGE + "/delete",
+        .post(API_URL + ENDPOINT_IMAGE + "/delete/$projectId",
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
@@ -394,13 +397,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> deleteImages(String token, List<String> imageIds) {
+  Future<ApiResponse> deleteImages(
+      String token, String projectId, List<String> imageIds) {
     final data = {"images": imageIds};
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .delete(API_URL + ENDPOINT_IMAGE + "/delete",
+        .post(API_URL + ENDPOINT_IMAGE + "/delete/$projectId",
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
@@ -519,12 +523,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> updateLabel(String token, Label label) {
+  Future<ApiResponse> updateLabel(String token, String projectId, Label label) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .put(API_URL + ENDPOINT_LABEL + "/${label.id}/update",
+        .put(API_URL + ENDPOINT_LABEL + "/label_info/${label.id}/$projectId",
             options: options, data: label.toMap())
         .then((response) {
       return ApiResponse(response.data);
@@ -532,12 +536,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> deleteLabel(String token, String id) {
+  Future<ApiResponse> deleteLabel(
+      String token, String projectId, String labelId) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .delete(API_URL + ENDPOINT_LABEL + "/$id/delete", options: options)
+        .delete(API_URL + ENDPOINT_LABEL + "/label_info/$labelId/$projectId",
+            options: options)
         .then((response) {
       return ApiResponse(response.data);
     });

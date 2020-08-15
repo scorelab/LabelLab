@@ -156,7 +156,9 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       });
     } else {
       // Update the existing label
-      return widget._repository.updateLabel(label).then((res) {
+      return widget._repository
+          .updateLabel(widget.projectId, label)
+          .then((res) {
         if (!res.success) return res.msg;
         return "Success";
       });

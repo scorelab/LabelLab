@@ -34,7 +34,7 @@ class ProjectViewImageBloc {
   }
 
   void delete() {
-    _repository.deleteImage(imageId);
+    _repository.deleteImage(projectId, imageId);
   }
 
   // Project stream

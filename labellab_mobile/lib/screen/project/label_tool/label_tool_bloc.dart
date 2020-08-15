@@ -166,7 +166,7 @@ class LabelToolBloc {
           selection.label, adjustedPoints, selection.color);
     }).toList();
 
-    _repository.updateImage(_image, adjustedSelections).then((res) {
+    _repository.updateImage(projectId, _image, adjustedSelections).then((res) {
       _isLoading = false;
       if (res.success) {
         _setState(LabelToolState.success(_selections, _image, labels: _labels));
