@@ -10,8 +10,8 @@ class Image(db.Model):
     __tablename__ = "image"
 
     id = db.Column(db.Integer, primary_key=True)
-    image_name = db.Column(db.String(128), nullable=False,)
-    image_url = db.Column(db.String(80), nullable=False,)
+    image_name = db.Column(db.String(255), nullable=False,)
+    image_url = db.Column(db.String(255), nullable=False,)
     height = db.Column(db.Integer)
     width = db.Column(db.Integer)
     labelled = db.Column(db.Boolean,
