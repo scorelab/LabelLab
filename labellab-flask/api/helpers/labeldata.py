@@ -58,16 +58,6 @@ def update_labeldata(labeldata_id, data):
     labeldatas = find_by_image_id(labeldata.image_id)
     return labeldatas
 
-def update_labeldata(labeldata_id, data):
-    """
-    update labeldata using its id.
-    """
-    labeldata = LabelData.query.get(labeldata_id)
-    labeldata.label_id = data['label_id']
-    db.session.commit()
-    labeldatas = find_by_image_id(labeldata.image_id)
-    return labeldatas_schema.dump(labeldatas).data
-
 def delete_by_id(_id):
     """
     Delete labeldata by their id
