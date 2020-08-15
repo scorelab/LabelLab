@@ -33,7 +33,7 @@ class ProjectDetailBloc {
   }
 
   void deleteLabel(String id) {
-    _repository.deleteLabel(id).then((_) {
+    _repository.deleteLabel(projectId, id).then((_) {
       refresh();
     });
   }
@@ -63,7 +63,7 @@ class ProjectDetailBloc {
 
   // Used to delete selected images
   void deleteSelected() {
-    _repository.deleteImages(_selectedImages).then((_) {
+    _repository.deleteImages(projectId, _selectedImages).then((_) {
       refresh();
     });
   }

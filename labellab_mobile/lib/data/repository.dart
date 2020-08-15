@@ -189,19 +189,19 @@ class Repository {
   }
 
   Future<ApiResponse> updateImage(
-      Image image, List<LabelSelection> selections) {
+      String projectId, Image image, List<LabelSelection> selections) {
     if (accessToken == null) return Future(null);
-    return _api.updateImage(accessToken, image, selections);
+    return _api.updateImage(accessToken, projectId, image, selections);
   }
 
-  Future<ApiResponse> deleteImage(String imageId) {
+  Future<ApiResponse> deleteImage(String projectId, String imageId) {
     if (accessToken == null) return Future(null);
-    return _api.deleteImage(accessToken, imageId);
+    return _api.deleteImage(accessToken, projectId, imageId);
   }
 
-  Future<ApiResponse> deleteImages(List<String> imageIds) {
+  Future<ApiResponse> deleteImages(String projectId, List<String> imageIds) {
     if (accessToken == null) return Future(null);
-    return _api.deleteImages(accessToken, imageIds);
+    return _api.deleteImages(accessToken, projectId, imageIds);
   }
 
   Future<List<Location>> getImagePath(String imageId) {
@@ -242,14 +242,14 @@ class Repository {
     return _api.getLabels(accessToken, projectId);
   }
 
-  Future<ApiResponse> updateLabel(Label label) {
+  Future<ApiResponse> updateLabel(String projectId, Label label) {
     if (accessToken == null) return Future(null);
-    return _api.updateLabel(accessToken, label);
+    return _api.updateLabel(accessToken, projectId, label);
   }
 
-  Future<ApiResponse> deleteLabel(String id) {
+  Future<ApiResponse> deleteLabel(String projectId, String labelId) {
     if (accessToken == null) return Future(null);
-    return _api.deleteLabel(accessToken, id);
+    return _api.deleteLabel(accessToken, projectId, labelId);
   }
 
   // Classification
