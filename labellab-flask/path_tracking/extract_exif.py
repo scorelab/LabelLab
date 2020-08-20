@@ -81,12 +81,5 @@ class ImageMetaData(object):
                     lng = 0 - lng
         return lat, lng
 
-def get_data():
-    meta_data =  ImageMetaData("sample6.png")
-    latlng =meta_data.get_lat_lng()
-    print(latlng)
-    exif_data = meta_data.get_exif_data()
-    print(exif_data)
-
 if __name__ == "__main__":
     get_data()
