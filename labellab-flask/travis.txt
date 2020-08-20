@@ -12,8 +12,7 @@ cffi==1.14.0
 chardet==3.0.4
 Click==7.0
 colorama==0.4.3
-coverage==5.2.1
-cmake==3.14.3
+cmake==3.14.3.post1
 configparser==3.7.4
 coverage==5.2.1
 cycler==0.10.0
@@ -38,12 +37,12 @@ isort==4.3.21
 itsdangerous==1.1.0
 Jinja2==2.11.1
 Keras-Preprocessing==1.1.2
-kiwisolver==1.2.0
+kiwisolver==1.1.0
 lazy-object-proxy==1.4.3
 Mako==1.1.2
 Markdown==3.2.2
 MarkupSafe==1.1.1
-matplotlib==3.2.2
+matplotlib==3.0.2
 marshmallow==2.21.0
 marshmallow-sqlalchemy==0.17.1
 mccabe==0.6.1
@@ -53,7 +52,7 @@ oauthlib==3.1.0
 onnx==1.7.0
 opencv-python==4.2.0.34
 opt-einsum==3.2.1
-pandas==1.0.4
+pandas==0.25.3
 pep8==1.7.1
 Pillow==7.1.2
 protobuf==3.12.2
@@ -91,4 +90,4 @@ urllib3==1.25.9
 virtualenv==16.6.0
 Werkzeug==1.0.0
 wrapt==1.12.1
-zipp==3.1.0
+zipp==1.2.0
