@@ -23,22 +23,22 @@ Some of the highlighting features of it are:<br/>
 
 ## Steps to use LabelLab labeller:
 1. First we need to upload an image and then select the `edit` option on the right next to the image.<br/>
-![Image of project->images](https://github.com/scorelab/labellab/reference/images/edit-elephant-1.png)
+![Image of project->images](https://github.com/scorelab/labellab/blob/master/reference/images/edit-elephant-1.png)
 2. Then we need to create labels and give them name according to the users needs and labels can be on two types:<br/>
-![Image of labels in project sidebar](https://github.com/scorelab/labellab/reference/images/labels.png)<br/>
+![Image of labels in project sidebar](https://github.com/scorelab/labellab/blob/master/reference/images/labels.png)<br/>
 * Bounding-box<br/>
-![Image of an example of bounding box](https://github.com/scorelab/labellab/reference/images/bounding-box.png)<br/>
+![Image of an example of bounding box](https://github.com/scorelab/labellab/blob/master/reference/images/bounding-box.png)<br/>
 * Polygon figure<br/>
-![Image of an example of polygon figure](https://github.com/scorelab/labellab/reference/images/polygon.png)
+![Image of an example of polygon figure](https://github.com/scorelab/labellab/blob/master/reference/images/polygon.png)
 3. The when we open the labeller we can choose any of the above two types of labels to label an image.<br/>
-![Image of an example of polygon figure](https://github.com/scorelab/labellab/reference/images/labeller.png)
+![Image of an example of polygon figure](https://github.com/scorelab/labellab/blob/master/reference/images/labeller.png)
 4. The side bar shows all the different labels available in the project and help us choose frm them.<br/>
-![Image of sidebar](https://github.com/scorelab/labellab/reference/images/sidebar.png)
+![Image of sidebar](https://github.com/scorelab/labellab/blob/master/reference/images/sidebar.png)
 5. the labeller allows the user to zoom in or zoom out in order to label the parts of an image more accurately using the `plus` and `minus` buttons on the labeller screen or the `+` and `-` keys on the keyboard or even double tapping the left mouse.
 6. The `back` and `skip` buttons allow us to toggle between different labelled images in a project in a consecutive manner.<br/>
-![Image of back-skip button](https://github.com/scorelab/labellab/reference/images/back-skip.png)
+![Image of back-skip button](https://github.com/scorelab/labellab/blob/master/reference/images/back-skip.png)
 7. The watch icon helps us unsee an existing label on an image.<br/>
-![Image of back-skip button](https://github.com/scorelab/labellab/reference/images/watch.png)
+![Image of back-skip button](https://github.com/scorelab/labellab/blob/master/reference/images/watch.png)
 ## Apart from all these functionalities there are many shortcuts available as well.
 <br/>
 
@@ -53,4 +53,4 @@ Some of the highlighting features of it are:<br/>
 <br/>
 
 >**Note** These shortcuts can also be viewed from the `keyboard` button.
-![Image of back-skip button](https://github.com/scorelab/labellab/reference/images/shortcut.png)
+![Image of back-skip button](https://github.com/scorelab/labellab/blob/master/reference/images/shortcut.png)

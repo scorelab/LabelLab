@@ -169,3 +169,5 @@ pip freeze>requirements.txt
 or has a new migrations file and in order to create a new migartions file the command `flask db migrate` can be used.
 
 >**Note**: If faced by a directory missing issue do ensure that you have the labellab-flask directory in your `PYTHONPATH` environment variable.
+
+>**Note**: For documentation on the Labeller Go to:**[Labeller Documentation](https://github.com/scorelab/LabelLab/blob/master/LABELLER.md)**
