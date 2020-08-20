@@ -42,6 +42,7 @@ abstract class LabelLabAPI {
   // Image
   Future<ApiResponse> uploadImage(
       String token, String projectId, UploadImage image);
+  Future<List<Image>> getImages(String token, String projectId);
   Future<Image> getImage(String token, String imageId);
   Future<ApiResponse> updateImage(String token, String projectId, Image image,
       List<LabelSelection> selections);
@@ -49,7 +50,8 @@ abstract class LabelLabAPI {
       String token, String projectId, String imageId);
   Future<ApiResponse> deleteImages(
       String token, String projectId, List<String> imageIds);
-  Future<List<Location>> getImagePath(String token, String imageId);
+  Future<List<Location>> getImagesPath(
+      String token, String projectId, List<String> ids);
 
   // Group
   Future<ApiResponse> createGroup(String token, String projectId, Group group);

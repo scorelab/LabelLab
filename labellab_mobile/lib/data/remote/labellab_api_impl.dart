@@ -65,6 +65,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove";
 
   static const ENDPOINT_IMAGE = "image";
+  static const ENDPOINT_IMAGES = "images";
+  static const ENDPOINT_METADATA = "metadata";
 
   static const ENDPOINT_GROUP = "group";
 
@@ -338,6 +340,25 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<List<Image>> getImages(String token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_IMAGE + "/get/$projectId", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((image) => Image.fromJson(image))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+  @override
   Future<Image> getImage(String token, String id) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
@@ -412,19 +433,26 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<List<Location>> getImagePath(String token, String imageId) {
+  Future<List<Location>> getImagesPath(
+      String token, String projectId, List<String> ids) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
 
     return _dio
-        .get(API_URL + ENDPOINT_IMAGE + "/$imageId/" + ENDPOINT_PATH,
+        .post(
+            API_URL + ENDPOINT_IMAGES + "/" + ENDPOINT_METADATA + "/$projectId",
             options: options)
-        .then(
-          (response) => response.data['data']
-              .map((location) => Location.fromJson(location))
-              .toList(),
-        );
+        .then((response) {
+      final bool isSuccess = response.data["success"];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((meta) => Location.fromJson(meta))
+            .toList();
+      } else {
+        throw Exception("Request Failed");
+      }
+    });
   }
 
   @override

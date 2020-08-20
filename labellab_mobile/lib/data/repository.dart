@@ -183,6 +183,11 @@ class Repository {
     return _api.uploadImage(accessToken, projectId, image);
   }
 
+  Future<List<Image>> getImages(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getImages(accessToken, projectId);
+  }
+
   Future<Image> getImage(String imageId) {
     if (accessToken == null) return Future(null);
     return _api.getImage(accessToken, imageId);
@@ -204,9 +209,9 @@ class Repository {
     return _api.deleteImages(accessToken, projectId, imageIds);
   }
 
-  Future<List<Location>> getImagePath(String imageId) {
+  Future<List<Location>> getImagesPath(String projectId, List<String> ids) {
     if (accessToken == null) return Future(null);
-    return _api.getImagePath(accessToken, imageId);
+    return _api.getImagesPath(accessToken, projectId, ids);
   }
 
   // Group
