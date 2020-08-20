@@ -43,10 +43,13 @@ class TestingConfig(Config):
     TEST_DATABASE =  os.environ.get(
         "TEST_DATABASE_URL"
     )
-    from sqlalchemy_utils.functions import database_exists, create_database
-    if not database_exists(TEST_DATABASE):
-        create_database(TEST_DATABASE)
-    SQLALCHEMY_DATABASE_URI = TEST_DATABASE
+    if os.getenv("FLASK_CONFIG")=="travis":
+        pass
+    else:
+        from sqlalchemy_utils.functions import database_exists, create_database
+        if not database_exists(TEST_DATABASE):
+            create_database(TEST_DATABASE)
+        SQLALCHEMY_DATABASE_URI = TEST_DATABASE
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # needs to be removed in further versions
     UPLOAD_FOLDER = imagesdir
@@ -75,6 +78,13 @@ class DockerConfig(Config):
         file_handler = StreamHandler()
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
+        
+class TravisConfig(Config):
+    TESTING = True
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # needs to be removed in further versions
+    UPLOAD_FOLDER = imagesdir
 
 config = {
     "development": DevelopmentConfig,
@@ -82,4 +92,5 @@ config = {
     "production": ProductionConfig,
     "docker": DockerConfig,
     "default": DevelopmentConfig,
+    "travis": TravisConfig
 }

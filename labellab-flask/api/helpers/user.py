@@ -96,7 +96,6 @@ def get_user_roles(user_id, project_id):
         )
     for team in queries:
         all_roles.append(team_schema.dump(team.Team).data["role"])
-        
     return all_roles
 
 def get_teams_of_user_in_project(user_id, project_id):
@@ -147,7 +146,6 @@ def get_projectmembers(project_id):
             "email": email
         }
         all_members.append(data)
-    print(all_members)
     return all_members
 
 def save(user):

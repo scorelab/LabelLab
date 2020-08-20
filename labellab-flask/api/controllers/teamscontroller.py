@@ -44,13 +44,6 @@ class GetAllTeams(MethodView):
             if not all_teams:
                 response = {
                     "success": False,
-                    "msg": "Data not found"
-                }
-                return make_response(jsonify(response)), 404
-
-            if not all_teams:
-                response = {
-                    "success": False,
                     "msg": "No teams present"
                     }
                 return make_response(jsonify(response)), 404

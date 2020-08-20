@@ -1,24 +1,46 @@
-language: node_js
-node_js:
-  - "stable"
+matrix:
+  include:
+    - language: python
+      env:
+        - FLASK_APP=app.py 
+        - FLASK_CONFIG=travis
+      python:
+        - 3.6
+        - 3.7
+      services:
+        - mysql
+      before_install:
+        - mysql -e 'CREATE DATABASE test_labellab;'
+      install:
+        - pip3 install --upgrade pip
+        - pip install -r labellab-flask/travis.txt
+      before_script:
+        - sleep 10
+        - cd labellab-flask
+      script:
+        - python -m unittest discover tests
 
-services:
-  - "mongodb"
-  - "docker"
-
-before_script:
-  - sleep 15
-  - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - docker-compose up --build -d
-
-script:
-  - cd labellab-server/
-  - npm install && npm test
-  - cd ..
-  - cd labellab-client/
-  - npm install && npm test
-
-after_script:
-  - docker-compose down
+    - language: node_js
+      node_js:
+        - "stable"
+      
+      services:
+        - "mongodb"
+        - "docker"
+      
+      before_script:
+        - sleep 15
+        - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+        - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+        - chmod +x docker-compose
+        - docker-compose up --build -d
+      
+      script:
+        - cd labellab-server/
+        - npm install && npm test
+        - cd ..
+        - cd labellab-client/
+        - npm install && npm test
+      
+      after_script:
+        - docker-compose down
