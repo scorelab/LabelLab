@@ -19,6 +19,7 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -78,6 +79,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_CLASSIFICAITON_CLASSIFY = "classification/classify";
   static const ENDPOINT_CLASSIFICATION_GET = "classification/get";
   static const ENDPOINT_CLASSIFICATION_DELETE = "classification/delete";
+
+  static const ENDPOINT_ML_CLASSIFIER = "mlclassifier";
 
   @override
   Future<LoginResponse> login(AuthUser user) {
@@ -656,5 +659,42 @@ class LabelLabAPIImpl extends LabelLabAPI {
   Future<List<Series>> getResults(String token) {
     return Future.delayed(Duration(seconds: 2))
         .then((value) => _fake.getResults);
+  }
+
+  @override
+  Future<List<MlModel>> getModels(String token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_ML_CLASSIFIER + "/all/$projectId",
+            options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((model) => MlModel.fromJson(model))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+  @override
+  Future<MlModel> getModel(String token, String modelId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_ML_CLASSIFIER + "/$modelId", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return MlModel.fromJson(response.data["body"]);
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
   }
 }

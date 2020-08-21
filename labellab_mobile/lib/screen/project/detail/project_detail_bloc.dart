@@ -87,8 +87,11 @@ class ProjectDetailBloc {
     _setState(ProjectDetailState.loading(project: _project));
     _repository.getProject(projectId).then((project) {
       this._project = project;
-      _setState(ProjectDetailState.success(_project));
-      _isLoading = false;
+      _repository.getModels(projectId).then((models) {
+        this._project.models = models;
+        _setState(ProjectDetailState.success(_project));
+        _isLoading = false;
+      });
     }).catchError((err) {
       if (err is DioError) {
         _setState(ProjectDetailState.error(err.message.toString(),

@@ -16,6 +16,7 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -312,6 +313,16 @@ class Repository {
         });
       });
     });
+  }
+
+  Future<List<MlModel>> getModels(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getModels(accessToken, projectId);
+  }
+
+  Future<MlModel> getModel(String modelId) {
+    if (accessToken == null) return Future(null);
+    return _api.getModel(accessToken, modelId);
   }
 
   Future<List<charts.Series>> getResults() {
