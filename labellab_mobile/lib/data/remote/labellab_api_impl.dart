@@ -697,4 +697,19 @@ class LabelLabAPIImpl extends LabelLabAPI {
       }
     });
   }
+
+  @override
+  Future<ApiResponse> createModel(
+      String token, String projectId, MlModel model) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    model.projectId = projectId;
+    return _dio
+        .post(API_URL + ENDPOINT_ML_CLASSIFIER,
+            options: options, data: model.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 
 enum ModelType { CLASSIFIER }
 
@@ -22,8 +23,10 @@ class MlModel {
   double train, test, validation, epochs, batchSize, learningRate;
   List<Label> labels;
 
+  MlModel.fromData({this.id, this.name, this.type, this.source});
+
   MlModel.fromJson(dynamic json) {
-    id = json['id'];
+    id = json['id'].toString();
     name = json['name'];
     preprocessingUrl = json['preprocessing_steps_json_url'];
     layersUrl = json['layers_json_url'];
@@ -35,8 +38,8 @@ class MlModel {
     saveModelUrl = json['saved_model_url'];
     transferSource = json['transfer_source'];
     projectId = json['project_id'];
-    type = ModelType.CLASSIFIER;
-    source = mapJsonToSource(json['source']);
+    type = MlModelMapper.mapJsonToType(json["type"]);
+    source = MlModelMapper.mapJsonToSource(json['source']);
     train = json['train'];
     test = json['test'];
     validation = json['validation'];
@@ -46,15 +49,12 @@ class MlModel {
     labels = json['labels'];
   }
 
-  ModelSource mapJsonToSource(String source) {
-    switch (source) {
-      case "transfer":
-        return ModelSource.TRANSFER;
-      case "upload":
-        return ModelSource.UPLOAD;
-
-      default:
-        return ModelSource.CUSTOM;
-    }
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "type": MlModelMapper.typeToString(type),
+      "source": MlModelMapper.sourceToString(source),
+      "projectId": projectId
+    };
   }
 }
