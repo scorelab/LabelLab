@@ -2,6 +2,7 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/group.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
 
 class Project {
   String id;
@@ -12,6 +13,7 @@ class Project {
   List<Image> images;
   List<Label> labels;
   List<Group> groups;
+  List<MlModel> models;
 
   Project(
       {this.id,

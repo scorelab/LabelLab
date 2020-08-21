@@ -7,6 +7,7 @@ import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
@@ -135,6 +136,12 @@ class ProjectDetailScreen extends StatelessWidget {
                   ? _buildLabels(
                       context, _state.project.images, _state.project.labels)
                   : SliverFillRemaining(),
+              _state.project != null
+                  ? _buildModelsHeading(context)
+                  : SliverFillRemaining(),
+              _state.project != null && _state.project.models != null
+                  ? _buildModels(context, _state.project.models)
+                  : SliverFillRemaining,
               SliverList(
                 delegate: SliverChildListDelegate([
                   Padding(
@@ -459,6 +466,52 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildModelsHeading(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Models",
+                style: Theme.of(context).textTheme.title,
+              ),
+              FlatButton.icon(
+                icon: Icon(Icons.add),
+                label: Text("Add"),
+                onPressed: () => _showAddEditModelPrompt(context),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildModels(BuildContext context, List<MlModel> models) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          models.length > 0
+              ? Wrap(
+                  spacing: 8,
+                  children: models.map((model) {
+                    return InkWell(
+                      child: Chip(
+                        label: Text(model.name),
+                      ),
+                    );
+                  }).toList(),
+                )
+              : _buildEmptyPlaceholder(context, "No models yet"),
+        ]),
+      ),
+    );
+  }
+
   Widget _buildMembers(BuildContext context, List<Member> members) {
     final User _currentUser = Provider.of<AuthState>(context).user;
     return SliverPadding(
@@ -682,4 +735,6 @@ class ProjectDetailScreen extends StatelessWidget {
       }
     });
   }
+
+  void _showAddEditModelPrompt(BuildContext baseContext, {MlModel model}) {}
 }

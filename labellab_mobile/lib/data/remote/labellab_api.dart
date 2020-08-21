@@ -12,6 +12,7 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
@@ -75,5 +76,7 @@ abstract class LabelLabAPI {
   Future<ApiResponse> deleteClassification(String token, String id);
 
   // Train
+  Future<List<MlModel>> getModels(String token, String projectId);
+  Future<MlModel> getModel(String token, String modelId);
   Future<List<charts.Series>> getResults(String token);
 }
