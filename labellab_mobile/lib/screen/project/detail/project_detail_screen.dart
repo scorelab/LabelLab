@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
@@ -13,6 +14,7 @@ import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/add_edit_group/add_edit_group.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
+import 'package:labellab_mobile/screen/project/add_edit_model/add_edit_model_dialog.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
@@ -140,7 +142,8 @@ class ProjectDetailScreen extends StatelessWidget {
                   ? _buildModelsHeading(context)
                   : SliverFillRemaining(),
               _state.project != null && _state.project.models != null
-                  ? _buildModels(context, _state.project.models)
+                  ? _buildModels(
+                      context, _state.project.id, _state.project.models)
                   : SliverFillRemaining,
               SliverList(
                 delegate: SliverChildListDelegate([
@@ -490,26 +493,60 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildModels(BuildContext context, List<MlModel> models) {
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      sliver: SliverList(
-        delegate: SliverChildListDelegate([
-          models.length > 0
-              ? Wrap(
-                  spacing: 8,
-                  children: models.map((model) {
-                    return InkWell(
-                      child: Chip(
-                        label: Text(model.name),
+  Widget _buildModels(
+      BuildContext context, String projectId, List<MlModel> models) {
+    return models.length > 0
+        ? SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(models.map((model) {
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  child: InkWell(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        height: 64,
+                        color: Colors.black12,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(model.name),
+                              Text(MlModelMapper.typeToString(model.type)),
+                              Icon(_getIcon(model.source))
+                            ],
+                          ),
+                        ),
                       ),
-                    );
-                  }).toList(),
-                )
-              : _buildEmptyPlaceholder(context, "No models yet"),
-        ]),
-      ),
-    );
+                    ),
+                    onTap: () => _gotoViewModel(context, projectId, model.id),
+                  ),
+                );
+              }).toList()),
+            ))
+        : SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _buildEmptyPlaceholder(context, "No images yet"),
+              ]),
+            ),
+          );
+  }
+
+  IconData _getIcon(ModelSource source) {
+    switch (source) {
+      case ModelSource.TRANSFER:
+        return Icons.swap_vert;
+      case ModelSource.UPLOAD:
+        return Icons.file_upload;
+      case ModelSource.CUSTOM:
+        return Icons.image;
+      default:
+        return Icons.warning;
+    }
   }
 
   Widget _buildMembers(BuildContext context, List<Member> members) {
@@ -652,6 +689,14 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
+  void _gotoViewModel(BuildContext context, String projectId, String id) {
+    Application.router
+        .navigateTo(context, "/train/$projectId")
+        .whenComplete(() {
+      Provider.of<ProjectDetailBloc>(context).refresh();
+    });
+  }
+
   void _showProjectDeleteConfirmation(
       BuildContext baseContext, Project project) {
     showDialog<bool>(
@@ -736,5 +781,19 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _showAddEditModelPrompt(BuildContext baseContext, {MlModel model}) {}
+  void _showAddEditModelPrompt(BuildContext baseContext, {MlModel model}) {
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return AddEditModelDialog(
+          Provider.of<ProjectDetailBloc>(baseContext).projectId,
+          model: model,
+        );
+      },
+    ).then((bool isSuccess) {
+      if (isSuccess) {
+        Provider.of<ProjectDetailBloc>(baseContext).refresh();
+      }
+    });
+  }
 }
