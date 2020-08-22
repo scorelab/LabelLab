@@ -144,7 +144,7 @@ class ProjectDetailScreen extends StatelessWidget {
               _state.project != null && _state.project.models != null
                   ? _buildModels(
                       context, _state.project.id, _state.project.models)
-                  : SliverFillRemaining,
+                  : SliverFillRemaining(),
               SliverList(
                 delegate: SliverChildListDelegate([
                   Padding(
