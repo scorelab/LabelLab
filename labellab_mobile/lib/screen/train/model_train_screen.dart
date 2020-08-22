@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
+import 'package:labellab_mobile/screen/train/dialogs/add_class_dialog.dart';
 import 'package:labellab_mobile/screen/train/model_train_bloc.dart';
 import 'package:labellab_mobile/screen/train/model_train_state.dart';
 import 'package:labellab_mobile/widgets/label_text_form_field.dart';
-import 'package:labellab_mobile/widgets/line_chart.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -31,7 +33,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             if (_state.isLoading)
               return _buildLoadingBody();
             else
-              return _buildPreTrainBody();
+              return _buildPreTrainBody(_state.labels, _state.currentClasses);
           }
           return Container();
         },
@@ -39,7 +41,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  SingleChildScrollView _buildPreTrainBody() {
+  SingleChildScrollView _buildPreTrainBody(
+      List<Label> labels, List<Label> currentClasses) {
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16),
@@ -51,7 +54,9 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
               style: Theme.of(context).textTheme.headline6,
             ),
             SizedBox(height: 16),
-            _buildAddClassButton(),
+            _buildCurrentClasses(currentClasses),
+            SizedBox(height: 16),
+            _buildAddClassButton(labels),
             SizedBox(height: 16),
             Text(
               "Train",
@@ -68,6 +73,42 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
+  Widget _buildCurrentClasses(List<Label> currentClasses) {
+    return currentClasses != null
+        ? Column(
+            children: currentClasses
+                .map((c) => Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border:
+                              Border.all(color: Theme.of(context).accentColor)),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(c.name),
+                            InkWell(
+                              child: Icon(Icons.close, size: 16),
+                              onTap: () {
+                                Provider.of<ModelTrainBloc>(context)
+                                    .removeClass(c);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ))
+                .toList(),
+          )
+        : Center(
+            child: Container(
+              child: Text("No classes yet"),
+            ),
+          );
+  }
+
   Widget _buildLoadingBody() {
     return Container(
       child: LinearProgressIndicator(
@@ -77,38 +118,10 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
   }
 
   Widget _buildPostTrainBody(List<charts.Series> results) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text("Loss Curve"),
-          SizedBox(height: 20),
-          Expanded(child: SimpleTimeSeriesChart(results)),
-          SizedBox(height: 20),
-          Text("Accuracy Curve"),
-          SizedBox(height: 20),
-          Expanded(child: SimpleTimeSeriesChart(results)),
-          SizedBox(height: 80),
-          FlatButton(
-            child: Text(
-              "Save Changes",
-              style: TextStyle(color: Colors.white),
-            ),
-            color: Theme.of(context).accentColor,
-            onPressed: _saveChanges,
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
+    return Container();
   }
 
-  void _trainModel() {}
-
-  void _saveChanges() {}
-
-  Widget _buildAddClassButton() {
+  Widget _buildAddClassButton(List<Label> labels) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
@@ -130,6 +143,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             ),
           ),
         ),
+        onTap: () => _showAddClassDialog(context, labels),
       ),
     );
   }
@@ -343,4 +357,16 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
       ],
     );
   }
+
+  void _showAddClassDialog(BuildContext baseContext, List<Label> labels) {
+    showDialog<String>(
+        context: baseContext,
+        builder: (context) {
+          return AddClassDialog(labels);
+        }).then((String labelId) {
+      Provider.of<ModelTrainBloc>(context).addClass(labelId);
+    });
+  }
+
+  void _trainModel() {}
 }

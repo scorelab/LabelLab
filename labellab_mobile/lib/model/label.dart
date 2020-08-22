@@ -18,9 +18,10 @@ class Label {
         json["label_type"] == "bbox" ? LabelType.RECTANGLE : LabelType.POLYGON;
     projectId = json['project_id'].toString();
     count = json['count'].toString();
-    imageIds = json['labeldata'] != null
+    imageIds = json['labeldata'] != null && json["labeldata"]["id"] != null
         ? (json['labeldata']['id'] as List<dynamic>)
-            .map((item) => item['image_id'])
+            .map((item) => item['image_id'].toString())
+            .toList()
         : [];
     // createdAt = DateTime.parse(json['created_at']);
   }

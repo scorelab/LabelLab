@@ -23,7 +23,7 @@ class ModelTrainBloc {
     _isLoading = true;
     _stateController.add(ModelTrainState.loading());
     _repository.getLabels(projectId).then((labels) {
-      _labels = labels.where((label) => label.imageIds.isNotEmpty);
+      _labels = labels;
       _isLoading = false;
       _stateController.add(ModelTrainState.success(
           labels: _labels, currentClasses: _currentClasses));
@@ -31,6 +31,19 @@ class ModelTrainBloc {
       _isLoading = false;
       _stateController.add(ModelTrainState.error(error: err));
     });
+  }
+
+  void addClass(String labelId) {
+    Label _toAdd = _labels.where((label) => label.id == labelId).first;
+    if (!_currentClasses.contains(_toAdd)) _currentClasses.add(_toAdd);
+    _stateController.add(ModelTrainState.success(
+        labels: _labels, currentClasses: _currentClasses));
+  }
+
+  void removeClass(Label label) {
+    _currentClasses.remove(label);
+    _stateController.add(ModelTrainState.success(
+        labels: _labels, currentClasses: _currentClasses));
   }
 
   // Project stream
