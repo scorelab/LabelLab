@@ -31,7 +31,7 @@ class Routes {
   static const classification = "/classification/:id";
 
   // Model
-  static const train = "/train/:group_id";
+  static const train = "/train/:project_id/:model_id";
 
   static void configureRouter(Router router) {
     router.define(main, handler: mainHandler);

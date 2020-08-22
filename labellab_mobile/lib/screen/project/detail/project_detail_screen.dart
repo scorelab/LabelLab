@@ -514,7 +514,6 @@ class ProjectDetailScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(model.name),
-                              Text(MlModelMapper.typeToString(model.type)),
                               Icon(_getIcon(model.source))
                             ],
                           ),
@@ -689,9 +688,9 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewModel(BuildContext context, String projectId, String id) {
+  void _gotoViewModel(BuildContext context, String projectId, String modelId) {
     Application.router
-        .navigateTo(context, "/train/$projectId")
+        .navigateTo(context, "/train/$projectId/$modelId")
         .whenComplete(() {
       Provider.of<ProjectDetailBloc>(context).refresh();
     });

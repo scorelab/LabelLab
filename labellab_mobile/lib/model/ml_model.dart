@@ -5,6 +5,42 @@ enum ModelType { CLASSIFIER }
 
 enum ModelSource { TRANSFER, UPLOAD, CUSTOM }
 
+enum ModelToLearn {
+  DN121,
+  DN169,
+  DN201,
+  INCEPTIONRNV2,
+  INCEPTIONV3,
+  MN,
+  MNV2,
+  NASNETLARGE,
+  NASNETMOBILE,
+  RN50,
+  RN101,
+  RN152,
+  RN101V2,
+  RN152V2,
+  RN50V2,
+  VGG16,
+  VGG19,
+  XCEPTION
+}
+
+enum ModelLoss { BCE, CCE }
+
+enum ModelOptimizer {
+  ADADELTA,
+  ADAGRAD,
+  ADAM,
+  ADAMAX,
+  FTRL,
+  NADAM,
+  RMSPROP,
+  SGD
+}
+
+enum ModelMetric { ACCURACY }
+
 class MlModel {
   String id;
   String name,
