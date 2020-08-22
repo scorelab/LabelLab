@@ -78,13 +78,16 @@ class DockerConfig(Config):
         file_handler = StreamHandler()
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
-        
+
 class TravisConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # needs to be removed in further versions
     UPLOAD_FOLDER = imagesdir
+    ML_FILES_DIR = os.path.join(os.path.dirname(basedir),'ml_files')
+    LABELS_ALLOWED = ["bbox","polygon"]
+    TEAMS_ALLOWED = ["labels","images","image labelling","models"]
 
 config = {
     "development": DevelopmentConfig,
