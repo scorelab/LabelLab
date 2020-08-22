@@ -3,28 +3,33 @@ import 'dart:async';
 import 'package:labellab_mobile/data/remote/dto/time_value.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/screen/train/model_train_state.dart';
 
 class ModelTrainBloc {
-  final String groupId;
+  final String projectId, modelId;
   bool _isLoading = false;
-  List<charts.Series<TimeValue, DateTime>> _results;
+  List<Label> _labels;
+  List<Label> _currentClasses = [];
 
   Repository _repository = Repository();
 
-  ModelTrainBloc(this.groupId);
+  ModelTrainBloc(this.projectId, this.modelId) {
+    fetchLabels();
+  }
 
-  initTrain() {
+  void fetchLabels() {
     if (_isLoading) return;
     _isLoading = true;
     _stateController.add(ModelTrainState.loading());
-    _repository.getResults().then((value) {
+    _repository.getLabels(projectId).then((labels) {
+      _labels = labels.where((label) => label.imageIds.isNotEmpty);
       _isLoading = false;
-      _results = value;
-      _stateController.add(ModelTrainState.trainSuccess(results: _results));
-    }).catchError((error) {
+      _stateController.add(ModelTrainState.success(
+          labels: _labels, currentClasses: _currentClasses));
+    }).catchError((err) {
       _isLoading = false;
-      _stateController.add(ModelTrainState.error());
+      _stateController.add(ModelTrainState.error(error: err));
     });
   }
 

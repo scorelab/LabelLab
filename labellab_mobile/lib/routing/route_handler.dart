@@ -173,7 +173,8 @@ var classificationHandler = Handler(
 var modelTrainHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ModelTrainBloc>(
-    builder: (context) => ModelTrainBloc(params['group_id'].first),
+    builder: (context) =>
+        ModelTrainBloc(params['project_id'].first, params['model_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ModelTrainScreen(),
   );

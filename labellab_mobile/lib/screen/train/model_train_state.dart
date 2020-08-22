@@ -1,17 +1,15 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:labellab_mobile/data/remote/dto/time_value.dart';
+import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
 
 class ModelTrainState {
-  bool isInitial = false;
   bool isLoading = false;
-  bool isTraining = false;
-  bool isTrainingSuccess = false;
   String error;
-  List<charts.Series<TimeValue, DateTime>> results;
+  List<Label> labels;
+  List<Label> currentClasses;
 
-  ModelTrainState.initial() {
-    isInitial = true;
-  }
+  ModelTrainState.initial();
 
   ModelTrainState.loading() {
     isLoading = true;
@@ -19,13 +17,5 @@ class ModelTrainState {
 
   ModelTrainState.error({this.error});
 
-  ModelTrainState.success();
-
-  ModelTrainState.training() {
-    isTraining = true;
-  }
-
-  ModelTrainState.trainSuccess({this.results}) {
-    isTrainingSuccess = true;
-  }
+  ModelTrainState.success({this.labels, this.currentClasses});
 }
