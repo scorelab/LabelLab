@@ -49,6 +49,36 @@ class MlModelMapper {
     }
   }
 
+  static String stepToString(ModelStep step) {
+    switch (step) {
+      case ModelStep.CENTER:
+        return "Center";
+      case ModelStep.STDNORM:
+        return "STD Normalization";
+      case ModelStep.RR:
+        return "Rotation Range";
+      case ModelStep.WSR:
+        return "Width Shift Range";
+      case ModelStep.HSR:
+        return "Height Shift Range";
+      case ModelStep.SR:
+        return "Shear Range";
+      case ModelStep.ZR:
+        return "Zoom Range";
+      case ModelStep.CSR:
+        return "Channel Shift Range";
+      case ModelStep.HF:
+        return "Horizontal Flip";
+      case ModelStep.VF:
+        return "Vertical Flip";
+      case ModelStep.RESCALE:
+        return "Rescale";
+
+      default:
+        return "";
+    }
+  }
+
   static String learnToString(ModelToLearn toLearn) {
     switch (toLearn) {
       case ModelToLearn.DN121:
@@ -87,6 +117,28 @@ class MlModelMapper {
         return "VGG19";
       case ModelToLearn.XCEPTION:
         return "Xception";
+
+      default:
+        return "";
+    }
+  }
+
+  static String layerToString(ModelLayer layer) {
+    switch (layer) {
+      case ModelLayer.C2D:
+        return "Conv 2D";
+      case ModelLayer.ACTIVATION:
+        return "Activation";
+      case ModelLayer.MAXPOOL2D:
+        return "MaxPool 2D";
+      case ModelLayer.GAP2D:
+        return "Global Average Pooling 2D";
+      case ModelLayer.DENSE:
+        return "Dense";
+      case ModelLayer.DROPOUT:
+        return "Dropout";
+      case ModelLayer.FLATTEN:
+        return "Flattern";
 
       default:
         return "";

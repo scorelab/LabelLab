@@ -1,13 +1,13 @@
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:labellab_mobile/data/remote/dto/time_value.dart';
 import 'package:labellab_mobile/model/label.dart';
-import 'package:labellab_mobile/model/ml_model.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/step_dto.dart';
 
 class ModelTrainState {
   bool isLoading = false;
   String error;
   List<Label> labels;
+
   List<Label> currentClasses;
+  List<StepDto> currentSteps;
 
   ModelTrainState.initial();
 
@@ -17,5 +17,6 @@ class ModelTrainState {
 
   ModelTrainState.error({this.error});
 
-  ModelTrainState.success({this.labels, this.currentClasses});
+  ModelTrainState.success(
+      {this.labels, this.currentClasses, this.currentSteps});
 }

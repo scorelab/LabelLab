@@ -28,7 +28,10 @@ class _AddClassDialogState extends State<AddClassDialog> {
               items: widget.labels
                   .map((label) => DropdownMenuItem<String>(
                         value: label.id,
-                        child: Text(label.name),
+                        child: Text(
+                          label.name,
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ))
                   .toList(),
               onChanged: (String value) {

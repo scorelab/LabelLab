@@ -5,6 +5,8 @@ enum ModelType { CLASSIFIER }
 
 enum ModelSource { TRANSFER, UPLOAD, CUSTOM }
 
+enum ModelStep { CENTER, STDNORM, RR, WSR, HSR, SR, ZR, CSR, HF, VF, RESCALE }
+
 enum ModelToLearn {
   DN121,
   DN169,
@@ -25,6 +27,8 @@ enum ModelToLearn {
   VGG19,
   XCEPTION
 }
+
+enum ModelLayer { C2D, ACTIVATION, MAXPOOL2D, GAP2D, DENSE, DROPOUT, FLATTEN }
 
 enum ModelLoss { BCE, CCE }
 
