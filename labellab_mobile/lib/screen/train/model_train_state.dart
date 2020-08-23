@@ -1,4 +1,6 @@
+import 'package:flutter/rendering.dart';
 import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/layer_dto.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/step_dto.dart';
 
 class ModelTrainState {
@@ -8,6 +10,7 @@ class ModelTrainState {
 
   List<Label> currentClasses;
   List<StepDto> currentSteps;
+  List<LayerDto> currentLayers;
 
   ModelTrainState.initial();
 
@@ -18,5 +21,8 @@ class ModelTrainState {
   ModelTrainState.error({this.error});
 
   ModelTrainState.success(
-      {this.labels, this.currentClasses, this.currentSteps});
+      {this.labels,
+      this.currentClasses,
+      this.currentSteps,
+      this.currentLayers});
 }

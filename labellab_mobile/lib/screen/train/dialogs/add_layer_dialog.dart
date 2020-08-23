@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/layer_dto.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
 
 class AddLayerDialog extends StatefulWidget {
@@ -11,6 +12,28 @@ class AddLayerDialog extends StatefulWidget {
 
 class _AddLayerDialogState extends State<AddLayerDialog> {
   ModelLayer _currentValue;
+
+  // Extra args
+  List<String> _activationExtra = [
+    "Relu",
+    "Exponential",
+    "Linear",
+    "Sigmoid",
+    "Softmax",
+    "Tanh"
+  ];
+  String _currentActivationExtra;
+
+  TextEditingController _extraFiltersController = TextEditingController();
+  TextEditingController _extraKernelSizeController = TextEditingController();
+  TextEditingController _extraXStridesController = TextEditingController();
+  TextEditingController _extraYStridesController = TextEditingController();
+
+  TextEditingController _extraPoolXController = TextEditingController();
+  TextEditingController _extraPoolYController = TextEditingController();
+
+  TextEditingController _extraUnitsController = TextEditingController();
+  TextEditingController _extraRateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +83,59 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
         ),
         FlatButton(
           child: new Text("Add"),
-          onPressed: _currentValue != null ? () {} : null,
+          onPressed: _currentValue != null
+              ? () {
+                  switch (_currentValue) {
+                    case ModelLayer.C2D:
+                      List<String> _args = [];
+                      _args.add(_extraFiltersController.text);
+                      _args.add(_extraKernelSizeController.text);
+                      _args.add(_extraXStridesController.text);
+                      _args.add(_extraYStridesController.text);
+
+                      Navigator.pop(
+                          context, LayerDto(layer: _currentValue, args: _args));
+                      break;
+
+                    case ModelLayer.ACTIVATION:
+                      List<String> _args = [];
+                      _args.add(_currentActivationExtra);
+
+                      Navigator.pop(
+                          context, LayerDto(layer: _currentValue, args: _args));
+                      break;
+
+                    case ModelLayer.MAXPOOL2D:
+                      List<String> _args = [];
+                      _args.add(_extraPoolXController.text);
+                      _args.add(_extraPoolYController.text);
+
+                      Navigator.pop(
+                          context, LayerDto(layer: _currentValue, args: _args));
+                      break;
+
+                    case ModelLayer.DENSE:
+                      List<String> _args = [];
+                      _args.add(_extraUnitsController.text);
+
+                      Navigator.pop(
+                          context, LayerDto(layer: _currentValue, args: _args));
+                      break;
+
+                    case ModelLayer.DROPOUT:
+                      List<String> _args = [];
+                      _args.add(_extraRateController.text);
+
+                      Navigator.pop(
+                          context, LayerDto(layer: _currentValue, args: _args));
+                      break;
+
+                    default:
+                      Navigator.pop(
+                          context, LayerDto(layer: _currentValue, args: []));
+                  }
+                }
+              : null,
         ),
       ],
     );
@@ -72,27 +147,35 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
         return Column(
           children: <Widget>[
             LabelTextField(
+              keyboardType: TextInputType.number,
               labelText: "Filters",
+              controller: _extraFiltersController,
             ),
             SizedBox(height: 8),
             LabelTextField(
+              keyboardType: TextInputType.number,
               labelText: "Kernel Size",
+              controller: _extraKernelSizeController,
             ),
             SizedBox(height: 8),
             LabelTextField(
+              keyboardType: TextInputType.number,
               labelText: "X Strides",
+              controller: _extraXStridesController,
             ),
             SizedBox(height: 8),
             LabelTextField(
+              keyboardType: TextInputType.number,
               labelText: "Y Strides",
+              controller: _extraYStridesController,
             ),
           ],
         );
 
       case ModelLayer.ACTIVATION:
         return DropdownButton(
-          // value: _currenttypeExtra,
-          items: <String>[]
+          value: _currentActivationExtra,
+          items: _activationExtra
               .map((extra) => DropdownMenuItem<String>(
                     value: extra,
                     child: Text(
@@ -103,9 +186,40 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
               .toList(),
           onChanged: (String value) {
             setState(() {
-              // _currenttypeExtra = value;
+              _currentActivationExtra = value;
             });
           },
+        );
+
+      case ModelLayer.MAXPOOL2D:
+        return Column(
+          children: <Widget>[
+            LabelTextField(
+              keyboardType: TextInputType.number,
+              labelText: "Pool size X",
+              controller: _extraPoolXController,
+            ),
+            SizedBox(height: 8),
+            LabelTextField(
+              keyboardType: TextInputType.number,
+              labelText: "Pool size Y",
+              controller: _extraPoolYController,
+            ),
+          ],
+        );
+
+      case ModelLayer.DENSE:
+        return LabelTextField(
+          keyboardType: TextInputType.number,
+          labelText: "Units",
+          controller: _extraUnitsController,
+        );
+
+      case ModelLayer.DROPOUT:
+        return LabelTextField(
+          keyboardType: TextInputType.number,
+          labelText: "Rate",
+          controller: _extraRateController,
         );
 
       default:
