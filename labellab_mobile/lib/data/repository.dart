@@ -21,6 +21,7 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -328,6 +329,17 @@ class Repository {
   Future<ApiResponse> createModel(String projectId, MlModel model) {
     if (accessToken == null) return Future(null);
     return _api.createModel(accessToken, projectId, model);
+  }
+
+  Future<ApiResponse> saveModel(
+      String modelId, MlModel model, ModelDto modelDto) {
+    if (accessToken == null) return Future(null);
+    return _api.saveModel(accessToken, modelId, model, modelDto);
+  }
+
+  Future<ApiResponse> trainModel(String modelId) {
+    if (accessToken == null) return Future(null);
+    return _api.trainModel(accessToken, modelId);
   }
 
   Future<List<charts.Series>> getResults() {

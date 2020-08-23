@@ -19,11 +19,13 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
+import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:logger/logger.dart';
 
 class LabelLabAPIImpl extends LabelLabAPI {
@@ -711,5 +713,147 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       return ApiResponse(response.data);
     });
+  }
+
+  @override
+  Future<ApiResponse> saveModel(
+      String token, String modelId, MlModel model, ModelDto modelDto) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    Map<String, dynamic> _data = {
+      "id": int.parse(modelId),
+      "accuracyGraphUrl": model.accuracyGraphUrl,
+      "batchSize": modelDto.batchSize,
+      "epochs": modelDto.epochs,
+      "labels": model.labels,
+      "layersJsonUrl": model.layersUrl,
+      "learningRate": modelDto.learningRate,
+      "loss": modelDto.loss,
+      "lossGraphUrl": model.lossGraphUrl,
+      "metric": MlModelMapper.metricToString(modelDto.metric),
+      "name": model.name,
+      "optimizer": MlModelMapper.optimizerToString(modelDto.optimizer),
+      "preprocessingStepsJsonUrl": model.preprocessingUrl,
+      "projectId": model.projectId,
+      "savedModelUrl": model.saveModelUrl,
+      "source": MlModelMapper.sourceToString(model.source),
+      "test": modelDto.test,
+      "train": modelDto.train,
+      "transferSource": MlModelMapper.learnToString(modelDto.modelToLearn),
+      "type": MlModelMapper.typeToString(model.type),
+      "validation": modelDto.validation,
+      "preprocessingSteps": modelDto.steps.map((step) {
+        switch (step.step) {
+          case ModelStep.CENTER:
+          case ModelStep.STDNORM:
+            return {
+              "name": MlModelMapper.stepToString(step.step),
+              "settings": [
+                {"name": "Type", "value": step.extra}
+              ]
+            };
+
+          case ModelStep.RR:
+          case ModelStep.WSR:
+          case ModelStep.HSR:
+          case ModelStep.SR:
+          case ModelStep.ZR:
+          case ModelStep.CSR:
+            return {
+              "name": MlModelMapper.stepToString(step.step),
+              "settings": [
+                {"name": "Range", "value": step.extra}
+              ]
+            };
+
+          case ModelStep.RESCALE:
+            return {
+              "name": MlModelMapper.stepToString(step.step),
+              "settings": [
+                {"name": "Factor", "value": step.extra}
+              ]
+            };
+
+          default:
+            return {
+              "name": MlModelMapper.stepToString(step.step),
+              "settings": []
+            };
+        }
+      }).toList(),
+      "layers": modelDto.layers.map((layer) {
+        switch (layer.layer) {
+          case ModelLayer.C2D:
+            return {
+              "name": MlModelMapper.layerToString(layer.layer),
+              "settings": [
+                {"name": "Filters", "value": layer.args[0]},
+                {"name": "Kernel Size", "value": layer.args[1]},
+                {"name": "X Strides", "value": layer.args[2]},
+                {"name": "Y Strides", "value": layer.args[3]}
+              ]
+            };
+
+          case ModelLayer.ACTIVATION:
+            return {
+              "name": MlModelMapper.layerToString(layer.layer),
+              "settings": [
+                {"name": "Activation", "value": layer.args.first}
+              ]
+            };
+
+          case ModelLayer.MAXPOOL2D:
+            return {
+              "name": MlModelMapper.layerToString(layer.layer),
+              "settings": [
+                {"name": "Pool Size X", "value": layer.args.first},
+                {"name": "Pool Size Y", "value": layer.args.last}
+              ]
+            };
+
+          case ModelLayer.DENSE:
+            return {
+              "name": MlModelMapper.layerToString(layer.layer),
+              "settings": [
+                {"name": "Units", "value": layer.args.first}
+              ]
+            };
+
+          case ModelLayer.DROPOUT:
+            return {
+              "name": MlModelMapper.layerToString(layer.layer),
+              "settings": [
+                {"name": "Rate", "value": layer.args.first}
+              ]
+            };
+
+          default:
+            return {
+              "name": MlModelMapper.layerToString(layer.layer),
+              "settings": []
+            };
+        }
+      }).toList()
+    };
+    return _dio
+        .put(API_URL + ENDPOINT_ML_CLASSIFIER + "/$modelId",
+            options: options, data: _data)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((error) => ApiResponse.error(error));
+  }
+
+  @override
+  Future<ApiResponse> trainModel(String token, String modelId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .post(API_URL + ENDPOINT_ML_CLASSIFIER + "/train/$modelId",
+            options: options)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((error) => ApiResponse.error(error));
   }
 }
