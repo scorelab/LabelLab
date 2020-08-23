@@ -94,8 +94,8 @@ const project = (state = initialState, action) => {
         currentProject: {
           ...state.currentProject,
           projectId: action.payload.id,
-          projectName: action.payload.project_name,
-          projectDescription: action.payload.project_description,
+          projectName: action.payload.projectName,
+          projectDescription: action.payload.projectDescription,
           images: action.payload.images,
           members: action.payload.members
         }
