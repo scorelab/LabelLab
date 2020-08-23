@@ -133,14 +133,6 @@ class ProjectSidebar extends Component {
               onConfirm={this.handleDeleteProject}
             />
           </div>
-
-          <Button
-            negative
-            basic
-            className="delete-project-button"
-            onClick={this.handleOpen}
-            content="Delete Project"
-          />
           <Confirm
             open={this.state.open}
             onCancel={this.handleClose}

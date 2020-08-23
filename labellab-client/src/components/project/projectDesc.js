@@ -39,7 +39,8 @@ class ProjectDescriptionIndex extends Component {
   handleSubmit = () => {
     const { updateProject, project } = this.props
     let data = {
-      projectDescription: this.state.desc
+      project_description: this.state.desc,
+      project_name: project.projectName
     }
 
     updateProject(data, project.projectId, this.callback)

@@ -31,7 +31,7 @@ def update_project(project_id, data):
     """
     project = Project.query.get(project_id)
     project.project_name = data['project_name']
-    project.project_description = data['projectdescription']
+    project.project_description = data['project_description']
     db.session.commit()
     return project_schema.dump(project).data
     
