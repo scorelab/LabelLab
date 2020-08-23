@@ -5,11 +5,12 @@ import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/screen/train/dialogs/add_class_dialog.dart';
 import 'package:labellab_mobile/screen/train/dialogs/add_layer_dialog.dart';
 import 'package:labellab_mobile/screen/train/dialogs/add_step_dialog.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/layer_dto.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/step_dto.dart';
 import 'package:labellab_mobile/screen/train/model_train_bloc.dart';
 import 'package:labellab_mobile/screen/train/model_train_state.dart';
-import 'package:labellab_mobile/widgets/label_text_form_field.dart';
-import 'package:logger/logger.dart';
+import 'package:labellab_mobile/widgets/label_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -19,6 +20,18 @@ class ModelTrainScreen extends StatefulWidget {
 }
 
 class _ModelTrainScreenState extends State<ModelTrainScreen> {
+  ModelToLearn _currentLearningOn;
+  ModelLoss _currentLoss;
+  ModelOptimizer _currentOptimizer;
+  ModelMetric _currentMetric;
+
+  TextEditingController _trainController = TextEditingController();
+  TextEditingController _validationController = TextEditingController();
+  TextEditingController _testController = TextEditingController();
+  TextEditingController _epochsController = TextEditingController();
+  TextEditingController _batchSizeController = TextEditingController();
+  TextEditingController _learningRateController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +49,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             if (_state.isLoading)
               return _buildLoadingBody();
             else
-              return _buildPreTrainBody(
-                  _state.labels, _state.currentClasses, _state.currentSteps);
+              return _buildPreTrainBody(_state.labels, _state.currentClasses,
+                  _state.currentSteps, _state.currentLayers);
           }
           return Container();
         },
@@ -45,8 +58,11 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  SingleChildScrollView _buildPreTrainBody(List<Label> labels,
-      List<Label> currentClasses, List<StepDto> currentSteps) {
+  SingleChildScrollView _buildPreTrainBody(
+      List<Label> labels,
+      List<Label> currentClasses,
+      List<StepDto> currentSteps,
+      List<LayerDto> currentLayers) {
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16),
@@ -57,7 +73,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
               "Classes",
               style: Theme.of(context).textTheme.headline6,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
             _buildCurrentClasses(currentClasses),
             SizedBox(height: 16),
             _buildAddClassButton(labels),
@@ -66,8 +82,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
               "Train",
               style: Theme.of(context).textTheme.headline6,
             ),
-            SizedBox(height: 16),
-            _buildTrainBody(currentSteps),
+            SizedBox(height: 8),
+            _buildTrainBody(currentSteps, currentLayers),
             SizedBox(height: 24),
             _buildTrainButton(),
             SizedBox(height: 24)
@@ -82,6 +98,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         ? Column(
             children: currentClasses
                 .map((c) => Container(
+                      margin: EdgeInsets.symmetric(vertical: 8),
                       height: 48,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -128,13 +145,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  Widget _buildPostTrainBody(List<charts.Series> results) {
-    return Container();
-  }
-
   Widget _buildAddClassButton(List<Label> labels) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -159,7 +171,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  Widget _buildTrainBody(List<StepDto> steps) {
+  Widget _buildTrainBody(List<StepDto> steps, List<LayerDto> layers) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -177,14 +189,14 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 8),
         steps != null
             ? Wrap(
                 spacing: 8,
                 children: steps
                     .map((step) => Chip(
                           label: Text(MlModelMapper.stepToString(step.step) +
-                              " | " +
+                              (step.extra != "" ? " | " : "") +
                               step.extra.toString()),
                           deleteIcon: Icon(Icons.cancel),
                           onDeleted: () {
@@ -195,27 +207,40 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                     .toList(),
               )
             : Container(),
+        SizedBox(height: 16),
         Row(
           children: <Widget>[
             Container(width: 100, child: Text("Train")),
-            Expanded(child: LabelTextFormField()),
+            Expanded(
+                child: LabelTextField(
+              keyboardType: TextInputType.number,
+              controller: _trainController,
+            )),
           ],
         ),
         SizedBox(height: 8),
         Row(
           children: <Widget>[
             Container(width: 100, child: Text("Validation")),
-            Expanded(child: LabelTextFormField()),
+            Expanded(
+                child: LabelTextField(
+              keyboardType: TextInputType.number,
+              controller: _validationController,
+            )),
           ],
         ),
         SizedBox(height: 8),
         Row(
           children: <Widget>[
             Container(width: 100, child: Text("Test")),
-            Expanded(child: LabelTextFormField()),
+            Expanded(
+                child: LabelTextField(
+              keyboardType: TextInputType.number,
+              controller: _testController,
+            )),
           ],
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 20),
         Text(
           "Transfer learning",
           style: TextStyle(fontWeight: FontWeight.w700),
@@ -225,7 +250,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         SizedBox(height: 8),
         Center(
           child: DropdownButton(
-            // value: _currentSource,
+            value: _currentLearningOn,
             items: <ModelToLearn>[
               ModelToLearn.DN121,
               ModelToLearn.DN169,
@@ -256,7 +281,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                 .toList(),
             onChanged: (ModelToLearn value) {
               setState(() {
-                // _currentSource = value;
+                _currentLearningOn = value;
               });
             },
           ),
@@ -277,24 +302,55 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
           ],
         ),
         SizedBox(height: 8),
+        layers != null
+            ? Wrap(
+                spacing: 8,
+                children: layers
+                    .map((layer) => Chip(
+                          label: Text(MlModelMapper.layerToString(layer.layer) +
+                              (layer.args.isNotEmpty
+                                  ? " | " + layer.args.map((a) => a).toString()
+                                  : "")),
+                          deleteIcon: Icon(Icons.cancel),
+                          onDeleted: () {
+                            Provider.of<ModelTrainBloc>(context)
+                                .removeLayer(layer);
+                          },
+                        ))
+                    .toList(),
+              )
+            : Container(),
+        SizedBox(height: 16),
         Row(
           children: <Widget>[
             Container(width: 100, child: Text("Epochs")),
-            Expanded(child: LabelTextFormField()),
+            Expanded(
+                child: LabelTextField(
+              keyboardType: TextInputType.number,
+              controller: _epochsController,
+            )),
           ],
         ),
         SizedBox(height: 8),
         Row(
           children: <Widget>[
             Container(width: 100, child: Text("Batch Size")),
-            Expanded(child: LabelTextFormField()),
+            Expanded(
+                child: LabelTextField(
+              keyboardType: TextInputType.number,
+              controller: _batchSizeController,
+            )),
           ],
         ),
         SizedBox(height: 8),
         Row(
           children: <Widget>[
             Container(width: 100, child: Text("Learning rate")),
-            Expanded(child: LabelTextFormField()),
+            Expanded(
+                child: LabelTextField(
+              keyboardType: TextInputType.number,
+              controller: _learningRateController,
+            )),
           ],
         ),
         SizedBox(height: 16),
@@ -302,7 +358,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         SizedBox(height: 8),
         Center(
           child: DropdownButton(
-            // value: _currentSource,
+            value: _currentLoss,
             items: <ModelLoss>[
               ModelLoss.BCE,
               ModelLoss.CCE,
@@ -317,7 +373,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                 .toList(),
             onChanged: (ModelLoss value) {
               setState(() {
-                // _currentSource = value;
+                _currentLoss = value;
               });
             },
           ),
@@ -327,7 +383,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         SizedBox(height: 8),
         Center(
           child: DropdownButton(
-            // value: _currentSource,
+            value: _currentOptimizer,
             items: <ModelOptimizer>[
               ModelOptimizer.ADADELTA,
               ModelOptimizer.ADAGRAD,
@@ -348,7 +404,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                 .toList(),
             onChanged: (ModelOptimizer value) {
               setState(() {
-                // _currentSource = value;
+                _currentOptimizer = value;
               });
             },
           ),
@@ -358,7 +414,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         SizedBox(height: 8),
         Center(
           child: DropdownButton(
-            // value: _currentSource,
+            value: _currentMetric,
             items: <ModelMetric>[
               ModelMetric.ACCURACY,
             ]
@@ -372,7 +428,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                 .toList(),
             onChanged: (ModelMetric value) {
               setState(() {
-                // _currentSource = value;
+                _currentMetric = value;
               });
             },
           ),
@@ -404,7 +460,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         builder: (context) {
           return AddClassDialog(labels);
         }).then((String labelId) {
-      Provider.of<ModelTrainBloc>(context).addClass(labelId);
+      if (labelId != null)
+        Provider.of<ModelTrainBloc>(context).addClass(labelId);
     });
   }
 
@@ -414,19 +471,34 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         builder: (context) {
           return AddStepDialog();
         }).then((StepDto step) {
-      Provider.of<ModelTrainBloc>(context).addStep(step);
+      if (step != null) Provider.of<ModelTrainBloc>(context).addStep(step);
     });
   }
 
   void _showAddLayersDialog(BuildContext baseContext) {
-    showDialog<bool>(
+    showDialog<LayerDto>(
         context: baseContext,
         builder: (context) {
           return AddLayerDialog();
-        }).then((bool step) {
-      // Provider.of<ModelTrainBloc>(context).addStep(step);
+        }).then((LayerDto layer) {
+      if (layer != null) Provider.of<ModelTrainBloc>(context).addLayer(layer);
     });
   }
 
-  void _trainModel() {}
+  void _trainModel() {
+    ModelDto model = ModelDto(
+      train: _trainController.text,
+      validation: _validationController.text,
+      test: _testController.text,
+      modelToLearn: _currentLearningOn,
+      epochs: _epochsController.text,
+      batchSize: _batchSizeController.text,
+      learningRate: _learningRateController.text,
+      loss: _currentLoss,
+      optimizer: _currentOptimizer,
+      metric: _currentMetric,
+    );
+
+    Provider.of<ModelTrainBloc>(context).trainModel(model);
+  }
 }

@@ -143,12 +143,14 @@ class _AddStepDialogState extends State<AddStepDialog> {
       case ModelStep.ZR:
       case ModelStep.CSR:
         return LabelTextField(
+          keyboardType: TextInputType.number,
           labelText: "Range",
           controller: _extraRangeController,
         );
 
       case ModelStep.RESCALE:
         return LabelTextField(
+          keyboardType: TextInputType.number,
           labelText: "Factor",
           controller: _extraFactorController,
         );

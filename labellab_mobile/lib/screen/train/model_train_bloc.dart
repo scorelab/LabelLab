@@ -4,6 +4,9 @@ import 'package:labellab_mobile/data/remote/dto/time_value.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/layer_dto.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/step_dto.dart';
 import 'package:labellab_mobile/screen/train/model_train_state.dart';
 
@@ -15,6 +18,7 @@ class ModelTrainBloc {
   // State data
   List<Label> _currentClasses = [];
   List<StepDto> _currentSteps = [];
+  List<LayerDto> _currentLayers = [];
 
   Repository _repository = Repository();
 
@@ -32,7 +36,8 @@ class ModelTrainBloc {
       _stateController.add(ModelTrainState.success(
           labels: _labels,
           currentClasses: _currentClasses,
-          currentSteps: _currentSteps));
+          currentSteps: _currentSteps,
+          currentLayers: _currentLayers));
     }).catchError((err) {
       _isLoading = false;
       _stateController.add(ModelTrainState.error(error: err));
@@ -45,7 +50,8 @@ class ModelTrainBloc {
     _stateController.add(ModelTrainState.success(
         labels: _labels,
         currentClasses: _currentClasses,
-        currentSteps: _currentSteps));
+        currentSteps: _currentSteps,
+        currentLayers: _currentLayers));
   }
 
   void removeClass(Label label) {
@@ -53,7 +59,8 @@ class ModelTrainBloc {
     _stateController.add(ModelTrainState.success(
         labels: _labels,
         currentClasses: _currentClasses,
-        currentSteps: _currentSteps));
+        currentSteps: _currentSteps,
+        currentLayers: _currentLayers));
   }
 
   void addStep(StepDto step) {
@@ -61,7 +68,8 @@ class ModelTrainBloc {
     _stateController.add(ModelTrainState.success(
         labels: _labels,
         currentClasses: _currentClasses,
-        currentSteps: _currentSteps));
+        currentSteps: _currentSteps,
+        currentLayers: _currentLayers));
   }
 
   void removeStep(StepDto step) {
@@ -69,7 +77,32 @@ class ModelTrainBloc {
     _stateController.add(ModelTrainState.success(
         labels: _labels,
         currentClasses: _currentClasses,
-        currentSteps: _currentSteps));
+        currentSteps: _currentSteps,
+        currentLayers: _currentLayers));
+  }
+
+  void addLayer(LayerDto layer) {
+    _currentLayers.add(layer);
+    _stateController.add(ModelTrainState.success(
+        labels: _labels,
+        currentClasses: _currentClasses,
+        currentSteps: _currentSteps,
+        currentLayers: _currentLayers));
+  }
+
+  void removeLayer(LayerDto layer) {
+    _currentLayers.remove(layer);
+    _stateController.add(ModelTrainState.success(
+        labels: _labels,
+        currentClasses: _currentClasses,
+        currentSteps: _currentSteps,
+        currentLayers: _currentLayers));
+  }
+
+  void trainModel(ModelDto modelDto) {
+    modelDto.classes = _currentClasses;
+    modelDto.steps = _currentSteps;
+    modelDto.layers = _currentLayers;
   }
 
   // Project stream
