@@ -18,6 +18,7 @@ import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 
 abstract class LabelLabAPI {
   Future<LoginResponse> login(AuthUser user);
@@ -80,5 +81,8 @@ abstract class LabelLabAPI {
   Future<MlModel> getModel(String token, String modelId);
   Future<ApiResponse> createModel(
       String token, String projectId, MlModel model);
+  Future<ApiResponse> saveModel(
+      String token, String modelId, MlModel model, ModelDto modelDto);
+  Future<ApiResponse> trainModel(String token, String modelId);
   Future<List<charts.Series>> getResults(String token);
 }

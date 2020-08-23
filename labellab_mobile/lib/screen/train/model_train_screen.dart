@@ -85,7 +85,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             SizedBox(height: 8),
             _buildTrainBody(currentSteps, currentLayers),
             SizedBox(height: 24),
-            _buildTrainButton(),
+            _buildActionButtons(),
             SizedBox(height: 24)
           ],
         ),
@@ -131,9 +131,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                 .toList(),
           )
         : Center(
-            child: Container(
-              child: Text("No classes yet"),
-            ),
+            child: Container(),
           );
   }
 
@@ -437,9 +435,18 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  Widget _buildTrainButton() {
+  Widget _buildActionButtons() {
     return Row(
       children: <Widget>[
+        FlatButton(
+          child: Text(
+            "Save Model",
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.grey,
+          onPressed: _saveModel,
+        ),
+        SizedBox(width: 8),
         Expanded(
           child: FlatButton(
             child: Text(
@@ -485,7 +492,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     });
   }
 
-  void _trainModel() {
+  void _saveModel() {
     ModelDto model = ModelDto(
       train: _trainController.text,
       validation: _validationController.text,
@@ -499,6 +506,10 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
       metric: _currentMetric,
     );
 
-    Provider.of<ModelTrainBloc>(context).trainModel(model);
+    Provider.of<ModelTrainBloc>(context).saveModel(model);
+  }
+
+  void _trainModel() {
+    Provider.of<ModelTrainBloc>(context).trainModel();
   }
 }
