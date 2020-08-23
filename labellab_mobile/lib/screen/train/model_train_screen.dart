@@ -50,7 +50,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
               return _buildLoadingBody();
             else
               return _buildPreTrainBody(_state.labels, _state.currentClasses,
-                  _state.currentSteps, _state.currentLayers);
+                  _state.currentSteps, _state.currentLayers, _state.isTraining);
           }
           return Container();
         },
@@ -62,7 +62,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
       List<Label> labels,
       List<Label> currentClasses,
       List<StepDto> currentSteps,
-      List<LayerDto> currentLayers) {
+      List<LayerDto> currentLayers,
+      bool isTraining) {
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16),
@@ -85,7 +86,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             SizedBox(height: 8),
             _buildTrainBody(currentSteps, currentLayers),
             SizedBox(height: 24),
-            _buildActionButtons(),
+            _buildActionButtons(isTraining),
             SizedBox(height: 24)
           ],
         ),
@@ -435,30 +436,40 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  Widget _buildActionButtons() {
-    return Row(
-      children: <Widget>[
-        FlatButton(
-          child: Text(
-            "Save Model",
-            style: TextStyle(color: Colors.white),
-          ),
-          color: Colors.grey,
-          onPressed: _saveModel,
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: FlatButton(
-            child: Text(
-              "Train",
-              style: TextStyle(color: Colors.white),
+  Widget _buildActionButtons(bool isTraining) {
+    return !isTraining
+        ? Row(
+            children: <Widget>[
+              FlatButton(
+                child: Text("Save Model"),
+                color: Colors.black12,
+                onPressed: _saveModel,
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: FlatButton(
+                  child: Text(
+                    "Train",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Theme.of(context).accentColor,
+                  onPressed: _trainModel,
+                ),
+              ),
+            ],
+          )
+        : ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              height: 48,
+              color: Theme.of(context).accentColor,
+              child: Center(
+                  child: Text(
+                "Model is training ...",
+                style: TextStyle(color: Colors.white),
+              )),
             ),
-            color: Theme.of(context).accentColor,
-            onPressed: _trainModel,
-          ),
-        ),
-      ],
-    );
+          );
   }
 
   void _showAddClassDialog(BuildContext baseContext, List<Label> labels) {
