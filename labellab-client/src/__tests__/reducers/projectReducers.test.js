@@ -98,8 +98,8 @@ describe("Project Reducer", () => {
 
   it("Should fetch a project", () => {
     const mockPayload = { id: 1,
-                          project_name: "project1", 
-                          project_description: "desc",
+                          projectName: "project1", 
+                          projectDescription: "desc",
                           images: { image_name: "image1", image_url: "image/url.png", image: "some_base64_image"},
                           members: [{ member: 1, projectId: 1, role: "member"}, { member: 2, projectId: 1, role: "admin"}]
                         }
@@ -114,8 +114,8 @@ describe("Project Reducer", () => {
           },
         currentProject: {
           projectId: mockPayload.id,
-          projectName: mockPayload.project_name,
-          projectDescription: mockPayload.project_description,
+          projectName: mockPayload.projectName,
+          projectDescription: mockPayload.projectDescription,
           images: mockPayload.images,
           members: mockPayload.members
         }
