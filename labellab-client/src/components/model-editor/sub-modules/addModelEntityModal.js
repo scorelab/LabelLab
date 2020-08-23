@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Modal, Dropdown, Button, Header, Input } from 'semantic-ui-react'
 
 import './css/addModelEntityModal.css'
@@ -237,6 +238,17 @@ class AddModelEntityModal extends Component {
       </Modal>
     )
   }
+}
+
+AddModelEntityModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired,
+  options: PropTypes.array.isRequired,
+  entityName: PropTypes.string.isRequired,
+  modelEntities: PropTypes.array.isRequired,
+  addEntity: PropTypes.func.isRequired,
+  entityEditing: PropTypes.func.isRequired,
+  editEntity: PropTypes.func,
 }
 
 export default AddModelEntityModal

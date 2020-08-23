@@ -8,20 +8,19 @@ import {
   Grid,
   Icon,
   Button,
-  Input,
-  Popup
 } from 'semantic-ui-react'
 
 import AddModelEntityModal from './addModelEntityModal'
+import ModelParameterEditor from "./modelParameterEditor"
 import {
   setModelParameter,
   setTransferLearningSource,
   addLayer,
   editLayer,
   removeLayer,
-  getTrainedModels,
+  fetchTrainedModels,
   trainModel
-} from '../../../actions/model'
+} from '../../../actions'
 import lossOptions from './options/lossOptions'
 import optimizerOptions from './options/optimizerOptions'
 import metricOptions from './options/metricOptions'
@@ -49,8 +48,8 @@ class TransferLearningBuilder extends Component {
   }
 
   componentDidMount() {
-    const { getTrainedModels, projectId } = this.props;
-    getTrainedModels(projectId, this.setCombinedTransferLearningOptions)
+    const { fetchTrainedModels, projectId } = this.props;
+    fetchTrainedModels(projectId, this.setCombinedTransferLearningOptions)
   }
 
   setCombinedTransferLearningOptions = (models) => {
@@ -127,75 +126,11 @@ class TransferLearningBuilder extends Component {
         <Card.Content>
           <Grid columns={2}>
             <Grid.Row>
-              <Grid.Column width={4}>
-                Epochs
-                <Popup
-                  content="Number of times the data is fed to the model"
-                  trigger={
-                    <Icon
-                      name="question"
-                      size="small"
-                      className="question-icon"
-                    ></Icon>
-                  }
-                />
-                <br />
-                <Input
-                  fluid
-                  placeholder="Epochs..."
-                  size="mini"
-                  defaultValue={model.epochs}
-                  onChange={e => setModelParameter('epochs', e.target.value)}
-                />
-                <br />
-                <br />
-                Batch Size
-                <Popup
-                  content="Number of training examples used in one iteration"
-                  trigger={
-                    <Icon
-                      name="question"
-                      size="small"
-                      className="question-icon"
-                    ></Icon>
-                  }
-                />
-                <br />
-                <Input
-                  fluid
-                  placeholder="Batch Size..."
-                  size="mini"
-                  defaultValue={model.batchSize}
-                  onChange={e => setModelParameter('batchSize', e.target.value)}
-                />
-                <br />
-                <br />
-                Learning Rate
-                <Popup
-                  content="Decides how much parameters change when the model is fed with data"
-                  trigger={
-                    <Icon
-                      name="question"
-                      size="small"
-                      className="question-icon"
-                      onClick={null}
-                    ></Icon>
-                  }
-                />
-                <br />
-                <Input
-                  fluid
-                  placeholder="Learning Rate..."
-                  size="mini"
-                  defaultValue={model.learningRate}
-                  onChange={e =>
-                    setModelParameter('learningRate', e.target.value)
-                  }
-                />
-                <br />
-                <br />
-                <Button positive onClick={() => trainModel(model.id)}>Train</Button>
-              </Grid.Column>
+              <ModelParameterEditor
+                model={model}
+                setModelParameter={setModelParameter}
+                trainModel={trainModel}
+              />
               <Grid.Column width={12}>
                 <Dropdown
                   fluid
@@ -325,7 +260,7 @@ TransferLearningBuilder.propTypes = {
   addLayer: PropTypes.func.isRequired,
   editLayer: PropTypes.func.isRequired,
   removeLayer: PropTypes.func.isRequired,
-  getTrainedModels: PropTypes.func.isRequired,
+  fetchTrainedModels: PropTypes.func.isRequired,
   trainModel: PropTypes.func.isRequired,
   model: PropTypes.object,
   projectId: PropTypes.number.isRequired,
@@ -344,7 +279,7 @@ export default connect(
     addLayer,
     editLayer,
     removeLayer,
-    getTrainedModels,
+    fetchTrainedModels,
     trainModel
   }
 )(TransferLearningBuilder)
