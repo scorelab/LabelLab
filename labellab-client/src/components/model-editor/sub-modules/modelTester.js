@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Card, Header, Grid, Progress } from 'semantic-ui-react';
 
-import { testModel } from '../../../actions/model'
+import { testModel } from '../../../actions'
 
 import './css/modelTester.css';
 

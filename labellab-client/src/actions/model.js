@@ -185,7 +185,7 @@ export const removeLayer = (layers, layerToRemove) => {
   }
 }
 
-export const getProjectModels = projectId => {
+export const fetchProjectModels = projectId => {
   return dispatch => {
     dispatch(request())
     FetchApi.get('/api/v1/mlclassifier/all/' + projectId)
@@ -211,7 +211,7 @@ export const getProjectModels = projectId => {
   }
 }
 
-export const getModel = modelId => {
+export const fetchModel = modelId => {
   return dispatch => {
     dispatch(request())
     FetchApi.get('/api/v1/mlclassifier/' + modelId)
@@ -429,7 +429,7 @@ export const uploadModel = (modelData, modelId) => {
   }
 }
 
-export const getTrainedModels = (projectId, callback) => {
+export const fetchTrainedModels = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
     FetchApi.get('/api/v1/mlclassifier/trained/' + projectId, null, true)

@@ -229,7 +229,7 @@ class GetAllModels(MethodView):
             return make_response(jsonify(response)), 500
 
 
-class GetTrainedModels(MethodView):
+class fetchTrainedModels(MethodView):
     """This class gets all trained models related to a particular project."""
     @jwt_required
     def get(self, project_id):
@@ -315,8 +315,11 @@ class Train(MethodView):
             cl.set_batch_size(ml_classifier.batch_size)
             cl.set_epochs(ml_classifier.epochs)
 
-            with open(ml_classifier.preprocessing_steps_json_url) as f:
-                preprocessing_data = json.load(f)
+            if ml_classifier.preprocessing_steps_json_url != None:
+                with open(ml_classifier.preprocessing_steps_json_url) as f:
+                    preprocessing_data = json.load(f)
+            else:
+                preprocessing_data = {"steps": []}
 
             # Add image preprocessing
             cl.add_preprocessing_steps(preprocessing_data["steps"], ml_classifier.validation)
@@ -564,7 +567,7 @@ mlclassifiercontroller = {
     "create": CreateMLClassifier.as_view("create"),
     "mlclassifier": MLClassifierInfo.as_view("mlclassifier"),
     "get_all_models": GetAllModels.as_view("get_all_models"),
-    "get_trained_models": GetTrainedModels.as_view("get_trained_models"),
+    "get_trained_models": fetchTrainedModels.as_view("get_trained_models"),
     "train": Train.as_view("train"),
     "test": Test.as_view("test"),
     "export": Export.as_view("export"),

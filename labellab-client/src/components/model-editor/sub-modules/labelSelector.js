@@ -13,7 +13,7 @@ import {
   Icon
 } from 'semantic-ui-react'
 
-import { addLabel, removeLabel } from '../../../actions/model'
+import { addLabel, removeLabel } from '../../../actions'
 
 import './css/labelSelector.css'
 

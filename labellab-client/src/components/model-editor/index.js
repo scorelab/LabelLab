@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Loadable from 'react-loadable'
 import Loader from '../loading/index'
 
-import { fetchLabels, fetchProject, editModel, getModel } from '../../actions/index'
+import { fetchLabels, fetchProject, editModel, fetchModel } from '../../actions'
 
 import './css/modelEditor.css'
 
@@ -20,9 +20,9 @@ const ClassifierEditor = Loadable({
 
 class ModelEditor extends Component {
   componentDidMount() {
-    const { fetchLabels, fetchProject, getModel, match } = this.props
+    const { fetchLabels, fetchProject, fetchModel, match } = this.props
 
-    getModel(match.params.modelId)
+    fetchModel(match.params.modelId)
     fetchLabels(match.params.projectId)
     fetchProject(match.params.projectId)
   }
@@ -69,9 +69,9 @@ const mapDispatchToProps = dispatch => {
     editModel: (model, modelId) => {
       return dispatch(editModel(model, modelId))
     },
-    getModel: modelId => {
-      return dispatch(getModel(modelId))
-    },
+    fetchModel: modelId => {
+      return dispatch(fetchModel(modelId))
+    }
   }
 }
 

@@ -17,7 +17,7 @@ import {
   addPreprocessingStep,
   removePreprocessingStep,
   setTrainTestSplit
-} from '../../../actions/model'
+} from '../../../actions'
 import preprocessingStepOptions from './options/preprocessingStepOptions'
 
 import './css/preprocessingSelector.css'

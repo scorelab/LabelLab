@@ -19,7 +19,7 @@ import {
   setType,
   setSource,
   createModel,
-  getProjectModels,
+  fetchProjectModels,
   deleteModel
 } from '../../actions'
 import './css/models.css'
@@ -65,10 +65,10 @@ class ModelsIndex extends Component {
   }
 
   componentDidMount() {
-    const { setProjectId, getProjectModels, project } = this.props
+    const { setProjectId, fetchProjectModels, project } = this.props
 
     setProjectId(project.projectId)
-    getProjectModels(project.projectId)
+    fetchProjectModels(project.projectId)
   }
 
   fetchProjectCallback = () => {
@@ -90,7 +90,7 @@ class ModelsIndex extends Component {
   }
 
   render() {
-    const { project, model, models, setName, setType, setSource, createModel, deleteModel, getProjectModels, history } = this.props
+    const { project, model, models, setName, setType, setSource, createModel, deleteModel, fetchProjectModels, history } = this.props
     const { modelType, modelSource, open, testing, selectedModelId } = this.state
 
     return (
@@ -188,7 +188,7 @@ class ModelsIndex extends Component {
                       label="Delete"
                       size="tiny"
                       onClick={() => {
-                        deleteModel(model.id, () => getProjectModels(project.projectId))
+                        deleteModel(model.id, () => fetchProjectModels(project.projectId))
                       }}
                       basic
                       negative
@@ -211,7 +211,7 @@ class ModelsIndex extends Component {
 
 const TestModelModal = (props) => {
   const { open, toggleOpen, modelId } = props;
-  console.log(modelId)
+
   return <Modal size="small" open={open} onClose={toggleOpen}>
     <Modal.Content>
       <ModelTester modelId={modelId} />
@@ -226,7 +226,7 @@ ModelsIndex.propTypes = {
   setName: PropTypes.func.isRequired,
   setType: PropTypes.func.isRequired,
   setSource: PropTypes.func.isRequired,
-  getProjectModels: PropTypes.func.isRequired,
+  fetchProjectModels: PropTypes.func.isRequired,
   deleteModel: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
@@ -261,8 +261,8 @@ const mapDispatchToProps = dispatch => {
     createModel: (model, callback) => {
       return dispatch(createModel(model, callback))
     },
-    getProjectModels: id => {
-      return dispatch(getProjectModels(id))
+    fetchProjectModels: id => {
+      return dispatch(fetchProjectModels(id))
     },
     deleteModel: (id, callback) => {
       return dispatch(deleteModel(id, callback))

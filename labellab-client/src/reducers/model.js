@@ -89,7 +89,7 @@ const keysToCamelCase = data => {
 
 const model = (state = initialState, action) => {
 
-  // This needs to be done since the backend passes variables in camelcase
+  // This needs to be done since the backend passes variables in snake_case
   if (action.payload && action.payload.constructor == Object) {
     action.payload = keysToCamelCase(action.payload)
   }
