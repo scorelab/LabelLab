@@ -684,6 +684,26 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<List<MlModel>> getTrainedModels(String token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_ML_CLASSIFIER + "/trained/$projectId",
+            options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((model) => MlModel.fromJson(model))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
+
+  @override
   Future<MlModel> getModel(String token, String modelId) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
