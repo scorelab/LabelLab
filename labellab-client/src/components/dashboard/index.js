@@ -132,7 +132,6 @@ class Dashboard extends Component {
       pathname: '/project/' + id + '/team'
     })
   }
-  callback() {}
   close = () => this.setState({ open: false })
   render() {
     const { user, isfetching, isinitializing, history, errors } = this.props

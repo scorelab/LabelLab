@@ -49,11 +49,11 @@ class SearchProject extends Component {
     search.map((project, index) =>
       project.projectDescription
         ? results.push({
-            key: index,
-            title: project.projectName,
-            description: project.projectDescription,
-            id: project._id
-          })
+          key: index,
+          title: project.projectName,
+          description: project.projectDescription,
+          id: project._id
+        })
         : null
     )
 

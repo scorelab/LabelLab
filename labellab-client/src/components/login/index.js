@@ -205,8 +205,8 @@ class LoginIndex extends Component {
           <Divider horizontal>Or</Divider>
 
           <div className="login-oauth-icon">
-            <GoogleContainer/>
-            <GitHubContainer/>
+            <GoogleContainer />
+            <GitHubContainer />
           </div>
         </div>
       </div>

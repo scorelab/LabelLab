@@ -71,22 +71,22 @@ export const logout = callback => {
   return dispatch => {
     dispatch(request())
     FetchApi.post('/api/v1/auth/logout_access', {})
-    .then(() => {
-      FetchApi.post('/api/v1/auth/logout_refresh', {})
-        .then(() => {
-          // Remove tokens from local storage
-         setAuthToken(false)
-         removeAllTokens()
-         dispatch(success())
-         callback()
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    })
-    .catch(err => {
-      console.error(err)
-    })
+      .then(() => {
+        FetchApi.post('/api/v1/auth/logout_refresh', {})
+          .then(() => {
+            // Remove tokens from local storage
+            setAuthToken(false)
+            removeAllTokens()
+            dispatch(success())
+            callback()
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   function request() {
@@ -160,13 +160,13 @@ export const verifyResetPasswordToken = (user_id, token) => {
   }
 }
 
-export const updatePassword = (email, username, password, resetPasswordToken) =>{
+export const updatePassword = (email, username, password, resetPasswordToken) => {
   return dispatch => {
     const data = {
       email: email,
-      username:username,
+      username: username,
       password: password,
-      resetPasswordToken:resetPasswordToken
+      resetPasswordToken: resetPasswordToken
     }
     dispatch(request())
     FetchApi('PUT', `/api/v1/auth/update-password`, data)

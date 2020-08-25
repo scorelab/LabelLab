@@ -208,7 +208,7 @@ function ListItem({
 
     if (label.label_type === 'select') {
       const { options } = label
-      const handleChange = function(option) {
+      const handleChange = function (option) {
         return (e, { checked }) =>
           onFormChange(
             label.id,

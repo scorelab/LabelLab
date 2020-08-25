@@ -37,8 +37,8 @@ class PreviousProject extends Component {
               </Card>
             ))
           ) : (
-            <CardLoader />
-          )}
+              <CardLoader />
+            )}
         </Card.Group>
       </div>
     )

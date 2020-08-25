@@ -301,6 +301,8 @@ class UpdateLabels(MethodView):
                 "width": width,
                 "labelled": labelled
             }
+            # Converting labeldata in the format the frontend 
+            # understands the data. 
             new_image = update_image(image_id, data)
             existing_labeldata = find_by_image_id(image_id)
             existing_labeldata_ids = []
@@ -376,66 +378,10 @@ class UpdateLabels(MethodView):
             # Server Error)
             return make_response(jsonify(response)), 500
 
-class Metadata(MethodView):
-    """
-    This method returns metadata of images
-    Url --> /api/v1/image/metadata/<int:project_id>
-    """
-    @jwt_required
-    def post(self, project_id):
-        try:
-            post_data = request.get_json(silent=True, force=True)
-            image_ids = post_data["images"]
-        
-        except Exception:
-            response = {
-                "success":False,
-                "msg": "Image ids not provided"
-            }
-            return make_response(jsonify(response)), 400
-
-        try:            
-            metadata = []
-
-            for image_id in image_ids:
-                image = find_by_id(image_id)
-                
-                if not image or image["project_id"] != project_id:
-                    response = {
-                        "success": False,
-                        "msg": "Invalid image id"
-                    }
-                    return make_response(jsonify(response)), 404
-
-                image_path = get_path(image["image_url"], project_id)
-                meta = ImageMetaData(image_path)
-                latlng = meta.get_lat_lng()
-                
-                if not all(latlng):
-                    metadata.append([])
-                else:
-                    metadata.append(list(latlng))
-
-            response = {
-                "success": True,
-                "body": metadata
-            }
-            return make_response(jsonify(response)), 200
-        
-        except Exception:
-            response = {
-                "success":False,
-                "msg": "Something went wrong!"
-                }
-            # Return a server error using the HTTP Error Code 500 (Internal
-            # Server Error)
-            return make_response(jsonify(response)), 500
-
 imageController = {
     "save_image": SubmitImage.as_view("save_image"),
     "get_all_images": GetAllImages.as_view("get_all_images"),
     "get_image": GetImage.as_view("get_image"),
     "delete_images": DeleteImages.as_view("delete_images"),
-    "update_labels": UpdateLabels.as_view("update_labels"),
-    "metadata": Metadata.as_view("metadata"),
+    "update_labels": UpdateLabels.as_view("update_labels")
 }

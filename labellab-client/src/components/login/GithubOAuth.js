@@ -29,15 +29,15 @@ class GitHubContainer extends Component {
     const { access_token } = this.props.githubResponse.data
     access_token && this.props.GithubOauthCallback(access_token, this.sendDetails)
   }
-  
+
   sendDetails = () => {
-      const { details } = this.props
-      const data = {
-        name: details.name,
-        username: details.username,
-        email: details.email
-      }
-      this.props.OauthUser(data, this.callback)
+    const { details } = this.props
+    const data = {
+      name: details.name,
+      username: details.username,
+      email: details.email
+    }
+    this.props.OauthUser(data, this.callback)
   }
 
   callback = () => {
@@ -49,10 +49,10 @@ class GitHubContainer extends Component {
       ? history.push(location.state.from.pathname)
       : history.push('/')
   }
-  
+
   errors = err => {
     console.log(err)
-    this.setState({ errors: err})
+    this.setState({ errors: err })
   }
 
   render() {
@@ -62,7 +62,7 @@ class GitHubContainer extends Component {
           className="github-login"
           buttonText="Login with GitHub"
           clientId={process.env.GITHUB_CLIENT_ID}
-          redirectUri="" 
+          redirectUri=""
           onSuccess={this.responseGithub}
           onFailure={this.errors}
         />
@@ -78,11 +78,11 @@ GitHubContainer.propTypes = {
 }
 
 const mapStateToProps = state => {
-    return {
-      githubResponse: state.auth.githubResponse,
-      details: state.auth.details
-    }
+  return {
+    githubResponse: state.auth.githubResponse,
+    details: state.auth.details
   }
+}
 
 const mapDispatchToProps = {
   OauthUser,

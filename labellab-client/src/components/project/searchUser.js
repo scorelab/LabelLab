@@ -47,12 +47,12 @@ class SearchUser extends Component {
     search.map((user, index) =>
       user
         ? results.push({
-            key: index,
-            title: user.name,
-            description: user.email,
-            email: user.email,
-            id: user.id
-          })
+          key: index,
+          title: user.name,
+          description: user.email,
+          email: user.email,
+          id: user.id
+        })
         : null
     )
 

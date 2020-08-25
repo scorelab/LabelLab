@@ -76,7 +76,7 @@ class LabelIndex extends Component {
 
   handleDelete = value => {
     const { project, deleteLabel, fetchLabels } = this.props
-    deleteLabel(value.id, fetchLabels(project.projectId))
+    deleteLabel(value.id, project.projectId, fetchLabels(project.projectId))
   }
   render() {
     const value = {
@@ -107,19 +107,19 @@ class LabelIndex extends Component {
             </Table.Header>
 
             <Table.Body>
-              {labels.length && 
+              {labels.length &&
                 labels.length !== 0 ? labels.map((label, index) => (
-                <LabelItem
-                  key={label.id}
-                  index={index}
-                  label={label}
-                  options={options}
-                  onChange={this.onChange}
-                  onDelete={this.handleDelete}
-                  onUpdate={this.onUpdate}
-                />
-              )):<div>
-                There are no labels present
+                  <LabelItem
+                    key={label.id}
+                    index={index}
+                    label={label}
+                    options={options}
+                    onChange={this.onChange}
+                    onDelete={this.handleDelete}
+                    onUpdate={this.onUpdate}
+                  />
+                )) : <div>
+                  There are no labels present
                 </div>}
             </Table.Body>
           </Table>

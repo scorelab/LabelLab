@@ -20,7 +20,7 @@ export function withLoadImageData(Comp) {
         const img = new Image()
         img.crossOrigin = 'anonymous'
         const setState = this.setState.bind(this)
-        img.onload = async function() {
+        img.onload = async function () {
           const { height, width } = this
           setState({ height, width })
 

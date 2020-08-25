@@ -103,7 +103,7 @@ export const updateLabels = (image_id, labeldata) => {
   }
 }
 
-export const updateALabel = (label_id, labeldata ,callback) => {
+export const updateALabel = (label_id, labeldata, callback) => {
   return dispatch => {
     dispatch(request())
     FetchApi.put('/api/v1/label/label_info/' + label_id, labeldata)
@@ -130,10 +130,10 @@ export const updateALabel = (label_id, labeldata ,callback) => {
   }
 }
 
-export const deleteLabel = (label_id, callback) => {
+export const deleteLabel = (label_id, project_id, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('DELETE', '/api/v1/label/' + label_id + '/delete', null, true)
+    FetchApi.delete("/api/v1/label/label_info/" + label_id + "/" + project_id)
       .then(res => {
         dispatch(success())
         callback()

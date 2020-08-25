@@ -16,56 +16,56 @@ class PathTracking extends Component {
   render() {
     let coordinates = []
     let marksarr = []
-    this.props.project.coordinates && this.props.project.coordinates.map(point=>{
+    this.props.project.coordinates && this.props.project.coordinates.map(point => {
       let points = {}
       let marks = {}
-      if(point.length!=0){
-          points.lat = point[0]
-          points.lng = point[1]
-          marks.position = { lat:point[0],  lng:point[1] }
-          marks.showInfo = false
-          marks.infoContent = false
+      if (point.length != 0) {
+        points.lat = point[0]
+        points.lng = point[1]
+        marks.position = { lat: point[0], lng: point[1] }
+        marks.showInfo = false
+        marks.infoContent = false
       }
       coordinates.push(points)
       marksarr.push(marks)
     })
     const pathCoordinates = coordinates
-    const markers= marksarr
+    const markers = marksarr
     return (
-        <GoogleMap
-            defaultZoom={10}
-            defaultCenter={
-              pathCoordinates[0]&&
-                Object.keys(pathCoordinates[0]).length!=0? 
-                  pathCoordinates[0] : { lat:45, lng:-75 }
-                }
-        >
-          {markers.map((marker, index) => (
-                    <Marker
-                        key={index}
-                        position={marker.position}
-                        defaultPosition={this.props.center}
-                        style={{height: '2px', width: '2px'}}
-                    />
-                ))}
-            {/*for creating path with the updated coordinates*/}
-            <Polyline
-                path={pathCoordinates}
-                geodesic={true}
-                options={{
-                    strokeColor: "#ff2527",
-                    strokeOpacity: 1,
-                    strokeWeight: 3,
-                    // icons: [
-                    //     {
-                    //         icon: myIcon,
-                    //         offset: "0",
-                    //         repeat: "20px"
-                    //     }
-                    // ]
-                }}
-            />
-        </GoogleMap>
+      <GoogleMap
+        defaultZoom={10}
+        defaultCenter={
+          pathCoordinates[0] &&
+            Object.keys(pathCoordinates[0]).length != 0 ?
+            pathCoordinates[0] : { lat: 45, lng: -75 }
+        }
+      >
+        {markers.map((marker, index) => (
+          <Marker
+            key={index}
+            position={marker.position}
+            defaultPosition={this.props.center}
+            style={{ height: '2px', width: '2px' }}
+          />
+        ))}
+        {/*for creating path with the updated coordinates*/}
+        <Polyline
+          path={pathCoordinates}
+          geodesic={true}
+          options={{
+            strokeColor: "#ff2527",
+            strokeOpacity: 1,
+            strokeWeight: 3,
+            // icons: [
+            //     {
+            //         icon: myIcon,
+            //         offset: "0",
+            //         repeat: "20px"
+            //     }
+            // ]
+          }}
+        />
+      </GoogleMap>
     );
   }
 }

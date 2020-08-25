@@ -488,6 +488,8 @@ class GetCoordinates(MethodView):
                     "msg": "Images not found"}
                 return make_response(jsonify(response)), 404
 
+            # Getting the metadata of the image from ImageMetaData class.
+            
             coordinates = []
             for image in images:
                 image_path = get_path(image['image_url'], project_id)
