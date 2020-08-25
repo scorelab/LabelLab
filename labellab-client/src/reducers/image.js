@@ -105,17 +105,17 @@ const user = (state = initialState, action) => {
         nextImage: action.payload.next,
         prevImage: action.payload.prev
       }
-      case UPDATE_LABEL_SUCCESS:
-        return {
-          ...state,
-          currentImage: {
-            ...state.currentImage,
-            labeldata: action.payload.labeldata,
-            width: action.payload.width,
-            height: action.payload.height,
-            labelled: action.payload.labelled
-          },
-        }
+    case UPDATE_LABEL_SUCCESS:
+      return {
+        ...state,
+        currentImage: {
+          ...state.currentImage,
+          labeldata: action.payload.labeldata,
+          width: action.payload.width,
+          height: action.payload.height,
+          labelled: action.payload.labelled
+        },
+      }
     default:
       return state
   }

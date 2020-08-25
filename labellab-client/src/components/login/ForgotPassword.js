@@ -64,55 +64,55 @@ class ForgotPassword extends Component {
         {isEmailSending ? (
           <div>Sending...</div>
         ) : (
-          <>
-            {emailRequestSent ? (
-              <>
-                {emailRecievedMessage === 'recovery email sent' ? (
-                  <div>
-                    <h3>Password Reset Email Successfully Sent!</h3>
-                  </div>
-                ) : (
-                  <div>
-                    <p>
-                      That email address isn&apos;t recognized. Please try again
-                      or register for a new account.
-                    </p>
-                    <Button primary as={Link} to="/register">
-                      Register
-                    </Button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <form
-                  className="profile-form"
-                  onSubmit={this.sendEmail}
-                  className="emailForm"
-                >
-                  <Input
-                    primary
-                    id="email"
-                    value={email}
-                    onChange={this.handleChange('email')}
-                    placeholder="Email Address"
-                  />
-                  {showNullError && (
-                    <div className="error-msg">
-                      <p>The email address cannot be null.</p>
+            <>
+              {emailRequestSent ? (
+                <>
+                  {emailRecievedMessage === 'recovery email sent' ? (
+                    <div>
+                      <h3>Password Reset Email Successfully Sent!</h3>
                     </div>
-                  )}
-                  <span className="sendMail">
-                    <Button primary>Send Email</Button>
-                  </span>
-                </form>
-              </>
-            )}
-            <Button as={Link} to="/login" className="btn-home">
-              Go Home
+                  ) : (
+                      <div>
+                        <p>
+                          That email address isn&apos;t recognized. Please try again
+                          or register for a new account.
+                    </p>
+                        <Button primary as={Link} to="/register">
+                          Register
+                    </Button>
+                      </div>
+                    )}
+                </>
+              ) : (
+                  <>
+                    <form
+                      className="profile-form"
+                      onSubmit={this.sendEmail}
+                      className="emailForm"
+                    >
+                      <Input
+                        primary
+                        id="email"
+                        value={email}
+                        onChange={this.handleChange('email')}
+                        placeholder="Email Address"
+                      />
+                      {showNullError && (
+                        <div className="error-msg">
+                          <p>The email address cannot be null.</p>
+                        </div>
+                      )}
+                      <span className="sendMail">
+                        <Button primary>Send Email</Button>
+                      </span>
+                    </form>
+                  </>
+                )}
+              <Button as={Link} to="/login" className="btn-home">
+                Go Home
             </Button>
-          </>
-        )}
+            </>
+          )}
       </div>
     )
   }

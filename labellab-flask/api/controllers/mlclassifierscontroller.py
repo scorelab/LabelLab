@@ -22,7 +22,7 @@ from api.helpers.mlclassifier import (
     find_all_by_project_id as find_ml_classifiers
 )
 
-ml_files_dir = config[os.getenv("FLASK_CONFIG") or "development"].ML_FILES_DIR
+ml_files_dir = config["development"].ML_FILES_DIR
 
 class CreateMLClassifier(MethodView):
     """This class creates a new classifier model."""

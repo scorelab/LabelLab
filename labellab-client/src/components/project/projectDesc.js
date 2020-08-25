@@ -70,42 +70,42 @@ class ProjectDescriptionIndex extends Component {
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : (
-          <Card>
-            <Card.Header className="projectDesc-header">
-              <Header content={name} as="h4"></Header>
-              <Icon name="pencil alternate" onClick={this.handleUpdate} />
-            </Card.Header>
-            <Card.Content>
-              {edit ? (
-                <Modal size="small" open={this.state.edit} onClose={this.close}>
-                  <Modal.Header>
-                    <p>Enter Project Description</p>
-                  </Modal.Header>
-                  <Modal.Actions>
-                    <div className="modal-actions">
-                      <Input
-                        name="desc"
-                        type="text"
-                        label="Description"
-                        placeholder="Description..."
-                        defaultValue={this.state.desc}
-                        onChange={this.handleChange}
-                      />
-                      <div>
-                        <Button
-                          positive
-                          onClick={this.handleSubmit}
-                          content="Submit"
+            <Card>
+              <Card.Header className="projectDesc-header">
+                <Header content={name} as="h4"></Header>
+                <Icon name="pencil alternate" onClick={this.handleUpdate} />
+              </Card.Header>
+              <Card.Content>
+                {edit ? (
+                  <Modal size="small" open={this.state.edit} onClose={this.close}>
+                    <Modal.Header>
+                      <p>Enter Project Description</p>
+                    </Modal.Header>
+                    <Modal.Actions>
+                      <div className="modal-actions">
+                        <Input
+                          name="desc"
+                          type="text"
+                          label="Description"
+                          placeholder="Description..."
+                          defaultValue={this.state.desc}
+                          onChange={this.handleChange}
                         />
+                        <div>
+                          <Button
+                            positive
+                            onClick={this.handleSubmit}
+                            content="Submit"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Modal.Actions>
-                </Modal>
-              ) : null}
-              {!edit && desc ? desc : null}
-            </Card.Content>
-          </Card>
-        )}
+                    </Modal.Actions>
+                  </Modal>
+                ) : null}
+                {!edit && desc ? desc : null}
+              </Card.Content>
+            </Card>
+          )}
       </div>
     )
   }

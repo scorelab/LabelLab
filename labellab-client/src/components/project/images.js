@@ -49,7 +49,7 @@ class ImagesIndex extends Component {
   handleImageChange = e => {
     e.preventDefault()
     let files = e.target.files
-    let formData =  new FormData()
+    let formData = new FormData()
     Array.from(files).forEach(file => {
       let reader = new FileReader()
       formData.append('images', file)
@@ -65,8 +65,8 @@ class ImagesIndex extends Component {
       }
       reader.readAsDataURL(file)
     })
-    formData.append('format',this.state.format)
-    formData.append('project_id',this.props.project.projectId)
+    formData.append('format', this.state.format)
+    formData.append('project_id', this.props.project.projectId)
     this.setState({
       showform: !this.state.showform,
       formData: formData,
@@ -137,7 +137,7 @@ class ImagesIndex extends Component {
       photoIndex: 0,
       isOpen: false
     })
-  }    
+  }
   onImageLoaded = image => {
     this.imageRef = image;
   };
@@ -165,7 +165,7 @@ class ImagesIndex extends Component {
       const new_cropped_image = []
       new_cropped_image.push(croppedImage)
       this.setState({
-        images: new_cropped_image, 
+        images: new_cropped_image,
         croppedImageUrl: croppedImageURL,
         format: 'image/jpeg'
       });
@@ -280,7 +280,7 @@ class ImagesIndex extends Component {
                 nextSrc={image_urls[(photoIndex + 1) % image_urls.length]}
                 prevSrc={
                   image_urls[
-                    (photoIndex + image_urls.length - 1) % image_urls.length
+                  (photoIndex + image_urls.length - 1) % image_urls.length
                   ]
                 }
                 onCloseRequest={() => this.setState({ isOpen: false })}
@@ -307,26 +307,26 @@ class ImagesIndex extends Component {
               View
             </Button>
             {
-              number_of_images === 1?
-              <Modal trigger={<Button>Crop</Button>}>
-                <Modal.Header>Crop Image</Modal.Header>
-                <Modal.Content>
-                {images[0] && (
-                  <ReactCrop
-                    src={image_urls[0]}
-                    crop={crop}
-                    ruleOfThirds
-                    onImageLoaded={this.onImageLoaded}
-                    onComplete={this.onCropComplete}
-                    onChange={this.onCropChange}
-                  />
-                )}
-                {croppedImageUrl && (
-                  <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
-                )}
-                </Modal.Content>
-              </Modal>:
-              null
+              number_of_images === 1 ?
+                <Modal trigger={<Button>Crop</Button>}>
+                  <Modal.Header>Crop Image</Modal.Header>
+                  <Modal.Content>
+                    {images[0] && (
+                      <ReactCrop
+                        src={image_urls[0]}
+                        crop={crop}
+                        ruleOfThirds
+                        onImageLoaded={this.onImageLoaded}
+                        onComplete={this.onCropComplete}
+                        onChange={this.onCropChange}
+                      />
+                    )}
+                    {croppedImageUrl && (
+                      <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
+                    )}
+                  </Modal.Content>
+                </Modal> :
+                null
             }
             {this.state.maxSizeError ? (
               <div className="max-size-error">
@@ -431,77 +431,77 @@ const Row = ({
   selected,
   isLast
 }) => (
-  <Table.Row
-    style={{
-      ...style,
-      display: 'flex',
-      borderBottom: isLast ? '1px solid rgba(34,36,38,.1)' : ''
-    }}
-  >
-    <Table.Cell width={1}>
-      {imageId + 1}
-      {image.labelled ? <Icon name="checkmark green"></Icon> : null}
-    </Table.Cell>
-    <Table.Cell width={1}>
-      <Checkbox
-        onClick={() => {
-          onSelect(image.id)
-        }}
-        checked={selected}
-      />
-    </Table.Cell>
-    <Table.Cell width={11}>
-      <a
-        rel={'external'}
-        href={
-          process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
-            ? image.image_url
-            : 'http://' +
+    <Table.Row
+      style={{
+        ...style,
+        display: 'flex',
+        borderBottom: isLast ? '1px solid rgba(34,36,38,.1)' : ''
+      }}
+    >
+      <Table.Cell width={1}>
+        {imageId + 1}
+        {image.labelled ? <Icon name="checkmark green"></Icon> : null}
+      </Table.Cell>
+      <Table.Cell width={1}>
+        <Checkbox
+          onClick={() => {
+            onSelect(image.id)
+          }}
+          checked={selected}
+        />
+      </Table.Cell>
+      <Table.Cell width={11}>
+        <a
+          rel={'external'}
+          href={
+            process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
+              ? image.image_url
+              : 'http://' +
               process.env.REACT_APP_HOST +
               ':' +
               process.env.REACT_APP_SERVER_PORT +
               `/static/uploads/${image.project_id}/${image.image_url}`
-        }
-      >
-        {image.image_name}
-      </a>
-      {image.labelled ? (
-        <span className="labelDropdown">
-          <Dropdown text="Labels">
-            <Dropdown.Menu>
-              {Object.keys(image.labeldata).map((key, index) =>
-                image.labeldata[key].length !== 0 ? (
-                  <Dropdown.Item
-                    text={key + '  ' + image.labeldata[key].length}
-                    key={index}
-                  />
-                ) : null
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </span>
-      ) : null}
-    </Table.Cell>
-    <Table.Cell width={3}>
-      <div>
-        <Link to={`/labeller/${projectId}/${image.id}`}>
-          <Button icon="pencil" label="Edit" size="tiny" />
-        </Link>
-        <Button
-          negative
-          basic
-          icon="trash"
-          label="Delete"
-          size="tiny"
-          onClick={async () => {
-            await onSelect(image.id)
-            onDelete()
-          }}
-        />
-      </div>
-    </Table.Cell>
-  </Table.Row>
-)
+          }
+        >
+          {image.image_name}
+        </a>
+        {image.labelled ? (
+          <span className="labelDropdown">
+            <Dropdown text="Labels">
+              <Dropdown.Menu>
+                {Object.keys(image.labeldata).map((key, index) =>
+                  image.labeldata[key].length !== 0 ? (
+                    <Dropdown.Item
+                      text={key + '  ' + image.labeldata[key].length}
+                      key={index}
+                    />
+                  ) : null
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </span>
+        ) : null}
+      </Table.Cell>
+      <Table.Cell width={3}>
+        <div>
+          <Link to={`/labeller/${projectId}/${image.id}`}>
+            <Button icon="pencil" label="Edit" size="tiny" />
+          </Link>
+          <Button
+            negative
+            basic
+            icon="trash"
+            label="Delete"
+            size="tiny"
+            onClick={async () => {
+              await onSelect(image.id)
+              onDelete()
+            }}
+          />
+        </div>
+      </Table.Cell>
+    </Table.Row>
+  )
 
 const AutoSizedList = props => (
   <AutoSizer>

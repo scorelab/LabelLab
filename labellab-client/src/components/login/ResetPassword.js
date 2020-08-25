@@ -18,7 +18,7 @@ class ResetPassword extends Component {
       updated:false
     };
   }
-
+F
   async componentDidMount() {
     const { match: { params } } = this.props;
     await this.props.verifyResetPasswordToken(params.user_id,params.token)

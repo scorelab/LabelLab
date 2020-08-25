@@ -95,6 +95,9 @@ def update_image(image_id, data):
     return image_schema.dump(image).data
 
 def get_path(image_url, project_id):
+    """
+    getting the path of the saved image
+    """
     parent_dir = config[os.getenv("FLASK_CONFIG") or "development"].UPLOAD_FOLDER
     directory = os.path.join(parent_dir,str(project_id))
     path = os.path.join(directory, image_url)

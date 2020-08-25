@@ -58,6 +58,9 @@ def delete_by_email(email):
     db.session.commit()
 
 def get_data(user_id):
+    """
+    get all the projects and the teams of a user
+    """
     all_projects = []
     all_teams = []
     queries = db.session.query(
@@ -81,6 +84,9 @@ def get_data(user_id):
             "all_teams": all_teams}
 
 def get_user_roles(user_id, project_id):
+    """
+    get all the roles of a user in a project
+    """
     all_roles = []
     queries = db.session.query(
             User, ProjectMember, Team, Project
@@ -99,6 +105,9 @@ def get_user_roles(user_id, project_id):
     return all_roles
 
 def get_teams_of_user_in_project(user_id, project_id):
+    """
+    get all the teams of the user in a project
+    """
     all_team_ids = []
     queries = db.session.query(
             User, ProjectMember, Team, Project
@@ -118,6 +127,9 @@ def get_teams_of_user_in_project(user_id, project_id):
     return all_team_ids
 
 def get_projectmembers(project_id):
+    """
+    get the project members of a project
+    """
     all_members = []
     queries = db.session.query(
            Project, Team, ProjectMember, User

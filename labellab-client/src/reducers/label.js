@@ -96,7 +96,7 @@ const user = (state = initialState, action) => {
           isupdating: false
         },
       }
-      case UPDATE_A_LABEL_REQUEST:
+    case UPDATE_A_LABEL_REQUEST:
       return {
         ...state,
         labelActions: {

@@ -1,5 +1,5 @@
 import axios from 'axios'
- // token can be of refresh type or access type
+// token can be of refresh type or access type
 
 export function hasToken(token_type) {
   const token = getToken(token_type)
@@ -45,10 +45,10 @@ export const removeAllTokens = () => {
   if (hasToken('access_token')) {
     localStorage.removeItem('access_token')
   }
-  if(hasToken('refresh_token')){
+  if (hasToken('refresh_token')) {
     localStorage.removeItem('refresh_token')
   }
-  if(hasToken('user_details')){
+  if (hasToken('user_details')) {
     localStorage.removeItem('user_details')
   }
 }

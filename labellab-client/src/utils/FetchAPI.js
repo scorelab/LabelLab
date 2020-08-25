@@ -14,18 +14,18 @@ FetchApi.interceptors.request.use(
   request => {
     const token = getToken('access_token');
     if (token) {
-        if (
-          request.url.includes('token_refresh') ||
-          request.url.includes('logout_refresh')
-        ) {
-          request.headers.Authorization = `Bearer ${localStorage.refresh_token}`
-        } else {
-          request.headers.Authorization = `Bearer ${localStorage.access_token}`
-        }
+      if (
+        request.url.includes('token_refresh') ||
+        request.url.includes('logout_refresh')
+      ) {
+        request.headers.Authorization = `Bearer ${localStorage.refresh_token}`
+      } else {
+        request.headers.Authorization = `Bearer ${localStorage.access_token}`
+      }
     }
     // config.headers['Content-Type'] = 'application/json';
     return request;
-},
+  },
   error => {
     return Promise.reject(error)
   }

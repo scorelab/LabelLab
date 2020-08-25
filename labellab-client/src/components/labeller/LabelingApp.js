@@ -264,37 +264,37 @@ class LabelingApp extends Component {
     }
     const sidebarProps = reassigning.status
       ? {
-          title: 'Select the new label',
-          selected: null,
-          onSelect: selected => {
-            const figure = this.canvasRef.current.getSelectedFigure()
-            if (figure) {
-              this.handleChange('recolor', figure, selected)
-            }
+        title: 'Select the new label',
+        selected: null,
+        onSelect: selected => {
+          const figure = this.canvasRef.current.getSelectedFigure()
+          if (figure) {
+            this.handleChange('recolor', figure, selected)
+          }
 
-            this.setState({ reassigning: { status: false, label_type: null } })
-          },
-          filter: label => label.label_type === reassigning.label_type,
-          labeldata: figures
-        }
+          this.setState({ reassigning: { status: false, label_type: null } })
+        },
+        filter: label => label.label_type === reassigning.label_type,
+        labeldata: figures
+      }
       : {
-          title: 'Labeling',
-          selected,
-          onSelect: this.handleSelected,
-          toggles,
-          onToggle: label =>
-            this.setState({
-              toggles: update(toggles, {
-                [label.id]: { $set: !toggles[label.id] }
-              })
-            }),
-          onFormChange: (labelId, newValue) =>
-            pushState(state => ({
-              figures: update(figures, { [labelId]: { $set: newValue } })
-            })),
-          labeldata: figures,
-          onHome: () => this.props.history.push(projectUrl)
-        }
+        title: 'Labeling',
+        selected,
+        onSelect: this.handleSelected,
+        toggles,
+        onToggle: label =>
+          this.setState({
+            toggles: update(toggles, {
+              [label.id]: { $set: !toggles[label.id] }
+            })
+          }),
+        onFormChange: (labelId, newValue) =>
+          pushState(state => ({
+            figures: update(figures, { [labelId]: { $set: newValue } })
+          })),
+        labeldata: figures,
+        onHome: () => this.props.history.push(projectUrl)
+      }
     // let selectedFigure = null;
     const allFigures = []
     labels.forEach((label, i) => {

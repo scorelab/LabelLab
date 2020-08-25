@@ -18,10 +18,10 @@ import SearchUser from './searchUser.js'
 import './css/team.css'
 
 const teamsOptions = [
-  { key: 1, value: 'images', role:'images', text: 'images' },
-  { key: 2, value: 'labels',  role:'labels', text: 'labels' },
-  { key: 3, value: 'image labelling', role:'image labelling', text: 'image labelling' },
-  { key: 4, value: 'models', role:'models', text: 'models' }
+  { key: 1, value: 'images', role: 'images', text: 'images' },
+  { key: 2, value: 'labels', role: 'labels', text: 'labels' },
+  { key: 3, value: 'image labelling', role: 'image labelling', text: 'image labelling' },
+  { key: 4, value: 'models', role: 'models', text: 'models' }
 ]
 
 class TeamIndex extends Component {
@@ -111,13 +111,13 @@ class TeamIndex extends Component {
           </Modal.Content>
           <Modal.Actions>
             <SearchUser history={history} updateState={this.updateState} />
-            <Dropdown 
-            name='team' 
-            placeholder='Team' 
-            search 
-            selection 
-            options={teamsOptions} 
-            onChange={this.handleDropDownChange}/>
+            <Dropdown
+              name='team'
+              placeholder='Team'
+              search
+              selection
+              options={teamsOptions}
+              onChange={this.handleDropDownChange} />
             <Button
               positive
               onClick={this.handleMemberSubmit}
@@ -152,13 +152,13 @@ class TeamIndex extends Component {
 
                   <Table.Cell collapsing>
                     {member.team_role !== 'admin' &&
-                    member.email !== user.email ? (
-                      <Icon
-                        className="team-remove-user-icon"
-                        name="user delete"
-                        onClick={() => this.handleDelete(member.email, member.team_id)}
-                      />
-                    ) : null}
+                      member.email !== user.email ? (
+                        <Icon
+                          className="team-remove-user-icon"
+                          name="user delete"
+                          onClick={() => this.handleDelete(member.email, member.team_id)}
+                        />
+                      ) : null}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -175,69 +175,69 @@ class TeamIndex extends Component {
             <Icon name="add" />
             Add member
           </Button>
-          </div>
-          <Container className='team-management-conatiner'>
+        </div>
+        <Container className='team-management-conatiner'>
           <Table color="green" celled striped stackable className='all-teams'>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell singleLine>Team name</Table.HeaderCell>
-              <Table.HeaderCell>Role</Table.HeaderCell>
-              <Table.HeaderCell>No of members</Table.HeaderCell>
-              <Table.HeaderCell />
-            </Table.Row>
-          </Table.Header>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell singleLine>Team name</Table.HeaderCell>
+                <Table.HeaderCell>Role</Table.HeaderCell>
+                <Table.HeaderCell>No of members</Table.HeaderCell>
+                <Table.HeaderCell />
+              </Table.Row>
+            </Table.Header>
 
-          <Table.Body>
-            {project &&
-              project.teams &&
-              project.teams.map((team, index) => (
-                <Table.Row key={index}>
-                  <Table.Cell>
-                    <Header as="h4">{team.team_name}</Header>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Header as="h4">{team.role}</Header>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Header as="h4">{team.team_members.length}</Header>
-                  </Table.Cell>
-                  <Table.Cell collapsing>
-                    {team.role !== 'admin'? (
-                      <Icon
-                        className="team-remove-user-icon"
-                        name="user delete"
-                        onClick={() => this.handleTeamDelete(team.id)}
-                      />
-                    ) : null}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-          </Table.Body>
-        </Table>
-        <Table color="green" celled striped stackable className='my-team'>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell singleLine>My Teams</Table.HeaderCell>
-              <Table.HeaderCell>Role</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
+            <Table.Body>
+              {project &&
+                project.teams &&
+                project.teams.map((team, index) => (
+                  <Table.Row key={index}>
+                    <Table.Cell>
+                      <Header as="h4">{team.team_name}</Header>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Header as="h4">{team.role}</Header>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Header as="h4">{team.team_members.length}</Header>
+                    </Table.Cell>
+                    <Table.Cell collapsing>
+                      {team.role !== 'admin' ? (
+                        <Icon
+                          className="team-remove-user-icon"
+                          name="user delete"
+                          onClick={() => this.handleTeamDelete(team.id)}
+                        />
+                      ) : null}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+            </Table.Body>
+          </Table>
+          <Table color="green" celled striped stackable className='my-team'>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell singleLine>My Teams</Table.HeaderCell>
+                <Table.HeaderCell>Role</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
 
-          <Table.Body>
-            {project &&
-              project.members &&
-              project.members.filter(member=>
-                member.email === user.email).map((team, index) => (
-                <Table.Row key={index}>
-                  <Table.Cell>
-                    <Header as="h4">{team.team_name}</Header>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Header as="h4">{team.team_role}</Header>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-          </Table.Body>
-        </Table>
+            <Table.Body>
+              {project &&
+                project.members &&
+                project.members.filter(member =>
+                  member.email === user.email).map((team, index) => (
+                    <Table.Row key={index}>
+                      <Table.Cell>
+                        <Header as="h4">{team.team_name}</Header>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Header as="h4">{team.team_role}</Header>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+            </Table.Body>
+          </Table>
         </Container>
       </Container>
     )
@@ -273,7 +273,7 @@ const mapDispatchToProps = dispatch => {
     fetchProject: data => {
       return dispatch(fetchProject(data))
     },
-    fetchAllTeams:  data => {
+    fetchAllTeams: data => {
       return dispatch(fetchAllTeams(data))
     },
     memberDelete: (email, projectId, callback) => {

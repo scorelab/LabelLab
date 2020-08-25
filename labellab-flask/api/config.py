@@ -38,6 +38,9 @@ class DevelopmentConfig(Config):
     
 
 class TestingConfig(Config):
+    """
+    Testing config applies for both local testing and travis configurations
+    """
     TESTING = True
     WTF_CSRF_ENABLED = False
     TEST_DATABASE =  os.environ.get(
@@ -80,6 +83,9 @@ class DockerConfig(Config):
         app.logger.addHandler(file_handler)
 
 class TravisConfig(Config):
+    """
+    Configs for travis
+    """
     TESTING = True
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False

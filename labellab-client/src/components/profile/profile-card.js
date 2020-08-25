@@ -103,66 +103,66 @@ class ProfileCard extends Component {
             <Loader indeterminate>Loading..</Loader>
           </Dimmer>
         ) : (
-          <div className="profile-card">
-            <div className="header">
-              <img
-                src={
-                  user.profileImage === ''
-                    ? `${user.thumbnail}`
-                    : `${user.profileImage}?${Date.now()}`
-                }
-                alt=""
-                className="image"
-              />
-              <div className="details">
-                <div className="name">{user.name}</div>
-                <div className="email">{user.email}</div>
+            <div className="profile-card">
+              <div className="header">
+                <img
+                  src={
+                    user.profileImage === ''
+                      ? `${user.thumbnail}`
+                      : `${user.profileImage}?${Date.now()}`
+                  }
+                  alt=""
+                  className="image"
+                />
+                <div className="details">
+                  <div className="name">{user.name}</div>
+                  <div className="email">{user.email}</div>
+                </div>
               </div>
-            </div>
-            <div className="content">
-              <div className="detail">
-                <div className="key">Name</div>
-                <div className="value">{user.name}</div>
+              <div className="content">
+                <div className="detail">
+                  <div className="key">Name</div>
+                  <div className="value">{user.name}</div>
+                </div>
+                <div className="detail">
+                  <div className="key">Username</div>
+                  <div className="value">{user.username}</div>
+                </div>
+                <div className="detail">
+                  <div className="key">Email</div>
+                  <div className="value">{user.email}</div>
+                  {this.state.max_size_error ? (
+                    <div className="image_size_error">
+                      Max size of the profile pic should be 101Kb
+                    </div>
+                  ) : null}
+                </div>
               </div>
-              <div className="detail">
-                <div className="key">Username</div>
-                <div className="value">{user.username}</div>
-              </div>
-              <div className="detail">
-                <div className="key">Email</div>
-                <div className="value">{user.email}</div>
-                {this.state.max_size_error ? (
-                  <div className="image_size_error">
-                    Max size of the profile pic should be 101Kb
-                  </div>
-                ) : null}
-              </div>
-            </div>
-            <div className="actions">
-              <Button primary className="btn-edit" onClick={this.openModal}>
-                Edit
+              <div className="actions">
+                <Button primary className="btn-edit" onClick={this.openModal}>
+                  Edit
               </Button>
-              <input
-                type="file"
-                onChange={this.handleImageChange}
-                className="profile-file-input"
-                id="profile-embedpollfileinput"
-              />
-              <label
-                htmlFor="profile-embedpollfileinput"
-                className="ui medium primary left floated button custom-margin"
-              >
-                Change Image
+                <input
+                  type="file"
+                  onChange={this.handleImageChange}
+                  className="profile-file-input"
+                  id="profile-embedpollfileinput"
+                />
+                <label
+                  htmlFor="profile-embedpollfileinput"
+                  className="ui medium primary left floated button custom-margin"
+                >
+                  Change Image
               </label>
-              <Button
-                negative
-                basic
-                icon="delete"
-                onClick={this.handleRemoveImage}
-              />
+                <Button
+                  negative
+                  basic
+                  icon="delete"
+                  onClick={this.handleRemoveImage}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
         <Modal size="small" open={open} onClose={this.closeModal}>
           <Modal.Header>
             <p>Edit User Details</p>

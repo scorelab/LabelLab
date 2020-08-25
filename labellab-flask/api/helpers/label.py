@@ -33,10 +33,16 @@ def find_by_label_type(label_type):
     return labels_schema.dump(labels).data
 
 def find_all_by_project_id(project_id):
+    """
+    find all the labels in a project
+    """
     labels = Label.query.filter_by(project_id=project_id).all()
     return labels_schema.dump(labels).data
 
 def get_label_type(label_id):
+    """
+    get the label type
+    """
     label = Label.query.get(label_id)
     return label.label_type
 

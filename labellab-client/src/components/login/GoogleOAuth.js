@@ -34,10 +34,10 @@ class GoogleContainer extends Component {
       ? history.push(location.state.from.pathname)
       : history.push('/')
   }
-  
+
   errors = err => {
     console.log(err)
-    this.setState({ errors: err})
+    this.setState({ errors: err })
   }
 
   render() {
@@ -46,7 +46,7 @@ class GoogleContainer extends Component {
         <GoogleLogin
           className="googleSignin"
           buttonText={
-              'Login with Google'
+            'Login with Google'
           }
           clientId={process.env.GOOGLE_CLIENT_ID}
           onSuccess={this.responseGoogle}
