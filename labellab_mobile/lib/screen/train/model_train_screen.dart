@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
+import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/train/dialogs/add_class_dialog.dart';
 import 'package:labellab_mobile/screen/train/dialogs/add_layer_dialog.dart';
 import 'package:labellab_mobile/screen/train/dialogs/add_step_dialog.dart';
@@ -38,6 +39,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
       appBar: AppBar(
         title: Text("Train model"),
         elevation: 0,
+        actions: _buildActions(context),
       ),
       body: StreamBuilder<ModelTrainState>(
         stream: Provider.of<ModelTrainBloc>(context).state,
@@ -522,5 +524,39 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
 
   void _trainModel() {
     Provider.of<ModelTrainBloc>(context).trainModel();
+  }
+
+  List<Widget> _buildActions(BuildContext context) {
+    return [
+      PopupMenuButton<int>(
+        onSelected: (int value) {
+          switch (value) {
+            case 0:
+              _gotoHistory();
+              break;
+          }
+        },
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: 0,
+              child: Text("View History"),
+            ),
+            PopupMenuItem(
+              value: 1,
+              child: Text("Delete"),
+            ),
+          ];
+        },
+      ),
+    ];
+  }
+
+  void _gotoHistory() {
+    String projectId = Provider.of<ModelTrainBloc>(context).projectId;
+    String modelId = Provider.of<ModelTrainBloc>(context).modelId;
+
+    Application.router
+        .navigateTo(context, "/project/$projectId/history/$modelId");
   }
 }
