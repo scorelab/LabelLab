@@ -6,7 +6,9 @@ class ModelHistoryState {
 
   List<MlModel> models;
 
-  ModelHistoryState.loading();
+  ModelHistoryState.loading() {
+    isLoading = true;
+  }
 
   ModelHistoryState.error(this.error);
 
