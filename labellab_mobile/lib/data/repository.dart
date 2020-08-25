@@ -326,6 +326,11 @@ class Repository {
     return _api.getModel(accessToken, modelId);
   }
 
+  Future<List<MlModel>> getTrainedModels(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getTrainedModels(accessToken, projectId);
+  }
+
   Future<ApiResponse> createModel(String projectId, MlModel model) {
     if (accessToken == null) return Future(null);
     return _api.createModel(accessToken, projectId, model);

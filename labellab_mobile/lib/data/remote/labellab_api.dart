@@ -79,6 +79,7 @@ abstract class LabelLabAPI {
   // Train
   Future<List<MlModel>> getModels(String token, String projectId);
   Future<MlModel> getModel(String token, String modelId);
+  Future<List<MlModel>> getTrainedModels(String token, String projectId);
   Future<ApiResponse> createModel(
       String token, String projectId, MlModel model);
   Future<ApiResponse> saveModel(
