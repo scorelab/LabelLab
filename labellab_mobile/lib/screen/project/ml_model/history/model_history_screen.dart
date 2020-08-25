@@ -22,7 +22,7 @@ class ModelHistoryScreen extends StatelessWidget {
             if (_state.isLoading)
               return _buildLoadingBody(context);
             else
-              return _buildBody(_state.models);
+              return _buildBody(context, _state.models);
           }
           return Container();
         },
@@ -38,20 +38,192 @@ class ModelHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(List<MlModel> models) {
+  Widget _buildBody(BuildContext context, List<MlModel> models) {
     return models != null
-        ? SingleChildScrollView(
-            child: Column(
-              children: models
-                  .map((model) => Container(
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        child: Column(
-                          children: <Widget>[
-                            Text(model.name),
-                          ],
-                        ),
-                      ))
-                  .toList(),
+        ? Container(
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: SingleChildScrollView(
+              child: Column(
+                children: models
+                    .map((model) => Container(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: Theme.of(context).accentColor),
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Text(
+                                  model.name,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          "Train",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          model.train.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          "Test",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          model.test.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          "Validation",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          model.validation.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          "Epochs",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          model.epochs.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          "Batch Size",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          model.batchSize.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          "Learning Rate",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          model.learningRate.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  "Loss Graph",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                SizedBox(height: 8),
+                                Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(model.lossGraphUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  "Accuracy Graph",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                SizedBox(height: 8),
+                                Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image:
+                                          NetworkImage(model.accuracyGraphUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
             ),
           )
         : Center(
