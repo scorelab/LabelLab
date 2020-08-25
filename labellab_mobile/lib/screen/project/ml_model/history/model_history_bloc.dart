@@ -11,7 +11,7 @@ class ModelHistoryBloc {
   final String modelId;
 
   List<MlModel> _trainedModels;
-  bool _isLoading;
+  bool _isLoading = false;
 
   ModelHistoryBloc(this.projectId, this.modelId) {
     fetchModels();
