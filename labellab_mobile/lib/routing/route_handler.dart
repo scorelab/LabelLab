@@ -15,6 +15,8 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_screen.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_screen.dart';
+import 'package:labellab_mobile/screen/project/ml_model/history/model_history_bloc.dart';
+import 'package:labellab_mobile/screen/project/ml_model/history/model_history_screen.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_screen.dart';
 import 'package:labellab_mobile/screen/project/view_group/add_images/group_add_images_bloc.dart';
@@ -177,5 +179,15 @@ var modelTrainHandler = Handler(
         ModelTrainBloc(params['project_id'].first, params['model_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ModelTrainScreen(),
+  );
+});
+
+var modelHistoryHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ModelHistoryBloc>(
+    builder: (context) =>
+        ModelHistoryBloc(params['project_id'].first, params['model_id'].first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ModelHistoryScreen(),
   );
 });

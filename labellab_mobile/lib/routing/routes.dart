@@ -33,6 +33,9 @@ class Routes {
   // Model
   static const train = "/train/:project_id/:model_id";
 
+  // History
+  static const modelHistory = "/project/:project_id/history/:model_id";
+
   static void configureRouter(Router router) {
     router.define(main, handler: mainHandler);
     router.define(login,
@@ -77,5 +80,7 @@ class Routes {
 
     router.define(train,
         handler: modelTrainHandler, transitionType: TransitionType.native);
+    router.define(modelHistory,
+        handler: modelHistoryHandler, transitionType: TransitionType.native);
   }
 }
