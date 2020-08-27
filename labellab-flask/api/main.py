@@ -1,4 +1,4 @@
-import os 
+import os
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -8,9 +8,10 @@ from flask_marshmallow import Marshmallow
 
 from api.config import config
 from api import commands
-from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files
+from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications
 from api.extensions import db, migrate, jwt, ma
 from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier
+
 
 def create_app(config_name):
     try:
@@ -42,19 +43,22 @@ def register_additional_extensions(app):
     ma.init_app(app)
 
 
-
 def register_blueprint(app):
     """Register Flask blueprints."""
     app.register_blueprint(users.usersprint, url_prefix="/api/v1")
-    app.register_blueprint(mlclassifiers.mlclassifiersprint, url_prefix="/api/v1")
+    app.register_blueprint(
+        mlclassifiers.mlclassifiersprint, url_prefix="/api/v1")
     app.register_blueprint(labels.labelsprint, url_prefix="/api/v1")
     app.register_blueprint(projects.projectsprint, url_prefix="/api/v1")
     app.register_blueprint(teams.teamsprint, url_prefix="/api/v1")
     app.register_blueprint(images.imagesprint, url_prefix="/api/v1")
     app.register_blueprint(analytics.analyticsprint, url_prefix="/api/v1")
+    app.register_blueprint(
+        classifications.classificationsprint, url_prefix="/api/v1")
     app.register_blueprint(static.staticprint, url_prefix="/static/uploads")
     app.register_blueprint(ml_files.mlfilesprint, url_prefix="/ml_files")
     return None
+
 
 def register_commands(app):
     """Register Click commands."""
@@ -62,6 +66,7 @@ def register_commands(app):
     app.cli.add_command(commands.clean)
     app.cli.add_command(commands.urls)
     app.cli.add_command(commands.deploy)
+
 
 def register_shellcontext(app):
     """Register shell context objects."""
