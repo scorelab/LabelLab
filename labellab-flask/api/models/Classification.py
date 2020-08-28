@@ -14,7 +14,7 @@ class Classification(db.Model):
     image_url = db.Column(db.String(255), nullable=False,)
     label = db.Column(db.String(255))
     confidence = db.Column(db.Float)
-    classifiedAt = db.Column(db.DateTime, default=datetime.now())
+    classified_at = db.Column(db.DateTime, default=datetime.now())
 
     def __init__(self, image_name, image_url, label, confidence):
         self.image_name = image_name
