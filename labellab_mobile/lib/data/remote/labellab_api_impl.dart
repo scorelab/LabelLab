@@ -45,7 +45,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   static const String API_URL = BASE_URL + "api/v1/";
   static const String STATIC_CLASSIFICATION_URL =
-      BASE_URL + "static/classifications/";
+      BASE_URL + "static/uploads/classifications/";
   static const String STATIC_IMAGE_URL = BASE_URL + "static/img/";
   static const String STATIC_UPLOADS_URL = BASE_URL + "static/uploads/";
 
@@ -80,6 +80,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   static const ENDPOINT_CLASSIFICAITON_CLASSIFY = "classification/classify";
   static const ENDPOINT_CLASSIFICATION_GET = "classification/get";
+  static const ENDPOINT_CLASSIFICATION_ALL = "classification/all";
   static const ENDPOINT_CLASSIFICATION_DELETE = "classification/delete";
 
   static const ENDPOINT_ML_CLASSIFIER = "mlclassifier";
@@ -585,13 +586,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<Classification> classify(String token, File image) async {
-    final imageBytes = image.readAsBytesSync();
-    final encodedBytes = base64Encode(imageBytes);
-    final data = {"image": "base64," + encodedBytes, "format": "image/jpg"};
-    Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
-      // contentType: ContentType.parse("application/x-www-form-urlencoded"),
-    );
+    Options options =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+
+    FormData data =
+        FormData.fromMap({"image": await MultipartFile.fromFile(image.path)});
+
     final response = await _dio.post(API_URL + ENDPOINT_CLASSIFICAITON_CLASSIFY,
         options: options, data: data);
     return Classification.fromJson(response.data['body'],
@@ -608,11 +608,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return (response.data['body'] as List<dynamic>)
-            .map((item) => Classification.fromJson(item,
-                staticEndpoint: STATIC_CLASSIFICATION_URL))
-            .toList()
-            .first;
+        return Classification.fromJson(response.data['body'],
+            staticEndpoint: STATIC_CLASSIFICATION_URL);
       } else {
         throw Exception("Request unsuccessfull");
       }
@@ -625,7 +622,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     return _dio
-        .get(API_URL + ENDPOINT_CLASSIFICATION_GET, options: options)
+        .get(API_URL + ENDPOINT_CLASSIFICATION_ALL, options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {

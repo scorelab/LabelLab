@@ -1,8 +1,7 @@
-
 class ClassificationLabel {
   String id;
   String name;
-  int confidence;
+  double confidence;
 
   ClassificationLabel();
 
@@ -11,4 +10,6 @@ class ClassificationLabel {
     name = json["label_name"];
     confidence = json["confidence"] ?? 0;
   }
+
+  ClassificationLabel.fromValues({this.name, this.confidence});
 }

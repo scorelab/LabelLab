@@ -6,6 +6,7 @@ import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
 import 'package:labellab_mobile/screen/classification/classification_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class ClassificationScreen extends StatelessWidget {
@@ -68,6 +69,7 @@ class ClassificationScreen extends StatelessWidget {
 
   Widget _buildClassification(
       BuildContext context, Classification classification) {
+    Logger().i(classification.imageUrl);
     return Column(
       children: <Widget>[
         Padding(
@@ -87,10 +89,13 @@ class ClassificationScreen extends StatelessWidget {
         ListTile(
           title: Text("Labels"),
           subtitle: Row(
-            children: classification.label != null
-                ? classification.label.map((label) {
+            children: classification.labels != null
+                ? classification.labels.map((label) {
                     return Chip(
-                      label: Text(label.name + " => " + label.confidence.toString() + '%'),
+                      label: Text(label.name +
+                          " => " +
+                          label.confidence.toString() +
+                          '%'),
                     );
                   }).toList()
                 : [],
