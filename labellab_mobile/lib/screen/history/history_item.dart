@@ -9,7 +9,10 @@ class HistoryItem extends StatelessWidget {
   final bool shouldHaveOptions;
 
   const HistoryItem(this.classification,
-      {Key key, this.onSelected, this.onDeleteSelected, this.shouldHaveOptions = true})
+      {Key key,
+      this.onSelected,
+      this.onDeleteSelected,
+      this.shouldHaveOptions = true})
       : super(key: key);
 
   @override
@@ -36,31 +39,33 @@ class HistoryItem extends StatelessWidget {
             ),
             ListTile(
               title: Row(
-                children: classification.label != null
-                    ? classification.label
+                children: classification.labels != null
+                    ? classification.labels
                         .map((label) => Chip(
                               label: Text(label.name),
                             ))
                         .toList()
                     : [],
               ),
-              trailing: shouldHaveOptions ? PopupMenuButton<int>(
-                onSelected: (int selected) {
-                  switch (selected) {
-                    case 0:
-                      if (onDeleteSelected != null) onDeleteSelected();
-                      break;
-                  }
-                },
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      value: 0,
-                      child: Text("Delete"),
+              trailing: shouldHaveOptions
+                  ? PopupMenuButton<int>(
+                      onSelected: (int selected) {
+                        switch (selected) {
+                          case 0:
+                            if (onDeleteSelected != null) onDeleteSelected();
+                            break;
+                        }
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Text("Delete"),
+                          )
+                        ];
+                      },
                     )
-                  ];
-                },
-              ) : null,
+                  : null,
             ),
           ],
         ),

@@ -10,18 +10,14 @@ import 'package:labellab_mobile/widgets/empty_placeholder.dart';
 import 'package:provider/provider.dart';
 
 class HistoryScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Provider
-          .of<HistoryBloc>(context)
-          .classifications,
+      stream: Provider.of<HistoryBloc>(context).classifications,
       initialData: HistoryState.loading(),
       builder: (context, AsyncSnapshot<HistoryState> snapshot) {
         final HistoryState state = snapshot.data;
-        if (state.classifications != null &&
-            state.classifications.isNotEmpty) {
+        if (state.classifications != null && state.classifications.isNotEmpty) {
           return Scaffold(
             appBar: AppBar(
               title: Text("History"),
@@ -43,30 +39,30 @@ class HistoryScreen extends StatelessWidget {
                 children: <Widget>[
                   state.isLoading
                       ? LinearProgressIndicator(
-                    backgroundColor: Theme.of(context).canvasColor,
-                  )
+                          backgroundColor: Theme.of(context).canvasColor,
+                        )
                       : Container(
-                    height: 6,
-                  ),
+                          height: 6,
+                        ),
                   state.error != null
                       ? ListTile(
-                    title: Text(state.error),
-                  )
+                          title: Text(state.error),
+                        )
                       : Container(),
                   state.classifications != null
                       ? Column(
-                    children: state.classifications
-                        .map((classification) => HistoryItem(
-                      classification,
-                      onDeleteSelected: () {
-                        _showOnDeleteAlert(
-                            context, classification);
-                      },
-                      onSelected: () => _gotoClassification(
-                          context, classification.id),
-                    ))
-                        .toList(),
-                  )
+                          children: state.classifications
+                              .map((classification) => HistoryItem(
+                                    classification,
+                                    onDeleteSelected: () {
+                                      _showOnDeleteAlert(
+                                          context, classification);
+                                    },
+                                    onSelected: () => _gotoClassification(
+                                        context, classification.id),
+                                  ))
+                              .toList(),
+                        )
                       : Container(),
                 ],
               ),
@@ -88,7 +84,8 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  void _showOnDeleteAlert(BuildContext baseContext, Classification classification) {
+  void _showOnDeleteAlert(
+      BuildContext baseContext, Classification classification) {
     showDialog(
       context: baseContext,
       builder: (context) {

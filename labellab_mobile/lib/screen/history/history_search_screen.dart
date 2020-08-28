@@ -61,7 +61,7 @@ class HistorySearchScreen extends SearchDelegate {
                       children: state.classifications
                           .where((classification) {
                             bool found = false;
-                            classification.label.forEach((label) {
+                            classification.labels.forEach((label) {
                               if (label.name
                                   .toLowerCase()
                                   .contains(query.toLowerCase())) {
@@ -107,7 +107,7 @@ class HistorySearchScreen extends SearchDelegate {
                       children: state.classifications
                           .where((classification) {
                             bool found = false;
-                            classification.label.forEach((label) {
+                            classification.labels.forEach((label) {
                               if (label.name
                                   .toLowerCase()
                                   .contains(query.toLowerCase())) {
@@ -123,7 +123,7 @@ class HistorySearchScreen extends SearchDelegate {
                                 },
                                 onSelected: () => _gotoClassification(
                                     context, classification.id),
-                        shouldHaveOptions: false,
+                                shouldHaveOptions: false,
                               ))
                           .toList(),
                     )
