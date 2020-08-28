@@ -1,17 +1,30 @@
 import os
 import sys
 import base64
+import random
 from io import BytesIO
 
 from api.config import config
 from api.extensions import db, ma
+from api.models.Classification import Classification
 from api.serializers.classification import ClassificationSchema
 
 classification_schema = ClassificationSchema()
+classifications_schema = ClassificationSchema(many=True)
+
+
+def find_by_id(id):
+    classification = Classification.query.filter_by(id=id).first()
+    return classification_schema.dump(classification).data
+
+
+def find_all_by_id(user_id):
+    classifications = Classification.query.filter_by(user_id=user_id).all()
+    return classifications_schema.dump(classifications).data
 
 
 def get_classified_data():
-    return ["test-label", 92.1774]
+    return ["test-label", round(random.uniform(80, 95), 4)]
 
 
 def save_image(username, image, image_url):
