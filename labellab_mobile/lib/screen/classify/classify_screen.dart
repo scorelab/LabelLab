@@ -37,7 +37,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Classifing",
+          "Classifying",
         ),
         centerTitle: true,
         elevation: 0,
@@ -50,8 +50,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
               ClassifyState state = snapshot.data;
               if (state.classification != null) {
                 WidgetsBinding.instance.addPostFrameCallback(
-                        (_) =>
-                        _gotoClassificationDetail(state.classification.id));
+                    (_) => _gotoClassificationDetail(state.classification.id));
               }
               return ListView(
                 children: <Widget>[
@@ -73,41 +72,41 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                   state.isClassifing
                       ? Container()
                       : CheckboxListTile(
-                    title: Text("Upload Compressed Image (Faster)"),
-                    value: uploadWithCompression,
-                    onChanged: (newValue) {
-                      setState(() {
-                        uploadWithCompression = newValue;
-                      });
-                    },
-                    controlAffinity: ListTileControlAffinity
-                        .leading, //  <-- leading Checkbox
-                  ),
+                          title: Text("Upload Compressed Image (Faster)"),
+                          value: uploadWithCompression,
+                          onChanged: (newValue) {
+                            setState(() {
+                              uploadWithCompression = newValue;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity
+                              .leading, //  <-- leading Checkbox
+                        ),
                   SizedBox(
                     height: 20,
                   ),
                   state.isClassifing
                       ? Container()
                       : FlatButton(
-                    child: Text("Upload"),
-                    onPressed: () async {
-                      Provider.of<ClassifyBloc>(context).classifyImage(
-                          uploadWithCompression
-                              ? await _compressImage(state.image)
-                              : state.image);
-                    },
-                  ),
+                          child: Text("Upload"),
+                          onPressed: () async {
+                            Provider.of<ClassifyBloc>(context).classifyImage(
+                                uploadWithCompression
+                                    ? await _compressImage(state.image)
+                                    : state.image);
+                          },
+                        ),
                   SizedBox(
                     height: 24,
                   ),
                   state.isClassifing
                       ? Container()
                       : FlatButton(
-                    child: Text("Cancel"),
-                    onPressed: () {
-                      Application.router.pop(context);
-                    },
-                  ),
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Application.router.pop(context);
+                          },
+                        ),
                   state.isClassifing ? _buildProgress(context) : Container(),
                   state.error != null
                       ? _buildError(context, state.error)
@@ -174,9 +173,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
     image = await FlutterImageCompress.compressAndGetFile(
         image.absolute.path,
         (await getApplicationDocumentsDirectory()).path +
-            image.path
-                ?.split("/")
-                ?.last,
+            image.path?.split("/")?.last,
         quality: 70);
     return image;
   }
