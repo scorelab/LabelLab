@@ -39,7 +39,8 @@ class ClassifyImage(MethodView):
                 image_name=image_name,
                 image_url=image_url,
                 label=_current[0],
-                confidence=_current[1]
+                confidence=_current[1],
+                user_id=current_user
             )
             classification_schema = save_to_db(to_save)
 

@@ -11,4 +11,5 @@ class ClassificationSchema(ma.ModelSchema):
     image_url = fields.Str()
     label = fields.Str()
     confidence = fields.Float()
+    user_id = fields.Int(dump_only=True)
     classified_at = fields.DateTime()
