@@ -14,13 +14,18 @@ class Classification(db.Model):
     image_url = db.Column(db.String(255), nullable=False,)
     label = db.Column(db.String(255))
     confidence = db.Column(db.Float)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey(
+                            'user.id', ondelete="cascade", onupdate="cascade"),
+                        nullable=False)
     classified_at = db.Column(db.DateTime, default=datetime.now())
 
-    def __init__(self, image_name, image_url, label, confidence):
+    def __init__(self, image_name, image_url, label, confidence, user_id):
         self.image_name = image_name
         self.image_url = image_url
         self.label = label
         self.confidence = confidence
+        self.user_id = user_id
 
     def __repr__(self):
         """
