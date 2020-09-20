@@ -20,7 +20,7 @@ export const validateForm = ({ errors, ...rest }) => {
 
   // validate if form is empty
   Object.values(rest).forEach(val => {
-    !val.length && (valid = false)
+    typeof val !== 'boolean' && !val.length && (valid = false)
   })
 
   return valid
