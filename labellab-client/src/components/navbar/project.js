@@ -19,16 +19,14 @@ import './css/navbar.css'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
-const resultRenderer = ({ image_name, createdAt }) => (
+const resultRenderer = ({ image_name }) => (
   <>
     <Label content={image_name} />
-    <Label content={new Date(createdAt).toISOString().substring(0, 10)} />
   </>
 )
 
 resultRenderer.propTypes = {
-  title: PropTypes.string,
-  description: PropTypes.string
+  image_name: PropTypes.string,
 }
 
 class ProjectNavbar extends Component {
