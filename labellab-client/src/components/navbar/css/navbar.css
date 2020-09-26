@@ -70,6 +70,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   padding: 20px 20px;
+  z-index: 1;
 }
 
 .navbar .menu-icon .nav-icon:before {
