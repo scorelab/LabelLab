@@ -48,7 +48,7 @@ First you need to create a `.env` file in both `labellab-server` folder and `lab
 For client-side `.env` file:
 
 ```
-REACT_APP_HOST=http://localhost
+REACT_APP_HOST=localhost
 REACT_APP_SERVER_ENVIRONMENT=dev
 REACT_APP_SERVER_PORT=4000
 ```
