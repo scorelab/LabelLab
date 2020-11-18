@@ -1,10 +1,10 @@
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import ReactCrop from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
 import {
   Table,
   Button,
@@ -39,10 +39,11 @@ class ImagesIndex extends Component {
       photoIndex: 0,
       isOpen: false,
       number_of_images: 0,
+      selectAll: false,
       crop: {
         unit: '%',
         width: 30,
-        aspect: 16 / 9,
+        aspect: 16 / 9
       }
     }
   }
@@ -121,6 +122,24 @@ class ImagesIndex extends Component {
       }))
     }
   }
+  handleSelectAll = () => {
+    const {project} = this.props
+    if(this.state.selectAll){
+      this.setState(() => ({
+        selectedList: [],
+        selectAll:false
+      }))
+    }
+    else {
+      this.setState( () => ({
+        selectedList: [...project?.images?.map((image)=>{
+          return image.id;
+        })],
+        selectAll:true
+      }))
+    }
+
+  }
   handleNameChange = e => {
     const value = e.target.value
     this.setState({ image_names: [value] })
@@ -139,16 +158,16 @@ class ImagesIndex extends Component {
     })
   }
   onImageLoaded = image => {
-    this.imageRef = image;
-  };
+    this.imageRef = image
+  }
 
   onCropComplete = crop => {
-    this.makeClientCrop(crop);
-  };
+    this.makeClientCrop(crop)
+  }
 
   onCropChange = (crop, percentCrop) => {
-    this.setState({ crop });
-  };
+    this.setState({ crop })
+  }
 
   async makeClientCrop(crop) {
     if (this.imageRef && crop.width && crop.height) {
@@ -156,29 +175,29 @@ class ImagesIndex extends Component {
         this.imageRef,
         crop,
         this.state.image_names[0]
-      );
+      )
       const croppedImageURL = await this.getCroppedImgURL(
         this.imageRef,
         crop,
         this.state.image_names[0]
-      );
+      )
       const new_cropped_image = []
       new_cropped_image.push(croppedImage)
       this.setState({
         images: new_cropped_image,
         croppedImageUrl: croppedImageURL,
         format: 'image/jpeg'
-      });
+      })
     }
   }
 
   getCroppedImgURL(image, crop, fileName) {
-    const canvas = document.createElement('canvas');
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    canvas.width = crop.width;
-    canvas.height = crop.height;
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement('canvas')
+    const scaleX = image.naturalWidth / image.width
+    const scaleY = image.naturalHeight / image.height
+    canvas.width = crop.width
+    canvas.height = crop.height
+    const ctx = canvas.getContext('2d')
 
     ctx.drawImage(
       image,
@@ -190,32 +209,32 @@ class ImagesIndex extends Component {
       0,
       crop.width,
       crop.height
-    );
+    )
 
-    const base64Image = canvas.toDataURL('image/jpeg');
+    const base64Image = canvas.toDataURL('image/jpeg')
 
     return new Promise((resolve, reject) => {
       canvas.toBlob(blob => {
         if (!blob) {
           //reject(new Error('Canvas is empty'));
-          console.error('Canvas is empty');
-          return;
+          console.error('Canvas is empty')
+          return
         }
-        blob.name = fileName;
-        window.URL.revokeObjectURL(this.fileUrl);
-        this.fileUrl = window.URL.createObjectURL(blob);
-        resolve(this.fileUrl);
-      }, 'image/jpeg');
-    });
+        blob.name = fileName
+        window.URL.revokeObjectURL(this.fileUrl)
+        this.fileUrl = window.URL.createObjectURL(blob)
+        resolve(this.fileUrl)
+      }, 'image/jpeg')
+    })
   }
 
   getCroppedImg(image, crop, fileName) {
-    const canvas = document.createElement('canvas');
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    canvas.width = crop.width;
-    canvas.height = crop.height;
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement('canvas')
+    const scaleX = image.naturalWidth / image.width
+    const scaleY = image.naturalHeight / image.height
+    canvas.width = crop.width
+    canvas.height = crop.height
+    const ctx = canvas.getContext('2d')
 
     ctx.drawImage(
       image,
@@ -227,15 +246,22 @@ class ImagesIndex extends Component {
       0,
       crop.width,
       crop.height
-    );
+    )
 
-    return canvas.toDataURL('image/jpeg');
+    return canvas.toDataURL('image/jpeg')
   }
   render() {
     const { imageActions, project } = this.props
-    const { showform, image_name, image_urls, number_of_images, images } = this.state
+    const {
+      showform,
+      image_name,
+      image_urls,
+      number_of_images,
+      images,
+      selectAll
+    } = this.state
     const { photoIndex, isOpen } = this.state
-    const { crop, croppedImageUrl } = this.state;
+    const { crop, croppedImageUrl } = this.state
     return (
       <div>
         {imageActions.isdeleting ? (
@@ -259,10 +285,7 @@ class ImagesIndex extends Component {
           </label>
         </div>
         {showform ? (
-          <Form
-            className="file-submit-form"
-            encType="multiple/form-data"
-          >
+          <Form className="file-submit-form" encType="multiple/form-data">
             {this.state.images.length == 1 && (
               <Form.Field>
                 <label>Image Name</label>
@@ -280,7 +303,7 @@ class ImagesIndex extends Component {
                 nextSrc={image_urls[(photoIndex + 1) % image_urls.length]}
                 prevSrc={
                   image_urls[
-                  (photoIndex + image_urls.length - 1) % image_urls.length
+                    (photoIndex + image_urls.length - 1) % image_urls.length
                   ]
                 }
                 onCloseRequest={() => this.setState({ isOpen: false })}
@@ -297,7 +320,11 @@ class ImagesIndex extends Component {
                 }
               />
             ) : null}
-            <Button onClick={this.handleSubmit} loading={imageActions.isposting} type="submit">
+            <Button
+              onClick={this.handleSubmit}
+              loading={imageActions.isposting}
+              type="submit"
+            >
               Submit
             </Button>
             <Button onClick={this.removeImage} type="delete">
@@ -306,28 +333,30 @@ class ImagesIndex extends Component {
             <Button onClick={() => this.setState({ isOpen: true })}>
               View
             </Button>
-            {
-              number_of_images === 1 ?
-                <Modal trigger={<Button>Crop</Button>}>
-                  <Modal.Header>Crop Image</Modal.Header>
-                  <Modal.Content>
-                    {images[0] && (
-                      <ReactCrop
-                        src={image_urls[0]}
-                        crop={crop}
-                        ruleOfThirds
-                        onImageLoaded={this.onImageLoaded}
-                        onComplete={this.onCropComplete}
-                        onChange={this.onCropChange}
-                      />
-                    )}
-                    {croppedImageUrl && (
-                      <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
-                    )}
-                  </Modal.Content>
-                </Modal> :
-                null
-            }
+            {number_of_images === 1 ? (
+              <Modal trigger={<Button>Crop</Button>}>
+                <Modal.Header>Crop Image</Modal.Header>
+                <Modal.Content>
+                  {images[0] && (
+                    <ReactCrop
+                      src={image_urls[0]}
+                      crop={crop}
+                      ruleOfThirds
+                      onImageLoaded={this.onImageLoaded}
+                      onComplete={this.onCropComplete}
+                      onChange={this.onCropChange}
+                    />
+                  )}
+                  {croppedImageUrl && (
+                    <img
+                      alt="Crop"
+                      style={{ maxWidth: '100%' }}
+                      src={croppedImageUrl}
+                    />
+                  )}
+                </Modal.Content>
+              </Modal>
+            ) : null}
             {this.state.maxSizeError ? (
               <div className="max-size-error">
                 The size of the file should not be greater than 101Kb!
@@ -340,7 +369,14 @@ class ImagesIndex extends Component {
             <Table.Header className="image-table-header">
               <Table.Row className="flex">
                 <Table.HeaderCell width={1}>ID</Table.HeaderCell>
-                <Table.HeaderCell width={1}></Table.HeaderCell>
+                <Table.HeaderCell width={1}>
+                  <Checkbox
+                    onClick={() => {
+                      this.handleSelectAll()
+                    }}
+                    checked={selectAll}
+                  />
+                </Table.HeaderCell>
                 <Table.HeaderCell width={11}>Image Link</Table.HeaderCell>
                 <Table.HeaderCell width={3}>
                   Actions
@@ -416,10 +452,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ImagesIndex)
+export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
 
 const Row = ({
   image,
@@ -431,77 +464,77 @@ const Row = ({
   selected,
   isLast
 }) => (
-    <Table.Row
-      style={{
-        ...style,
-        display: 'flex',
-        borderBottom: isLast ? '1px solid rgba(34,36,38,.1)' : ''
-      }}
-    >
-      <Table.Cell width={1}>
-        {imageId + 1}
-        {image.labelled ? <Icon name="checkmark green"></Icon> : null}
-      </Table.Cell>
-      <Table.Cell width={1}>
-        <Checkbox
-          onClick={() => {
-            onSelect(image.id)
-          }}
-          checked={selected}
-        />
-      </Table.Cell>
-      <Table.Cell width={11}>
-        <a
-          rel={'external'}
-          href={
-            process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
-              ? image.image_url
-              : 'http://' +
+  <Table.Row
+    style={{
+      ...style,
+      display: 'flex',
+      borderBottom: isLast ? '1px solid rgba(34,36,38,.1)' : ''
+    }}
+  >
+    <Table.Cell width={1}>
+      {imageId + 1}
+      {image.labelled ? <Icon name="checkmark green"></Icon> : null}
+    </Table.Cell>
+    <Table.Cell width={1}>
+      <Checkbox
+        onClick={() => {
+          onSelect(image.id)
+        }}
+        checked={selected}
+      />
+    </Table.Cell>
+    <Table.Cell width={11}>
+      <a
+        rel={'external'}
+        href={
+          process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
+            ? image.image_url
+            : 'http://' +
               process.env.REACT_APP_HOST +
               ':' +
               process.env.REACT_APP_SERVER_PORT +
               `/static/uploads/${image.project_id}/${image.image_url}`
-          }
-        >
-          {image.image_name}
-        </a>
-        {image.labelled ? (
-          <span className="labelDropdown">
-            <Dropdown text="Labels">
-              <Dropdown.Menu>
-                {Object.keys(image.labeldata).map((key, index) =>
-                  image.labeldata[key].length !== 0 ? (
-                    <Dropdown.Item
-                      text={key + '  ' + image.labeldata[key].length}
-                      key={index}
-                    />
-                  ) : null
-                )}
-              </Dropdown.Menu>
-            </Dropdown>
-          </span>
-        ) : null}
-      </Table.Cell>
-      <Table.Cell width={3}>
-        <div>
-          <Link to={`/labeller/${projectId}/${image.id}`}>
-            <Button icon="pencil" label="Edit" size="tiny" />
-          </Link>
-          <Button
-            negative
-            basic
-            icon="trash"
-            label="Delete"
-            size="tiny"
-            onClick={async () => {
-              await onSelect(image.id)
-              onDelete()
-            }}
-          />
-        </div>
-      </Table.Cell>
-    </Table.Row>
-  )
+        }
+      >
+        {image.image_name}
+      </a>
+      {image.labelled ? (
+        <span className="labelDropdown">
+          <Dropdown text="Labels">
+            <Dropdown.Menu>
+              {Object.keys(image.labeldata).map((key, index) =>
+                image.labeldata[key].length !== 0 ? (
+                  <Dropdown.Item
+                    text={key + '  ' + image.labeldata[key].length}
+                    key={index}
+                  />
+                ) : null
+              )}
+            </Dropdown.Menu>
+          </Dropdown>
+        </span>
+      ) : null}
+    </Table.Cell>
+    <Table.Cell width={3}>
+      <div>
+        <Link to={`/labeller/${projectId}/${image.id}`}>
+          <Button icon="pencil" label="Edit" size="tiny" />
+        </Link>
+        <Button
+          negative
+          basic
+          icon="trash"
+          label="Delete"
+          size="tiny"
+          onClick={async () => {
+            await onSelect(image.id)
+            onDelete()
+          }}
+        />
+      </div>
+    </Table.Cell>
+  </Table.Row>
+)
 
 const AutoSizedList = props => (
   <AutoSizer>
