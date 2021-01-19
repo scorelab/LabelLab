@@ -107,9 +107,9 @@ class Repository {
     });
   }
 
-  // Future<User> usersInfoLocal() {
-  //   return _userProvider.getUser();
-  // }
+  Future<User> usersInfoLocal() {
+    return _userProvider.getUser();
+  }
 
   Future<User> usersInfo() {
     if (accessToken == null) return Future(null);
@@ -140,14 +140,14 @@ class Repository {
     return _api.getProject(accessToken, id);
   }
 
-  // Future<List<Project>> getProjectsLocal() {
-  //   return _projectProvider.open().then((_) {
-  //     return _projectProvider.getProjects().then((projects) {
-  //       _projectProvider.close();
-  //       return projects;
-  //     });
-  //   });
-  // }
+  Future<List<Project>> getProjectsLocal() {
+    return _projectProvider.open().then((_) {
+      return _projectProvider.getProjects().then((projects) {
+        _projectProvider.close();
+        return projects;
+      });
+    });
+  }
 
   Future<List<Project>> getProjects() {
     if (accessToken == null) return Future(null);
@@ -277,32 +277,32 @@ class Repository {
     });
   }
 
-  // Future<List<Classification>> getClassificationsLocal() {
-  //   return _classificationProvider.open().then((_) {
-  //     return _classificationProvider
-  //         .getClassifications()
-  //         .then((classifications) {
-  //       _classificationProvider.close();
-  //       return classifications;
-  //     });
-  //   });
-  // }
+  Future<List<Classification>> getClassificationsLocal() {
+    return _classificationProvider.open().then((_) {
+      return _classificationProvider
+          .getClassifications()
+          .then((classifications) {
+        _classificationProvider.close();
+        return classifications;
+      });
+    });
+  }
 
   Future<Classification> getClassification(String id) {
     if (accessToken == null) return Future(null);
     return _api.getClassification(accessToken, id);
   }
 
-  // Future<Classification> getClassificationLocal(String id) {
-  //   return _classificationProvider.open().then((_) {
-  //     return _classificationProvider
-  //         .getClassification(id)
-  //         .then((classification) {
-  //       _classificationProvider.close();
-  //       return classification;
-  //     });
-  //   });
-  // }
+  Future<Classification> getClassificationLocal(String id) {
+    return _classificationProvider.open().then((_) {
+      return _classificationProvider
+          .getClassification(id)
+          .then((classification) {
+        _classificationProvider.close();
+        return classification;
+      });
+    });
+  }
 
   Future<bool> deleteClassification(String id) {
     if (accessToken == null) return Future(null);

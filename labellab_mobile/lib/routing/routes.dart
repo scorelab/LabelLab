@@ -36,7 +36,7 @@ class Routes {
   // History
   static const modelHistory = "/project/:project_id/history/:model_id";
 
-  static void configureRouter(Router router) {
+  static void configureRouter(FluroRouter router) {
     router.define(main, handler: mainHandler);
     router.define(login,
         handler: loginHandler, transitionType: TransitionType.native);
