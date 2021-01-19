@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class LabelLabApp extends StatelessWidget {
   LabelLabApp() {
-    final router = Router();
+    final router = FluroRouter();
     Routes.configureRouter(router);
     Application.router = router;
   }
