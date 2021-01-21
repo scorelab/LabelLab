@@ -6,8 +6,8 @@ class LoginResponse {
 
   LoginResponse(dynamic json) {
     this.success = json['success'];
-    this.accessToken = json['access_token'];
-    this.refreshToken = json['refresh_token'];
+    this.accessToken = json['token'];
+    this.refreshToken = json['token'];
     this.msg = json['msg'];
   }
 }
