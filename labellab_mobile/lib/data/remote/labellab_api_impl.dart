@@ -91,7 +91,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .post(API_URL + ENDPOINT_LOGIN, data: user.toMap())
         .then((response) {
       return LoginResponse(response.data);
-    });
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   @override
@@ -133,7 +134,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .post(API_URL + ENDPOINT_REGISTER, data: user.toMap())
         .then((response) {
       return RegisterResponse(response.data);
-    });
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   @override
