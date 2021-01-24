@@ -168,8 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoginIn = false;
         });
-        print(err.toString());
-        _showAuthFailSnackbar(context);
+        print(err.message);
+        _showAuthFailSnackbar(context, err.message);
       });
     }
   }
@@ -191,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoginIn = false;
       });
       print(err.toString());
-      _showAuthFailSnackbar(context);
+      _showAuthFailSnackbar(context, null);
     });
   }
 
@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoginIn = false;
         });
-        _showAuthFailSnackbar(context);
+        _showAuthFailSnackbar(context, null);
       }
     });
   }
@@ -230,9 +230,9 @@ class _LoginScreenState extends State<LoginScreen> {
     Application.router.navigateTo(context, "/signup");
   }
 
-  void _showAuthFailSnackbar(BuildContext context) {
+  void _showAuthFailSnackbar(BuildContext context, String message) {
     Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text("Sign in failed"),
+      content: Text(message ?? "Sign in failed"),
       backgroundColor: Colors.redAccent,
     ));
   }
