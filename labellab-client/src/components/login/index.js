@@ -13,7 +13,7 @@ import {
   Message,
   Icon,
   Label,
-  Form,
+  Form
 } from 'semantic-ui-react'
 import { validateForm, isEmail } from '../../utils/helpers'
 import { login } from '../../actions/index'
@@ -36,7 +36,7 @@ class LoginIndex extends Component {
         email: '',
         password: ''
       },
-      showPassword: false,
+      showPassword: false
     }
   }
 
@@ -97,21 +97,26 @@ class LoginIndex extends Component {
   callback = () => {
     const { location, history } = this.props
     location &&
-      location.state &&
-      location.state.from &&
-      location.state.from.pathname
+    location.state &&
+    location.state.from &&
+    location.state.from.pathname
       ? history.push(location.state.from.pathname)
       : history.push('/')
   }
 
   showPassword = () => {
     this.setState({
-      showPassword: !this.state.showPassword,
+      showPassword: !this.state.showPassword
     })
   }
 
   render() {
-    const { isAuthenticating, statusText, registerStatusText, authError } = this.props
+    const {
+      isAuthenticating,
+      statusText,
+      registerStatusText,
+      authError
+    } = this.props
     const { email, password, errors } = this.state
     return (
       <div className="login-grand-parent">
@@ -158,15 +163,18 @@ class LoginIndex extends Component {
                   value={password}
                   onChange={this.handleChange}
                   label={
-                    <Button onClick={this.showPassword} className="show-password">
-                      {this.state.showPassword ?
-                        <Icon fitted name='eye slash' />
-                        :
-                        <Icon fitted name='eye' />
-                      }
+                    <Button
+                      onClick={this.showPassword}
+                      className="show-password"
+                    >
+                      {this.state.showPassword ? (
+                        <Icon fitted name="eye slash" />
+                      ) : (
+                        <Icon fitted name="eye" />
+                      )}
                     </Button>
                   }
-                  labelPosition='right'
+                  labelPosition="right"
                 />
                 {errors.password && (
                   <Label pointing color="red">
@@ -180,15 +188,6 @@ class LoginIndex extends Component {
                   {statusText}
                 </Message>
               )}
-
-              {(!authError && registerStatusText || statusText) && (
-                <Message>
-                  <Icon name="info circle" />
-                  {registerStatusText || statusText}
-                </Message>
-              )}
-
-
               <div className="action">
                 <Link to="/forgotpassword">Forgot password?</Link>
               </div>
