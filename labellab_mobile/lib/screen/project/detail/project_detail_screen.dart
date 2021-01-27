@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
-import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
@@ -20,7 +19,6 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart'
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/group_item.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
@@ -427,7 +425,7 @@ class ProjectDetailScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Labels",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
               FlatButton.icon(
                 icon: Icon(Icons.add),
@@ -479,7 +477,7 @@ class ProjectDetailScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Models",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
               FlatButton.icon(
                 icon: Icon(Icons.add),
@@ -747,8 +745,7 @@ class ProjectDetailScreen extends StatelessWidget {
         });
   }
 
-  void _showAddEditLabelModel(BuildContext baseContext,
-      {String projectId, Label label}) {
+  void _showAddEditLabelModel(BuildContext baseContext, {Label label}) {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {

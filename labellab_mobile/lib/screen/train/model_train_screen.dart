@@ -13,7 +13,6 @@ import 'package:labellab_mobile/screen/train/model_train_bloc.dart';
 import 'package:labellab_mobile/screen/train/model_train_state.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 class ModelTrainScreen extends StatefulWidget {
   @override

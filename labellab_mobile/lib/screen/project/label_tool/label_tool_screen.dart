@@ -47,9 +47,9 @@ class LabelToolScreen extends StatelessWidget {
           state.selections,
           true,
           onTap: (selection) {
-            !state.isUpdating
-                ? Provider.of<LabelToolBloc>(context).updateSelection(selection)
-                : null;
+            if (!state.isUpdating) {
+              Provider.of<LabelToolBloc>(context).updateSelection(selection);
+            }
           },
           onDeleted: (selection) {
             Provider.of<LabelToolBloc>(context).removeSelection(selection);

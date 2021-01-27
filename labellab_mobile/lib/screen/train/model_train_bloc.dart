@@ -7,7 +7,6 @@ import 'package:labellab_mobile/screen/train/dialogs/dto/layer_dto.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/step_dto.dart';
 import 'package:labellab_mobile/screen/train/model_train_state.dart';
-import 'package:logger/logger.dart';
 
 class ModelTrainBloc {
   final String projectId, modelId;

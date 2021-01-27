@@ -169,7 +169,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
     setState(() {
       _labelId = widget.label.id;
       _nameController.text = widget.label.name;
-      if (widget.label.type == "Rectangle") {
+      if (widget.label.type.toString() == "Rectangle") {
         _type = 0;
       } else {
         _type = 1;

@@ -5,7 +5,6 @@ import 'package:labellab_mobile/data/local/project_provider.dart';
 import 'package:labellab_mobile/data/local/user_provider.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
-import 'package:labellab_mobile/data/remote/dto/refresh_response.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 import 'package:labellab_mobile/data/remote/dto/api_response.dart';

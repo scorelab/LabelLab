@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:charts_common/src/data/series.dart';
+import 'package:charts_common/common.dart';
 import 'package:dio/dio.dart';
 import 'package:labellab_mobile/config.dart';
 import 'package:labellab_mobile/data/interceptor/token_interceptor.dart';

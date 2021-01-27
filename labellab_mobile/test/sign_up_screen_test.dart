@@ -1,11 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:labellab_mobile/data/remote/dto/login_response.dart';
-import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
 import 'package:mockito/mockito.dart';
 import 'mock_labellab_api_impl.dart';
-import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'wrapper/material_wrapper.dart';
 

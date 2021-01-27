@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,8 @@ import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
+  final ImagePicker _imagePicker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,9 +148,10 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _showImagePicker(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source).then((image) {
+    _imagePicker.getImage(source: source).then((image) {
       if (image != null) {
-        Provider.of<ProfileBloc>(context).uploadImage(image);
+        File imageFile = File(image.path);
+        Provider.of<ProfileBloc>(context).uploadImage(imageFile);
         Navigator.pop(context);
       }
     });
