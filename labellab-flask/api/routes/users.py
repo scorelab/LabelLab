@@ -57,3 +57,9 @@ usersprint.add_url_rule(
     view_func=userscontroller.userController["search_users"],
     methods=["GET"]
 )
+
+usersprint.add_url_rule(
+    '/users/edit/',
+    view_func=userscontroller.userController["edit_user"],
+    methods=["PUT"]
+)
