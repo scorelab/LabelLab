@@ -412,8 +412,20 @@ class EditUser(MethodView):
 
         # if some data is sent but it doesn't contain email or username
         try:
-            username = put_data["username"]
-            email = put_data["email"]
+            username = put_data.get('username')
+            email = put_data.get('email')
+            if not username:
+                response = {
+                    "success": False,
+                    "msg": 'username key is not present'
+                }
+                return make_response(jsonify(response)), 400
+            if not email:
+                response = {
+                    "success": False,
+                    "msg": 'email key is not present'
+                }
+                return make_response(jsonify(response)), 400
         except KeyError as err:
             response = {
                 "success": False,
@@ -427,7 +439,7 @@ class EditUser(MethodView):
             # There is an existing user with that email. So we can't let the current user use this email
             response = {
                 "success": False,
-                "msg": "New email already associated with another account"
+                "msg": "Email already taken"
             }
             return make_response(jsonify(response)), 400
 
@@ -437,7 +449,7 @@ class EditUser(MethodView):
             # There is an existing user with that username. So we can't let the current user use this username
             response = {
                 "success": False,
-                "msg": "New username already associated with another account"
+                "msg": "Username already taken"
             }
             return make_response(jsonify(response)), 400
 
