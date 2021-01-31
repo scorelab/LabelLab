@@ -68,7 +68,7 @@ class Register(MethodView):
             # exist
             response = {
                 "success": False,
-                "msg": "UserName already exists. Please choose a different one."
+                "msg": "Username already exists. Please choose a different one."
             }
             return make_response(jsonify(response)), 400
 

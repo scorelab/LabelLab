@@ -238,7 +238,7 @@ export const GithubOauth = (credentials, callback) => {
       headers: {
         'content-type': 'application/json',
         'Access-Control-Allow-Origin': 'http://localhost:3000',
-        Accept: 'application/json'
+        'Accept': 'application/json'
       }
     }
     dispatch(request())
@@ -272,8 +272,8 @@ export const GithubOauthCallback = (access_token, callback) => {
     const config = {
       headers: {
         'Access-Control-Allow-Origin': 'http://localhost:3000',
-        Accept: 'application/json',
-        Authorization: 'token ' + access_token
+        'Accept': 'application/json',
+        'Authorization': 'token ' + access_token
       }
     }
     dispatch(request())
