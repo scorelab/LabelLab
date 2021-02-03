@@ -63,7 +63,6 @@ def update_by_id(user_id, data):
     """
     user = User.query.get(user_id)
     user.username = data['username']
-    user.email = data['email']
     db.session.commit()
     return user_schema.dump(user).data
 
