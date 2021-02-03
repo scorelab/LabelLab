@@ -64,7 +64,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_INFO = "project/project_info";
   static const ENDPOINT_PROJECT_CREATE = "project/create";
   static const ENDPOINT_PROJECT_UPDATE = "project/project_info";
-  static const ENDPOINT_PROJECT_DELETE = "project/delete";
+  static const ENDPOINT_PROJECT_DELETE = "project/project_info";
   static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add";
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove";
 
