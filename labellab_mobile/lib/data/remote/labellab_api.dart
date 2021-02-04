@@ -38,7 +38,8 @@ abstract class LabelLabAPI {
   Future<ApiResponse> createProject(String token, Project project);
   Future<ApiResponse> updateProject(String token, Project project);
   Future<ApiResponse> deleteProject(String token, String id);
-  Future<ApiResponse> addMember(String token, String projectId, String email);
+  Future<ApiResponse> addMember(String token, String projectName, String email,
+      String teamname, String role);
   Future<ApiResponse> removeMember(
       String token, String projectId, String email);
 

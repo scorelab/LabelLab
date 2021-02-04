@@ -170,9 +170,11 @@ class Repository {
     return _api.deleteProject(accessToken, id);
   }
 
-  Future<ApiResponse> addMember(String projectId, String email) {
+  Future<ApiResponse> addMember(
+      String projectId, String email, String role) async {
     if (accessToken == null) return Future(null);
-    return _api.addMember(accessToken, projectId, email);
+    Project project = await getProject(projectId);
+    return _api.addMember(accessToken, projectId, email, project.name, role);
   }
 
   Future<ApiResponse> removeMember(String projectId, String email) {
