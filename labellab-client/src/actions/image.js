@@ -70,7 +70,7 @@ export const fetchProjectImage = (imageId, callback) => {
 export const deleteImage = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.delete('/api/v1/image/delete', data)
+    FetchApi.post(`/api/v1/image/delete/${data.projectId}`, data)
       .then(res => {
         dispatch(success())
         callback()
