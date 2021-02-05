@@ -59,6 +59,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_USERS_INFO = "users/info";
   static const ENDPOINT_USERS_SEARCH = "users/search";
   static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
+  static const ENDPOINT_EDIT_INFO = "users/edit/";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_INFO = "project/project_info";
@@ -188,6 +189,20 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       return ApiResponse(response.data);
     });
+  }
+
+  @override
+  Future<ApiResponse> editInfo(String token, String username) {
+    final data = {"username": username};
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .put(API_URL + ENDPOINT_EDIT_INFO, options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   @override

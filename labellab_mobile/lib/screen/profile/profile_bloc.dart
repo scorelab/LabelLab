@@ -29,6 +29,14 @@ class ProfileBloc {
     });
   }
 
+  void refresh() {
+    _loadUser();
+  }
+
+  String getUsername() {
+    return _user.username;
+  }
+
   // State stream
   StreamController<ProfileState> _stateController =
       StreamController<ProfileState>();

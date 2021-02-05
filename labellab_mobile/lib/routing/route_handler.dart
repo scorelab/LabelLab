@@ -6,6 +6,7 @@ import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
 import 'package:labellab_mobile/screen/classify/classify_screen.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:labellab_mobile/screen/main_screen.dart';
+import 'package:labellab_mobile/screen/profile/edit_info/edit_info_screen.dart';
 import 'package:labellab_mobile/screen/profile/profile_bloc.dart';
 import 'package:labellab_mobile/screen/profile/profile_screen.dart';
 import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.dart';
@@ -55,6 +56,15 @@ var profileHandler = Handler(
     builder: (context) => ProfileBloc(),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProfileScreen(),
+  );
+});
+
+var editInfoHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return Provider<ProfileBloc>(
+    builder: (context) => ProfileBloc(),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: EditInfoScreen(params['username'].first),
   );
 });
 

@@ -31,6 +31,7 @@ abstract class LabelLabAPI {
   Future<User> usersInfo(String token);
   Future<List<User>> searchUser(String token, String email);
   Future<ApiResponse> uploadUserImage(String token, File image);
+  Future<ApiResponse> editInfo(String token, String username);
 
   // Project
   Future<List<Project>> getProjects(String token);

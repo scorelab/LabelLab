@@ -6,6 +6,7 @@ class Routes {
   static const login = "/login";
   static const signup = "/signup";
   static const profile = "/profile";
+  static const editInfo = "/editinfo/:username";
 
   // Project
   static const addProject = "/project/add";
@@ -44,6 +45,8 @@ class Routes {
         handler: signupHandler, transitionType: TransitionType.native);
     router.define(profile,
         handler: profileHandler, transitionType: TransitionType.native);
+    router.define(editInfo,
+        handler: editInfoHandler, transitionType: TransitionType.native);
 
     router.define(addProject,
         handler: addProjectHandler, transitionType: TransitionType.native);
