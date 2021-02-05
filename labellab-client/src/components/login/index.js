@@ -13,7 +13,7 @@ import {
   Message,
   Icon,
   Label,
-  Form
+  Form,
 } from 'semantic-ui-react'
 import { validateForm, isEmail } from '../../utils/helpers'
 import { login } from '../../actions/index'
@@ -34,9 +34,9 @@ class LoginIndex extends Component {
       password: '',
       errors: {
         email: '',
-        password: ''
+        password: '',
       },
-      showPassword: false
+      showPassword: false,
     }
   }
 
@@ -46,7 +46,7 @@ class LoginIndex extends Component {
     }
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     e.preventDefault()
     const { name, value } = e.target
     let errors = { ...this.state.errors }
@@ -68,11 +68,11 @@ class LoginIndex extends Component {
 
     this.setState({
       [name]: value,
-      errors: errors
+      errors: errors,
     })
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     const { email, password } = this.state
     e.preventDefault()
 
@@ -89,7 +89,7 @@ class LoginIndex extends Component {
         : 'E-mail address is required!'
 
       this.setState({
-        errors
+        errors,
       })
     }
   }
@@ -106,7 +106,7 @@ class LoginIndex extends Component {
 
   showPassword = () => {
     this.setState({
-      showPassword: !this.state.showPassword
+      showPassword: !this.state.showPassword,
     })
   }
 
@@ -115,7 +115,7 @@ class LoginIndex extends Component {
       isAuthenticating,
       statusText,
       registerStatusText,
-      authError
+      authError,
     } = this.props
     const { email, password, errors } = this.state
     return (
@@ -164,6 +164,7 @@ class LoginIndex extends Component {
                   onChange={this.handleChange}
                   label={
                     <Button
+                      type="button"
                       onClick={this.showPassword}
                       className="show-password"
                     >
@@ -217,27 +218,24 @@ LoginIndex.propTypes = {
   isAuthenticating: PropTypes.bool,
   login: PropTypes.func,
   history: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isAuthenticating: state.auth.isAuthenticating,
     statusText: state.auth.statusText,
     registerStatusText: state.register.statusText,
-    authError: state.auth.error
+    authError: state.auth.error,
   }
 }
 
-const mapActionToProps = dispatch => {
+const mapActionToProps = (dispatch) => {
   return {
     login: (email, password, callback) => {
       return dispatch(login(email, password, callback))
-    }
+    },
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapActionToProps
-)(LoginIndex)
+export default connect(mapStateToProps, mapActionToProps)(LoginIndex)
