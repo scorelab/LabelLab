@@ -129,6 +129,11 @@ class Repository {
     return _api.uploadUserImage(accessToken, image);
   }
 
+  Future<ApiResponse> editInfo(String username) {
+    if (accessToken == null) return Future(null);
+    return _api.editInfo(accessToken, username);
+  }
+
   // Project
   Future<ApiResponse> createProject(Project project) {
     if (accessToken == null) return Future(null);
