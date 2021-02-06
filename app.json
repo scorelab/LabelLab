@@ -1,0 +1,43 @@
+{
+  "name": "Labellab",
+  "description": "Machine learning supported web-based image labelling tool for researchers",
+  "repository": "https://github.com/scorelab/LabelLab",
+  "logo": "https://media-exp1.licdn.com/dms/image/C511BAQG0CuA8HTmGTA/company-background_10000/0?e=2159024400&v=beta&t=TgDb2TWb3EJWQ0rY6WXZCwMEfcU9jLLSJ2s_H6FQMfs",
+  "addons": ["mongolab", "cloudinary"],
+  "env": {
+    "HOST": {
+      "description": "Please enter the app name which you entered above"
+    },
+    "REACT_APP_HOST": {
+      "description": "Please enter the app name which you entered above"
+    },
+    "JWT_SECRET": {
+      "description": "A string of random characters"
+    },
+    "GOOGLE_CLIENT_ID": {
+      "description": "Client ID for Google authentication",
+      "required": false
+    },
+    "GOOGLE_CLIENT_SECRET": {
+      "description": "Client secret for Google authentication",
+      "required": false
+    },
+    "GITHUB_CLIENT_ID": {
+      "description": "Client ID for Github authentication",
+      "required": false
+    },
+    "GITHUB_CLIENT_SECRET": {
+      "description": "Client secret for Github authentication",
+      "required": false
+    },
+    "PORT": {
+      "description": "This should be kept as 4000"
+    },
+    "REACT_APP_SERVER_PORT": {
+      "description": "This should be kept as 4000"
+    }
+  },
+  "scripts": {
+    "pr-predestroy": "cp .env labellab-server/env && cp .env labellab-client/env"
+  }
+}

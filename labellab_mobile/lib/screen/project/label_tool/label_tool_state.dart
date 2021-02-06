@@ -11,6 +11,7 @@ class LabelToolState {
   bool isLoading = false;
   bool isSaving = false;
   bool isSuccess = false;
+  bool isUpdating = false;
 
   LabelToolState.initial() {
     selections = [];
@@ -24,6 +25,11 @@ class LabelToolState {
 
   LabelToolState.drawingSelection(this.selections, this.image,
       {this.labels, this.currentSelection});
+
+  LabelToolState.updatingSelection(this.selections, this.image,
+      {this.labels, this.currentSelection}) {
+    isUpdating = true;
+  }
 
   LabelToolState.doneSelection(this.selections, this.image, {this.labels});
 

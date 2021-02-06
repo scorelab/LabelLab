@@ -1,59 +1,63 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Button, Icon } from 'semantic-ui-react'
+import { Input, Select, Button, Icon, Table, Header } from 'semantic-ui-react'
 import '../css/labelItem.css'
 
-const options = [
-  { key: 'bbox', text: 'Draw a bounding box', value: 'bbox' },
-  { key: 'polygon', text: 'Draw a polygon figure', value: 'polygon' }
-]
-
 class LabelItem extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      changed: false
+    }
+  }
+
   render() {
-    const { value, onChange, onDelete, onUpdate } = this.props
+    const { index, label, options } = this.props
+    const { onChange, onDelete, onUpdate } = this.props
+    console.log(label)
     return (
-      <div className="form-card-parent">
-        <Form className="form-card flex">
-          <div className="form-card-child">
-            <Form.Field
-              placeholder="Label name"
-              control="input"
-              defaultValue={value.name}
-              className="form-card-child-field"
-              onChange={e =>
-                {
-                onChange("name",e.target.value)
-                }
-              }
-            />
-            <Form.Select
-              label="Label type"
-              options={options}
-              defaultValue={value.type}
-              onChange={(e, change) =>
-                onChange("type", change.value )
-              }
-              style={{ maxWidth: 400 }}
-            />
-          </div>
-          <div className="form-button-parent">
-            <Button
-              type="button"
-              className="form-button-itself"
-              onClick={() => onDelete(value)}
-            >
-              <Icon name="trash" />
-            </Button>
-            <Button
-              type="button"
-              className="form-button-itself"
-              onClick={() => onUpdate(value)}
-            >
-              Update
-            </Button>
-          </div>
-        </Form>
-      </div>
+      <Table.Row key={index}>
+        <Table.Cell collapsing>
+          <Header as="h4">{index}</Header>
+        </Table.Cell>
+        <Table.Cell>
+          <Input
+            placeholder="Label name"
+            control="input"
+            defaultValue={label.label_name}
+            onChange={e => {
+              onChange('name', e.target.value)
+              this.setState({
+                changed: true
+              })
+            }}
+          />
+        </Table.Cell>
+        <Table.Cell>
+          <Select
+            options={options}
+            defaultValue={label.label_type}
+            onChange={(e, change) => {
+              onChange('type', change.value)
+              this.setState({
+                changed: true
+              })
+            }}
+            style={{ maxWidth: 400 }}
+          />
+        </Table.Cell>
+        <Table.Cell collapsing>
+          <Button negative basic type="button" onClick={() => onDelete(label)}>
+            <Icon name="trash" />
+          </Button>
+          <Button
+            onClick={() => onUpdate(label)}
+            disabled={this.state.changed ? false : true}
+          >
+            Update
+          </Button>
+        </Table.Cell>
+      </Table.Row>
     )
   }
 }

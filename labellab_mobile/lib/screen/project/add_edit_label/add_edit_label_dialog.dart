@@ -4,6 +4,8 @@ import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
 
+typedef void OnUpdateError(String message);
+
 class AddEditLabelDialog extends StatefulWidget {
   final Repository _repository = Repository();
   final String projectId;
@@ -18,11 +20,12 @@ class AddEditLabelDialog extends StatefulWidget {
 class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
   String _labelId;
 
-  final TextEditingController _nameController = TextEditingController();
   int _type = 0;
 
   bool _isLoading = false;
   String _error;
+
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
@@ -40,52 +43,54 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
         borderRadius: BorderRadius.circular(16),
       ),
       elevation: 8,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          LabelTextField(
-            controller: _nameController,
-            labelText: "Label name",
-            textCapitalization: TextCapitalization.words,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text("Type"),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.all(0),
-            leading: Radio(
-              value: 0,
-              groupValue: _type,
-              onChanged: (_) {
-                setState(() {
-                  _type = 0;
-                });
-              },
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            LabelTextField(
+              controller: _nameController,
+              labelText: "Label name",
+              textCapitalization: TextCapitalization.words,
             ),
-            title: Text("Rectangle"),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.all(0),
-            leading: Radio(
-              value: 1,
-              groupValue: _type,
-              onChanged: (_) {
-                setState(() {
-                  _type = 1;
-                });
-              },
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text("Type"),
             ),
-            title: Text("Polygon"),
-          ),
-          this._error != null
-              ? Text(
-                  this._error,
-                  style: TextStyle(color: Colors.red),
-                )
-              : Container(),
-        ],
+            ListTile(
+              contentPadding: EdgeInsets.all(0),
+              leading: Radio(
+                value: 0,
+                groupValue: _type,
+                onChanged: (_) {
+                  setState(() {
+                    _type = 0;
+                  });
+                },
+              ),
+              title: Text("Rectangle"),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(0),
+              leading: Radio(
+                value: 1,
+                groupValue: _type,
+                onChanged: (_) {
+                  setState(() {
+                    _type = 1;
+                  });
+                },
+              ),
+              title: Text("Polygon"),
+            ),
+            this._error != null
+                ? Text(
+                    this._error,
+                    style: TextStyle(color: Colors.red),
+                  )
+                : Container(),
+          ],
+        ),
       ),
       actions: <Widget>[
         FlatButton(
@@ -107,15 +112,16 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
     final Label _label = Label();
     _label.id = _labelId;
     _label.name = _nameController.text;
-    _label.type = _type == 0 ? "Rectangle" : "Polygon";
+    _label.type = _type == 0 ? LabelType.RECTANGLE : LabelType.POLYGON;
     _updateLogic(_label).then((String message) {
       if (message == "Success") {
         Navigator.pop(context, true);
       } else {
         setState(() {
-          _error = message;
+          // _error = message;
           _isLoading = false;
         });
+        Navigator.pop(context, false);
       }
     }).catchError((err) {
       if (err is DioError) {
@@ -150,7 +156,9 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       });
     } else {
       // Update the existing label
-      return widget._repository.updateLabel(label).then((res) {
+      return widget._repository
+          .updateLabel(widget.projectId, label)
+          .then((res) {
         if (!res.success) return res.msg;
         return "Success";
       });

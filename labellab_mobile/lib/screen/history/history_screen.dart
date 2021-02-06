@@ -3,6 +3,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/history/history_bloc.dart';
 import 'package:labellab_mobile/screen/history/history_item.dart';
+import 'package:labellab_mobile/screen/history/history_search_screen.dart';
 import 'package:labellab_mobile/screen/history/history_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/empty_placeholder.dart';
@@ -11,20 +12,26 @@ import 'package:provider/provider.dart';
 class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("History"),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: StreamBuilder(
-        stream: Provider.of<HistoryBloc>(context).classifications,
-        initialData: HistoryState.loading(),
-        builder: (context, AsyncSnapshot<HistoryState> snapshot) {
-          final HistoryState state = snapshot.data;
-          if (state.classifications != null &&
-              state.classifications.isNotEmpty) {
-            return RefreshIndicator(
+    return StreamBuilder(
+      stream: Provider.of<HistoryBloc>(context).classifications,
+      initialData: HistoryState.loading(),
+      builder: (context, AsyncSnapshot<HistoryState> snapshot) {
+        final HistoryState state = snapshot.data;
+        if (state.classifications != null && state.classifications.isNotEmpty) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("History"),
+              centerTitle: true,
+              elevation: 0,
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      _gotoHistorySearch(context, state);
+                    })
+              ],
+            ),
+            body: RefreshIndicator(
               onRefresh: () async {
                 Provider.of<HistoryBloc>(context).refresh();
               },
@@ -59,14 +66,21 @@ class HistoryScreen extends StatelessWidget {
                       : Container(),
                 ],
               ),
-            );
-          } else {
-            return EmptyPlaceholder(
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("History"),
+              centerTitle: true,
+              elevation: 0,
+            ),
+            body: EmptyPlaceholder(
               description: "Your past classifications will appear here",
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -93,5 +107,9 @@ class HistoryScreen extends StatelessWidget {
     Application.router.navigateTo(context, "/classification/$id").then((_) {
       Provider.of<HistoryBloc>(context).refresh();
     });
+  }
+
+  void _gotoHistorySearch(BuildContext context, HistoryState historyState) {
+    showSearch(context: context, delegate: HistorySearchScreen(historyState));
   }
 }

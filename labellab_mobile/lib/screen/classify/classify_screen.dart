@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
 import 'package:labellab_mobile/screen/classify/classify_state.dart';
 import 'package:labellab_mobile/widgets/selected_image.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class ClassifyScreen extends StatefulWidget {
@@ -17,9 +21,12 @@ class ClassifyScreen extends StatefulWidget {
 }
 
 class _ClassifyScreenState extends State<ClassifyScreen> {
+  bool uploadWithCompression;
+
   @override
   void initState() {
     super.initState();
+    uploadWithCompression = true;
     _showImagePicker(
         context, widget.isCamera ? ImageSource.camera : ImageSource.gallery);
   }
@@ -30,7 +37,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Classifing",
+          "Classifying",
         ),
         centerTitle: true,
         elevation: 0,
@@ -59,6 +66,47 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  state.isClassifing
+                      ? Container()
+                      : CheckboxListTile(
+                          title: Text("Upload Compressed Image (Faster)"),
+                          value: uploadWithCompression,
+                          onChanged: (newValue) {
+                            setState(() {
+                              uploadWithCompression = newValue;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity
+                              .leading, //  <-- leading Checkbox
+                        ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  state.isClassifing
+                      ? Container()
+                      : FlatButton(
+                          child: Text("Upload"),
+                          onPressed: () async {
+                            Provider.of<ClassifyBloc>(context).classifyImage(
+                                uploadWithCompression
+                                    ? await _compressImage(state.image)
+                                    : state.image);
+                          },
+                        ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  state.isClassifing
+                      ? Container()
+                      : FlatButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Application.router.pop(context);
+                          },
+                        ),
                   state.isClassifing ? _buildProgress(context) : Container(),
                   state.error != null
                       ? _buildError(context, state.error)
@@ -107,9 +155,9 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
   }
 
   void _showImagePicker(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source).then((image) {
+    ImagePicker.pickImage(source: source).then((image) async {
       if (image != null) {
-        Provider.of<ClassifyBloc>(context).classifyImage(image);
+        Provider.of<ClassifyBloc>(context).setImage(image);
       } else {
         Application.router.pop(context);
       }
@@ -117,6 +165,16 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
   }
 
   void _gotoClassificationDetail(String id) {
-    Application.router.navigateTo(context, "/classification/$id", replace: true);
+    Application.router
+        .navigateTo(context, "/classification/$id", replace: true);
+  }
+
+  Future<File> _compressImage(File image) async {
+    image = await FlutterImageCompress.compressAndGetFile(
+        image.absolute.path,
+        (await getApplicationDocumentsDirectory()).path +
+            image.path?.split("/")?.last,
+        quality: 70);
+    return image;
   }
 }

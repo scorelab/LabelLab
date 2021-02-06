@@ -8,7 +8,9 @@ import {
   Form,
   Checkbox,
   Radio,
-  Select
+  Select,
+  Popup,
+  Grid,
 } from 'semantic-ui-react'
 import { shortcuts, colors } from './utils'
 import Hotkeys from 'react-hot-keys'
@@ -25,26 +27,17 @@ export default class Sidebar extends PureComponent {
       onToggle,
       filter,
       style,
-      openHotkeys,
       onBack,
       onSkip,
-      labelData,
+      onHome,
+      labeldata,
       onFormChange,
       models,
       makePrediction
     } = this.props
 
-    const hotkeysButton = openHotkeys ? (
-      <Icon
-        link
-        name="keyboard"
-        style={headerIconStyle}
-        onClick={openHotkeys}
-      />
-    ) : null
-
-    const getSelectHandler = ({ type, id }) =>
-      type === 'bbox' || type === 'polygon' ? () => onSelect(id) : null
+    const getSelectHandler = ({ label_type, id }) =>
+      label_type === 'bbox' || label_type === 'polygon' ? () => onSelect(id) : null
     return (
       <div
         style={{
@@ -58,7 +51,34 @@ export default class Sidebar extends PureComponent {
       >
         <Header size="large" style={{ flex: '0 0 auto' }}>
           {title}
-          {hotkeysButton}
+          <Popup
+            flowing
+            content={
+              <Grid columns={2} style={{ width: '400px' }}>
+                <Grid.Row>
+                  <Grid.Column width={7}>Select Label:</Grid.Column>
+                  <Grid.Column width={9}>
+                    <Label>0</Label>-<Label>9</Label> and <Label>q</Label>,{' '}
+                    <Label>w</Label>, <Label>e</Label>
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                  <Grid.Column width={7}>Unselect Label:</Grid.Column>
+                  <Grid.Column width={9}>
+                    <Label>Esc</Label>
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                  <Grid.Column width={7}>Delete Polygon:</Grid.Column>
+                  <Grid.Column width={9}>
+                    Select Polygon + <Label>Del</Label>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            }
+            header="Shortcuts"
+            trigger={<Icon link name="keyboard" style={headerIconStyle} />}
+          />
         </Header>
         <List divided selection style={{ flex: 1, overflowY: 'auto' }}>
           {labels.map((label, i) =>
@@ -71,7 +91,7 @@ export default class Sidebar extends PureComponent {
               disabled: filter ? !filter(label) : false,
               onToggle: onToggle,
               isToggled: toggles && toggles[label.id],
-              labelData: labelData[label.id],
+              labeldata: labeldata[label.id],
               onFormChange,
               models,
               makePrediction
@@ -80,8 +100,10 @@ export default class Sidebar extends PureComponent {
           <Hotkeys keyName="esc" onKeyDown={() => onSelect(null)} />
         </List>
         <div style={{ flex: '0 0 auto', display: 'flex' }}>
-          <Button onClick={onBack}>Back</Button>
+          <Button onClick={onHome}>Home</Button>
           <span style={{ flex: 1 }} />
+          <Button onClick={onBack}>Back</Button>
+          <span style={{ flex: 0.3 }} />
           <Button secondary onClick={onSkip}>
             Skip
           </Button>
@@ -96,7 +118,7 @@ const iconMapping = {
   polygon: 'pencil alternate'
 }
 
-const typeHidable = {
+const label_typeHidable = {
   bbox: true,
   polygon: true,
   text: false,
@@ -112,14 +134,14 @@ function ListItem({
   selected = false,
   disabled = false,
   isToggled = false,
-  labelData,
+  labeldata,
   onFormChange,
   models,
   makePrediction
 }) {
   const icons = []
 
-  if (onToggle && typeHidable[label.type]) {
+  if (onToggle && label_typeHidable[label.label_type]) {
     icons.push(
       <Button
         key="visibility-icon"
@@ -133,24 +155,24 @@ function ListItem({
     )
   }
 
-  const iconType = iconMapping[label.type]
-  const figureIcon = iconType ? (
+  const iconlabel_Type = iconMapping[label.label_type]
+  const figureIcon = iconlabel_Type ? (
     <Icon
-      key="type-icon"
-      name={iconType}
+      key="label_type-icon"
+      name={iconlabel_Type}
       style={{ opacity: 0.5, display: 'inline-block', marginLeft: 5 }}
     />
   ) : null
 
   function genSublist(label) {
     const sublistStyle = { fontSize: '12px' }
-    if (label.type === 'text') {
+    if (label.label_type === 'text') {
       const filteredModels = (models || []).filter(
-        ({ type }) => type === 'object_classification'
+        ({ label_type }) => label_type === 'object_classification'
       )
-      const options = filteredModels.map(({ id, name }) => ({
+      const options = filteredModels.map(({ id, label_name }) => ({
         value: id,
-        text: name
+        text: label_name
       }))
       const fillInDOM =
         filteredModels.length > 0 ? (
@@ -174,7 +196,7 @@ function ListItem({
               <Form.Input
                 label={label.prompt}
                 style={{ width: '100%' }}
-                value={labelData[0] || ''}
+                value={labeldata[0] || ''}
                 onChange={(e, { value }) => onFormChange(label.id, [value])}
               />
               {fillInDOM}
@@ -184,15 +206,15 @@ function ListItem({
       )
     }
 
-    if (label.type === 'select') {
+    if (label.label_type === 'select') {
       const { options } = label
-      const handleChange = function(option) {
+      const handleChange = function (option) {
         return (e, { checked }) =>
           onFormChange(
             label.id,
             checked
-              ? labelData.concat([option])
-              : labelData.filter(x => x !== option)
+              ? labeldata.concat([option])
+              : labeldata.filter(x => x !== option)
           )
       }
 
@@ -200,7 +222,7 @@ function ListItem({
         <List.Item key={option}>
           <Checkbox
             label={option}
-            checked={labelData.indexOf(option) !== -1}
+            checked={labeldata.indexOf(option) !== -1}
             onChange={handleChange(option)}
           />
         </List.Item>
@@ -208,13 +230,13 @@ function ListItem({
       return <List style={sublistStyle}>{items}</List>
     }
 
-    if (label.type === 'select-one') {
+    if (label.label_type === 'select-one') {
       const { options } = label
       const items = options.map(option => (
         <List.Item key={option}>
           <Radio
             label={option}
-            checked={labelData.indexOf(option) !== -1}
+            checked={labeldata.indexOf(option) !== -1}
             onChange={(e, { checked }) => onFormChange(label.id, [option])}
           />
         </List.Item>
@@ -240,7 +262,7 @@ function ListItem({
         <Label color={color} horizontal>
           {shortcut}
         </Label>
-        {label.name}
+        {label.label_name}
         {figureIcon}
         <span style={{ float: 'right' }}>{icons}</span>
         {genSublist(label)}

@@ -35,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: <Widget>[
                 Text(
                   "Sign Up",
-                  style: Theme.of(context).textTheme.headline,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Form(
                   key: _key,
@@ -46,9 +46,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("username"),
                         labelText: "Username",
                         onSaved: (String value) {
-                          _user.username = value;
+                          _user.username = value.trim();
                         },
                         validator: _validateUsername,
                       ),
@@ -56,10 +57,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("name"),
                         labelText: "Name",
                         textCapitalization: TextCapitalization.words,
                         onSaved: (String value) {
-                          _user.name = value;
+                          _user.name = value.trim();
                         },
                         validator: _validateName,
                       ),
@@ -67,9 +69,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("email"),
                         labelText: "Email",
                         onSaved: (String value) {
-                          _user.email = value;
+                          _user.email = value.trim();
                         },
                         validator: _validateEmail,
                       ),
@@ -77,6 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("password"),
                         labelText: "Password",
                         isObscure: true,
                         onSaved: (String value) {
@@ -88,6 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("confirm-password"),
                         labelText: "Confirm Password",
                         isObscure: true,
                         onSaved: (String value) {
@@ -98,18 +103,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      RaisedButton(
-                        elevation: 0,
-                        color: Theme.of(context).accentColor,
-                        colorBrightness: Brightness.dark,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      Builder(
+                        builder: (context) => RaisedButton(
+                          key: Key("signup-button"),
+                          elevation: 0,
+                          color: Theme.of(context).accentColor,
+                          colorBrightness: Brightness.dark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: _isRegistering
+                              ? Text("Signnig Up")
+                              : Text("Sign Up"),
+                          onPressed: !_isRegistering
+                              ? () {
+                                  _onSubmit(context);
+                                }
+                              : null,
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: _isRegistering
-                            ? Text("Signnig Up")
-                            : Text("Sign Up"),
-                        onPressed: _isRegistering ? null : _onSubmit,
                       ),
                     ],
                   ),
@@ -150,10 +162,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _validateEmail(String email) {
     if (email.isEmpty) {
       return "Email can't be empty";
-    }
-    if (!RegExp(
+    } else if (!RegExp(
             r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-        .hasMatch(email)) {
+        .hasMatch(email.trim())) {
       return "Invalid email";
     }
     return null;
@@ -162,6 +173,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _validatePassword(String password) {
     if (password.isEmpty) {
       return "Password can't be empty";
+    } else if (password.length < 6) {
+      return "Password must be at least 6 characters";
     }
     return null;
   }
@@ -173,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  void _onSubmit() {
+  void _onSubmit(BuildContext context) {
     _key.currentState.save();
     if (_key.currentState.validate()) {
       setState(() {
@@ -193,9 +206,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isRegistering = false;
         });
         print(err.toString());
-        // Scaffold.of(context).showSnackBar(SnackBar(
-        //   content: Text("Sign in failed!"),
-        // ));
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("Sign in failed"),
+          backgroundColor: Colors.redAccent,
+        ));
       });
     }
   }

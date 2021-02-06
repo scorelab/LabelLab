@@ -52,7 +52,7 @@ class Canvas extends Component {
   handleChange(eventType, { point, pos, figure, points }) {
     const { onChange, unfinishedFigure } = this.props
     const drawing = !!unfinishedFigure
-
+    let f = null
     switch (eventType) {
       case 'add':
         if (drawing) {
@@ -76,7 +76,7 @@ class Canvas extends Component {
         break
 
       case 'end':
-        const f = unfinishedFigure
+        f = unfinishedFigure
         onChange('new', f)
         break
 
@@ -96,7 +96,7 @@ class Canvas extends Component {
         break
 
       default:
-        throw new Error('unknown event type ' + eventType)
+        throw new Error('unknown event label_type ' + eventType)
     }
   }
 
@@ -122,7 +122,7 @@ class Canvas extends Component {
   }
 
   renderFigure(figure, options) {
-    const Comp = figure.type === 'bbox' ? BBoxFigure : PolygonFigure
+    const Comp = figure.label_type === 'bbox' ? BBoxFigure : PolygonFigure
 
     return (
       <Comp
@@ -157,14 +157,14 @@ class Canvas extends Component {
 
     const unfinishedDrawingDOM = drawing
       ? this.renderFigure(unfinishedFigure, {
-          finished: false,
-          editing: false,
-          interactive: false,
-          color: colorMapping[unfinishedFigure.color],
-          onChange: this.handleChange,
-          calcDistance,
-          newPoint: cursorPos
-        })
+        finished: false,
+        editing: false,
+        interactive: false,
+        color: colorMapping[unfinishedFigure.color],
+        onChange: this.handleChange,
+        calcDistance,
+        newPoint: cursorPos
+      })
       : null
 
     const getColor = f =>
@@ -197,15 +197,15 @@ class Canvas extends Component {
           }
           if (drawing) {
             if (key === 'f') {
-              const { type, points } = unfinishedFigure
-              if (type === 'polygon' && points.length >= 3) {
+              const { label_type, points } = unfinishedFigure
+              if (label_type === 'polygon' && points.length >= 3) {
                 this.handleChange('end', {})
               }
             }
           } else {
             if (key === 'c') {
               if (selectedFigureId && this.getSelectedFigure()) {
-                onReassignment(this.getSelectedFigure().type)
+                onReassignment(this.getSelectedFigure().label_type)
               }
             } else if (key === 'backspace' || key === 'del') {
               if (selectedFigureId && this.getSelectedFigure()) {
@@ -239,13 +239,13 @@ class Canvas extends Component {
 
     let renderedTrace = null
     const selectedFigure = this.getSelectedFigure()
-    if (selectedFigure && selectedFigure.type === 'polygon') {
+    if (selectedFigure && selectedFigure.label_type === 'polygon') {
       const trace = selectedFigure.tracingOptions
         ? selectedFigure.tracingOptions.trace || []
         : []
       const figure = {
         id: 'trace',
-        type: 'line',
+        label_type: 'line',
         points: trace
       }
       const traceOptions = {

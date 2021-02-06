@@ -1,11 +1,13 @@
 class LoginResponse {
   bool success;
-  String token;
+  String accessToken;
+  String refreshToken;
   String msg;
 
   LoginResponse(dynamic json) {
     this.success = json['success'];
-    this.token = json['token'];
+    this.accessToken = json['access_token'];
+    this.refreshToken = json['refresh_token'];
     this.msg = json['msg'];
   }
 }

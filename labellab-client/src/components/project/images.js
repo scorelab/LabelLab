@@ -1,9 +1,25 @@
+import ReactDOM from 'react-dom'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { Table, Button, Form, Dimmer, Loader } from 'semantic-ui-react'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
+import {
+  Table,
+  Button,
+  Form,
+  Dimmer,
+  Loader,
+  Icon,
+  Checkbox,
+  Dropdown,
+  Modal,
+  Image
+} from 'semantic-ui-react'
 import { AutoSizer, List } from 'react-virtualized'
+import Lightbox from 'react-image-lightbox'
+import 'react-image-lightbox/style.css'
 import { submitImage, deleteImage, fetchProject } from '../../actions/index'
 import './css/images.css'
 
@@ -11,68 +27,241 @@ class ImagesIndex extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      image: '',
+      images: [],
       file: '',
-      imageName: '',
+      image_names: [],
       projectId: '',
       showform: false,
-      format: ''
+      format: '',
+      maxSizeError: '',
+      selectedList: [],
+      image_urls: [],
+      photoIndex: 0,
+      isOpen: false,
+      number_of_images: 0,
+      selectAll: false,
+      crop: {
+        unit: '%',
+        width: 30,
+        aspect: 16 / 9
+      }
     }
   }
   handleImageChange = e => {
     e.preventDefault()
-    let reader = new FileReader()
-    let file = e.target.files[0]
-    reader.onloadend = () => {
-      this.setState({
-        image: reader.result,
-        file: file,
-        format: file.type,
-        imageName: file.name,
-        showform: !this.state.showform
-      })
-    }
-    reader.readAsDataURL(file)
+    let files = e.target.files
+    let formData = new FormData()
+    Array.from(files).forEach(file => {
+      let reader = new FileReader()
+      formData.append('images', file)
+      formData.append('image_names', file.name)
+      reader.onloadend = () => {
+        this.setState(prevState => ({
+          images: [...prevState.images, reader.result],
+          file: file,
+          format: file.type,
+          image_names: [...prevState.image_names, file.name],
+          image_urls: [...prevState.image_urls, URL.createObjectURL(file)]
+        }))
+      }
+      reader.readAsDataURL(file)
+    })
+    formData.append('format', this.state.format)
+    formData.append('project_id', this.props.project.projectId)
+    this.setState({
+      showform: !this.state.showform,
+      formData: formData,
+      isOpen: true,
+      number_of_images: files.length
+    })
   }
+
   handleSubmit = e => {
     e.preventDefault()
-    const { project, fetchProject, submitImage } = this.props
-    const { imageName, image, format } = this.state
-    let data = {
-      imageName: imageName,
-      image: image,
-      projectId: project.projectId,
-      format: format
+    if (this.state.isOpen) {
+      return
     }
-    submitImage(data, () => {
+    const { project, fetchProject, submitImage } = this.props
+    const { formData } = this.state
+    if (this.state.file && this.state.file.size > 101200) {
       this.setState({
-        showform: false
+        maxSizeError: 'max sized reached'
+      })
+    } else {
+      submitImage(formData, project.projectId, () => {
+        this.setState({
+          showform: false,
+          images: [],
+          formData: null,
+          image_names: []
+        })
+        fetchProject(project.projectId)
+      })
+    }
+  }
+  handleDelete = () => {
+    const { deleteImage, project, fetchProject } = this.props
+    const self = this
+    deleteImage({ images: Array.from(this.state.selectedList) }, () => {
+      self.setState({
+        selectedList: []
       })
       fetchProject(project.projectId)
     })
   }
-  handleDelete = imageId => {
-    const { deleteImage, project, fetchProject } = this.props
-    deleteImage(imageId, project.projectId, fetchProject(project.projectId))
+  handleSelected = imageId => {
+    if (!this.state.selectedList.includes(imageId)) {
+      this.setState(prevState => ({
+        selectedList: [...prevState.selectedList, imageId]
+      }))
+    } else {
+      this.setState(prevState => ({
+        selectedList: prevState.selectedList.filter(
+          checkedImage => checkedImage != imageId
+        )
+      }))
+    }
   }
-  handleChange = e => {
-    const name = e.target.name
+  handleSelectAll = () => {
+    const {project} = this.props
+    if(this.state.selectAll){
+      this.setState(() => ({
+        selectedList: [],
+        selectAll:false
+      }))
+    }
+    else {
+      this.setState( () => ({
+        selectedList: [...project?.images?.map((image)=>{
+          return image.id;
+        })],
+        selectAll:true
+      }))
+    }
+
+  }
+  handleNameChange = e => {
     const value = e.target.value
-    this.setState({ [name]: value })
+    this.setState({ image_names: [value] })
   }
   removeImage = () => {
     this.setState({
-      image: '',
+      images: [],
       file: '',
-      imageName: '',
+      image_names: [],
       showform: !this.state.showform,
-      format: ''
+      format: '',
+      maxSizeError: '',
+      image_urls: [],
+      photoIndex: 0,
+      isOpen: false
+    })
+  }
+  onImageLoaded = image => {
+    this.imageRef = image
+  }
+
+  onCropComplete = crop => {
+    this.makeClientCrop(crop)
+  }
+
+  onCropChange = (crop, percentCrop) => {
+    this.setState({ crop })
+  }
+
+  async makeClientCrop(crop) {
+    if (this.imageRef && crop.width && crop.height) {
+      const croppedImage = await this.getCroppedImg(
+        this.imageRef,
+        crop,
+        this.state.image_names[0]
+      )
+      const croppedImageURL = await this.getCroppedImgURL(
+        this.imageRef,
+        crop,
+        this.state.image_names[0]
+      )
+      const new_cropped_image = []
+      new_cropped_image.push(croppedImage)
+      this.setState({
+        images: new_cropped_image,
+        croppedImageUrl: croppedImageURL,
+        format: 'image/jpeg'
+      })
+    }
+  }
+
+  getCroppedImgURL(image, crop, fileName) {
+    const canvas = document.createElement('canvas')
+    const scaleX = image.naturalWidth / image.width
+    const scaleY = image.naturalHeight / image.height
+    canvas.width = crop.width
+    canvas.height = crop.height
+    const ctx = canvas.getContext('2d')
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    )
+
+    const base64Image = canvas.toDataURL('image/jpeg')
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (!blob) {
+          //reject(new Error('Canvas is empty'));
+          console.error('Canvas is empty')
+          return
+        }
+        blob.name = fileName
+        window.URL.revokeObjectURL(this.fileUrl)
+        this.fileUrl = window.URL.createObjectURL(blob)
+        resolve(this.fileUrl)
+      }, 'image/jpeg')
     })
   }
 
+  getCroppedImg(image, crop, fileName) {
+    const canvas = document.createElement('canvas')
+    const scaleX = image.naturalWidth / image.width
+    const scaleY = image.naturalHeight / image.height
+    canvas.width = crop.width
+    canvas.height = crop.height
+    const ctx = canvas.getContext('2d')
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    )
+
+    return canvas.toDataURL('image/jpeg')
+  }
   render() {
     const { imageActions, project } = this.props
-    const { showform, imageName } = this.state
+    const {
+      showform,
+      image_name,
+      image_urls,
+      number_of_images,
+      images,
+      selectAll
+    } = this.state
+    const { photoIndex, isOpen } = this.state
+    const { crop, croppedImageUrl } = this.state
     return (
       <div>
         {imageActions.isdeleting ? (
@@ -83,78 +272,151 @@ class ImagesIndex extends Component {
         <div>
           <input
             type="file"
+            multiple
             onChange={this.handleImageChange}
             className="image-file-input"
             id="image-embedpollfileinput"
           />
           <label
             htmlFor="image-embedpollfileinput"
-            className="ui medium primary left floated button custom-margin"
+            className="ui medium primary left floated button custom-margin positive"
           >
             Add Image
           </label>
         </div>
-
         {showform ? (
-          <Form
-            className="file-submit-form"
-            encType="multiple/form-data"
-            onSubmit={this.handleSubmit}
-          >
-            <Form.Field>
-              <label>Image Name</label>
-              <input
-                name="imageName"
-                value={imageName}
-                onChange={this.handleChange}
-                placeholder="Image Name"
+          <Form className="file-submit-form" encType="multiple/form-data">
+            {this.state.images.length == 1 && (
+              <Form.Field>
+                <label>Image Name</label>
+                <input
+                  name="image_name"
+                  value={image_name}
+                  onChange={this.handleNameChange}
+                  placeholder="Image Name"
+                />
+              </Form.Field>
+            )}
+            {image_urls && isOpen ? (
+              <Lightbox
+                mainSrc={image_urls[photoIndex]}
+                nextSrc={image_urls[(photoIndex + 1) % image_urls.length]}
+                prevSrc={
+                  image_urls[
+                    (photoIndex + image_urls.length - 1) % image_urls.length
+                  ]
+                }
+                onCloseRequest={() => this.setState({ isOpen: false })}
+                onMovePrevRequest={() =>
+                  this.setState({
+                    photoIndex:
+                      (photoIndex + image_urls.length - 1) % image_urls.length
+                  })
+                }
+                onMoveNextRequest={() =>
+                  this.setState({
+                    photoIndex: (photoIndex + 1) % image_urls.length
+                  })
+                }
               />
-            </Form.Field>
-            <Button loading={imageActions.isposting} type="submit">
+            ) : null}
+            <Button
+              onClick={this.handleSubmit}
+              loading={imageActions.isposting}
+              type="submit"
+            >
               Submit
             </Button>
             <Button onClick={this.removeImage} type="delete">
-              Remove
+              Cancel
             </Button>
+            <Button onClick={() => this.setState({ isOpen: true })}>
+              View
+            </Button>
+            {number_of_images === 1 ? (
+              <Modal trigger={<Button>Crop</Button>}>
+                <Modal.Header>Crop Image</Modal.Header>
+                <Modal.Content>
+                  {images[0] && (
+                    <ReactCrop
+                      src={image_urls[0]}
+                      crop={crop}
+                      ruleOfThirds
+                      onImageLoaded={this.onImageLoaded}
+                      onComplete={this.onCropComplete}
+                      onChange={this.onCropChange}
+                    />
+                  )}
+                  {croppedImageUrl && (
+                    <img
+                      alt="Crop"
+                      style={{ maxWidth: '100%' }}
+                      src={croppedImageUrl}
+                    />
+                  )}
+                </Modal.Content>
+              </Modal>
+            ) : null}
+            {this.state.maxSizeError ? (
+              <div className="max-size-error">
+                The size of the file should not be greater than 101Kb!
+              </div>
+            ) : null}
           </Form>
         ) : null}
-        <Table
-          celled
-          style={{ display: 'flex', flexDirection: 'column', height: 600 }}
-        >
-          <Table.Header className="image-table-header">
-            <Table.Row className="flex image-table-row-back">
-              <Table.HeaderCell style={columnStyles[0]}>ID</Table.HeaderCell>
-              <Table.HeaderCell style={columnStyles[1]}>
-                Image Link
-              </Table.HeaderCell>
-              <Table.HeaderCell style={columnStyles[2]}>
-                Actions
-              </Table.HeaderCell>
-              <Table.HeaderCell className="image-table-special-headercell" />
-            </Table.Row>
-          </Table.Header>
-          <Table.Body className="image-table-body">
-            {project.images && project.images.length > 0 ? (
-              <AutoSizedList
-                rowHeight={55}
-                rowCount={project && project.images && project.images.length}
-                style={{ overflowY: 'scroll' }}
-                rowRenderer={({ index, style, key }) => (
-                  <Row
-                    key={key}
-                    style={style}
-                    image={project.images[index]}
-                    projectId={project.projectId}
-                    onDelete={this.handleDelete}
-                    imageId={index}
+        <div className="image-table-container">
+          <Table celled className="image-table" color="green">
+            <Table.Header className="image-table-header">
+              <Table.Row className="flex">
+                <Table.HeaderCell width={1}>ID</Table.HeaderCell>
+                <Table.HeaderCell width={1}>
+                  <Checkbox
+                    onClick={() => {
+                      this.handleSelectAll()
+                    }}
+                    checked={selectAll}
                   />
-                )}
-                overscanRowCount={10}
-              />
-            ) : null}
-          </Table.Body>
-        </Table>
+                </Table.HeaderCell>
+                <Table.HeaderCell width={11}>Image Link</Table.HeaderCell>
+                <Table.HeaderCell width={3}>
+                  Actions
+                  <Button
+                    negative
+                    basic
+                    disabled={!this.state.selectedList.length}
+                    onClick={this.handleDelete}
+                  >
+                    Delete
+                  </Button>
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body className="image-table-body">
+              {project.images && project.images.length > 0 ? (
+                <AutoSizedList
+                  rowHeight={55}
+                  rowCount={project && project.images && project.images.length}
+                  rowRenderer={({ index, style, key }) => (
+                    <Row
+                      key={key}
+                      style={style}
+                      image={project.images[index]}
+                      projectId={project.projectId}
+                      onDelete={this.handleDelete}
+                      imageId={index}
+                      onSelect={this.handleSelected}
+                      selected={this.state.selectedList.includes(
+                        project.images[index].id
+                      )}
+                      isLast={index === project.images.length - 1}
+                    />
+                  )}
+                  overscanRowCount={10}
+                />
+              ) : null}
+            </Table.Body>
+          </Table>
+        </div>
       </div>
     )
   }
@@ -192,38 +454,82 @@ const mapDispatchToProps = dispatch => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
 
-const columnStyles = [
-  { flex: '0 0 80px', lineHeight: '32px' },
-  { flex: '1', lineHeight: '32px' },
-  { flex: '0 0 250px', lineHeight: '32px' }
-]
-
-const Row = ({ image, projectId, style, onDelete, imageId }) => (
-  <Table.Row style={{ ...style, display: 'flex' }}>
-    <Table.Cell style={columnStyles[0]}>{imageId + 1}</Table.Cell>
-    <Table.Cell style={columnStyles[1]}>
+const Row = ({
+  image,
+  projectId,
+  style,
+  onDelete,
+  imageId,
+  onSelect,
+  selected,
+  isLast
+}) => (
+  <Table.Row
+    style={{
+      ...style,
+      display: 'flex',
+      borderBottom: isLast ? '1px solid rgba(34,36,38,.1)' : ''
+    }}
+  >
+    <Table.Cell width={1}>
+      {imageId + 1}
+      {image.labelled ? <Icon name="checkmark green"></Icon> : null}
+    </Table.Cell>
+    <Table.Cell width={1}>
+      <Checkbox
+        onClick={() => {
+          onSelect(image.id)
+        }}
+        checked={selected}
+      />
+    </Table.Cell>
+    <Table.Cell width={11}>
       <a
+        rel={'external'}
         href={
-          'http://' +
-          process.env.REACT_APP_HOST +
-          ':' +
-          process.env.REACT_APP_SERVER_PORT +
-          `/static/uploads/${image.imageUrl}?${Date.now()}`
+          process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
+            ? image.image_url
+            : 'http://' +
+              process.env.REACT_APP_HOST +
+              ':' +
+              process.env.REACT_APP_SERVER_PORT +
+              `/static/uploads/${image.project_id}/${image.image_url}`
         }
       >
-        {image.imageName}
+        {image.image_name}
       </a>
+      {image.labelled ? (
+        <span className="labelDropdown">
+          <Dropdown text="Labels">
+            <Dropdown.Menu>
+              {Object.keys(image.labeldata).map((key, index) =>
+                image.labeldata[key].length !== 0 ? (
+                  <Dropdown.Item
+                    text={key + '  ' + image.labeldata[key].length}
+                    key={index}
+                  />
+                ) : null
+              )}
+            </Dropdown.Menu>
+          </Dropdown>
+        </span>
+      ) : null}
     </Table.Cell>
-    <Table.Cell style={columnStyles[2]}>
+    <Table.Cell width={3}>
       <div>
-        <Link to={`/labeller/${projectId}/${image._id}`}>
+        <Link to={`/labeller/${projectId}/${image.id}`}>
           <Button icon="pencil" label="Edit" size="tiny" />
         </Link>
         <Button
+          negative
+          basic
           icon="trash"
           label="Delete"
           size="tiny"
-          onClick={() => onDelete(image._id)}
+          onClick={async () => {
+            await onSelect(image.id)
+            onDelete()
+          }}
         />
       </div>
     </Table.Cell>

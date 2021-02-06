@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:labellab_mobile/data/repository.dart';
-import 'package:labellab_mobile/model/api_response.dart';
+import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProjectUploadImageBloc {
@@ -18,14 +19,18 @@ class ProjectUploadImageBloc {
 
   ProjectUploadImageBloc(this.projectId);
 
-  void selectImage(File image) {
-    final _image = UploadImage(image: image);
-    _images.add(_image);
+  void selectImages(List<UploadImage> images) {
+    _images = _images + images;
     _stateController.add(ProjectUploadImageState.imageChange(images: _images));
   }
 
   void unselectImage(UploadImage image) {
     _images.remove(image);
+    _stateController.add(ProjectUploadImageState.imageChange(images: _images));
+  }
+
+  void updateImage(int index, File image) {
+    _images[index] = UploadImage(image: image);
     _stateController.add(ProjectUploadImageState.imageChange(images: _images));
   }
 
@@ -52,8 +57,12 @@ class ProjectUploadImageBloc {
       _stateController
           .add(ProjectUploadImageState.error(err.toString(), images: _images));
     }).listen((response) {
-      print(response.msg);
+      Logger().i(response.msg.toString());
     });
+  }
+
+  int getImageIndex(UploadImage image) {
+    return _images.indexOf(image);
   }
 
   // Project stream

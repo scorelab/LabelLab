@@ -15,10 +15,10 @@ class Figure extends Component {
   }
 
   // abstract
-  onPointClick(i) {}
+  onPointClick(i) { }
 
   // abstract
-  onPointMoved(point, i) {}
+  onPointMoved(point, i) { }
 
   // abstract
   makeExtraElements() {

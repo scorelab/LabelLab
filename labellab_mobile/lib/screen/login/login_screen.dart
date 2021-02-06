@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 Text(
                   "Sign In",
-                  style: Theme.of(context).textTheme.headline,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Form(
                   key: _key,
@@ -49,9 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("email"),
                         labelText: "Email",
                         onSaved: (String value) {
-                          _user.email = value;
+                          _user.email = value.trim();
                         },
                         validator: _validateEmail,
                       ),
@@ -59,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 16,
                       ),
                       LabelTextFormField(
+                        key: Key("password"),
                         labelText: "Password",
                         isObscure: true,
                         onSaved: (String value) {
@@ -69,18 +71,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      RaisedButton(
-                        elevation: 0,
-                        color: Theme.of(context).accentColor,
-                        colorBrightness: Brightness.dark,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      Builder(
+                        builder: (context) => RaisedButton(
+                          key: Key("signin-button"),
+                          elevation: 0,
+                          color: Theme.of(context).accentColor,
+                          colorBrightness: Brightness.dark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: _isLoginIn
+                              ? Text("Signing In...")
+                              : Text("Sign In"),
+                          onPressed: !_isLoginIn
+                              ? () {
+                                  _onSubmit(context);
+                                }
+                              : null,
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: _isLoginIn
-                            ? Text("Signing In...")
-                            : Text("Sign In"),
-                        onPressed: _isLoginIn ? null : _onSubmit,
                       ),
                     ],
                   ),
@@ -89,14 +98,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Center(child: Text("or")),
                 ),
-                SignInButton(
-                  Buttons.GoogleDark,
-                  onPressed: () => !_isLoginIn ? _signInWithGoogle() : null,
+                Builder(
+                  builder: (context) => SignInButton(
+                    Buttons.GoogleDark,
+                    onPressed: () =>
+                        !_isLoginIn ? _signInWithGoogle(context) : null,
+                  ),
                 ),
-                SignInButton(
-                  Buttons.GitHub,
-                  onPressed: () =>
-                      !_isLoginIn ? _signInWithGithub(context) : null,
+                Builder(
+                  builder: (context) => SignInButton(
+                    Buttons.GitHub,
+                    onPressed: () =>
+                        !_isLoginIn ? _signInWithGithub(context) : null,
+                  ),
                 ),
                 SizedBox(
                   height: 16,
@@ -120,6 +134,10 @@ class _LoginScreenState extends State<LoginScreen> {
   String _validateEmail(String email) {
     if (email.isEmpty) {
       return "Email can't be empty";
+    } else if (!RegExp(
+            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+        .hasMatch(email.trim())) {
+      return "Invalid email";
     }
     return null;
   }
@@ -131,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  void _onSubmit() {
+  void _onSubmit(BuildContext context) {
     if (_key.currentState.validate()) {
       _key.currentState.save();
 
@@ -151,14 +169,12 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoginIn = false;
         });
         print(err.toString());
-        // Scaffold.of(context).showSnackBar(SnackBar(
-        //   content: Text("Sign in failed!"),
-        // ));
+        _showAuthFailSnackbar(context);
       });
     }
   }
 
-  void _signInWithGoogle() {
+  void _signInWithGoogle(BuildContext context) {
     setState(() {
       _isLoginIn = true;
     });
@@ -175,9 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoginIn = false;
       });
       print(err.toString());
-      // Scaffold.of(context).showSnackBar(SnackBar(
-      //   content: Text("Sign in failed!"),
-      // ));
+      _showAuthFailSnackbar(context);
     });
   }
 
@@ -207,11 +221,19 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoginIn = false;
         });
+        _showAuthFailSnackbar(context);
       }
     });
   }
 
   void _onCreateAccount() {
     Application.router.navigateTo(context, "/signup");
+  }
+
+  void _showAuthFailSnackbar(BuildContext context) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text("Sign in failed"),
+      backgroundColor: Colors.redAccent,
+    ));
   }
 }

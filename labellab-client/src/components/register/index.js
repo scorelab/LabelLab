@@ -1,10 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Message, Button, Form, Icon } from 'semantic-ui-react'
+import {
+  Message,
+  Button,
+  Form,
+  Icon,
+  Header,
+  Label,
+  Input
+} from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 import { userRegister } from '../../actions/index'
 import register from './css/register.css'
 import validateInput from '../../utils/validation'
+import { isEmail } from '../../utils/helpers'
 
 class RegisterIndex extends Component {
   constructor(props) {
@@ -18,20 +28,25 @@ class RegisterIndex extends Component {
       submitted: false
     }
   }
+
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
     })
   }
+
   handleSubmit = e => {
     e.preventDefault()
     const { name, username, email, password, password2 } = this.state
     const { history, setProfile } = this.props
+
     this.setState({
       submitted: true
     })
+
     if (name && username && email && password && password2) {
       const checkPass = validateInput(password, 'password')
+
       if (checkPass.isValid) {
         if (password === password2) {
           let data = {
@@ -41,6 +56,7 @@ class RegisterIndex extends Component {
             password: password,
             password2: password2
           }
+
           setProfile(data, () => {
             history.push('/login')
           })
@@ -69,109 +85,162 @@ class RegisterIndex extends Component {
       submitted,
       errors
     } = this.state
+
     return (
-      <div>
-        <Message
-          attached
-          header="Welcome to our site!"
-          content="Fill out the form below to sign-up for a new account"
-        />
-        <Form onSubmit={this.handleSubmit} className="attached fluid segment">
-          <Form.Input
-            error={errField === 'name' || (submitted && name === '')}
-            onChange={this.onChange}
-            fluid
-            name="name"
-            label="Name"
-            placeholder="Name"
-            type="text"
-          />
-          {submitted && !name && (
-            <div className="register-error-text">
-              Name field cannot be empty
-            </div>
-          )}
-          {statusText && errField === 'name' && (
-            <div className={register.errorText}>{statusText}</div>
-          )}
-          <Form.Input
-            error={errField === 'email' || (submitted && email === '')}
-            onChange={this.onChange}
-            name="email"
-            label="Email"
-            placeholder="Email"
-            type="email"
-          />
-          {submitted && !email && (
-            <div className="register-error-text">
-              Email field cannot be empty
-            </div>
-          )}
-          {statusText && errField === 'email' && (
-            <div className="register-error-text">{statusText}</div>
-          )}
-          <Form.Input
+      <div className="register-parent">
+        <Header as="h2" textAlign="center">
+          <Header.Content>
+            LabelLab
+            <Header.Subheader>Create an account</Header.Subheader>
+          </Header.Content>
+        </Header>
+
+        <Form onSubmit={this.handleSubmit} className="register-form">
+          <Form.Field error={errField === 'name' || (submitted && name === '')}>
+            <label>Name</label>
+
+            <Input
+              onChange={this.onChange}
+              fluid
+              name="name"
+              placeholder="Name"
+              type="text"
+            />
+            {submitted && !name && (
+              <Label pointing color="red">
+                Name cannot be empty!
+              </Label>
+            )}
+            {statusText && errField === 'name' && (
+              <Label pointing color="red">
+                {statusText}
+              </Label>
+            )}
+          </Form.Field>
+
+          <Form.Field
+            error={
+              errField === 'email' ||
+              (submitted && (email === '' || !isEmail(email)))
+            }
+          >
+            <label>E-mail address</label>
+
+            <Input
+              onChange={this.onChange}
+              name="email"
+              placeholder="E-mail address"
+              type="email"
+            />
+            {submitted && !email && (
+              <Label pointing color="red">
+                E-mail address cannot be empty!
+              </Label>
+            )}
+            {submitted && email && !isEmail(email) && (
+              <Label pointing color="red">
+                E-mail address is invalid!
+              </Label>
+            )}
+            {statusText && errField === 'email' && (
+              <Label pointing color="red">
+                {statusText}
+              </Label>
+            )}
+          </Form.Field>
+
+          <Form.Field
             error={errField === 'username' || (submitted && username === '')}
-            onChange={this.onChange}
-            name="username"
-            label="Username"
-            placeholder="Username"
-            type="text"
-          />
-          {submitted && !username && (
-            <div className="register-error-text">
-              Username field cannot be empty
-            </div>
-          )}
-          {statusText && errField === 'username' && (
-            <div className="register-error-text">{statusText}</div>
-          )}
-          <Form.Input
+          >
+            <label>Username</label>
+
+            <Input
+              onChange={this.onChange}
+              name="username"
+              placeholder="Username"
+              type="text"
+            />
+            {submitted && !username && (
+              <Label pointing color="red">
+                Username cannot be empty!
+              </Label>
+            )}
+            {statusText && errField === 'username' && (
+              <Label pointing color="red">
+                {statusText}
+              </Label>
+            )}
+          </Form.Field>
+
+          <Form.Field
             error={errField === 'password' || (submitted && password === '')}
-            onChange={this.onChange}
-            name="password"
-            label="Password"
-            placeholder="Password"
-            type="password"
-          />
-          {submitted && !password && (
-            <div className="register-error-text">
-              Password field cannot be empty
-            </div>
-          )}
-          {statusText && errField === 'password' && (
-            <div className="register-error-text">{statusText}</div>
-          )}
-          <Form.Input
-            error={errField === 'password2' || (submitted && password2 === '')}
-            onChange={this.onChange}
-            name="password2"
-            label="Confirm Password"
-            placeholder="Confirm Password"
-            type="password"
-          />
-          {submitted && !password2 && (
-            <div className="register-error-text">
-              Confirm password field cannot be empty
-            </div>
-          )}
-          {submitted && password && password2 && password !== password2 && (
-            <div className="register-error-text">
-              Both password are not equal!
-            </div>
-          )}
-          {statusText && errField === 'password2' && (
-            <div className="register-error-text">{statusText}</div>
-          )}
-          {errors && <div className="register-error-text">{errors}</div>}
+          >
+            <label>Password</label>
+
+            <Input
+              onChange={this.onChange}
+              name="password"
+              placeholder="Password"
+              type="password"
+            />
+            {submitted && !password && (
+              <Label pointing color="red">
+                Password cannot be empty!
+              </Label>
+            )}
+            {statusText && errField === 'password' && (
+              <Label pointing color="red">
+                {statusText}
+              </Label>
+            )}
+          </Form.Field>
+
+          <Form.Field
+            error={
+              errField === 'password2' ||
+              (submitted &&
+                (password2 === '' || (password && password !== password2)))
+            }
+          >
+            <label>Confirm Password</label>
+
+            <Input
+              onChange={this.onChange}
+              name="password2"
+              placeholder="Confirm password"
+              type="password"
+            />
+            {submitted && !password2 && (
+              <Label pointing color="red">
+                Confirm password cannot be empty!
+              </Label>
+            )}
+            {submitted && password && password2 && password !== password2 && (
+              <Label pointing color="red">
+                Passwords do not match!
+              </Label>
+            )}
+            {statusText && errField === 'password2' && (
+              <Label pointing color="red">
+                {statusText}
+              </Label>
+            )}
+          </Form.Field>
+
+          {statusText ? (
+            <Message negative>
+              <Icon name="warning circle" />
+              {statusText}
+            </Message>
+          ) : null}
           <Button loading={isRegistering} color="blue">
-            Submit
+            Register
           </Button>
         </Form>
-        <Message attached="bottom" warning>
-          <Icon name="help" />
-          Already signed up?&nbsp;<a href="/login">Login here</a>&nbsp;instead.
-        </Message>
+        <div className="register-login">
+          Already have an account? &nbsp;
+          <Link to="/login">Login here</Link>
+        </div>
       </div>
     )
   }

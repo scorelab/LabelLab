@@ -2,9 +2,31 @@
   padding: 2em 0;
 }
 .add-member {
-  background-color: #00a89f !important;
   color: white !important;
 }
 .team-remove-user-icon:hover {
   cursor: pointer;
+}
+
+.ui.container {
+  margin-left: unset !important;
+}
+
+.all-teams {
+  margin-right: 20px !important;
+}
+
+.my-team {
+  margin: 0 !important;
+}
+
+.team-management-conatiner {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+@media only screen and (max-width: 767px) {
+  .ui.container {
+    width: 100% !important;
+  }
 }

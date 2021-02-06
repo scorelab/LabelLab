@@ -1,14 +1,20 @@
 version: "3"
 
 services:
-  server:
-    build: ./labellab-server
-    working_dir: /labellab-server/
+
+  flask_server:
+    build: ./labellab-flask
     ports:
-      - 4000:4000
-    volumes:
-      - ./labellab-server/:/labellab-server
-    
+      - 5000:5000
+    restart: always
+    links:
+      - mysql:dbserver
+    environment:
+      FLASK_ENV: development
+
+  mysql:
+    image: "mysql/mysql-server:5.7"
+    restart: always
 
   client:
     build: ./labellab-client

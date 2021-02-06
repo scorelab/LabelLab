@@ -20,25 +20,25 @@ class PreviousProject extends Component {
     const { actions, projects } = this.props
     return (
       <div className="previous-card-parent">
-        <Card.Group itemsPerRow={3}>
+        <Card.Group itemsPerRow={3} stackable={true}>
           {!actions.isfetching ? (
             projects[0] &&
             projects.map((project, index) => (
               <Card
                 key={index}
-                onClick={() => this.handleClick(project._id)}
+                onClick={() => this.handleClick(project.id)}
                 color="green"
               >
                 <Card.Content
                   className="card-headers"
-                  header={project.projectName}
+                  header={project.project_name}
                 />
-                <Card.Content description={project.projectDescription} />
+                <Card.Content description={project.project_description} />
               </Card>
             ))
           ) : (
-            <CardLoader />
-          )}
+              <CardLoader />
+            )}
         </Card.Group>
       </div>
     )

@@ -4,7 +4,14 @@ import Loadable from 'react-loadable'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { fetchProject, getTimeLabel, fetchLabels } from '../../actions/index'
+import {
+  fetchProject,
+  getTimeLabel,
+  getLabelCount,
+  fetchLabels,
+  fetchCoordinates,
+  fetchAllTeams
+} from '../../actions/index'
 import Load from '../loading/index'
 import './css/index.css'
 
@@ -46,6 +53,14 @@ const Labels = Loadable({
   loader: () => import('./label/index'),
   loading: Loading
 })
+const Models = Loadable({
+  loader: () => import('./models'),
+  loading: Loading
+})
+const PathTracking = Loadable({
+  loader: () => import('./path-tracking'),
+  loading: Loading
+})
 
 class ProjectIndex extends Component {
   constructor(props) {
@@ -53,10 +68,21 @@ class ProjectIndex extends Component {
     this.state = {}
   }
   componentDidMount() {
-    const { match, fetchProject, fetchTimeLabel, fetchLabels } = this.props
+    const {
+      match,
+      fetchProject,
+      fetchTimeLabel,
+      fetchLabels,
+      fetchLabelCount,
+      fetchCoordinates,
+      fetchAllTeams
+    } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
     fetchLabels(match.params.projectId)
+    fetchLabelCount(match.params.projectId)
+    fetchCoordinates(match.params.projectId)
+    fetchAllTeams(match.params.projectId)
   }
   render() {
     const { match, actions, history, actionsLabel } = this.props
@@ -74,9 +100,10 @@ class ProjectIndex extends Component {
         ) : null}
         <ProjectNavbar history={history} />
         <div className="project-main">
-          <Sidebar history={history} />
-          <div className="project-non-side-section">
+          <Sidebar history={history}>
             <ProjectDescription history={history} />
+          </Sidebar>
+          <div className="project-non-side-section">
             <Switch>
               <PrivateRoute
                 exact
@@ -98,6 +125,23 @@ class ProjectIndex extends Component {
                 path={`${match.path}/labels`}
                 component={Labels}
               />
+              <PrivateRoute
+                exact
+                path={`${match.path}/models`}
+                component={Models}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/path-tracking`}
+                component={props =>
+                  <PathTracking
+                    isMarkerShown
+                    googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`}
+                    loadingElement={<div style={{ height: `100%` }} />}
+                    containerElement={<div style={{ height: `400px` }} />}
+                    mapElement={<div style={{ height: `100%` }} />}
+                  />}
+              />
             </Switch>
           </div>
         </div>
@@ -114,7 +158,8 @@ ProjectIndex.propTypes = {
   fetchTimeLabel: PropTypes.func,
   match: PropTypes.object,
   actionsLabel: PropTypes.object,
-  fetchLabels: PropTypes.func
+  fetchLabels: PropTypes.func,
+  fetchAllTeams: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -135,6 +180,15 @@ const mapDispatchToProps = dispatch => {
     },
     fetchTimeLabel: projectId => {
       return dispatch(getTimeLabel(projectId))
+    },
+    fetchLabelCount: projectId => {
+      return dispatch(getLabelCount(projectId))
+    },
+    fetchCoordinates: projectId => {
+      return dispatch(fetchCoordinates(projectId))
+    },
+    fetchAllTeams: projectId => {
+      return dispatch(fetchAllTeams(projectId))
     }
   }
 }

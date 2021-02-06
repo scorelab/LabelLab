@@ -19,7 +19,7 @@ class ProjectViewImageScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text(""),
             elevation: 0,
-            actions: _buildActions(context),
+            actions: _buildActions(context, snapshot),
           ),
           body: _buildBody(context, snapshot),
           floatingActionButton: FloatingActionButton(
@@ -35,18 +35,28 @@ class ProjectViewImageScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildActions(BuildContext context) {
+  List<Widget> _buildActions(
+      BuildContext context, AsyncSnapshot<ProjectViewImageState> snapshot) {
     return [
       PopupMenuButton<int>(
         onSelected: (int value) {
-          if (value == 0) {
-            _showDeleteConfirmation(context);
+          switch (value) {
+            case 0:
+              _gotoImagePathScreen(context, snapshot.data.image.id);
+              break;
+            case 1:
+              _showDeleteConfirmation(context);
+              break;
           }
         },
         itemBuilder: (context) {
           return [
             PopupMenuItem(
               value: 0,
+              child: Text("Show Path"),
+            ),
+            PopupMenuItem(
+              value: 1,
               child: Text("Delete"),
             )
           ];
@@ -61,29 +71,29 @@ class ProjectViewImageScreen extends StatelessWidget {
       ProjectViewImageState _state = snapshot.data;
       return Column(
         mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _state.isLoading ? LinearProgressIndicator() : Container(),
           _state.error != null ? Text(_state.error) : Container(),
-          _state.image != null
+          _state.image != null && _state.image.labels != null
               ? LabelSelectionList(_state.image.labels, false)
               : Container(),
           _state.image != null
               ? Expanded(
                   child: Container(
-                    decoration: new BoxDecoration(
-                      image: _state.image != null
-                          ? DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                  _state.image.imageUrl))
-                          : null,
-                    ),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                                _state.image.imageUrl))),
                     child: CustomPaint(
                       size: Size.infinite,
-                      painter: LabelSelectionPainter(
-                        _state.image.labels,
-                        null,
-                        _state.image,
-                      ),
+                      painter: _state.image.labels != null
+                          ? LabelSelectionPainter(
+                              _state.image.labels,
+                              null,
+                              _state.image,
+                            )
+                          : null,
                     ),
                   ),
                 )
@@ -122,5 +132,11 @@ class ProjectViewImageScreen extends StatelessWidget {
         Navigator.pop(baseContext);
       }
     });
+  }
+
+  void _gotoImagePathScreen(BuildContext context, String imageId) {
+    final String projectId =
+        Provider.of<ProjectViewImageBloc>(context).projectId;
+    Application.router.navigateTo(context, "/project/$projectId/path/$imageId");
   }
 }

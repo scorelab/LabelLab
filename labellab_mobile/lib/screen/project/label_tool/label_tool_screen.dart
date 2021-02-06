@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/label.dart';
-import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/common/label_selection_list.dart';
 import 'package:labellab_mobile/screen/project/common/label_selection_painter.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
@@ -46,6 +46,11 @@ class LabelToolScreen extends StatelessWidget {
         LabelSelectionList(
           state.selections,
           true,
+          onTap: (selection) {
+            !state.isUpdating
+                ? Provider.of<LabelToolBloc>(context).updateSelection(selection)
+                : null;
+          },
           onDeleted: (selection) {
             Provider.of<LabelToolBloc>(context).removeSelection(selection);
           },
@@ -65,7 +70,8 @@ class LabelToolScreen extends StatelessWidget {
                           context,
                           state.currentSelection.label.type ==
                                   LabelType.POLYGON &&
-                              state.currentSelection.points.length > 0)
+                              state.currentSelection.points.length > 0,
+                          state.isUpdating)
                       : _buildMainActions(context, state),
                 ),
               )
@@ -131,6 +137,12 @@ class LabelToolScreen extends StatelessWidget {
                   bottom: 0,
                   child: Row(
                     children: <Widget>[
+                      state.isUpdating
+                          ? Text(
+                              "Updating\t\t",
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            )
+                          : Container(),
                       Chip(
                         backgroundColor: Colors.blue,
                         label: Text(
@@ -141,12 +153,15 @@ class LabelToolScreen extends StatelessWidget {
                       SizedBox(
                         width: 8,
                       ),
-                      Text(
-                        state.currentSelection.label.type == LabelType.POLYGON
-                            ? "Tap to draw a polygon"
-                            : "Touch and drag to draw a rectangle",
-                        style: TextStyle(color: Colors.black45),
-                      ),
+                      !state.isUpdating
+                          ? Text(
+                              state.currentSelection.label.type ==
+                                      LabelType.POLYGON
+                                  ? "Tap to draw a polygon"
+                                  : "Touch and drag to draw a rectangle",
+                              style: TextStyle(color: Colors.black45),
+                            )
+                          : Container(),
                     ],
                   ),
                 )
@@ -180,15 +195,16 @@ class LabelToolScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawTools(BuildContext context, isUndoEnable) {
+  Widget _buildDrawTools(BuildContext context, isUndoEnable, isUpdating) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         LabelIconButton(
           Icons.close,
           "Cancel",
-          onTap: () =>
-              Provider.of<LabelToolBloc>(context).cancelCurrentSelection(),
+          onTap: () => isUpdating
+              ? Provider.of<LabelToolBloc>(context).cancelUpdatingSelection()
+              : Provider.of<LabelToolBloc>(context).cancelCurrentSelection(),
         ),
         LabelIconButton(
           Icons.refresh,
@@ -206,7 +222,7 @@ class LabelToolScreen extends StatelessWidget {
         ),
         LabelIconButton(
           Icons.done,
-          "Done",
+          isUpdating ? "Update" : "Done",
           onTap: () =>
               Provider.of<LabelToolBloc>(context).saveCurrentSelection(),
         ),
@@ -224,8 +240,21 @@ class LabelToolScreen extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text("Select label",
-                  style: Theme.of(context).textTheme.title),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("Select label",
+                      style: Theme.of(context).textTheme.headline6),
+                  FlatButton.icon(
+                    icon: Icon(Icons.add),
+                    label: Text("Add"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showAddLabelModel(baseContext);
+                    },
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 8,
@@ -252,5 +281,20 @@ class LabelToolScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  _showAddLabelModel(BuildContext baseContext) {
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return AddEditLabelDialog(
+          Provider.of<LabelToolBloc>(baseContext).projectId,
+        );
+      },
+    ).then((bool isSuccess) {
+      if (isSuccess) {
+        Provider.of<LabelToolBloc>(baseContext).refresh();
+      }
+    });
   }
 }

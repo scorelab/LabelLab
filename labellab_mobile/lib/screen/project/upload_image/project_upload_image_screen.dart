@@ -1,10 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_state.dart';
+import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ProjectUploadImageScreen extends StatelessWidget {
   @override
@@ -74,18 +81,35 @@ class ProjectUploadImageScreen extends StatelessWidget {
             ),
             image.state == UploadImageState.PENDING
                 ? Positioned(
-                    right: 8,
                     top: 8,
-                    child: GestureDetector(
-                      child: Icon(
-                        Icons.cancel,
-                        size: 28,
-                        color: Colors.black54,
-                      ),
-                      onTap: () {
-                        Provider.of<ProjectUploadImageBloc>(context)
-                            .unselectImage(image);
-                      },
+                    left: 8,
+                    right: 8,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        GestureDetector(
+                          child: Icon(
+                            Icons.edit,
+                            size: 28,
+                            color: Colors.black54,
+                          ),
+                          onTap: () {
+                            _showImageEdit(context, image);
+                          },
+                        ),
+                        GestureDetector(
+                          child: Icon(
+                            Icons.cancel,
+                            size: 28,
+                            color: Colors.black54,
+                          ),
+                          onTap: () {
+                            Provider.of<ProjectUploadImageBloc>(context)
+                                .unselectImage(image);
+                          },
+                        ),
+                      ],
                     ),
                   )
                 : Container(),
@@ -119,44 +143,91 @@ class ProjectUploadImageScreen extends StatelessWidget {
           child: Container(color: Colors.black12, child: Icon(Icons.add)),
         ),
       ),
-      onTap: () => _showChangePictureMethodSelect(context),
+      onTap: () => _selectImages(context),
     );
   }
 
-  void _showChangePictureMethodSelect(BuildContext pageContext) {
-    showDialog(
-      context: pageContext,
-      builder: (context) => AlertDialog(
-        title: Text("Choose method"),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+  void _selectImages(BuildContext context) async {
+    if (await Permission.accessMediaLocation.request().isGranted) {
+      List<UploadImage> uploadImages = List<UploadImage>();
+
+      MultiImagePicker.pickImages(
+        maxImages: 100,
+        enableCamera: true,
+        materialOptions: MaterialOptions(
+          actionBarTitle: "Select Images",
+          actionBarColor: "#00a89f",
+          statusBarColor: "#a2a2a2",
+          useDetailsView: false,
         ),
-        elevation: 8,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.camera),
-              title: Text("Camera"),
-              onTap: () => _showImagePicker(context, ImageSource.camera),
-            ),
-            ListTile(
-              leading: Icon(Icons.photo_library),
-              title: Text("Gallery"),
-              onTap: () => _showImagePicker(pageContext, ImageSource.gallery),
-            ),
-          ],
-        ),
-      ),
-    );
+      ).then((images) {
+        // Emmits upload images
+        Observable.fromIterable(images).flatMap((image) {
+          // To create a temp image file
+          Future<File> fetchImageFile = image.getByteData().then((byteData) {
+            return getTemporaryDirectory().then((tempDir) {
+              return new File(tempDir.path + '/' + image.name).writeAsBytes(
+                  byteData.buffer.asUint8List(
+                      byteData.offsetInBytes, byteData.lengthInBytes));
+            });
+          });
+
+          // To read image metadata
+          Future<Metadata> fetchMetadata = image.metadata;
+
+          return Future.wait([fetchImageFile, fetchMetadata]).then((result) {
+            return UploadImage(
+                name: image.name, image: result.first, metadata: result.last);
+          }).asStream();
+        }).doOnDone(() {
+          Provider.of<ProjectUploadImageBloc>(context)
+              .selectImages(uploadImages);
+        }).listen((uploadImage) {
+          uploadImages.add(uploadImage);
+        });
+      }).catchError((err) => Logger().e(err.toString()));
+    } else {
+      Logger().e("Permission denied");
+    }
   }
 
-  void _showImagePicker(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source).then((image) {
-      if (image != null) {
-        Provider.of<ProjectUploadImageBloc>(context).selectImage(image);
-        Navigator.pop(context);
-      }
-    });
+  void _showImageEdit(BuildContext context, UploadImage image) async {
+    final imageIndex =
+        Provider.of<ProjectUploadImageBloc>(context).getImageIndex(image);
+
+    File editedFile = await ImageCropper.cropImage(
+        sourcePath: image.image.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Edit Image',
+          toolbarColor: Theme.of(context).accentColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        iosUiSettings: IOSUiSettings(
+          title: 'Edit Image',
+        ));
+    if (editedFile != null) {
+      Provider.of<ProjectUploadImageBloc>(context)
+          .updateImage(imageIndex, editedFile);
+    }
   }
 }

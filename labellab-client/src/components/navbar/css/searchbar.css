@@ -1,12 +1,16 @@
-.core-searchbar {
-  position: absolute;
-  margin-left: 184px;
-  margin-top: 25px;
+.searchbar-parent {
   width: 340px;
   height: 46px;
   border-radius: 5px;
-  background-color: #eeeeee;
 }
+
+@media only screen and (min-width: 600px) {
+  .searchbar-parent {
+    position: absolute;
+    margin-left: 184px;
+  }
+}
+
 .size {
-  font-size: 1.1em !important;
+  /* font-size: 1.1em !important; */
 }

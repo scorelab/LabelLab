@@ -13,10 +13,10 @@ import {
 
 import FetchApi from '../utils/FetchAPI'
 
-export const submitImage = (data, callback) => {
+export const submitImage = (data, projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/image/' + data.projectId + '/create', data, true)
+    FetchApi.post('/api/v1/image/create/' + projectId, data)
       .then(res => {
         dispatch(success(res.data.body))
         callback()
@@ -43,7 +43,7 @@ export const submitImage = (data, callback) => {
 export const fetchProjectImage = (imageId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/image/' + imageId + '/get', null, true)
+    FetchApi.get('/api/v1/image/get_image/' + imageId)
       .then(res => {
         dispatch(success(res.data.body))
         callback()
@@ -67,10 +67,10 @@ export const fetchProjectImage = (imageId, callback) => {
   }
 }
 
-export const deleteImage = (imageId, projectId, callback) => {
+export const deleteImage = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('DELETE', '/api/v1/image/' + imageId + '/delete', null, true)
+    FetchApi.delete('/api/v1/image/delete', data)
       .then(res => {
         dispatch(success())
         callback()

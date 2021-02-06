@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom'
 import {
   Card,
   Image,
-  Header,
+  Label,
   Container,
   Menu,
   Dimmer,
-  Loader
+  Loader,
+  Dropdown,
+  Button,
+  Grid
 } from 'semantic-ui-react'
 import Navbar from '../navbar/project'
 import {
@@ -21,7 +24,7 @@ import {
 import { hasToken } from '../../utils/token'
 import { TOKEN_TYPE } from '../../constants/index'
 import CardLoader from '../../utils/cardLoader'
-import Edit from './edit'
+import ProfileCard from './profile-card'
 import './css/profile.css'
 class Profile extends Component {
   constructor(props) {
@@ -50,13 +53,27 @@ class Profile extends Component {
         image: reader.result,
         file: file
       })
-      this.onSubmit(e)
+      this.onSubmit()
     }
     reader.readAsDataURL(file)
   }
-  onSubmit = e => {
+  handleRemoveImage = () => {
+    this.setState({
+      image: null,
+      file: null
+    })
+    this.onSubmit()
+  }
+  onSubmit = () => {
+    const { uploadImage } = this.props
     let { file, image } = this.state
-    if (file && file.size > 101200) {
+    if (!file && !image) {
+      let data = {
+        image: null,
+        format: null
+      }
+      uploadImage(data, this.imageCallback)
+    } else if (file && file.size > 101200) {
       this.setState({
         max_size_error: 'max sized reached'
       })
@@ -65,7 +82,7 @@ class Profile extends Component {
         image: image,
         format: file.type
       }
-      this.props.uploadImage(data, this.imageCallback)
+      uploadImage(data, this.imageCallback)
     }
   }
   handleClick = id => {
@@ -74,6 +91,10 @@ class Profile extends Component {
     })
   }
   imageCallback = () => {
+    this.setState({
+      image: null,
+      file: null
+    })
     this.props.fetchUser()
   }
   render() {
@@ -81,99 +102,85 @@ class Profile extends Component {
     return (
       <div>
         <Navbar title="Profile" history={history} />
-        <Container>
-          {!isfetching ? (
-            <React.Fragment>
-              <div className="profile-first">
-                <div className="profile-first-leftbar">
-                  <Image
-                    centered
-                    src={
-                      user.profileImage === ''
-                        ? `${user.thumbnail}`
-                        : `${user.profileImage}?${Date.now()}`
-                    }
-                    size="small"
-                  />
-                  <div className="profile-edit-button">
-                    <input
-                      type="file"
-                      onChange={this.handleImageChange}
-                      className="profile-file-input"
-                      id="profile-embedpollfileinput"
-                    />
-                    <label
-                      htmlFor="profile-embedpollfileinput"
-                      className="ui medium primary left floated button custom-margin"
-                    >
-                      Edit
-                    </label>
-                  </div>
-                </div>
-                <div className="profile-first-rightbar">
-                  <Edit />
-                  <div className="profile-rightbar-child">
-                    <div>
-                      <Header as="h5" content="Total Projects" />
-                      {profile.totalProjects}
-                    </div>
-                    <div>
-                      <Header as="h5" content="Total Images" />
-                      {profile.totalImages}
-                    </div>
-                    <div>
-                      <Header as="h5" content="Total Labels" />
-                      {profile.totalLabels}
-                    </div>
-                  </div>
-                </div>
+        {!isfetching ? (
+          <React.Fragment>
+            <div className="container">
+              <div className="profile">
+                <ProfileCard />
               </div>
-              <div className="project-second">
-                <div className="project-second-leftbar">
-                  <Menu vertical>
-                    <Menu.Item as={Link} to="" name="projects">
-                      Projects
-                    </Menu.Item>
+              <div className="content">
+                <div className="title">Projects Information</div>
 
-                    <Menu.Item as={Link} to="" name="analytics">
-                      Analytics
-                    </Menu.Item>
-
-                    <Menu.Item as={Link} to="" name="summary">
-                      Summary
-                    </Menu.Item>
-                  </Menu>
+                <div className="project-details">
+                  <div className="project-detail">
+                    <div className="key">Total Projects</div>
+                    <div className="value">{profile.totalProjects}</div>
+                  </div>
+                  <div className="project-detail">
+                    <div className="key">Total Images</div>
+                    <div className="value">{profile.totalImages}</div>
+                  </div>
+                  <div className="project-detail">
+                    <div className="key">Total Labels</div>
+                    <div className="value">{profile.totalLabels}</div>
+                  </div>
                 </div>
-                <div className="project-second-rightbar">
-                  <Card.Group itemsPerRow={3}>
-                    {!actions.isfetching ? (
-                      projects[0] &&
-                      projects.map((project, index) => (
-                        <Card
-                          key={index}
-                          onClick={() => this.handleClick(project._id)}
-                        >
-                          <Card.Content
-                            className="card-headers"
-                            header={project.projectName}
-                          />
-                          <Card.Content description={project.projectDescription} />
-                          <Card.Content extra />
-                        </Card>
-                      ))
-                    ) : (
+                <div className="title">Projects</div>
+                <Card.Group itemsPerRow={3} stackable={true}>
+                  {!actions.isfetching ? (
+                    projects[0] &&
+                    projects.map((project, index) => (
+                      <Card
+                        key={index}
+                        onClick={() => this.handleClick(project.id)}
+                      >
+                        <Card.Content
+                          className="card-headers"
+                          header={project.project_name}
+                        />
+                        <Card.Content
+                          description={project.project_description}
+                        />
+                        <Card.Content extra />
+                      </Card>
+                    ))
+                  ) : (
                       <CardLoader />
                     )}
-                  </Card.Group>
-                </div>
+                </Card.Group>
               </div>
-            </React.Fragment>
-          ) : (
+            </div>
+            {/* <div className="project-second">
+              <div className="project-second-leftbar">
+                <Menu vertical>
+                  <Menu.Item as={Link} to="" name="projects">
+                    Projects
+                  </Menu.Item>
+                  <Dropdown item text="Project Analytics">
+                    <Dropdown.Menu>
+                      {projects.map(project => (
+                        <Dropdown.Item
+                          key={project.id}
+                          as={Link}
+                          to={'/project/' + project.id + '/analytics'}
+                        >
+                          {project.project_name}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Menu.Item as={Link} to="" name="summary">
+                    Summary
+                  </Menu.Item>
+                </Menu>
+              </div>
+            </div> */}
+          </React.Fragment>
+        ) : (
             <Dimmer active>
               <Loader indeterminate>Loading..</Loader>
             </Dimmer>
           )}
-        </Container>
       </div>
     )
   }

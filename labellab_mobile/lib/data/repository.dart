@@ -5,19 +5,26 @@ import 'package:labellab_mobile/data/local/project_provider.dart';
 import 'package:labellab_mobile/data/local/user_provider.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
+import 'package:labellab_mobile/data/remote/dto/refresh_response.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
-import 'package:labellab_mobile/model/api_response.dart';
+import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
+import 'package:labellab_mobile/model/location.dart';
+import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class Repository {
   LabelLabAPI _api;
@@ -29,9 +36,11 @@ class Repository {
 
   Future<bool> initToken() {
     return SharedPreferences.getInstance().then((pref) {
-      String token = pref.getString("token");
-      if (token != null) {
-        accessToken = token;
+      String accessTokenStored = pref.getString("access_token");
+      String refreshTokenStored = pref.getString("refresh_token");
+
+      if (accessTokenStored != null && refreshTokenStored != null) {
+        accessToken = accessTokenStored;
         return true;
       } else {
         return false;
@@ -40,33 +49,51 @@ class Repository {
   }
 
   Future<LoginResponse> login(AuthUser user) {
-    return _api.login(user).then((response) => _storeAccessToken(response));
+    return _api.login(user).then((response) => _storeTokens(response));
   }
 
   Future<LoginResponse> loginWithGoogle(GoogleUserRequest user) {
     return _api
         .loginWithGoogle(user)
-        .then((response) => _storeAccessToken(response));
+        .then((response) => _storeTokens(response));
   }
 
   Future<LoginResponse> loginWithGithub(String code) {
     return _api
         .loginWithGithub(code)
-        .then((response) => _storeAccessToken(response));
+        .then((response) => _storeTokens(response));
   }
 
-  LoginResponse _storeAccessToken(LoginResponse response) {
-    this.accessToken = response.token;
+  LoginResponse _storeTokens(LoginResponse response) {
+    this.accessToken = response.accessToken;
     SharedPreferences.getInstance().then((pref) {
-      pref.setString("token", response.token);
+      pref.setString("access_token", response.accessToken);
+      pref.setString("refresh_token", response.refreshToken);
     });
     return response;
+  }
+
+  Future<bool> refreshToken() {
+    return SharedPreferences.getInstance().then((pref) {
+      final String refreshToken = pref.getString('refresh_token');
+
+      return _api.refreshToken(refreshToken).then((response) {
+        this.accessToken = response.accessToken;
+        pref.setString("access_token", response.accessToken);
+        Logger().i("Token updated");
+        return true;
+      }).catchError((err) {
+        Logger().e(err);
+        return false;
+      });
+    });
   }
 
   Future<void> logout() {
     this.accessToken = null;
     return SharedPreferences.getInstance().then((pref) async {
-      pref.setString("token", null);
+      pref.setString("access_token", null);
+      pref.setString("refresh_token", null);
       await _userProvider.delete();
     });
   }
@@ -125,10 +152,10 @@ class Repository {
   Future<List<Project>> getProjects() {
     if (accessToken == null) return Future(null);
     return _api.getProjects(accessToken).then((projects) {
-      _projectProvider.open().then((_) async {
-        await _projectProvider.replaceProjects(projects);
-        _projectProvider.close();
-      });
+      // _projectProvider.open().then((_) async {
+      //   await _projectProvider.replaceProjects(projects);
+      //   _projectProvider.close();
+      // });
       return projects;
     });
   }
@@ -159,20 +186,57 @@ class Repository {
     return _api.uploadImage(accessToken, projectId, image);
   }
 
+  Future<List<Image>> getImages(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getImages(accessToken, projectId);
+  }
+
   Future<Image> getImage(String imageId) {
     if (accessToken == null) return Future(null);
     return _api.getImage(accessToken, imageId);
   }
 
   Future<ApiResponse> updateImage(
-      Image image, List<LabelSelection> selections) {
+      String projectId, Image image, List<LabelSelection> selections) {
     if (accessToken == null) return Future(null);
-    return _api.updateImage(accessToken, image, selections);
+    return _api.updateImage(accessToken, projectId, image, selections);
   }
 
-  Future<ApiResponse> deleteImage(String imageId) {
+  Future<ApiResponse> deleteImage(String projectId, String imageId) {
     if (accessToken == null) return Future(null);
-    return _api.deleteImage(accessToken, imageId);
+    return _api.deleteImage(accessToken, projectId, imageId);
+  }
+
+  Future<ApiResponse> deleteImages(String projectId, List<String> imageIds) {
+    if (accessToken == null) return Future(null);
+    return _api.deleteImages(accessToken, projectId, imageIds);
+  }
+
+  Future<List<Location>> getImagesPath(String projectId, List<String> ids) {
+    if (accessToken == null) return Future(null);
+    return _api.getImagesPath(accessToken, projectId, ids);
+  }
+
+  // Group
+  Future<ApiResponse> createGroup(String projectId, Group group) {
+    if (accessToken == null) return Future(null);
+    return _api.createGroup(accessToken, projectId, group);
+  }
+
+  Future<ApiResponse> addGroupImages(
+      String projectId, String groupId, List<String> images) {
+    if (accessToken == null) return Future(null);
+    return _api.addGroupImages(accessToken, projectId, groupId, images);
+  }
+
+  Future<ApiResponse> updateGroup(Group group) {
+    if (accessToken == null) return Future(null);
+    return _api.updateGroup(accessToken, group);
+  }
+
+  Future<Group> getGroup(String groupId) {
+    if (accessToken == null) return Future(null);
+    return _api.getGroup(accessToken, groupId);
   }
 
   // Label
@@ -186,14 +250,14 @@ class Repository {
     return _api.getLabels(accessToken, projectId);
   }
 
-  Future<ApiResponse> updateLabel(Label label) {
+  Future<ApiResponse> updateLabel(String projectId, Label label) {
     if (accessToken == null) return Future(null);
-    return _api.updateLabel(accessToken, label);
+    return _api.updateLabel(accessToken, projectId, label);
   }
 
-  Future<ApiResponse> deleteLabel(String id) {
+  Future<ApiResponse> deleteLabel(String projectId, String labelId) {
     if (accessToken == null) return Future(null);
-    return _api.deleteLabel(accessToken, id);
+    return _api.deleteLabel(accessToken, projectId, labelId);
   }
 
   // Classification
@@ -250,6 +314,42 @@ class Repository {
         });
       });
     });
+  }
+
+  Future<List<MlModel>> getModels(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getModels(accessToken, projectId);
+  }
+
+  Future<MlModel> getModel(String modelId) {
+    if (accessToken == null) return Future(null);
+    return _api.getModel(accessToken, modelId);
+  }
+
+  Future<List<MlModel>> getTrainedModels(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getTrainedModels(accessToken, projectId);
+  }
+
+  Future<ApiResponse> createModel(String projectId, MlModel model) {
+    if (accessToken == null) return Future(null);
+    return _api.createModel(accessToken, projectId, model);
+  }
+
+  Future<ApiResponse> saveModel(
+      String modelId, MlModel model, ModelDto modelDto) {
+    if (accessToken == null) return Future(null);
+    return _api.saveModel(accessToken, modelId, model, modelDto);
+  }
+
+  Future<ApiResponse> trainModel(String modelId) {
+    if (accessToken == null) return Future(null);
+    return _api.trainModel(accessToken, modelId);
+  }
+
+  Future<List<charts.Series>> getResults() {
+    if (accessToken == null) return Future(null);
+    return _api.getResults(accessToken);
   }
 
   // Singleton

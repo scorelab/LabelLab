@@ -19,7 +19,7 @@ import FetchApi from '../utils/FetchAPI'
 export const fetchUser = () => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/users/info', null, true)
+    FetchApi.get('/api/v1/users/info')
       .then(res => {
         dispatch(success(res.data.body))
       })
@@ -45,7 +45,7 @@ export const fetchUser = () => {
 export const uploadImage = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/users/uploadImage', data, true)
+    FetchApi.post('/api/v1/users/uploadImage', data)
       .then(() => {
         dispatch(success())
         callback('true')
@@ -70,7 +70,7 @@ export const uploadImage = (data, callback) => {
 export const fetchCount = () => {
   return dispatch => {
     dispatch(request())
-    FetchApi('GET', '/api/v1/users/fetchCount', null, true)
+    FetchApi.get('/api/v1/users/count_info')
       .then(res => {
         dispatch(success(res.data.body))
       })
@@ -98,7 +98,7 @@ export const getSearchUser = query => {
     if (!query) {
       query = 'null'
     }
-    FetchApi('GET', '/api/v1/users/search/' + query, null, true)
+    FetchApi.get(`/api/v1/users/search/${query}`)
       .then(response => {
         dispatch(success(response.data.body))
       })
@@ -106,8 +106,8 @@ export const getSearchUser = query => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+              failure(err.response.data.msg, err.response.data.err_field)
+            )
             : dispatch(failure(err.response.statusText, null))
         }
       })
@@ -123,7 +123,7 @@ export const getSearchUser = query => {
 export const editUser = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('PUT', '/api/v1/users/edit', data, true)
+    FetchApi.put('/api/v1/users/edit', data)
       .then(response => {
         callback()
       })
@@ -131,8 +131,8 @@ export const editUser = (data, callback) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+              failure(err.response.data.msg, err.response.data.err_field)
+            )
             : dispatch(failure(err.response.statusText, null))
         }
       })

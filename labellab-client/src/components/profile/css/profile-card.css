@@ -1,0 +1,73 @@
+.profile-card {
+  background-color: #fff;
+  margin: 20px 20px;
+  padding: 20px 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px 2px #dddddd83;
+}
+
+.profile-card .header .image {
+  width: 80px;
+  border-radius: 50%;
+  height: 80px;
+  object-fit: cover;
+}
+
+.profile-card .header {
+  display: flex;
+}
+
+.profile-card .header .details {
+  margin: 10px 10px;
+}
+.profile-card .header .details .name {
+  font-size: 21px;
+}
+
+.profile-card .header .details .email {
+  font-size: 15px;
+  color: #888;
+}
+
+.profile-card .actions {
+  padding-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px #ddd solid;
+  margin-top: 20px;
+}
+
+.profile-card .content {
+  margin: 10px 5px;
+}
+
+.profile-card .content .detail {
+  margin: 20px 0px;
+}
+
+.profile-card .content .detail .key {
+  color: #666;
+  font-size: 14px;
+}
+.profile-card .content .detail .value {
+  font-size: 16px;
+}
+
+@media only screen and (max-width: 768px) {
+  .profile-card .header {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-actions > div {
+  padding-bottom: 1em;
+  padding-top: 1em;
+}

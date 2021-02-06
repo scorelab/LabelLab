@@ -1,49 +1,49 @@
 @media only screen and (max-width: 600px) {
-    .login-parent {
-        width: 80% !important;
-    }
-    .loginSubmit {
-        width: 100% !important;
-    }
+  .login-parent {
+    width: 80% !important;
   }
+}
 
-.login-grand-parent{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+.login-grand-parent {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
-.login-parent{
-    margin-top: 5em;
-    width: 30%;
-    margin-left: auto;
-    margin-right: auto;
+
+.login-parent {
+  margin-top: 5em;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 .login-oauth-icon {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 2em 0 2em;
 }
 
 .login-oauth-icon div {
-    max-width: 15vw;
+  max-width: 15vw;
 }
 
 .login-icons {
-    width: 45px;
+  width: 45px;
 }
 
-.loginField{
-    width: 100%;
+.action {
+  padding: 1em 0;
 }
-.login-form-label{
-    margin: 1em 0 !important;
+
+.login-form {
+  margin-top: 2em;
 }
-.forgotPassword{
-    padding: 1em 0;
-}
-.loginSubmit{
-    background-color:#00A89F !important;
-    color: white !important; 
-}
-.login-create-account{
-    padding: 1em 0;
+
+.github-login {
+    width: 11vw;
+    height: 3rem;
+    background: black;
+    opacity: 0.6;
+    color: white;
+    box-shadow: 0px 1px 4px black;
 }

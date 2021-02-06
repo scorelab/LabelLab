@@ -1,25 +1,14 @@
-.form-card-parent {
-  margin-top: 0.7em;
-  padding: 1em;
-  border: solid 1px #efefef;
-  background: white;
-  box-shadow: rgb(204, 204, 204) 0px 1px 2px;
-}
-.flex {
+.modal-actions {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.form-card-child {
-  flex: 1;
-  padding: 0 0.5em;
+
+.modal-actions > div {
+  padding-bottom: 1.5em;
+  padding-top: 1.5em;
 }
-.form-button-parent {
-  flex: 0 0 auto;
-}
-.form-button-itself {
-  background: transparent;
-  padding: 0;
-}
-.form-card-child-field {
-  padding: 3;
-  font-size: 24;
+
+.label-container {
+  overflow: auto
 }

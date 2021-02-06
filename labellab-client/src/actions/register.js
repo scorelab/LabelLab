@@ -9,7 +9,7 @@ import FetchApi from '../utils/FetchAPI'
 export const userRegister = (data, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('POST', '/api/v1/auth/register', data)
+    FetchApi.post('/api/v1/auth/register', data)
       .then(() => {
         dispatch(success())
         callback()
@@ -18,8 +18,8 @@ export const userRegister = (data, callback) => {
         if (err.response) {
           err.response.data
             ? dispatch(
-                failure(err.response.data.msg, err.response.data.err_field)
-              )
+              failure(err.response.data.msg, err.response.data.err_field)
+            )
             : dispatch(failure(err.response.statusText, null))
         }
       })
@@ -28,7 +28,7 @@ export const userRegister = (data, callback) => {
     return { type: REGISTER_REQUEST }
   }
   function success() {
-    return { type: REGISTER_SUCCESS, payload: 'Login to continue!' }
+    return { type: REGISTER_SUCCESS, payload: 'Please log in to continue.' }
   }
   function failure(error, other) {
     return { type: REGISTER_FAILURE, payload: error, other: other }

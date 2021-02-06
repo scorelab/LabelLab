@@ -100,25 +100,28 @@ class Dashboard extends Component {
     })
   }
   handleChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    }, () => {
-      if(this.state.projectName === '') {
-        this.setState({
-          invalidDetails: true
-        })
-      } else {
-        this.setState({
-          invalidDetails: false
-        })
+    this.setState(
+      {
+        [e.target.name]: e.target.value
+      },
+      () => {
+        if (this.state.projectName === '') {
+          this.setState({
+            invalidDetails: true
+          })
+        } else {
+          this.setState({
+            invalidDetails: false
+          })
+        }
       }
-    })
+    )
   }
   handleProjectSubmit = () => {
     this.props.initProject(
       {
-        projectName: this.state.projectName,
-        projectDescription: this.state.projectDescription
+        project_name: this.state.projectName,
+        project_description: this.state.projectDescription
       },
       this.projectCallback
     )
@@ -129,7 +132,6 @@ class Dashboard extends Component {
       pathname: '/project/' + id + '/team'
     })
   }
-  callback() {}
   close = () => this.setState({ open: false })
   render() {
     const { user, isfetching, isinitializing, history, errors } = this.props
@@ -137,7 +139,7 @@ class Dashboard extends Component {
     return (
       <div className="dashboard-parent">
         <Navbar user={user} isfetching={isfetching} history={history} />
-        <Container className="home.container">
+        <div className="dashboard-container">
           {errors}
           <Dimmer active={isinitializing}>
             <Loader indeterminate>Preparing Files</Loader>
@@ -176,7 +178,8 @@ class Dashboard extends Component {
           <div className="create-project-button">
             <Button
               icon
-              className="create-button"
+              positive
+              className="create-project"
               onClick={this.handleCreateProject}
               labelPosition="left"
             >
@@ -185,10 +188,15 @@ class Dashboard extends Component {
             </Button>
           </div>
           <div className="previous-heading">
-            <Header textAlign="left" as="h3" content="Previous Works" />
+            <Header
+              className="mobile-padding"
+              textAlign="left"
+              as="h3"
+              content="Previous Works"
+            />
             <PreviousWork />
           </div>
-        </Container>
+        </div>
       </div>
     )
   }
@@ -234,4 +242,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Dashboard)

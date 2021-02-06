@@ -47,7 +47,7 @@ class LabelingLoader extends Component {
     const len = allImages && allImages.length
     allImages &&
       allImages.map((image, index) => {
-        if (image._id === match.params.imageId) {
+        if (image.id === match.params.imageId) {
           if (index === 0) {
             if (len <= 1) {
               this.setState(
@@ -74,10 +74,13 @@ class LabelingLoader extends Component {
         }
       })
   }
-  pushUpdate(labelData) {
+  pushUpdate(labeldata) {
     const { match, updateLabels } = this.props
-    updateLabels(match.params.imageId, labelData)
+    labeldata.project_id = match.params.projectId
+    labeldata.labelled = true
+    updateLabels(match.params.imageId, labeldata)
   }
+
   render() {
     const {
       match,
@@ -93,12 +96,12 @@ class LabelingLoader extends Component {
     const props = {
       onBack: () => {
         return !disableBack
-          ? history.push(`/labeller/${match.params.projectId}/${prev._id}`)
+          ? history.push(`/labeller/${match.params.projectId}/${prev.id}`)
           : null
       },
       onSkip: () => {
         return !disableNext
-          ? history.push(`/labeller/${match.params.projectId}/${next._id}`)
+          ? history.push(`/labeller/${match.params.projectId}/${next.id}`)
           : null
       },
       onLabelChange: this.pushUpdate.bind(this)
@@ -113,30 +116,33 @@ class LabelingLoader extends Component {
         ) : lab.length > 0 ? (
           <LabelingApp
             labels={lab}
-            labelData={(img && img.labelData) || {}}
-            imageUrl={
-              process.env.REACT_APP_HOST +
-              process.env.REACT_APP_SERVER_PORT +
-              `/static/uploads/${image.imageUrl}?${Date.now()}`
+            labeldata={(img && img.labeldata) || {}}
+            image_url={
+              process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
+                ? image.image_url
+                : `http://${process.env.REACT_APP_HOST}:${
+                process.env.REACT_APP_SERVER_PORT
+                }/static/uploads/${image.projectId}/${image.imageUrl}`
             }
+            projectUrl={`/project/${match.params.projectId}/images`}
             demo={false}
             {...props}
           />
         ) : (
-          <Modal size="small" open>
-            <Modal.Content>
-              <p>
-                It seems that you have not created any labels in the project.
-                Click on the below button to create labels!
+              <Modal size="small" open>
+                <Modal.Content>
+                  <p>
+                    It seems that you have not created any labels in the project.
+                    Click on the below button to create labels!
               </p>
-            </Modal.Content>
-            <Modal.Actions>
-              <Link to={`/project/${match.params.projectId}}/labels`}>
-                <Button positive content="Create Labels" />
-              </Link>
-            </Modal.Actions>
-          </Modal>
-        )}
+                </Modal.Content>
+                <Modal.Actions>
+                  <Link to={`/project/${match.params.projectId}}/labels`}>
+                    <Button positive content="Create Labels" />
+                  </Link>
+                </Modal.Actions>
+              </Modal>
+            )}
       </DocumentMeta>
     )
   }
@@ -182,8 +188,8 @@ const mapDispatchToProps = dispatch => {
     fetchProjectImage: (imageId, callback) => {
       return dispatch(fetchProjectImage(imageId, callback))
     },
-    updateLabels: (imageId, labelData) => {
-      return dispatch(updateLabels(imageId, labelData))
+    updateLabels: (imageId, labeldata) => {
+      return dispatch(updateLabels(imageId, labeldata))
     },
     setNextPrev: (next, prev) => {
       return dispatch(setNextPrev(next, prev))

@@ -9,7 +9,7 @@ import FetchApi from '../../utils/FetchAPI'
 export const deleteProject = (projectId, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi('DELETE', '/api/v1/project/delete/' + projectId, null, true)
+    FetchApi.delete(`/api/v1/project/project_info/${projectId}`)
       .then(res => {
         dispatch(success())
         callback()
@@ -37,3 +37,5 @@ export * from './fetchDetails'
 export * from './member'
 export * from './search'
 export * from './projectDetails'
+export * from './pathTracking'
+export * from './teams'

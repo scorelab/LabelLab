@@ -10,18 +10,26 @@ import {
   Modal,
   Dimmer,
   Loader,
-  Message
+  Message,
+  Dropdown
 } from 'semantic-ui-react'
-import { addMember, fetchProject, memberDelete } from '../../actions'
+import { addMember, fetchProject, memberDelete, teamDelete, fetchAllTeams } from '../../actions'
 import SearchUser from './searchUser.js'
 import './css/team.css'
+
+const teamsOptions = [
+  { key: 1, value: 'images', role: 'images', text: 'images' },
+  { key: 2, value: 'labels', role: 'labels', text: 'labels' },
+  { key: 3, value: 'image labelling', role: 'image labelling', text: 'image labelling' },
+  { key: 4, value: 'models', role: 'models', text: 'models' }
+]
 
 class TeamIndex extends Component {
   constructor(props) {
     super(props)
     this.state = {
       open: false,
-      memberEmail: ''
+      member_email: ''
     }
   }
   handleAddMember = () => {
@@ -30,40 +38,50 @@ class TeamIndex extends Component {
     })
   }
   handleChange = e => {
+    console.log(e.target)
     this.setState({
       [e.target.name]: e.target.value
     })
   }
+  handleDropDownChange = (e, { name, value }) => this.setState({ [name]: value })
   handleMemberSubmit = () => {
     const { project, addMember } = this.props
-    const { memberEmail } = this.state
+    const { member_email, team, role } = this.state
     this.setState({
       check: true
     })
     let data = {
-      memberEmail: memberEmail,
-      projectId: project.projectId
+      member_email: member_email,
+      projectId: project.projectId,
+      team_name: team,
+      role: team
     }
     addMember(data, this.fetchProjectCallback)
     this.close()
   }
   close = () => this.setState({ open: false })
-  handleDelete = email => {
+  handleDelete = (email, team_id) => {
     const { memberDelete, project } = this.props
-    memberDelete(email, project.projectId, this.fetchProjectCallback)
+    memberDelete(email, project.projectId, team_id, this.fetchProjectCallback)
+  }
+  handleTeamDelete = team_id => {
+    const { teamDelete, project } = this.props
+    teamDelete(team_id, project.projectId, this.fetchProjectCallback)
   }
   fetchProjectCallback = () => {
-    const { fetchProject, project } = this.props
+    const { fetchProject, project, fetchAllTeams } = this.props
     fetchProject(project.projectId)
+    fetchAllTeams(project.projectId)
   }
   updateState = data => {
     this.setState({
-      memberEmail: data
+      member_email: data
     })
   }
   render() {
     const { project, actions, history, user } = this.props
     const { open } = this.state
+    console.log(project)
     return (
       <Container>
         {actions.errors ? (
@@ -93,6 +111,13 @@ class TeamIndex extends Component {
           </Modal.Content>
           <Modal.Actions>
             <SearchUser history={history} updateState={this.updateState} />
+            <Dropdown
+              name='team'
+              placeholder='Team'
+              search
+              selection
+              options={teamsOptions}
+              onChange={this.handleDropDownChange} />
             <Button
               positive
               onClick={this.handleMemberSubmit}
@@ -100,11 +125,12 @@ class TeamIndex extends Component {
             />
           </Modal.Actions>
         </Modal>
-        <Table color="green" celled padded striped>
+        <Table color="green" celled padded striped stackable>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell singleLine>Project Members</Table.HeaderCell>
               <Table.HeaderCell>Role</Table.HeaderCell>
+              <Table.HeaderCell>Team</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
@@ -115,21 +141,24 @@ class TeamIndex extends Component {
               project.members.map((member, index) => (
                 <Table.Row key={index}>
                   <Table.Cell>
-                    <Header as="h4">{member.member.name}</Header>
+                    <Header as="h4">{member.name}</Header>
                   </Table.Cell>
                   <Table.Cell>
-                    <Header as="h4">{member.role}</Header>
+                    <Header as="h4">{member.team_role}</Header>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Header as="h4">{member.team_name}</Header>
                   </Table.Cell>
 
                   <Table.Cell collapsing>
-                    {member.role !== 'Admin' &&
-                    member.member.email !== user.userDetails.email ? (
-                      <Icon
-                        className="team-remove-user-icon"
-                        name="user delete"
-                        onClick={() => this.handleDelete(member.member.email)}
-                      />
-                    ) : null}
+                    {member.team_role !== 'admin' &&
+                      member.email !== user.email ? (
+                        <Icon
+                          className="team-remove-user-icon"
+                          name="user delete"
+                          onClick={() => this.handleDelete(member.email, member.team_id)}
+                        />
+                      ) : null}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -138,6 +167,7 @@ class TeamIndex extends Component {
         <div className="add-member-button">
           <Button
             icon
+            positive
             className="add-member"
             onClick={this.handleAddMember}
             labelPosition="left"
@@ -146,6 +176,69 @@ class TeamIndex extends Component {
             Add member
           </Button>
         </div>
+        <Container className='team-management-conatiner'>
+          <Table color="green" celled striped stackable className='all-teams'>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell singleLine>Team name</Table.HeaderCell>
+                <Table.HeaderCell>Role</Table.HeaderCell>
+                <Table.HeaderCell>No of members</Table.HeaderCell>
+                <Table.HeaderCell />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {project &&
+                project.teams &&
+                project.teams.map((team, index) => (
+                  <Table.Row key={index}>
+                    <Table.Cell>
+                      <Header as="h4">{team.team_name}</Header>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Header as="h4">{team.role}</Header>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Header as="h4">{team.team_members.length}</Header>
+                    </Table.Cell>
+                    <Table.Cell collapsing>
+                      {team.role !== 'admin' ? (
+                        <Icon
+                          className="team-remove-user-icon"
+                          name="user delete"
+                          onClick={() => this.handleTeamDelete(team.id)}
+                        />
+                      ) : null}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+            </Table.Body>
+          </Table>
+          <Table color="green" celled striped stackable className='my-team'>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell singleLine>My Teams</Table.HeaderCell>
+                <Table.HeaderCell>Role</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {project &&
+                project.members &&
+                project.members.filter(member =>
+                  member.email === user.email).map((team, index) => (
+                    <Table.Row key={index}>
+                      <Table.Cell>
+                        <Header as="h4">{team.team_name}</Header>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Header as="h4">{team.team_role}</Header>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+            </Table.Body>
+          </Table>
+        </Container>
       </Container>
     )
   }
@@ -157,14 +250,16 @@ TeamIndex.propTypes = {
   actions: PropTypes.object,
   history: PropTypes.object,
   fetchProject: PropTypes.func,
+  fetchAllTeams: PropTypes.func,
   match: PropTypes.object,
   memberDelete: PropTypes.func,
-  addMember: PropTypes.func
+  addMember: PropTypes.func,
+  teamDelete: PropTypes.func
 }
 
 const mapStateToProps = state => {
   return {
-    user: state.user,
+    user: state.user.userDetails,
     project: state.projects.currentProject,
     actions: state.projects.projectActions
   }
@@ -178,10 +273,19 @@ const mapDispatchToProps = dispatch => {
     fetchProject: data => {
       return dispatch(fetchProject(data))
     },
+    fetchAllTeams: data => {
+      return dispatch(fetchAllTeams(data))
+    },
     memberDelete: (email, projectId, callback) => {
       return dispatch(memberDelete(email, projectId, callback))
+    },
+    teamDelete: (team_id, project_id, callback) => {
+      return dispatch(teamDelete(team_id, project_id, callback))
     }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamIndex)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TeamIndex)

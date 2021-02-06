@@ -8,17 +8,19 @@ import label from './label'
 import searchProjects from './search'
 import searchUser from './searchUser'
 import analytics from './analytics'
+import model from "./model"
 
 const rootReducers = combineReducers({
-  auth: auth,
-  register: register,
-  user: user,
+  auth,
+  register,
+  user,
+  searchProjects,
+  searchUser,
+  analytics,
+  model,
   projects: project,
   images: image,
   labels: label,
-  searchProjects: searchProjects,
-  searchUser: searchUser,
-  analytics
 })
 
 export default rootReducers

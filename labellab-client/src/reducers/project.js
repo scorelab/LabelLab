@@ -16,7 +16,16 @@ import {
   DELETE_MEMBER_SUCCESS,
   DELETE_PROJECT_FAILURE,
   DELETE_PROJECT_REQUEST,
-  DELETE_PROJECT_SUCCESS
+  DELETE_PROJECT_SUCCESS,
+  FETCH_COORDINATES_FAILURE,
+  FETCH_COORDINATES_REQUEST,
+  FETCH_COORDINATES_SUCCESS,
+  FETCH_TEAMS_FAILURE,
+  FETCH_TEAMS_REQUEST,
+  FETCH_TEAMS_SUCCESS,
+  DELETE_TEAM_FAILURE,
+  DELETE_TEAM_REQUEST,
+  DELETE_TEAM_SUCCESS
 } from '../constants/index'
 const initialState = {
   projectActions: {
@@ -57,8 +66,8 @@ const project = (state = initialState, action) => {
           isinitializing: false
         },
         currentProject: {
-          projectName: action.payload.projectName,
-          images: action.payload.image
+          projectName: action.payload.project_name,
+          images: action.payload.images
         }
       }
     case FETCH_PROJECT_REQUEST:
@@ -83,10 +92,11 @@ const project = (state = initialState, action) => {
           isfetching: false
         },
         currentProject: {
-          projectId: action.payload._id,
+          ...state.currentProject,
+          projectId: action.payload.id,
           projectName: action.payload.projectName,
           projectDescription: action.payload.projectDescription,
-          images: action.payload.image,
+          images: action.payload.images,
           members: action.payload.members
         }
       }
@@ -111,7 +121,7 @@ const project = (state = initialState, action) => {
         projectActions: {
           isfetching: false
         },
-        allProjects: action.payload.project
+        allProjects: action.payload
       }
     case ADD_MEMBER_REQUEST:
       return {
@@ -180,6 +190,81 @@ const project = (state = initialState, action) => {
         projectActions: {
           isdeletingproject: false,
           msg: 'Project removed successfully'
+        }
+      }
+    case FETCH_COORDINATES_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: true
+        }
+      }
+    case FETCH_COORDINATES_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false
+        },
+        currentProject: {
+          ...state.currentProject,
+          coordinates: action.payload
+        }
+      }
+    case FETCH_COORDINATES_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false,
+          errors: action.payload
+        }
+      }
+    case FETCH_TEAMS_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: true
+        }
+      }
+    case FETCH_TEAMS_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false
+        },
+        currentProject: {
+          ...state.currentProject,
+          teams: action.payload
+        }
+      }
+    case FETCH_TEAMS_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false,
+          errors: action.payload
+        }
+      }
+    case DELETE_TEAM_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: true
+        }
+      }
+    case DELETE_TEAM_SUCCESS:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: false,
+          msg: 'Team removed successfully'
+        }
+      }
+    case DELETE_TEAM_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isdeleting: false,
+          errors: action.payload
         }
       }
     default:

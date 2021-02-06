@@ -1,17 +1,20 @@
-import 'package:labellab_mobile/model/user.dart';
-
 class Member {
-  String id;
-  String role;
-  User member;
-  DateTime createdAt;
+  String name, email, role, teamId, teamName, projectId;
 
-  Member({this.id, this.role, this.member, this.createdAt});
+  Member(
+      {this.name,
+      this.email,
+      this.role,
+      this.teamId,
+      this.teamName,
+      this.projectId});
 
   Member.fromJson(dynamic json) {
-    id = json["_id"];
-    role = json["role"];
-    if (!(json["member"] is String)) member = User.fromJson(json["member"]);
-    createdAt = DateTime.parse(json["createdAt"]);
+    name = json['name'];
+    email = json['email'];
+    teamId = json['team_id'].toString();
+    teamName = json['team_name'];
+    role = json['team_role'];
+    projectId = json['project_id'].toString();
   }
 }

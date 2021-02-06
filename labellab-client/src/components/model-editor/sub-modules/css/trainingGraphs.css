@@ -1,0 +1,25 @@
+.training-graphs-card {
+  text-align: center;
+}
+
+.training-graphs {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  overflow-x: scroll;
+}
+
+.training-graphs::-webkit-scrollbar {
+  display: none;
+}
+
+.training-graph {
+  height: 10em;
+  width: auto;
+}
+
+.training-results {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}

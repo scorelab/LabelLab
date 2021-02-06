@@ -1,27 +1,25 @@
-.profile-first {
+.container {
   display: flex;
   width: 100%;
+  flex-wrap: wrap;
 }
-.profile-image-change-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.5em;
+
+.container > .content {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 20px 0px;
+  padding: 0px 15px;
 }
-.profile-first-leftbar {
-  width: 30%;
-  padding: 1em;
+
+.container > .content .title {
+  font-size: 23px;
+  margin-bottom: 20px;
 }
-.profile-first-rightbar {
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  padding: 1em;
+
+.container .profile {
+  width: 100%;
 }
-.profile-rightbar-child {
-  margin-top: 1.5em;
-  display: flex;
-  justify-content: space-between;
-}
+
 .project-second {
   display: flex;
   margin-top: 2em;
@@ -43,16 +41,88 @@
   z-index: -1;
   margin: 10px;
 }
-.profile-edit-button{
+.profile-edit-button {
   display: flex;
   justify-content: center;
   margin-top: 1.5em;
 }
+.image_size_error {
+  color: red;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.project-card {
+  display: flex;
+}
+
+.project-card-header {
+  padding-top: 0.5em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.project-details {
+  display: flex;
+  margin-bottom: 20px;
+  flex-direction: column;
+}
+
+.project-details .project-detail {
+  flex-grow: 1;
+  display: flex;
+  border: 1px #ddd solid;
+  margin: 5px 5px;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px 2px #dddddd83;
+  justify-content: space-between;
+}
+
+.project-details .project-detail .key {
+  padding: 10px 5px;
+  text-align: center;
+  font-size: 16px;
+  justify-self: center;
+}
+.project-details .project-detail .value {
+  background-color: #eee;
+  height: 100%;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+@media only screen and (min-width: 768px) {
+  .container > .content {
+    width: 70%;
+    padding-left: 0;
+  }
+
+  .container .profile {
+    width: 30%;
+  }
+
+  .project-details {
+    flex-direction: row;
+  }
+}
+
+@media only screen and (min-width: 993px) {
+  .container > .content {
+    width: 75%;
+    padding-left: 0;
+  }
+
+  .container .profile {
+    width: 25%;
+  }
+}
+
 @media only screen and (max-width: 993px) {
   .project-second-rightbar {
     width: 70%;
     padding: 1em;
-    margin-left:2vw;
+    margin-left: 2vw;
   }
 }
 
@@ -60,21 +130,21 @@
   .project-second-rightbar {
     width: 70%;
     padding: 1em;
-    margin-left:2vw;
+    margin-left: 2vw;
   }
   .ui.vertical.menu {
     width: 11rem;
-}
+  }
 }
 @media only screen and (max-width: 521px) {
   .project-second-rightbar {
     width: 70%;
     padding: 1em;
-    margin-left:4vw;
+    margin-left: 4vw;
   }
   .ui.vertical.menu {
     width: 10rem;
-}
+  }
 }
 @media only screen and (max-width: 500px) {
   .project-second-rightbar {
@@ -84,29 +154,30 @@
   }
   .ui.vertical.menu {
     width: 10rem;
-}
-.ui.three.cards>.card {
-  width: 21vw ;
-  margin-left: 1em;
-  margin-right: 1em;
-  height: 7.6rem;
-  font-size: 14px;
-}
-.item{
-  height: 2.5rem;
-}
-.ui.vertical.menu {
-  width: 6rem;
+  }
+  .ui.three.cards > .card {
+    width: 21vw;
+    margin-left: 1em;
+    margin-right: 1em;
+    height: 7.6rem;
+    font-size: 14px;
+  }
+  .item {
+    height: 2.5rem;
+  }
+  .ui.vertical.menu {
+    width: 6rem;
     height: 7.8rem;
     font-size: 11px;
-}
-.project-second-leftbar {
-  width: 30%;
+  }
+  .project-second-leftbar {
+    width: 30%;
     padding: 1em;
-}
+  }
 }
 @media only screen and (max-width: 263px) {
-  .ui.three.cards>.card {width: 26vw;
+  .ui.three.cards > .card {
+    width: 26vw;
     margin-left: 0.7em;
     margin-right: 1em;
     height: 7.6rem;
@@ -118,5 +189,4 @@
     margin-left: 8vw;
     margin-top: 0.4rem;
   }
- 
 }

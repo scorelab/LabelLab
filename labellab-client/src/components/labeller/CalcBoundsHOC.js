@@ -25,7 +25,8 @@ export function withBounds(Comp) {
     }
   }
 
-  return forwardRef((props, ref) => (
-    <CalcBoundsLayer {...props} forwardedRef={ref} />
-  ))
+  function exp(props, ref) {
+    return <CalcBoundsLayer {...props} forwardedRef={ref} />
+  }
+  return forwardRef(exp)
 }

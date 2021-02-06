@@ -1,0 +1,1065 @@
+openapi: 3.0.0
+info:
+  title: LabelLab API
+  version: "2.0.0"
+  description: Rest API for machine learning supported web-base image labelling tool.
+  contact:
+    name: SCoRe Lab
+    url: "http://www.scorelab.org/"
+    email: info@scorelab.org
+  license:
+    name: Apache 2.0
+    url: "https://github.com/scorelab/LabelLab/blob/master/LICENSE"
+servers:
+  - url: "http://localhost:8000"
+    description: Local Development
+tags:
+  - name: Authentication
+    description: Auth endpoints
+  - name: Analytics
+    description: Analytics endpoints
+  - name: Classification
+    description: Image classification endpoints
+  - name: Group
+    description: Group endpoints
+  - name: Image
+    description: Image endpoints
+  - name: Label
+    description: Label endpoints
+  - name: Project
+    description: Project endpoints
+  - name: User
+    description: User endpoints
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register with email & password
+      operationId: register
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login with email & password
+      operationId: login
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /auth/google:
+    get:
+      tags:
+        - Authentication
+      summary: Login with google
+      operationId: googleAuth
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /auth/google/callback:
+    get:
+      tags:
+        - Authentication
+      summary: Login with google callback
+      operationId: googleCallback
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /auth/google/moblie:
+    post:
+      tags:
+        - Authentication
+      summary: Login with google callback for mobile app
+      operationId: googleMobile
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /auth/github:
+    get:
+      tags:
+        - Authentication
+      summary: Login with github
+      operationId: githubAuth
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /auth/github/callback:
+    get:
+      tags:
+        - Authentication
+      summary: Login with github callback
+      operationId: githubCallback
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /auth/reset-password:
+    post:
+      tags:
+        - Authentication
+      summary: Reset password
+      operationId: resetPassword
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /auth/reset-password/{userId}/{token}:
+    get:
+      tags:
+        - Authentication
+      summary: Reset password with user id
+      operationId: resetPasswordCallback
+      parameters:
+        - schema:
+            type: string
+          name: userId
+          in: path
+          required: true
+        - schema:
+            type: string
+          name: token
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /auth/update-password:
+    put:
+      tags:
+        - Authentication
+      summary: Update password
+      operationId: updatePassword
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /analytics/{projectId}/timeLabel/get:
+    get:
+      tags:
+        - Analytics
+      summary: Get analytics
+      operationId: getTimeLabel
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /analytics/{projectId}/labelCount/get:
+    get:
+      tags:
+        - Analytics
+      summary: Get label count
+      operationId: getLabelCount
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /classification/classify:
+    post:
+      tags:
+        - Classification
+      summary: Classify a single image
+      operationId: classify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/classification"
+        description: Inventory item to add
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /classification/get:
+    get:
+      tags:
+        - Classification
+      summary: Get all classification results
+      operationId: getclassifications
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/classification"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /classification/get/{classificationId}:
+    get:
+      tags:
+        - Classification
+      summary: Get single classification result
+      operationId: getSingleclassification
+      parameters:
+        - schema:
+            type: string
+          name: classificationId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/classification"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /classification/delete/{classificationId}:
+    delete:
+      tags:
+        - Classification
+      summary: Delete classification
+      operationId: deleteclassification
+      parameters:
+        - schema:
+            type: string
+          name: classificationId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /group/{projectId}/create:
+    post:
+      tags:
+        - Group
+      summary: Create a group
+      operationId: createGroup
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /group/{groupId}/get:
+    get:
+      tags:
+        - Group
+      summary: Get a single group data
+      operationId: getGroup
+      parameters:
+        - schema:
+            type: string
+          name: groupId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /group/{groupId}/update:
+    put:
+      tags:
+        - Group
+      summary: Update group data
+      operationId: updateGroup
+      parameters:
+        - schema:
+            type: string
+          name: groupId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /group/{groupId}/delete:
+    delete:
+      tags:
+        - Group
+      summary: Delete group data
+      operationId: deleteGroup
+      parameters:
+        - schema:
+            type: string
+          name: groupId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /image/{projectId}/create:
+    post:
+      tags:
+        - Image
+      summary: Create a image and upload
+      operationId: createImage
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/classification"
+        description: Inventory item to add
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /image/{imageId}/get:
+    get:
+      tags:
+        - Image
+      summary: Get single image data
+      operationId: getImage
+      parameters:
+        - schema:
+            type: string
+          name: imageId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/classification"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /image/{imageId}/update:
+    put:
+      tags:
+        - Image
+      summary: Update image data
+      operationId: updateImage
+      parameters:
+        - schema:
+            type: string
+          name: imageId
+          in: path
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/classification"
+        description: Inventory item to add
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /image/{imageId}/delete:
+    delete:
+      tags:
+        - Image
+      summary: Delete image data
+      operationId: deleteImage
+      parameters:
+        - schema:
+            type: string
+          name: imageId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/classification"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /label/{projectId}/create:
+    post:
+      tags:
+        - Label
+      summary: Create a label
+      operationId: createLabel
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /label/{labelId}/get:
+    get:
+      tags:
+        - Label
+      summary: Get a single label
+      operationId: getLabel
+      parameters:
+        - schema:
+            type: string
+          name: labelId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /label/{labelId}/update:
+    put:
+      tags:
+        - Label
+      summary: Update label
+      operationId: updateLabel
+      parameters:
+        - schema:
+            type: string
+          name: labelId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /label/{labelId}/delete:
+    delete:
+      tags:
+        - Label
+      summary: Delete label
+      operationId: deleteLabel
+      parameters:
+        - schema:
+            type: string
+          name: labelId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /project/create:
+    post:
+      tags:
+        - Project
+      summary: Create a single project
+      operationId: createProject
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /project/get/{id}:
+    get:
+      tags:
+        - Project
+      summary: Get project by id
+      operationId: getProject
+      parameters:
+        - schema:
+            type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /project/get:
+    get:
+      tags:
+        - Project
+      summary: Get project by user token
+      operationId: getProjectByToken
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /project/update/{id}:
+    put:
+      tags:
+        - Project
+      summary: Update project
+      operationId: updateProject
+      parameters:
+        - schema:
+            type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /project/delete/{id}:
+    delete:
+      tags:
+        - Project
+      summary: Delete project
+      operationId: deleteProject
+      parameters:
+        - schema:
+            type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /project/add/{projectId}:
+    post:
+      tags:
+        - Project
+      summary: Add member to project
+      operationId: addMember
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /remove/{projectId}:
+    post:
+      tags:
+        - Project
+      summary: Remove member from project
+      operationId: removeMember
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /project/search/{query}:
+    get:
+      tags:
+        - Project
+      summary: Search project
+      operationId: searchProject
+      parameters:
+        - schema:
+            type: string
+          name: query
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /users/info:
+    get:
+      tags:
+        - User
+      summary: searches inventory
+      operationId: getUser
+      description: Test description
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /users/edit:
+    put:
+      tags:
+        - User
+      summary: adds an inventory item
+      operationId: updateUser
+      description: Test description
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+  /users/search/{query}:
+    get:
+      tags:
+        - User
+      summary: searches inventory
+      operationId: searchUser
+      description: Test description
+      parameters:
+        - schema:
+            type: string
+          name: query
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /users/fetchCount:
+    get:
+      tags:
+        - User
+      summary: searches inventory
+      operationId: getUserCount
+      description: Test description
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /users/uploadImage:
+    post:
+      tags:
+        - User
+      summary: adds an inventory item
+      operationId: uploadUserImage
+      description: Test description
+      parameters:
+        - schema:
+            type: string
+          name: projectId
+          in: path
+          required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+components:
+  securitySchemes:
+    accessToken:
+      type: http
+      scheme: bearer
+  schemas:
+    classification:
+      type: object
+      required:
+        - id
+        - image_url
+      properties:
+        image_url:
+          type: string
+        label:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date-time
+    point:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        label_data:
+          type: string
+        x_coordinate:
+          type: number
+        y_coordinate:
+          type: number
+    image:
+      type: object
+      required:
+        - id
+        - image_name
+      properties:
+        id:
+          type: string
+        image_name:
+          type: string
+        image_url:
+          type: string
+        height:
+          type: string
+        width:
+          type: string
+        labelled:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        latitude:
+          type: number
+        longitude:
+          type: number
+        project_id:
+          type: integer
+    group:
+      type: object
+      required:
+        - id
+        - group_name
+      properties:
+        id:
+          type: string
+        group_name:
+          type: string
+        project_id:
+          type: string
+    label:
+      type: object
+      required:
+        - id
+        - label_naem
+      properties:
+        id:
+          type: string
+        label_name:
+          type: string
+        type:
+          type: string
+        count:
+          type: number
+        project_id:
+          type: string
+    project:
+      type: object
+      required:
+        - id
+        - project_name
+      properties:
+        id:
+          type: string
+        project_name:
+          type: string
+        project_description:
+          type: string
+        admin_id:
+          type: string
+    team:
+      type: object
+      required:
+        - id
+        - team_name
+      properties:
+        id:
+          type: string
+        roles:
+          type: string
+        team_name:
+          type: string
+        project_id:
+          type: string
+    model:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        source:
+          type: string
+        preprocessing_steps_json_url:
+          type: string
+        layers_json_url:
+          type: string
+        train:
+          type: string
+        test:
+          type: string
+        validation:
+          type: string
+        epochs:
+          type: string
+        batch_size:
+          type: string
+        learning_rate:
+          type: string
+        loss:
+          type: string
+        optimizer:
+          type: string
+        metric:
+          type: string
+        loss_graph_url:
+          type: string
+        accuracy_graph_url:
+          type: string
+        saved_model_url:
+          type: string
+        transfer_source:
+          type: string
+        project_id:
+          type: number
+    user:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        date:
+          type: string
+          format: date-time
+        thumbnail:
+          type: string
+        projects:
+          type: string

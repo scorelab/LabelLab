@@ -1,3 +1,9 @@
+.sidebar-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 .sidebar-parent {
   width: 25%;
   display: flex;
@@ -15,10 +21,32 @@
 }
 .sidebar-menu-parent {
   margin-top: 2em;
+  margin-bottom: 2em;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 .delete-project-button {
-  width: 80%;
+  margin-top: 2rem !important;
+  width: 100%;
+}
+
+@media only screen and (max-width: 767px) {
+  .delete-project-button {
+    margin: 2rem 0 0 0 !important;
+    width: 100%;
+  }
+
+  .sidebar-parent {
+    width: 100%;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .sidebar-menu-parent {
+    width: 100%;
+  }
 }

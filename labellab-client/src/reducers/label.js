@@ -50,7 +50,7 @@ const user = (state = initialState, action) => {
         labelActions: {
           isfetching: false
         },
-        labels: action.payload.labels
+        labels: action.payload
       }
     case CREATE_LABEL_REQUEST:
       return {
@@ -96,7 +96,7 @@ const user = (state = initialState, action) => {
           isupdating: false
         },
       }
-      case UPDATE_A_LABEL_REQUEST:
+    case UPDATE_A_LABEL_REQUEST:
       return {
         ...state,
         labelActions: {

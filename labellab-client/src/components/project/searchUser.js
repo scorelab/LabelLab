@@ -15,7 +15,7 @@ class SearchUser extends Component {
       results: []
     }
   }
-  componentWillMount() {
+  componentDidMount() {
     this.resetComponent()
   }
   resetComponent = () =>
@@ -47,12 +47,12 @@ class SearchUser extends Component {
     search.map((user, index) =>
       user
         ? results.push({
-            key: index,
-            title: user.name,
-            description: user.email,
-            email: user.email,
-            id: user._id
-          })
+          key: index,
+          title: user.name,
+          description: user.email,
+          email: user.email,
+          id: user.id
+        })
         : null
     )
 
@@ -99,7 +99,4 @@ const mapActionToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapActionToProps
-)(SearchUser)
+export default connect(mapStateToProps, mapActionToProps)(SearchUser)
