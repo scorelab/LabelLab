@@ -67,7 +67,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_UPDATE = "project/project_info";
   static const ENDPOINT_PROJECT_DELETE = "project/project_info";
   static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add";
-  static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove";
+  static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
 
   static const ENDPOINT_IMAGE = "image";
   static const ENDPOINT_IMAGES = "images";
@@ -306,7 +306,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     final data = {
-      "memberEmail": email,
+      "member_email": email,
     };
     return _dio
         .post(API_URL + ENDPOINT_PROJECT_REMOVE_MEMBER + "/$projectId",

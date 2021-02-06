@@ -569,7 +569,7 @@ class ProjectDetailScreen extends StatelessWidget {
             return ListTile(
               title: Text(member.name),
               subtitle: Text(member.email),
-              trailing: _currentUser.name != member.name
+              trailing: _currentUser.email != member.email
                   ? PopupMenuButton<int>(
                       onSelected: (value) {
                         if (value == 0) {
