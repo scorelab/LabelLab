@@ -19,6 +19,7 @@ class ProjectDescriptionIndex extends Component {
     super(props)
     this.state = {
       edit: false,
+      name: '',
       desc: ''
     }
   }
@@ -36,11 +37,12 @@ class ProjectDescriptionIndex extends Component {
       edit: !this.state.edit
     })
   }
-  handleSubmit = () => {
+  handleSubmit = e => {
+    e.preventDefault()
     const { updateProject, project } = this.props
     let data = {
       project_description: this.state.desc,
-      project_name: project.projectName
+      project_name: this.state.name
     }
 
     updateProject(data, project.projectId, this.callback)
@@ -70,20 +72,31 @@ class ProjectDescriptionIndex extends Component {
             <Loader indeterminate>Have some patience :)</Loader>
           </Dimmer>
         ) : (
-            <Card>
-              <Card.Header className="projectDesc-header">
-                <Header content={name} as="h4"></Header>
-                <Icon name="pencil alternate" onClick={this.handleUpdate} />
-              </Card.Header>
-              <Card.Content>
-                {edit ? (
-                  <Modal size="small" open={this.state.edit} onClose={this.close}>
-                    <Modal.Header>
-                      <p>Enter Project Description</p>
-                    </Modal.Header>
-                    <Modal.Actions>
+          <Card>
+            <Card.Header className="projectDesc-header">
+              <Header content={name} as="h4"></Header>
+              <Icon name="pencil alternate" onClick={this.handleUpdate} />
+            </Card.Header>
+            <Card.Content>
+              {edit ? (
+                <Modal size="small" open={this.state.edit} onClose={this.close}>
+                  <Modal.Header>
+                    <p>Enter Project Description</p>
+                  </Modal.Header>
+                  <Modal.Actions>
+                    <form onSubmit={this.handleSubmit}>
                       <div className="modal-actions">
                         <Input
+                          required
+                          name="name"
+                          type="text"
+                          label="Name"
+                          placeholder="Name..."
+                          defaultValue={this.state.name}
+                          onChange={this.handleChange}
+                        />
+                        <Input
+                          required
                           name="desc"
                           type="text"
                           label="Description"
@@ -92,20 +105,17 @@ class ProjectDescriptionIndex extends Component {
                           onChange={this.handleChange}
                         />
                         <div>
-                          <Button
-                            positive
-                            onClick={this.handleSubmit}
-                            content="Submit"
-                          />
+                          <Button positive type="submit" content="Submit" />
                         </div>
                       </div>
-                    </Modal.Actions>
-                  </Modal>
-                ) : null}
-                {!edit && desc ? desc : null}
-              </Card.Content>
-            </Card>
-          )}
+                    </form>
+                  </Modal.Actions>
+                </Modal>
+              ) : null}
+              {!edit && desc ? desc : null}
+            </Card.Content>
+          </Card>
+        )}
       </div>
     )
   }
