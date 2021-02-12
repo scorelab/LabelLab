@@ -242,6 +242,18 @@ class ProjectInfo(MethodView):
             }
             return make_response(jsonify(response)), 400
 
+        # Search the database for this project_name
+        project = find_by_project_name(project_name)
+
+        if project and project['id'] != project_id:
+            # There already exists another project with the same name.
+            # So we can't let this project use that name
+            response = {
+                "success": False,
+                "msg": "Project name already taken."
+            }
+            return make_response(jsonify(response)), 400
+
         try:
             project = find_by_project_id(project_id)
             project['members'] = get_projectmembers(project_id)
