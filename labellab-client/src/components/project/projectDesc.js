@@ -96,7 +96,6 @@ class ProjectDescriptionIndex extends Component {
                           onChange={this.handleChange}
                         />
                         <Input
-                          required
                           name="desc"
                           type="text"
                           label="Description"
