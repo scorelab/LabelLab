@@ -15,6 +15,7 @@ import 'package:labellab_mobile/model/location.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -62,6 +63,9 @@ abstract class LabelLabAPI {
       String token, String projectId, String groupId, List<String> images);
   Future<ApiResponse> updateGroup(String token, Group group);
   Future<Group> getGroup(String token, String groupId);
+
+  // Teams
+  Future<List<Team>> getAllTeams(String token, String projectId);
 
   // Label
   Future<List<Label>> getLabels(String token, String projectId);

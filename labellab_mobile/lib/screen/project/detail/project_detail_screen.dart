@@ -10,6 +10,7 @@ import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/add_edit_group/add_edit_group.dart';
@@ -20,6 +21,7 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart'
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/group_item.dart';
+import 'package:labellab_mobile/widgets/team_item.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -124,12 +126,22 @@ class ProjectDetailScreen extends StatelessWidget {
                       _state.isSelecting,
                       _state.selectedImages)
                   : SliverFillRemaining(),
+              // _state.project != null
+              //     ? _buildGroupsHeading(context)
+              //     : SliverFillRemaining(),
+              // _state.project != null && _state.project.groups != null
+              //     ? _buildGroups(
+              //         context, _state.project.id, _state.project.groups)
+              //     : SliverFillRemaining(),
               _state.project != null
-                  ? _buildGroupsHeading(context)
+                  ? _buildTeamsHeading(context)
                   : SliverFillRemaining(),
-              _state.project != null && _state.project.groups != null
-                  ? _buildGroups(
-                      context, _state.project.id, _state.project.groups)
+              _state.project != null && _state.project.teams != null
+                  ? _buildTeams(
+                      context,
+                      _state.project.id,
+                      _state.project.teams,
+                    )
                   : SliverFillRemaining(),
               _state.project != null
                   ? _buildLabelsHeading(context)
@@ -366,6 +378,51 @@ class ProjectDetailScreen extends StatelessWidget {
               ]),
             ),
           );
+  }
+
+  Widget _buildTeamsHeading(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Teams",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              FlatButton.icon(
+                icon: Icon(Icons.add),
+                label: Text("Add"),
+                onPressed: null,
+              ),
+            ],
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildTeams(BuildContext context, String projectId, List<Team> teams) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          teams.length > 0
+              ? Wrap(
+                  spacing: 8,
+                  children: teams
+                      .map((team) => TeamItem(
+                            team,
+                            onPress: null,
+                          ))
+                      .toList(),
+                )
+              : _buildEmptyPlaceholder(context, "No Teams yet"),
+        ]),
+      ),
+    );
   }
 
   Widget _buildGroupsHeading(BuildContext context) {

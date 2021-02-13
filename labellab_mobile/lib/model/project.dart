@@ -3,6 +3,7 @@ import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
+import 'package:labellab_mobile/model/team.dart';
 
 class Project {
   String id;
@@ -14,6 +15,7 @@ class Project {
   List<Label> labels;
   List<Group> groups;
   List<MlModel> models;
+  List<Team> teams;
 
   Project(
       {this.id,
@@ -52,6 +54,7 @@ class Project {
           .toList();
     }
     groups = [];
+    teams = [];
     // if (json["groups"] != null && !isDense) {
     //   groups = (json["groups"] as List)
     //       .map((group) => Group.fromJson(group))

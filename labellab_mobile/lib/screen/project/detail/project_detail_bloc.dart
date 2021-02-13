@@ -89,8 +89,11 @@ class ProjectDetailBloc {
       this._project = project;
       _repository.getModels(projectId).then((models) {
         this._project.models = models;
-        _setState(ProjectDetailState.success(_project));
-        _isLoading = false;
+        _repository.getAllTeams(projectId).then((teams) {
+          this._project.teams = teams;
+          _setState(ProjectDetailState.success(_project));
+          _isLoading = false;
+        });
       });
     }).catchError((err) {
       if (err is DioError) {

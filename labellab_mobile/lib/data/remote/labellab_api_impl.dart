@@ -23,6 +23,7 @@ import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
@@ -73,6 +74,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_METADATA = "metadata";
 
   static const ENDPOINT_GROUP = "group";
+
+  static const ENDPOINT_ALL_TEAMS = "team/get";
 
   static const ENDPOINT_LABEL = "label";
 
@@ -522,6 +525,25 @@ class LabelLabAPIImpl extends LabelLabAPI {
     // });
 
     return Future.delayed(Duration(seconds: 1)).then((value) => _fake.getGroup);
+  }
+
+  @override
+  Future<List<Team>> getAllTeams(String token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .get(API_URL + ENDPOINT_ALL_TEAMS + "/$projectId", options: options)
+        .then((response) {
+      final isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((item) => Team.fromJson(item))
+            .toList();
+      } else {
+        return List.from([]);
+      }
+    });
   }
 
   @override

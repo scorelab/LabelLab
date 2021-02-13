@@ -19,6 +19,7 @@ import 'package:labellab_mobile/model/location.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
@@ -237,6 +238,12 @@ class Repository {
   Future<Group> getGroup(String groupId) {
     if (accessToken == null) return Future(null);
     return _api.getGroup(accessToken, groupId);
+  }
+
+  // Teams
+  Future<List<Team>> getAllTeams(String projectId) {
+    if (accessToken == null) return Future(null);
+    return _api.getAllTeams(accessToken, projectId);
   }
 
   // Label
