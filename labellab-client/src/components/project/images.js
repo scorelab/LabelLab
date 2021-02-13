@@ -102,12 +102,16 @@ class ImagesIndex extends Component {
   handleDelete = () => {
     const { deleteImage, project, fetchProject } = this.props
     const self = this
-    deleteImage({ images: Array.from(this.state.selectedList) }, () => {
-      self.setState({
-        selectedList: []
-      })
-      fetchProject(project.projectId)
-    })
+    deleteImage(
+      project.projectId,
+      { images: Array.from(this.state.selectedList) },
+      () => {
+        self.setState({
+          selectedList: []
+        })
+        fetchProject(project.projectId)
+      }
+    )
   }
   handleSelected = imageId => {
     if (!this.state.selectedList.includes(imageId)) {
