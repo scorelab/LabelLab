@@ -86,4 +86,5 @@ abstract class LabelLabAPI {
       String token, String modelId, MlModel model, ModelDto modelDto);
   Future<ApiResponse> trainModel(String token, String modelId);
   Future<List<charts.Series>> getResults(String token);
+  Future<ApiResponse> deleteModel(String token, String modelId);
 }
