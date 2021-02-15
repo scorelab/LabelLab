@@ -25,7 +25,6 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - /usr/labellab/labellab-client/node_modules
       - ./labellab-client/:/usr/labellab/labellab-client
     environment:
       - NODE_ENV=development
