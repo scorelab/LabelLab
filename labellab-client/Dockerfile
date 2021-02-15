@@ -8,7 +8,6 @@ ENV PATH /usr/app/node_modules/.bin:$PATH
 
 COPY package.json /usr/labellab/labellab-client
 RUN npm install --silent
-COPY . /usr/labellab/labellab-client
 
 EXPOSE 3000
 CMD ["npm", "start"] 
