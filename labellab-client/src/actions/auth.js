@@ -63,7 +63,7 @@ export const login = (username, password, callback) => {
     return { type: LOGIN_SUCCESS, payload: data }
   }
   function failure(error) {
-    return { type: LOGIN_FAILURE, error }
+    return { type: LOGIN_FAILURE, payload: error }
   }
 }
 
@@ -96,7 +96,6 @@ export const logout = callback => {
     return { type: LOGOUT_SUCCESS }
   }
 }
-
 
 export const forgotPassword = (email, callback) => {
   return dispatch => {
@@ -132,7 +131,6 @@ export const forgotPassword = (email, callback) => {
 
 export const verifyResetPasswordToken = (user_id, token) => {
   return dispatch => {
-
     dispatch(request())
     FetchApi('GET', `/api/v1/auth/reset-password/${user_id}/${token}`)
       .then(res => {
@@ -160,7 +158,12 @@ export const verifyResetPasswordToken = (user_id, token) => {
   }
 }
 
-export const updatePassword = (email, username, password, resetPasswordToken) => {
+export const updatePassword = (
+  email,
+  username,
+  password,
+  resetPasswordToken
+) => {
   return dispatch => {
     const data = {
       email: email,
@@ -237,9 +240,10 @@ export const GithubOauth = (credentials, callback) => {
         'Access-Control-Allow-Origin': 'http://localhost:3000',
         'Accept': 'application/json'
       }
-    };
+    }
     dispatch(request())
-    axios.post('https://github.com/login/oauth/access_token', credentials, config)
+    axios
+      .post('https://github.com/login/oauth/access_token', credentials, config)
       .then(res => {
         dispatch(success(res))
         callback()
@@ -271,9 +275,10 @@ export const GithubOauthCallback = (access_token, callback) => {
         'Accept': 'application/json',
         'Authorization': 'token ' + access_token
       }
-    };
+    }
     dispatch(request())
-    axios.get('https://api.github.com/user', config)
+    axios
+      .get('https://api.github.com/user', config)
       .then(res => {
         dispatch(success(res.data))
         callback()

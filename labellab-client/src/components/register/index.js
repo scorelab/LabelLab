@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Message, Button, Form, Icon, Header, Label, Input } from 'semantic-ui-react'
+import {
+  Message,
+  Button,
+  Form,
+  Icon,
+  Header,
+  Label,
+  Input
+} from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { userRegister } from '../../actions/index'
 import register from './css/register.css'
@@ -99,14 +107,23 @@ class RegisterIndex extends Component {
               type="text"
             />
             {submitted && !name && (
-              <Label pointing color="red">Name cannot be empty!</Label>
+              <Label pointing color="red">
+                Name cannot be empty!
+              </Label>
             )}
             {statusText && errField === 'name' && (
-              <Label pointing color="red">{statusText}</Label>
+              <Label pointing color="red">
+                {statusText}
+              </Label>
             )}
           </Form.Field>
 
-          <Form.Field error={errField === 'email' || (submitted && (email === '' || !isEmail(email)))}>
+          <Form.Field
+            error={
+              errField === 'email' ||
+              (submitted && (email === '' || !isEmail(email)))
+            }
+          >
             <label>E-mail address</label>
 
             <Input
@@ -116,18 +133,25 @@ class RegisterIndex extends Component {
               type="email"
             />
             {submitted && !email && (
-              <Label pointing color="red">E-mail address cannot be empty!</Label>
+              <Label pointing color="red">
+                E-mail address cannot be empty!
+              </Label>
             )}
             {submitted && email && !isEmail(email) && (
-              <Label pointing color="red">E-mail address is invalid!</Label>
+              <Label pointing color="red">
+                E-mail address is invalid!
+              </Label>
             )}
             {statusText && errField === 'email' && (
-              <Label pointing color="red">{statusText}</Label>
+              <Label pointing color="red">
+                {statusText}
+              </Label>
             )}
           </Form.Field>
 
           <Form.Field
-            error={errField === 'username' || (submitted && username === '')}>
+            error={errField === 'username' || (submitted && username === '')}
+          >
             <label>Username</label>
 
             <Input
@@ -137,15 +161,20 @@ class RegisterIndex extends Component {
               type="text"
             />
             {submitted && !username && (
-              <Label pointing color="red">Username cannot be empty!</Label>
+              <Label pointing color="red">
+                Username cannot be empty!
+              </Label>
             )}
             {statusText && errField === 'username' && (
-              <Label pointing color="red">{statusText}</Label>
+              <Label pointing color="red">
+                {statusText}
+              </Label>
             )}
           </Form.Field>
 
           <Form.Field
-            error={errField === 'password' || (submitted && password === '')}>
+            error={errField === 'password' || (submitted && password === '')}
+          >
             <label>Password</label>
 
             <Input
@@ -155,15 +184,24 @@ class RegisterIndex extends Component {
               type="password"
             />
             {submitted && !password && (
-              <Label pointing color="red">Password cannot be empty!</Label>
+              <Label pointing color="red">
+                Password cannot be empty!
+              </Label>
             )}
             {statusText && errField === 'password' && (
-              <Label pointing color="red">{statusText}</Label>
+              <Label pointing color="red">
+                {statusText}
+              </Label>
             )}
           </Form.Field>
 
           <Form.Field
-            error={errField === 'password2' || (submitted && (password2 === '' || (password && password !== password2)))}>
+            error={
+              errField === 'password2' ||
+              (submitted &&
+                (password2 === '' || (password && password !== password2)))
+            }
+          >
             <label>Confirm Password</label>
 
             <Input
@@ -173,22 +211,28 @@ class RegisterIndex extends Component {
               type="password"
             />
             {submitted && !password2 && (
-              <Label pointing color="red">Confirm password cannot be empty!</Label>
+              <Label pointing color="red">
+                Confirm password cannot be empty!
+              </Label>
             )}
             {submitted && password && password2 && password !== password2 && (
-              <Label pointing color="red">Passwords do not match!</Label>
+              <Label pointing color="red">
+                Passwords do not match!
+              </Label>
             )}
             {statusText && errField === 'password2' && (
-              <Label pointing color="red">{statusText}</Label>
+              <Label pointing color="red">
+                {statusText}
+              </Label>
             )}
           </Form.Field>
 
-          {errors && (
+          {statusText ? (
             <Message negative>
               <Icon name="warning circle" />
-              {errors}
+              {statusText}
             </Message>
-          )}
+          ) : null}
           <Button loading={isRegistering} color="blue">
             Register
           </Button>
@@ -197,7 +241,7 @@ class RegisterIndex extends Component {
           Already have an account? &nbsp;
           <Link to="/login">Login here</Link>
         </div>
-      </div >
+      </div>
     )
   }
 }

@@ -4,7 +4,7 @@ from flask_jwt_extended import (jwt_required, get_jwt_identity, get_raw_jwt)
 from datetime import datetime
 
 from api.helpers.classification import (
-    get_classified_data, find_by_id, find_all_by_id, save_image, save_to_db)
+    get_classified_data, find_by_id, find_all_by_id, save_image, save_to_db, delete_by_id)
 from api.models.Classification import Classification
 
 
@@ -112,9 +112,61 @@ class GetAllClassifications(MethodView):
             }
             return make_response(jsonify(response)), 500
 
+class DeleteClassification(MethodView):
+    # This class deletes a classification using its id
+
+    @jwt_required
+    def delete(self, classification_id):
+
+        if not classification_id:
+            response = {
+                "success": False,
+                "msg": "Classification id not found"
+            }
+            return make_response(jsonify(response)), 400
+
+        current_user_id = get_jwt_identity()
+
+        classification = find_by_id(classification_id)
+
+        # Check if a classification with that id exists or not
+        if not classification:
+            response = {
+                "success": False,
+                "msg": "Classification not found"
+            }
+            return make_response(jsonify(response)), 404
+
+        if classification["user_id"] != current_user_id:
+            # The user making this request is not the one who created this classification
+            # So we cannot let him delete it
+            response = {
+                "success": False,
+                "msg": "Can only delete classifications you created"
+            }
+            return make_response(jsonify(response)), 401
+
+        try:
+            delete_by_id(classification_id)
+
+            response = {
+                "success":True,
+                "msg": "Classification deleted successfully"
+            }
+            return make_response(jsonify(response)), 200
+
+        except Exception as err:
+            
+            response = {
+                "success": False,
+                "msg": "Error deleting classification"
+            }
+            return make_response(jsonify(response)), 500
+
 
 classificationController = {
     "classify_image": ClassifyImage.as_view("classify_image"),
     "get_classification": ClassificationInfo.as_view("get_classification"),
-    "get_all_classifications": GetAllClassifications.as_view("get_all_classifications")
+    "get_all_classifications": GetAllClassifications.as_view("get_all_classifications"),
+    "delete_classification": DeleteClassification.as_view("delete_classification")
 }

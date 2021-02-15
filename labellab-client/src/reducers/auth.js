@@ -67,8 +67,7 @@ const auth = (state = initialState, action) => {
         ...state,
         isAuthenticated: false,
         isAuthenticating: false,
-        statusText:
-          action.error === 'Unauthorized' ? 'Incorrect e-mail address or password!' : null,
+        statusText: action.payload,
         error: true,
         errField: action.other
       }
@@ -77,7 +76,7 @@ const auth = (state = initialState, action) => {
         ...state,
         isAuthenticating: true,
         statusText: '',
-        error: false,
+        error: false
       }
     case LOGOUT_SUCCESS:
       return {
@@ -110,7 +109,7 @@ const auth = (state = initialState, action) => {
     case VERIFY_TOKEN_REQUEST:
       return {
         ...state,
-        isLoading: true,
+        isLoading: true
       }
     case VERIFY_TOKEN_SUCCESS:
       return {
@@ -121,7 +120,8 @@ const auth = (state = initialState, action) => {
           username: action.payload.username
         },
         verifyTokenMessage: action.payload.msg,
-        verificationError: action.payload.msg === 'password reset link a-ok' ? false : true
+        verificationError:
+          action.payload.msg === 'password reset link a-ok' ? false : true
       }
     case VERIFY_TOKEN_FAILURE:
       return {
@@ -140,7 +140,8 @@ const auth = (state = initialState, action) => {
         ...state,
         isLoading: false,
         passwordUpdatedMessage: action.payload.msg,
-        passwordUpdateError: action.payload.msg === 'password updated' ? false : true
+        passwordUpdateError:
+          action.payload.msg === 'password updated' ? false : true
       }
     case UPDATE_PASSWORD_FAILURE:
       return {
@@ -177,7 +178,7 @@ const auth = (state = initialState, action) => {
     case GITHUB_OAUTH_REQUEST:
       return {
         ...state,
-        isAuthenticating: true,
+        isAuthenticating: true
       }
     case GITHUB_OAUTH_SUCCESS:
       return {
@@ -197,7 +198,7 @@ const auth = (state = initialState, action) => {
     case GITHUB_OAUTH_CALLBACK_REQUEST:
       return {
         ...state,
-        isAuthenticating: true,
+        isAuthenticating: true
       }
     case GITHUB_OAUTH_CALLBACK_SUCCESS:
       return {

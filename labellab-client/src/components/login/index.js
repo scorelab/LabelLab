@@ -34,7 +34,7 @@ class LoginIndex extends Component {
       password: '',
       errors: {
         email: '',
-        password: ''
+        password: '',
       },
       showPassword: false,
     }
@@ -46,7 +46,7 @@ class LoginIndex extends Component {
     }
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     e.preventDefault()
     const { name, value } = e.target
     let errors = { ...this.state.errors }
@@ -68,11 +68,11 @@ class LoginIndex extends Component {
 
     this.setState({
       [name]: value,
-      errors: errors
+      errors: errors,
     })
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     const { email, password } = this.state
     e.preventDefault()
 
@@ -89,7 +89,7 @@ class LoginIndex extends Component {
         : 'E-mail address is required!'
 
       this.setState({
-        errors
+        errors,
       })
     }
   }
@@ -97,9 +97,9 @@ class LoginIndex extends Component {
   callback = () => {
     const { location, history } = this.props
     location &&
-      location.state &&
-      location.state.from &&
-      location.state.from.pathname
+    location.state &&
+    location.state.from &&
+    location.state.from.pathname
       ? history.push(location.state.from.pathname)
       : history.push('/')
   }
@@ -111,7 +111,12 @@ class LoginIndex extends Component {
   }
 
   render() {
-    const { isAuthenticating, statusText, registerStatusText, authError } = this.props
+    const {
+      isAuthenticating,
+      statusText,
+      registerStatusText,
+      authError,
+    } = this.props
     const { email, password, errors } = this.state
     return (
       <div className="login-grand-parent">
@@ -158,15 +163,19 @@ class LoginIndex extends Component {
                   value={password}
                   onChange={this.handleChange}
                   label={
-                    <Button onClick={this.showPassword} className="show-password">
-                      {this.state.showPassword ?
-                        <Icon fitted name='eye slash' />
-                        :
-                        <Icon fitted name='eye' />
-                      }
+                    <Button
+                      type="button"
+                      onClick={this.showPassword}
+                      className="show-password"
+                    >
+                      {this.state.showPassword ? (
+                        <Icon fitted name="eye slash" />
+                      ) : (
+                        <Icon fitted name="eye" />
+                      )}
                     </Button>
                   }
-                  labelPosition='right'
+                  labelPosition="right"
                 />
                 {errors.password && (
                   <Label pointing color="red">
@@ -180,15 +189,6 @@ class LoginIndex extends Component {
                   {statusText}
                 </Message>
               )}
-
-              {(!authError && registerStatusText || statusText) && (
-                <Message>
-                  <Icon name="info circle" />
-                  {registerStatusText || statusText}
-                </Message>
-              )}
-
-
               <div className="action">
                 <Link to="/forgotpassword">Forgot password?</Link>
               </div>
@@ -218,27 +218,24 @@ LoginIndex.propTypes = {
   isAuthenticating: PropTypes.bool,
   login: PropTypes.func,
   history: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isAuthenticating: state.auth.isAuthenticating,
     statusText: state.auth.statusText,
     registerStatusText: state.register.statusText,
-    authError: state.auth.error
+    authError: state.auth.error,
   }
 }
 
-const mapActionToProps = dispatch => {
+const mapActionToProps = (dispatch) => {
   return {
     login: (email, password, callback) => {
       return dispatch(login(email, password, callback))
-    }
+    },
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapActionToProps
-)(LoginIndex)
+export default connect(mapStateToProps, mapActionToProps)(LoginIndex)

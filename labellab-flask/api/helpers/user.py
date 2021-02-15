@@ -57,6 +57,15 @@ def delete_by_email(email):
     User.query.filter_by(email=email).delete()
     db.session.commit()
 
+def update_by_id(user_id, data):
+    """
+    update user by its id
+    """
+    user = User.query.get(user_id)
+    user.username = data['username']
+    db.session.commit()
+    return user_schema.dump(user).data
+
 def get_data(user_id):
     """
     get all the projects and the teams of a user

@@ -17,6 +17,13 @@ def find_by_id(id):
     classification = Classification.query.filter_by(id=id).first()
     return classification_schema.dump(classification).data
 
+def delete_by_id(id):
+    """
+    Delete classification by id
+    """
+    Classification.query.filter_by(id=id).delete()
+    db.session.commit()
+
 
 def find_all_by_id(user_id):
     classifications = Classification.query.filter_by(user_id=user_id).all()
