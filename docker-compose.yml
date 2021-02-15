@@ -4,8 +4,11 @@ services:
 
   flask_server:
     build: ./labellab-flask
+    working_dir: /usr/labellab/labellab-flask
     ports:
       - 5000:5000
+    volumes:
+      - ./labellab-flask:/usr/labellab/labellab-flask
     restart: always
     links:
       - mysql:dbserver
@@ -18,10 +21,11 @@ services:
 
   client:
     build: ./labellab-client
-    working_dir: /labellab-client/
+    working_dir: /usr/labellab/labellab-client
     ports:
       - 3000:3000
     volumes:
-      - ./labellab-client/:/labellab-client
+      - /usr/labellab/labellab-client/node_modules
+      - ./labellab-client/:/usr/labellab/labellab-client
     environment:
       - NODE_ENV=development

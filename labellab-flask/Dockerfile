@@ -11,10 +11,10 @@ WORKDIR /usr/labellab/labellab-flask
 COPY requirements.txt requirements.txt
 COPY docker.txt docker.txt
 RUN pip install -r docker.txt
-COPY . .
+COPY ./boot.sh /boot.sh
 
-RUN chmod +x boot.sh
+RUN chmod +x /boot.sh
 
 EXPOSE 5000
 
-ENTRYPOINT [ "./boot.sh" ]
+ENTRYPOINT [ "/boot.sh" ]
