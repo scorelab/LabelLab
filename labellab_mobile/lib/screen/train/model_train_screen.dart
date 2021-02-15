@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
@@ -25,6 +26,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
   ModelLoss _currentLoss;
   ModelOptimizer _currentOptimizer;
   ModelMetric _currentMetric;
+  Repository _repository = Repository();
 
   TextEditingController _trainController = TextEditingController();
   TextEditingController _validationController = TextEditingController();
@@ -534,6 +536,9 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             case 0:
               _gotoHistory();
               break;
+            case 1:
+              _deleteModel();
+              break;
           }
         },
         itemBuilder: (context) {
@@ -550,6 +555,12 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         },
       ),
     ];
+  }
+
+  void _deleteModel() async {
+    String modelId = Provider.of<ModelTrainBloc>(context).modelId;
+    await _repository.deleteModel(modelId);
+    Navigator.of(context).pop(true);
   }
 
   void _gotoHistory() {

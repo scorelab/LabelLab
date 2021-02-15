@@ -352,6 +352,11 @@ class Repository {
     return _api.trainModel(accessToken, modelId);
   }
 
+  Future<ApiResponse> deleteModel(String modelId) {
+    if (accessToken == null) return Future(null);
+    return _api.deleteModel(accessToken, modelId);
+  }
+
   Future<List<charts.Series>> getResults() {
     if (accessToken == null) return Future(null);
     return _api.getResults(accessToken);

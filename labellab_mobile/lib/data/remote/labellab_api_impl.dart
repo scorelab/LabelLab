@@ -890,4 +890,17 @@ class LabelLabAPIImpl extends LabelLabAPI {
       return ApiResponse(response.data);
     }).catchError((error) => ApiResponse.error(error));
   }
+
+  @override
+  Future<ApiResponse> deleteModel(String token, String modelId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .delete(API_URL + ENDPOINT_ML_CLASSIFIER + "/$modelId",
+            options: options)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((error) => ApiResponse.error(error));
+  }
 }
