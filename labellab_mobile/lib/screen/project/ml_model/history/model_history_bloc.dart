@@ -22,7 +22,8 @@ class ModelHistoryBloc {
     _isLoading = true;
     _stateController.add(ModelHistoryState.loading());
     _repository.getTrainedModels(projectId).then((models) {
-      _trainedModels = models.where((model) => model.id == modelId);
+      if (models.isNotEmpty)
+        _trainedModels = models.where((model) => model.id == modelId);
       _isLoading = false;
       _stateController.add(ModelHistoryState.success(models: _trainedModels));
     }).catchError((error) {
