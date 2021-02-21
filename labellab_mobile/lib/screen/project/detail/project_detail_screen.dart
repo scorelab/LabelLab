@@ -514,7 +514,18 @@ class ProjectDetailScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(model.name),
-                              Icon(_getIcon(model.source))
+                              Row(
+                                children: [
+                                  Icon(_getIcon(model.source)),
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () => _showAddEditModelPrompt(
+                                      context,
+                                      model: model,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

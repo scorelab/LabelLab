@@ -336,6 +336,11 @@ class Repository {
     return _api.createModel(accessToken, projectId, model);
   }
 
+  Future<ApiResponse> updateModel(String projectId, MlModel model) {
+    if (accessToken == null) return Future(null);
+    return _api.updateModel(accessToken, projectId, model);
+  }
+
   Future<ApiResponse> saveModel(
       String modelId, MlModel model, ModelDto modelDto) {
     if (accessToken == null) return Future(null);
