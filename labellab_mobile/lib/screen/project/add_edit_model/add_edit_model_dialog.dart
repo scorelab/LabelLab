@@ -119,8 +119,9 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
     setState(() {
       _isLoading = true;
     });
-    final MlModel _model = MlModel.fromData(
+    MlModel _model = MlModel.fromData(
         name: _nameController.text, type: _currentType, source: _currentSource);
+    if (_editing) _model.id = widget.model.id;
     _updateLogic(_model).then((String message) {
       if (message == "Success") {
         Navigator.pop(context, true);
@@ -154,7 +155,7 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
   }
 
   Future<String> _updateLogic(MlModel model) {
-    if (model.id == null) {
+    if (widget.model == null) {
       // Create new model
       return widget._repository
           .createModel(widget.projectId, model)
@@ -163,7 +164,14 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
         return "Success";
       });
     } else {
-      // TODO: Write update logic
+      // Update existing model
+      print('Update');
+      return widget._repository
+          .updateModel(widget.projectId, model)
+          .then((res) {
+        if (!res.success) return res.msg;
+        return "Success";
+      });
     }
   }
 
@@ -175,8 +183,11 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
     }
   }
 
-  // TODO:
   void _loadModel() {
-    setState(() {});
+    setState(() {
+      _nameController.text = widget.model.name;
+      _currentType = widget.model.type;
+      _currentSource = widget.model.source;
+    });
   }
 }

@@ -750,6 +750,21 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<ApiResponse> updateModel(
+      String token, String projectId, MlModel model) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    model.projectId = projectId;
+    return _dio
+        .put(API_URL + ENDPOINT_ML_CLASSIFIER + '/${model.id}',
+            options: options, data: model.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
   Future<ApiResponse> saveModel(
       String token, String modelId, MlModel model, ModelDto modelDto) {
     Options options = Options(
