@@ -102,12 +102,18 @@ class ImagesIndex extends Component {
   handleDelete = () => {
     const { deleteImage, project, fetchProject } = this.props
     const self = this
-    deleteImage({ images: Array.from(this.state.selectedList) }, () => {
-      self.setState({
-        selectedList: []
-      })
-      fetchProject(project.projectId)
-    })
+    deleteImage(
+      {
+        images: Array.from(this.state.selectedList),
+        projectId: project.projectId
+      },
+      () => {
+        self.setState({
+          selectedList: []
+        })
+        fetchProject(project.projectId)
+      }
+    )
   }
   handleSelected = imageId => {
     if (!this.state.selectedList.includes(imageId)) {
@@ -123,22 +129,22 @@ class ImagesIndex extends Component {
     }
   }
   handleSelectAll = () => {
-    const {project} = this.props
-    if(this.state.selectAll){
+    const { project } = this.props
+    if (this.state.selectAll) {
       this.setState(() => ({
         selectedList: [],
-        selectAll:false
+        selectAll: false
+      }))
+    } else {
+      this.setState(() => ({
+        selectedList: [
+          ...project?.images?.map(image => {
+            return image.id
+          })
+        ],
+        selectAll: true
       }))
     }
-    else {
-      this.setState( () => ({
-        selectedList: [...project?.images?.map((image)=>{
-          return image.id;
-        })],
-        selectAll:true
-      }))
-    }
-
   }
   handleNameChange = e => {
     const value = e.target.value
@@ -443,8 +449,8 @@ const mapDispatchToProps = dispatch => {
     fetchProject: data => {
       return dispatch(fetchProject(data))
     },
-    submitImage: (data, callback) => {
-      return dispatch(submitImage(data, callback))
+    submitImage: (data, projectId, callback) => {
+      return dispatch(submitImage(data, projectId, callback))
     },
     deleteImage: (imageId, projectId, callback) => {
       return dispatch(deleteImage(imageId, projectId, callback))

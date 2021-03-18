@@ -52,6 +52,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   title: Text(
                     _state.project != null ? _state.project.name : "",
                     style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 actions: _buildActions(context, _state.project),
@@ -145,17 +146,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   ? _buildModels(
                       context, _state.project.id, _state.project.models)
                   : SliverFillRemaining(),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 16),
-                    child: Text(
-                      "Members",
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  ),
-                ]),
-              ),
+              _buildMembersHeading(context, _state.project),
               _state.project != null && _state.project.members != null
                   ? _buildMembers(context, _state.project.members)
                   : SliverFillRemaining(),
@@ -205,14 +196,10 @@ class ProjectDetailScreen extends StatelessWidget {
   List<Widget> _buildActions(BuildContext context, Project project) {
     return project != null
         ? [
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () => _gotoEditProject(context, project.id),
-            ),
             PopupMenuButton<int>(
               onSelected: (int value) {
                 if (value == 0) {
-                  _gotoAddMemberScreen(context, project);
+                  _gotoEditProject(context, project.id);
                 } else if (value == 1) {
                   _showProjectDeleteConfirmation(context, project);
                 }
@@ -221,7 +208,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 return [
                   PopupMenuItem(
                     value: 0,
-                    child: Text("Add member"),
+                    child: Text("Edit"),
                   ),
                   PopupMenuItem(
                     value: 1,
@@ -533,6 +520,30 @@ class ProjectDetailScreen extends StatelessWidget {
               ]),
             ),
           );
+  }
+
+  Widget _buildMembersHeading(BuildContext context, Project project) {
+    return SliverPadding(
+      padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Members",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              FlatButton.icon(
+                icon: Icon(Icons.add),
+                label: Text("Add"),
+                onPressed: () => _gotoAddMemberScreen(context, project),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    );
   }
 
   IconData _getIcon(ModelSource source) {

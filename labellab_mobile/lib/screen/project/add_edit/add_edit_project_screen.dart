@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/routing/application.dart';
-import 'package:labellab_mobile/widgets/label_text_field.dart';
+import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 
 class AddEditProjectScreen extends StatefulWidget {
   final Repository _repository = Repository();
@@ -16,6 +16,7 @@ class AddEditProjectScreen extends StatefulWidget {
 }
 
 class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
+  GlobalKey<FormState> _key = GlobalKey();
   String _projectId;
 
   final TextEditingController _nameController = TextEditingController();
@@ -41,48 +42,77 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            LabelTextField(
-              controller: _nameController,
-              labelText: "Project name",
-              textCapitalization: TextCapitalization.words,
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            LabelTextField(
-                controller: _descriptionController,
-                labelText: "Project description",
-                textCapitalization: TextCapitalization.sentences),
-            this._error != null
-                ? Text(
-                    this._error,
-                    style: TextStyle(color: Colors.red),
-                  )
-                : Container(),
-            SizedBox(
-              height: 16,
-            ),
-            RaisedButton(
-              elevation: 0,
-              color: Theme.of(context).accentColor,
-              colorBrightness: Brightness.dark,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+        child: Form(
+          key: _key,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              LabelTextFormField(
+                key: Key('name'),
+                onSaved: (String text) {
+                  _nameController.text = text.trim();
+                },
+                labelText: "Project name",
+                textCapitalization: TextCapitalization.words,
+                validator: _validateName,
               ),
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Text(_buttonText),
-              onPressed: _isLoading ? null : () => _update(context),
-            ),
-          ],
+              SizedBox(
+                height: 8,
+              ),
+              LabelTextFormField(
+                key: Key('description'),
+                onSaved: (String text) {
+                  _descriptionController.text = text.trim();
+                },
+                labelText: "Project description",
+                textCapitalization: TextCapitalization.sentences,
+                validator: _validateDescription,
+              ),
+              this._error != null
+                  ? Text(
+                      this._error,
+                      style: TextStyle(color: Colors.red),
+                    )
+                  : Container(),
+              SizedBox(
+                height: 16,
+              ),
+              RaisedButton(
+                elevation: 0,
+                color: Theme.of(context).accentColor,
+                colorBrightness: Brightness.dark,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Text(_buttonText),
+                onPressed: _isLoading ? null : () => _update(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  String _validateName(String name) {
+    if (name.isEmpty) {
+      return 'Please enter a name';
+    }
+    return null;
+  }
+
+  String _validateDescription(String description) {
+    if (description.isEmpty) {
+      return 'Please enter a description';
+    }
+    return null;
+  }
+
   void _update(BuildContext context) {
+    final form = _key.currentState;
+    if (!form.validate()) return;
+    form.save();
     setState(() {
       _isLoading = true;
     });

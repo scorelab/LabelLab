@@ -22,7 +22,8 @@ from api.helpers.user import (
     get_data,
     get_user_roles,
     get_projectmembers,
-    search_user
+    search_user,
+    update_by_id
 )
 
 class Register(MethodView):
@@ -68,7 +69,7 @@ class Register(MethodView):
             # exist
             response = {
                 "success": False,
-                "msg": "UserName already exists. Please choose a different one."
+                "msg": "Username already exists. Please choose a different one."
             }
             return make_response(jsonify(response)), 400
 
@@ -382,6 +383,69 @@ class SearchUsers(MethodView):
         }
         return make_response(jsonify(response)), 200
 
+class EditUser(MethodView):
+    """This class-based view handles the editing of a user info"""
+
+    @jwt_required
+    def put(self):
+        current_user = get_jwt_identity()
+
+        user = find_by_user_id(current_user)
+
+        if user is None:
+            response = {
+                "success": False,
+                "msg": "User not found."
+            }
+            return make_response(jsonify(response)), 404
+
+        # getting JSON data from request
+        put_data = request.get_json(silent=True,force=True)
+
+        # If no data is sent at all
+        if not put_data:
+            response = {
+                "success": False,
+                "msg": 'Please provide username to update'
+            }
+            return make_response(jsonify(response)), 400
+
+        # if some data is sent but it doesn't contain username
+        try:
+            username = put_data.get('username')
+            if not username:
+                response = {
+                    "success": False,
+                    "msg": 'username key is not present'
+                }
+                return make_response(jsonify(response)), 400
+        except KeyError as err:
+            response = {
+                "success": False,
+                "msg": f'{str(err)} key is not present'
+            }
+            return make_response(jsonify(response)), 400
+
+        existing_user = find_by_username(username)
+        
+        if existing_user and username != user['username']:
+            # There is an existing user with that username. So we can't let the current user use this username
+            response = {
+                "success": False,
+                "msg": "Username already taken"
+            }
+            return make_response(jsonify(response)), 400
+
+        # Update user with new info
+        updated_user = update_by_id(user['id'], { "username" : username })
+        
+        response = {
+            "success": True,
+            "msg": "User updated successfully.",
+            "body": updated_user
+        }
+        return make_response(jsonify(response)), 200
+
 userController = {
     "register": Register.as_view("register"),
     "login": Login.as_view("login"),
@@ -391,5 +455,6 @@ userController = {
     "oauth": Auth.as_view("oauth"),
     "user": UserInfo.as_view("user"),
     "count_info": CountInfo.as_view("count_info"),
-    "search_users": SearchUsers.as_view("search_users")
+    "search_users": SearchUsers.as_view("search_users"),
+    "edit_user": EditUser.as_view("edit_user")
 }
