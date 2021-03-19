@@ -23,7 +23,8 @@ from api.helpers.user import (
     get_user_roles,
     get_projectmembers,
     search_user,
-    update_by_id
+    update_by_id,
+    update_password,
 )
 
 class Register(MethodView):
@@ -446,6 +447,68 @@ class EditUser(MethodView):
         }
         return make_response(jsonify(response)), 200
 
+class UpdatePassword(MethodView):
+    """This class-based view handles the updating of a user's password"""
+    
+    @jwt_required
+    def put(self):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+
+        # If no user is found
+        if user is None:
+            response = {
+                "success": False,
+                "msg": "User not found."
+            }
+            return make_response(jsonify(response)), 404
+
+        # getting JSON data from request
+        put_data = request.get_json(silent=True,force=True)
+
+        # If no data is sent at all
+        if not put_data:
+            response = {
+                "success": False,
+                "msg": 'Please provide your current and new password'
+            }
+            return make_response(jsonify(response)), 400
+
+        # if some data is sent but it doesn't the current or new password
+        try:
+            current_password = put_data.get('current_password')
+            new_password = put_data.get('new_password')
+            if not current_password or not new_password:
+                response = {
+                    "success": False,
+                    "msg": 'Please provide your current and new password'
+                }
+                return make_response(jsonify(response)), 400
+        except KeyError as err:
+            response = {
+                "success": False,
+                "msg": f'{str(err)} key is not present'
+            }
+            return make_response(jsonify(response)), 400
+
+        # Try to authenticate the user using their current password
+        if not user.verify_password(current_password):
+            response = {
+                "success": False,
+                "msg": "Wrong password, Please try again"
+            }
+            return make_response(jsonify(response)), 402
+        
+        user = update_password(user.id, new_password)
+
+        response = {
+            "success": True,
+            "msg": "Password updated successfully.",
+            "body": user
+        }
+        return make_response(jsonify(response)), 200        
+
+
 userController = {
     "register": Register.as_view("register"),
     "login": Login.as_view("login"),
@@ -456,5 +519,6 @@ userController = {
     "user": UserInfo.as_view("user"),
     "count_info": CountInfo.as_view("count_info"),
     "search_users": SearchUsers.as_view("search_users"),
-    "edit_user": EditUser.as_view("edit_user")
+    "edit_user": EditUser.as_view("edit_user"),
+    "update_password": UpdatePassword.as_view("update_password")
 }

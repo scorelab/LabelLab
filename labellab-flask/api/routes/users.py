@@ -63,3 +63,9 @@ usersprint.add_url_rule(
     view_func=userscontroller.userController["edit_user"],
     methods=["PUT"]
 )
+
+usersprint.add_url_rule(
+    '/auth/update-password',
+    view_func=userscontroller.userController["update_password"],
+    methods=["PUT"]
+)
