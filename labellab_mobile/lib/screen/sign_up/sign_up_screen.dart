@@ -205,9 +205,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() {
           _isRegistering = false;
         });
-        print(err.toString());
+        print(err.message.toString());
         Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text("Sign in failed"),
+          content: Text(err.message ?? "Sign in failed"),
           backgroundColor: Colors.redAccent,
         ));
       });

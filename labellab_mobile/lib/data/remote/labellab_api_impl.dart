@@ -59,6 +59,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_USERS_INFO = "users/info";
   static const ENDPOINT_USERS_SEARCH = "users/search";
   static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
+  static const ENDPOINT_EDIT_INFO = "users/edit/";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_INFO = "project/project_info";
@@ -66,7 +67,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_UPDATE = "project/project_info";
   static const ENDPOINT_PROJECT_DELETE = "project/project_info";
   static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add_project_member";
-  static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove";
+  static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
 
   static const ENDPOINT_IMAGE = "image";
   static const ENDPOINT_IMAGES = "images";
@@ -91,7 +92,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .post(API_URL + ENDPOINT_LOGIN, data: user.toMap())
         .then((response) {
       return LoginResponse(response.data);
-    });
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   @override
@@ -133,7 +135,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .post(API_URL + ENDPOINT_REGISTER, data: user.toMap())
         .then((response) {
       return RegisterResponse(response.data);
-    });
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   @override
@@ -188,6 +191,20 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       return ApiResponse(response.data);
     });
+  }
+
+  @override
+  Future<ApiResponse> editInfo(String token, String username) {
+    final data = {"username": username};
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .put(API_URL + ENDPOINT_EDIT_INFO, options: options, data: data)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   @override
@@ -293,7 +310,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     );
     final data = {
-      "memberEmail": email,
+      "member_email": email,
     };
     return _dio
         .post(API_URL + ENDPOINT_PROJECT_REMOVE_MEMBER + "/$projectId",

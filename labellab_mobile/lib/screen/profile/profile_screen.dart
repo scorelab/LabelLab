@@ -23,6 +23,9 @@ class ProfileScreen extends StatelessWidget {
                   _showChangePictureMethodSelect(context);
                   break;
                 case 1:
+                  _goToEditInfo(context);
+                  break;
+                case 2:
                   _signOut(context);
                   break;
                 default:
@@ -34,8 +37,12 @@ class ProfileScreen extends StatelessWidget {
                 value: 0,
               ),
               PopupMenuItem<int>(
-                child: Text("Logout"),
+                child: Text("Edit info"),
                 value: 1,
+              ),
+              PopupMenuItem<int>(
+                child: Text("Logout"),
+                value: 2,
               ),
             ],
           ),
@@ -106,6 +113,13 @@ class ProfileScreen extends StatelessWidget {
           user.email,
           style: Theme.of(context).textTheme.subtitle1,
         ),
+        SizedBox(
+          height: 8,
+        ),
+        Text(
+          user.username,
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
       ],
     );
   }
@@ -113,6 +127,15 @@ class ProfileScreen extends StatelessWidget {
   void _signOut(BuildContext context) {
     Provider.of<AuthState>(context).signout().then((_) {
       Application.router.pop(context);
+    });
+  }
+
+  void _goToEditInfo(BuildContext context) async {
+    String username = Provider.of<ProfileBloc>(context).getUsername();
+    Application.router
+        .navigateTo(context, "/editinfo/" + username)
+        .whenComplete(() {
+      Provider.of<ProfileBloc>(context).refresh();
     });
   }
 
