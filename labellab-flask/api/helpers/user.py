@@ -190,3 +190,12 @@ def search_user(email_query):
     search = "%{}%".format(email_query)
     users = User.query.filter(User.email.like(search)).all()
     return users_schema.dump(users).data
+
+def update_password(user_id, new_password):
+    """
+    update user password
+    """
+    user = User.query.get(user_id)
+    user.password = User.generate_password_hash(new_password)
+    db.session.commit()
+    return user_schema.dump(user).data
