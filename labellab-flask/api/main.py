@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
+from werkzeug.exceptions import HTTPException
 
 from api.config import config
 from api import commands
@@ -29,21 +30,13 @@ def create_app(config_name):
         register_commands(app)
         register_shellcontext(app)
 
-        @app.errorhandler(405)
-        def method_not_found_error(err):
+        @app.errorhandler(HTTPException)
+        def error_handler(err):
             response = {
                 'success': False,
                 'msg': str(err),
             }
             return jsonify(response), 405
-
-        @app.errorhandler(500)
-        def internal_server_error(err):
-            response = {
-                'success': False,
-                'msg': str(err),
-            }
-            return jsonify(response), 500
 
         return app
     except Exception as err:
