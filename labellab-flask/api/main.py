@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -28,6 +28,22 @@ def create_app(config_name):
         register_blueprint(app)
         register_commands(app)
         register_shellcontext(app)
+
+        @app.errorhandler(405)
+        def method_not_found_error(err):
+            response = {
+                'success': False,
+                'msg': str(err),
+            }
+            return jsonify(response), 405
+
+        @app.errorhandler(500)
+        def internal_server_error(err):
+            response = {
+                'success': False,
+                'msg': str(err),
+            }
+            return jsonify(response), 500
 
         return app
     except Exception as err:
