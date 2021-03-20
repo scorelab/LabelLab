@@ -146,9 +146,15 @@ class ProjectDetailScreen extends StatelessWidget {
                   ? _buildModels(
                       context, _state.project.id, _state.project.models)
                   : SliverFillRemaining(),
-              _buildMembersHeading(context, _state.project),
+              _state.project != null
+                  ? _buildMembersHeading(context, _state.project)
+                  : SliverFillRemaining(),
               _state.project != null && _state.project.members != null
-                  ? _buildMembers(context, _state.project.members)
+                  ? _buildMembers(
+                      context,
+                      _state.project.members,
+                      _state.project.adminId,
+                    )
                   : SliverFillRemaining(),
             ],
           ),
@@ -534,6 +540,8 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildMembersHeading(BuildContext context, Project project) {
+    final User _currentUser = Provider.of<AuthState>(context).user;
+
     return SliverPadding(
       padding: EdgeInsets.only(top: 8, left: 16, right: 16),
       sliver: SliverList(
@@ -545,11 +553,13 @@ class ProjectDetailScreen extends StatelessWidget {
                 "Members",
                 style: Theme.of(context).textTheme.headline6,
               ),
-              FlatButton.icon(
-                icon: Icon(Icons.add),
-                label: Text("Add"),
-                onPressed: () => _gotoAddMemberScreen(context, project),
-              ),
+              _currentUser.id == project.adminId
+                  ? FlatButton.icon(
+                      icon: Icon(Icons.add),
+                      label: Text("Add"),
+                      onPressed: () => _gotoAddMemberScreen(context, project),
+                    )
+                  : Container(),
             ],
           ),
         ]),
@@ -570,7 +580,8 @@ class ProjectDetailScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildMembers(BuildContext context, List<Member> members) {
+  Widget _buildMembers(
+      BuildContext context, List<Member> members, String adminId) {
     final User _currentUser = Provider.of<AuthState>(context).user;
     return SliverPadding(
       padding: EdgeInsets.only(bottom: 72),
@@ -580,7 +591,8 @@ class ProjectDetailScreen extends StatelessWidget {
             return ListTile(
               title: Text(member.name),
               subtitle: Text(member.email),
-              trailing: _currentUser.email != member.email
+              trailing: (_currentUser.id == adminId &&
+                      _currentUser.email != member.email)
                   ? PopupMenuButton<int>(
                       onSelected: (value) {
                         if (value == 0) {
