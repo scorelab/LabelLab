@@ -134,6 +134,12 @@ class Repository {
     return _api.editInfo(accessToken, username);
   }
 
+  Future<ApiResponse> updatePassword(
+      String currentPassword, String newPassword) {
+    if (accessToken == null) return Future(null);
+    return _api.updatePassword(accessToken, currentPassword, newPassword);
+  }
+
   // Project
   Future<ApiResponse> createProject(Project project) {
     if (accessToken == null) return Future(null);

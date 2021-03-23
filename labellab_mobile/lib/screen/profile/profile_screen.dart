@@ -26,6 +26,9 @@ class ProfileScreen extends StatelessWidget {
                   _goToEditInfo(context);
                   break;
                 case 2:
+                  _goToUpdatePassword(context);
+                  break;
+                case 3:
                   _signOut(context);
                   break;
                 default:
@@ -41,8 +44,12 @@ class ProfileScreen extends StatelessWidget {
                 value: 1,
               ),
               PopupMenuItem<int>(
-                child: Text("Logout"),
+                child: Text("Update password"),
                 value: 2,
+              ),
+              PopupMenuItem<int>(
+                child: Text("Logout"),
+                value: 3,
               ),
             ],
           ),
@@ -137,6 +144,10 @@ class ProfileScreen extends StatelessWidget {
         .whenComplete(() {
       Provider.of<ProfileBloc>(context).refresh();
     });
+  }
+
+  void _goToUpdatePassword(BuildContext context) {
+    Application.router.navigateTo(context, "/update-password");
   }
 
   void _showChangePictureMethodSelect(BuildContext pageContext) {

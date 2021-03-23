@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:labellab_mobile/screen/main_screen.dart';
 import 'package:labellab_mobile/screen/profile/edit_info/edit_info_screen.dart';
 import 'package:labellab_mobile/screen/profile/profile_bloc.dart';
 import 'package:labellab_mobile/screen/profile/profile_screen.dart';
+import 'package:labellab_mobile/screen/profile/update_password/update_password_screen.dart';
 import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.dart';
 import 'package:labellab_mobile/screen/project/add_member/project_add_member_bloc.dart';
 import 'package:labellab_mobile/screen/project/add_member/project_add_member_screen.dart';
@@ -48,6 +51,11 @@ var loginHandler = Handler(
 var signupHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return SignUpScreen();
+});
+
+var updatePasswordHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return UpdatePasswordScreen();
 });
 
 var profileHandler = Handler(
