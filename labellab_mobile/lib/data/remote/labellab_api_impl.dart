@@ -55,6 +55,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_LOGIN_GOOGLE = "auth/google/mobile";
   static const ENDPOINT_LOGIN_GITHUB = "auth/github";
   static const ENDPOINT_REGISTER = "auth/register";
+  static const ENDPOINT_UPDATE_PASSWORD = "auth/update-password";
 
   static const ENDPOINT_USERS_INFO = "users/info";
   static const ENDPOINT_USERS_SEARCH = "users/search";
@@ -136,6 +137,26 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .then((response) {
       return RegisterResponse(response.data);
     }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
+  }
+
+  @override
+  Future<ApiResponse> updatePassword(
+      String token, String currentPassword, String newPassword) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+    );
+    return _dio
+        .put(
+          API_URL + ENDPOINT_UPDATE_PASSWORD,
+          options: options,
+          data: {
+            "current_password": currentPassword,
+            "new_password": newPassword,
+          },
+        )
+        .then((response) => ApiResponse(response.data))
+        .catchError((err) =>
             throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
