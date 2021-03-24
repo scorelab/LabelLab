@@ -10,6 +10,7 @@ class LabelTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final validator;
   final onSaved;
+  final TextEditingController controller;
 
   LabelTextFormField({
     this.key,
@@ -21,6 +22,7 @@ class LabelTextFormField extends StatefulWidget {
     this.labelText,
     this.validator,
     this.onSaved,
+    this.controller,
   });
 
   @override
@@ -35,6 +37,7 @@ class _LabelTextFormFieldState extends State<LabelTextFormField> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: TextFormField(
+        controller: widget.controller,
         key: widget.key,
         decoration: new InputDecoration(
           hintText: widget.hintText,

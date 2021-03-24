@@ -55,6 +55,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                 labelText: "Project name",
                 textCapitalization: TextCapitalization.words,
                 validator: _validateName,
+                controller: _nameController,
               ),
               SizedBox(
                 height: 8,
@@ -67,6 +68,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                 labelText: "Project description",
                 textCapitalization: TextCapitalization.sentences,
                 validator: _validateDescription,
+                controller: _descriptionController,
               ),
               this._error != null
                   ? Text(
