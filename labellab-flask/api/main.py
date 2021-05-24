@@ -11,7 +11,7 @@ from api.config import config
 from api import commands
 from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications
 from api.extensions import db, migrate, jwt, ma
-from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier
+from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier, Log
 
 
 def create_app(config_name):
