@@ -128,6 +128,17 @@ def upgrade():
     sa.ForeignKeyConstraint(['labeldata_id'], ['labeldata.id'], onupdate='cascade', ondelete='cascade'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('log',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('message', sa.String(length=120), nullable=False),
+    sa.Column('category', sa.String(length=10), nullable=False),
+    sa.Column('entity_type', sa.String(length=10), nullable=True),
+    sa.Column('entity_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('project_id', sa.Integer(), nullable=False),
+    sa.Column('timestamp', sa.DateTime(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     # ### end Alembic commands ###
 
 
@@ -144,4 +155,5 @@ def downgrade():
     op.drop_table('project')
     op.drop_table('user')
     op.drop_table('revoked_token')
+    op.drop_table('log')
     # ### end Alembic commands ###
