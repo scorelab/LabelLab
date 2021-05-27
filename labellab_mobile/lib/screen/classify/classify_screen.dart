@@ -22,6 +22,7 @@ class ClassifyScreen extends StatefulWidget {
 
 class _ClassifyScreenState extends State<ClassifyScreen> {
   bool uploadWithCompression;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -155,9 +156,10 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
   }
 
   void _showImagePicker(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source).then((image) async {
+    _imagePicker.getImage(source: source).then((image) async {
       if (image != null) {
-        Provider.of<ClassifyBloc>(context).setImage(image);
+        File imageFile = File(image.path);
+        Provider.of<ClassifyBloc>(context).setImage(imageFile);
       } else {
         Application.router.pop(context);
       }

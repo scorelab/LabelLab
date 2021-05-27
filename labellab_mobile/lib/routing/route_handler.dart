@@ -61,7 +61,7 @@ var updatePasswordHandler = Handler(
 var profileHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProfileBloc>(
-    builder: (context) => ProfileBloc(),
+    create: (context) => ProfileBloc(),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProfileScreen(),
   );
@@ -70,7 +70,7 @@ var profileHandler = Handler(
 var editInfoHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProfileBloc>(
-    builder: (context) => ProfileBloc(),
+    create: (context) => ProfileBloc(),
     dispose: (context, bloc) => bloc.dispose(),
     child: EditInfoScreen(params['username'].first),
   );
@@ -89,7 +89,7 @@ var editProjectHandler = Handler(
 var detailProjectHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProjectDetailBloc>(
-    builder: (context) => ProjectDetailBloc(params['id'].first),
+    create: (context) => ProjectDetailBloc(params['id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectDetailScreen(),
   );
@@ -98,7 +98,7 @@ var detailProjectHandler = Handler(
 var addMemberProjectHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProjectAddMemberBloc>(
-    builder: (context) => ProjectAddMemberBloc(params['id'].first),
+    create: (context) => ProjectAddMemberBloc(params['id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectAddMemberScreen(),
   );
@@ -107,7 +107,7 @@ var addMemberProjectHandler = Handler(
 var moreImagesProjectHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProjectMoreImagesBloc>(
-    builder: (context) => ProjectMoreImagesBloc(params['id'].first),
+    create: (context) => ProjectMoreImagesBloc(params['id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectMoreImagesScreen(),
   );
@@ -116,7 +116,7 @@ var moreImagesProjectHandler = Handler(
 var uploadImageHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProjectUploadImageBloc>(
-    builder: (context) => ProjectUploadImageBloc(params['project_id'].first),
+    create: (context) => ProjectUploadImageBloc(params['project_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectUploadImageScreen(),
   );
@@ -125,7 +125,7 @@ var uploadImageHandler = Handler(
 var viewImageHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProjectViewImageBloc>(
-    builder: (context) => ProjectViewImageBloc(
+    create: (context) => ProjectViewImageBloc(
         params['project_id'].first, params['image_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectViewImageScreen(),
@@ -135,7 +135,7 @@ var viewImageHandler = Handler(
 var viewGroupHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProjectViewGroupBloc>(
-    builder: (context) => ProjectViewGroupBloc(
+    create: (context) => ProjectViewGroupBloc(
         params['project_id'].first, params['group_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectViewGroupScreen(),
@@ -145,7 +145,7 @@ var viewGroupHandler = Handler(
 var addGroupImagesHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<GroupAddImagesBloc>(
-    builder: (context) => GroupAddImagesBloc(
+    create: (context) => GroupAddImagesBloc(
         params['project_id'].first, params['group_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: GroupAddImagesScreen(),
@@ -155,7 +155,7 @@ var addGroupImagesHandler = Handler(
 var labelImageHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<LabelToolBloc>(
-    builder: (context) =>
+    create: (context) =>
         LabelToolBloc(params['project_id'].first, params['image_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: LabelToolScreen(),
@@ -165,7 +165,7 @@ var labelImageHandler = Handler(
 var viewPathHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ProjectImagePathBloc>(
-    builder: (context) => ProjectImagePathBloc(
+    create: (context) => ProjectImagePathBloc(
         params['project_id'].first, params['image_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectImagePathScreen(),
@@ -175,7 +175,7 @@ var viewPathHandler = Handler(
 var classifyHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ClassifyBloc>(
-    builder: (context) => ClassifyBloc(),
+    create: (context) => ClassifyBloc(),
     dispose: (context, bloc) => bloc.dispose(),
     child: ClassifyScreen(params['by'].first == 'camera'),
   );
@@ -184,7 +184,7 @@ var classifyHandler = Handler(
 var classificationHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ClassificationBloc>(
-    builder: (context) => ClassificationBloc(params['id'].first),
+    create: (context) => ClassificationBloc(params['id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ClassificationScreen(),
   );
@@ -193,7 +193,7 @@ var classificationHandler = Handler(
 var modelTrainHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ModelTrainBloc>(
-    builder: (context) =>
+    create: (context) =>
         ModelTrainBloc(params['project_id'].first, params['model_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ModelTrainScreen(),
@@ -203,7 +203,7 @@ var modelTrainHandler = Handler(
 var modelHistoryHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return Provider<ModelHistoryBloc>(
-    builder: (context) =>
+    create: (context) =>
         ModelHistoryBloc(params['project_id'].first, params['model_id'].first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ModelHistoryScreen(),

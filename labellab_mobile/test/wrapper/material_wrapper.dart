@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 // Helper to wrap with material app
 Widget wrapWidget({Widget child}) {
   return ChangeNotifierProvider<AuthState>(
-    builder: (context) => AuthState(),
+    create: (context) => AuthState(),
     child: MaterialApp(
       home: child,
     ),
