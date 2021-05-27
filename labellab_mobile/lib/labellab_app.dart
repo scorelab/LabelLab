@@ -16,7 +16,7 @@ class LabelLabApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AuthState>(
-      builder: (context) => AuthState(),
+      create: (context) => AuthState(),
       child: MaterialApp(
         title: 'LabelLab',
         theme: ThemeData(

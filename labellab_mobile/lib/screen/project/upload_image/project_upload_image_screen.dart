@@ -162,7 +162,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
         ),
       ).then((images) {
         // Emmits upload images
-        Observable.fromIterable(images).flatMap((image) {
+        Stream.fromIterable(images).flatMap((image) {
           // To create a temp image file
           Future<File> fetchImageFile = image.getByteData().then((byteData) {
             return getTemporaryDirectory().then((tempDir) {

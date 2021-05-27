@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Provider<PageController>(
-      builder: (context) => _pageController,
+      create: (context) => _pageController,
       child: Consumer<AuthState>(
         builder: (context, AuthState authState, widget) {
           return Stack(
@@ -34,13 +34,13 @@ class _MainScreenState extends State<MainScreen> {
                       controller: _pageController,
                       children: <Widget>[
                         Provider<HistoryBloc>(
-                          builder: (context) => HistoryBloc(),
+                          create: (context) => HistoryBloc(),
                           dispose: (context, bloc) => bloc.dispose(),
                           child: HistoryScreen(),
                         ),
                         HomeScreen(),
                         Provider<ProjectBloc>(
-                          builder: (context) => ProjectBloc(),
+                          create: (context) => ProjectBloc(),
                           dispose: (context, bloc) => bloc.dispose(),
                           child: ProjectScreen(),
                         ),
@@ -51,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
                       controller: _pageController,
                       children: <Widget>[
                         Provider<HistoryBloc>(
-                          builder: (context) => HistoryBloc(),
+                          create: (context) => HistoryBloc(),
                           dispose: (context, bloc) => bloc.dispose(),
                           child: HistoryScreen(),
                         ),

@@ -38,7 +38,7 @@ class ProjectUploadImageBloc {
     if (_isUploading) return;
     _isUploading = true;
     _stateController.add(ProjectUploadImageState.loading(images: _images));
-    _uploadProgress = Observable.fromIterable(_images).flatMap((image) {
+    _uploadProgress = Stream.fromIterable(_images).flatMap((image) {
       image.state = UploadImageState.LOADING;
       _stateController.add(ProjectUploadImageState.loading(images: _images));
       return _repository.uploadImage(projectId, image).then((response) {
@@ -51,7 +51,7 @@ class ProjectUploadImageBloc {
     }).doOnDone(() {
       _isUploading = false;
       _stateController.add(ProjectUploadImageState.success(images: _images));
-    }).doOnError((err) {
+    }).doOnError((err, _) {
       print(err);
       _isUploading = false;
       _stateController

@@ -6,7 +6,7 @@ class RetryOnAuthFailInterceptor extends Interceptor {
   RetryOnAuthFailInterceptor(this._dio);
 
   @override
-  Future onError(DioError err) async {
+  Future onError(DioError err, ErrorInterceptorHandler handler) async {
     if (err.response != null && err.response.statusCode == 401) {
       _dio.interceptors.requestLock.lock();
       _dio.interceptors.responseLock.lock();
@@ -16,15 +16,9 @@ class RetryOnAuthFailInterceptor extends Interceptor {
       _dio.interceptors.requestLock.unlock();
       _dio.interceptors.responseLock.unlock();
 
-      return Dio().request(
-        err.request.path,
-        cancelToken: err.request.cancelToken,
-        data: err.request.data,
-        onReceiveProgress: err.request.onReceiveProgress,
-        onSendProgress: err.request.onSendProgress,
-        queryParameters: err.request.queryParameters,
-        options: err.request,
-      );
+      final RequestOptions options = err.response.requestOptions;
+
+      return Dio().fetch(options);
     }
 
     return err;
