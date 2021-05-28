@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
-import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
@@ -20,7 +19,6 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart'
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/group_item.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
@@ -33,8 +31,9 @@ class ProjectDetailScreen extends StatelessWidget {
       initialData: ProjectDetailState.loading(),
       builder: (context, snapshot) {
         ProjectDetailState _state = snapshot.data!;
-        bool _hasImages =
-            (_state.project != null) ? _state.project!.images!.length > 0 : false;
+        bool _hasImages = (_state.project != null)
+            ? _state.project!.images!.length > 0
+            : false;
         return Scaffold(
           key: _scaffoldKey,
           body: CustomScrollView(
@@ -670,7 +669,8 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewImage(BuildContext context, String? projectId, String? imageId) {
+  void _gotoViewImage(
+      BuildContext context, String? projectId, String? imageId) {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {
@@ -702,7 +702,8 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewGroup(BuildContext context, String? projectId, String? groupId) {
+  void _gotoViewGroup(
+      BuildContext context, String? projectId, String? groupId) {
     Application.router
         .navigateTo(context, "/project/$projectId/group/$groupId")
         .whenComplete(() {
@@ -710,7 +711,8 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewModel(BuildContext context, String? projectId, String? modelId) {
+  void _gotoViewModel(
+      BuildContext context, String? projectId, String? modelId) {
     Application.router
         .navigateTo(context, "/train/$projectId/$modelId")
         .whenComplete(() {
