@@ -3,9 +3,9 @@ import 'package:labellab_mobile/model/project.dart';
 class ProjectDetailState {
   bool isLoading = false;
   bool isSelecting = false;
-  String error;
-  Project project;
-  List<String> selectedImages = [];
+  String? error;
+  Project? project;
+  List<String?>? selectedImages = [];
 
   ProjectDetailState.loading({this.project}) {
     isLoading = true;

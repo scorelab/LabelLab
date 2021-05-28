@@ -17,13 +17,13 @@ class ProjectMoreImagesScreen extends StatelessWidget {
         stream: Provider.of<ProjectMoreImagesBloc>(context).state,
         initialData: ProjectMoreImagesState.loading(),
         builder: (context, snapshot) {
-          final ProjectMoreImagesState _state = snapshot.data;
+          final ProjectMoreImagesState _state = snapshot.data!;
           return _state.images != null
               ? GridView.count(
                   mainAxisSpacing: 2,
                   crossAxisCount: 3,
                   crossAxisSpacing: 2,
-                  children: _state.images.map((image) {
+                  children: _state.images!.map((image) {
                     return InkWell(
                       child: Container(
                         width: 64,
@@ -31,7 +31,7 @@ class ProjectMoreImagesScreen extends StatelessWidget {
                         color: Colors.black12,
                         child: Image(
                           image: CachedNetworkImageProvider(
-                            image.imageUrl,
+                            image.imageUrl!,
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -50,7 +50,7 @@ class ProjectMoreImagesScreen extends StatelessWidget {
     );
   }
 
-  void _gotoViewImage(BuildContext context, String projectId, String imageId) {
+  void _gotoViewImage(BuildContext context, String projectId, String? imageId) {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {

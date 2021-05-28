@@ -13,7 +13,7 @@ class ProjectImagePathScreen extends StatelessWidget {
       builder: (BuildContext context,
           AsyncSnapshot<ProjectImagePathState> snapshot) {
         if (snapshot.hasData) {
-          ProjectImagePathState _state = snapshot.data;
+          ProjectImagePathState _state = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
               title: Text("Object Path"),
@@ -27,10 +27,10 @@ class ProjectImagePathScreen extends StatelessWidget {
                       _state.labels != null
                           ? Wrap(
                               spacing: 8,
-                              children: _state.labels.map((label) {
+                              children: _state.labels!.map((label) {
                                 return InkWell(
                                   child: Chip(
-                                    label: Text(label.name),
+                                    label: Text(label.name!),
                                   ),
                                   onTap: () => _updateMap(context, label.id),
                                 );
@@ -46,20 +46,20 @@ class ProjectImagePathScreen extends StatelessWidget {
                                         mapType: MapType.hybrid,
                                         initialCameraPosition: CameraPosition(
                                           target: LatLng(
-                                              _state.locations.first.latitude,
-                                              _state.locations.first.longitude),
+                                              _state.locations!.first.latitude!,
+                                              _state.locations!.first.longitude!),
                                           zoom: 12,
                                         ),
                                         onMapCreated:
                                             (GoogleMapController controller) {},
-                                        markers: _state.locations
+                                        markers: _state.locations!
                                             .map(
                                               (location) => Marker(
                                                 markerId:
-                                                    MarkerId(location.name),
+                                                    MarkerId(location.name!),
                                                 position: LatLng(
-                                                    location.latitude,
-                                                    location.longitude),
+                                                    location.latitude!,
+                                                    location.longitude!),
                                                 infoWindow: InfoWindow(
                                                     title: location.name),
                                               ),
@@ -84,7 +84,7 @@ class ProjectImagePathScreen extends StatelessWidget {
     );
   }
 
-  void _updateMap(BuildContext context, String labelId) {
+  void _updateMap(BuildContext context, String? labelId) {
     Provider.of<ProjectImagePathBloc>(context).selectLabel(labelId);
   }
 }

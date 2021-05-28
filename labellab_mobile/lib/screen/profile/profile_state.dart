@@ -3,8 +3,8 @@ import 'package:labellab_mobile/model/user.dart';
 class ProfileState {
   bool isLoading = false;
   bool uploadingPhoto = false;
-  String error;
-  User user;
+  String? error;
+  User? user;
 
   ProfileState.loading({this.user}) {
     isLoading = true;

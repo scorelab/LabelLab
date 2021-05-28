@@ -39,7 +39,7 @@ class ClassificationScreen extends StatelessWidget {
         stream: Provider.of<ClassificationBloc>(context).state,
         builder: (context, AsyncSnapshot<ClassificationState> snapshot) {
           if (snapshot.hasData) {
-            final ClassificationState state = snapshot.data;
+            final ClassificationState state = snapshot.data!;
             return ListView(
               children: <Widget>[
                 state.isLoading
@@ -51,11 +51,11 @@ class ClassificationScreen extends StatelessWidget {
                       ),
                 state.error != null
                     ? ListTile(
-                        title: Text(state.error),
+                        title: Text(state.error!),
                       )
                     : Container(),
                 state.classification != null
-                    ? _buildClassification(context, state.classification)
+                    ? _buildClassification(context, state.classification!)
                     : Container(),
               ],
             );
@@ -80,7 +80,7 @@ class ClassificationScreen extends StatelessWidget {
               height: 320,
               color: Colors.black12,
               child: Image(
-                image: CachedNetworkImageProvider(classification.imageUrl),
+                image: CachedNetworkImageProvider(classification.imageUrl!),
                 fit: BoxFit.cover,
               ),
             ),
@@ -90,9 +90,9 @@ class ClassificationScreen extends StatelessWidget {
           title: Text("Labels"),
           subtitle: Row(
             children: classification.labels != null
-                ? classification.labels.map((label) {
+                ? classification.labels!.map((label) {
                     return Chip(
-                      label: Text(label.name +
+                      label: Text(label.name! +
                           " => " +
                           label.confidence.toString() +
                           '%'),
@@ -105,7 +105,7 @@ class ClassificationScreen extends StatelessWidget {
             ? ListTile(
                 title: Text("Classified at"),
                 subtitle: Text(
-                  DateFormat.yMd().format(classification.createdAt),
+                  DateFormat.yMd().format(classification.createdAt!),
                 ),
               )
             : Container(),

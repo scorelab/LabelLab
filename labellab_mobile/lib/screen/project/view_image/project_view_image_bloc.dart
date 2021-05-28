@@ -10,7 +10,7 @@ class ProjectViewImageBloc {
   final String projectId;
   final String imageId;
 
-  Image _image;
+  Image? _image;
   bool _isLoading = false;
 
   ProjectViewImageBloc(this.projectId, this.imageId) {

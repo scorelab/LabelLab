@@ -46,8 +46,8 @@ enum ModelOptimizer {
 enum ModelMetric { ACCURACY }
 
 class MlModel {
-  String id;
-  String name,
+  String? id;
+  String? name,
       preprocessingUrl,
       layersUrl,
       loss,
@@ -58,10 +58,10 @@ class MlModel {
       saveModelUrl,
       transferSource,
       projectId;
-  ModelType type;
-  ModelSource source;
-  double train, test, validation, epochs, batchSize, learningRate;
-  List<Label> labels;
+  ModelType? type;
+  ModelSource? source;
+  double? train, test, validation, epochs, batchSize, learningRate;
+  List<Label>? labels;
 
   MlModel.fromData({this.id, this.name, this.type, this.source});
 

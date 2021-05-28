@@ -2,9 +2,9 @@ import 'package:labellab_mobile/model/ml_model.dart';
 
 class ModelHistoryState {
   bool isLoading = false;
-  String error;
+  String? error;
 
-  List<MlModel> models;
+  List<MlModel>? models;
 
   ModelHistoryState.loading() {
     isLoading = true;

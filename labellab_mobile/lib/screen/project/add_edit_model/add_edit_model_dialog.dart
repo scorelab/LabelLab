@@ -11,18 +11,18 @@ class AddEditModelDialog extends StatefulWidget {
 
   final Repository _repository = Repository();
   final String projectId;
-  final MlModel model;
+  final MlModel? model;
 
   AddEditModelDialog(this.projectId, {this.model});
 }
 
 class _AddEditModelDialogState extends State<AddEditModelDialog> {
   bool _isLoading = false;
-  String _error;
+  String? _error;
 
   final TextEditingController _nameController = TextEditingController();
-  ModelType _currentType = ModelType.CLASSIFIER;
-  ModelSource _currentSource = ModelSource.TRANSFER;
+  ModelType? _currentType = ModelType.CLASSIFIER;
+  ModelSource? _currentSource = ModelSource.TRANSFER;
 
   bool get _editing => widget.model != null;
 
@@ -63,7 +63,7 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
                           child: Text(MlModelMapper.typeToString(value)),
                         ))
                     .toList(),
-                onChanged: (ModelType value) {
+                onChanged: (ModelType? value) {
                   setState(() {
                     _currentType = value;
                   });
@@ -85,7 +85,7 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
                           child: Text(MlModelMapper.sourceToString(value)),
                         ))
                     .toList(),
-                onChanged: (ModelSource value) {
+                onChanged: (ModelSource? value) {
                   setState(() {
                     _currentSource = value;
                   });
@@ -95,7 +95,7 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
             SizedBox(height: 16),
             this._error != null
                 ? Text(
-                    this._error,
+                    this._error!,
                     style: TextStyle(color: Colors.red),
                   )
                 : Container(),
@@ -121,7 +121,7 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
     });
     MlModel _model = MlModel.fromData(
         name: _nameController.text, type: _currentType, source: _currentSource);
-    if (_editing) _model.id = widget.model.id;
+    if (_editing) _model.id = widget.model!.id;
     _updateLogic(_model).then((String message) {
       if (message == "Success") {
         Navigator.pop(context, true);
@@ -134,9 +134,9 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
       }
     }).catchError((err) {
       if (err is DioError) {
-        if (err.response != null && err.response.data is Map) {
+        if (err.response != null && err.response!.data is Map) {
           setState(() {
-            _error = err.response.data['msg'].toString();
+            _error = err.response!.data['msg'].toString();
             _isLoading = false;
           });
         } else {
@@ -160,7 +160,7 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
       return widget._repository
           .createModel(widget.projectId, model)
           .then((res) {
-        if (!res.success) return res.msg;
+        if (!res.success!) return res.msg!;
         return "Success";
       });
     } else {
@@ -169,7 +169,7 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
       return widget._repository
           .updateModel(widget.projectId, model)
           .then((res) {
-        if (!res.success) return res.msg;
+        if (!res.success!) return res.msg!;
         return "Success";
       });
     }
@@ -185,9 +185,9 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
 
   void _loadModel() {
     setState(() {
-      _nameController.text = widget.model.name;
-      _currentType = widget.model.type;
-      _currentSource = widget.model.source;
+      _nameController.text = widget.model!.name!;
+      _currentType = widget.model!.type;
+      _currentSource = widget.model!.source;
     });
   }
 }

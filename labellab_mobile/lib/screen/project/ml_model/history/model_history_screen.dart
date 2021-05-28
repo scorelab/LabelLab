@@ -18,7 +18,7 @@ class ModelHistoryScreen extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<ModelHistoryState> snapshot) {
           if (snapshot.hasData) {
-            ModelHistoryState _state = snapshot.data;
+            ModelHistoryState _state = snapshot.data!;
             if (_state.isLoading)
               return _buildLoadingBody(context);
             else
@@ -38,7 +38,7 @@ class ModelHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, List<MlModel> models) {
+  Widget _buildBody(BuildContext context, List<MlModel>? models) {
     return models != null
         ? Container(
             margin: EdgeInsets.symmetric(horizontal: 16),
@@ -59,7 +59,7 @@ class ModelHistoryScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: <Widget>[
                                 Text(
-                                  model.name,
+                                  model.name!,
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -197,7 +197,7 @@ class ModelHistoryScreen extends StatelessWidget {
                                   height: 200,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: NetworkImage(model.lossGraphUrl),
+                                      image: NetworkImage(model.lossGraphUrl!),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -213,7 +213,7 @@ class ModelHistoryScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
                                       image:
-                                          NetworkImage(model.accuracyGraphUrl),
+                                          NetworkImage(model.accuracyGraphUrl!),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

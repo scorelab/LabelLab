@@ -1,15 +1,15 @@
 import 'package:labellab_mobile/model/classification_label.dart';
 
 class Classification {
-  String id;
-  String imageName;
-  String imageUrl;
-  List<ClassificationLabel> labels;
-  DateTime createdAt;
+  String? id;
+  String? imageName;
+  String? imageUrl;
+  List<ClassificationLabel>? labels;
+  DateTime? createdAt;
 
   Classification();
 
-  Classification.fromJson(dynamic json, {String staticEndpoint}) {
+  Classification.fromJson(dynamic json, {String? staticEndpoint}) {
     id = json["id"].toString();
     imageName = json["image_name"];
     imageUrl = (staticEndpoint != null ? staticEndpoint : "") +

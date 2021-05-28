@@ -21,7 +21,7 @@ class ClassifyScreen extends StatefulWidget {
 }
 
 class _ClassifyScreenState extends State<ClassifyScreen> {
-  bool uploadWithCompression;
+  bool? uploadWithCompression;
   final ImagePicker _imagePicker = ImagePicker();
 
   @override
@@ -48,10 +48,10 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
           initialData: ClassifyState.initial(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              ClassifyState state = snapshot.data;
+              ClassifyState state = snapshot.data!;
               if (state.classification != null) {
-                WidgetsBinding.instance.addPostFrameCallback(
-                    (_) => _gotoClassificationDetail(state.classification.id));
+                WidgetsBinding.instance!.addPostFrameCallback(
+                    (_) => _gotoClassificationDetail(state.classification!.id));
               }
               return ListView(
                 children: <Widget>[
@@ -92,8 +92,8 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                           child: Text("Upload"),
                           onPressed: () async {
                             Provider.of<ClassifyBloc>(context).classifyImage(
-                                uploadWithCompression
-                                    ? await _compressImage(state.image)
+                                uploadWithCompression!
+                                    ? await _compressImage(state.image!)
                                     : state.image);
                           },
                         ),
@@ -166,17 +166,17 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
     }).catchError((err) => print(err));
   }
 
-  void _gotoClassificationDetail(String id) {
+  void _gotoClassificationDetail(String? id) {
     Application.router
         .navigateTo(context, "/classification/$id", replace: true);
   }
 
   Future<File> _compressImage(File image) async {
-    image = await FlutterImageCompress.compressAndGetFile(
+    image = await (FlutterImageCompress.compressAndGetFile(
         image.absolute.path,
         (await getApplicationDocumentsDirectory()).path +
-            image.path?.split("/")?.last,
-        quality: 70);
+            image.path.split("/").last,
+        quality: 70) as Future<File>);
     return image;
   }
 }

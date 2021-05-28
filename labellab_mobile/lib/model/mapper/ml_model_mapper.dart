@@ -3,7 +3,7 @@ import 'package:labellab_mobile/model/ml_model.dart';
 class MlModelMapper {
   MlModelMapper._();
 
-  static ModelType mapJsonToType(String type) {
+  static ModelType mapJsonToType(String? type) {
     switch (type) {
       case "classifier":
         return ModelType.CLASSIFIER;
@@ -13,7 +13,7 @@ class MlModelMapper {
     }
   }
 
-  static ModelSource mapJsonToSource(String source) {
+  static ModelSource mapJsonToSource(String? source) {
     switch (source) {
       case "transfer":
         return ModelSource.TRANSFER;
@@ -25,7 +25,7 @@ class MlModelMapper {
     }
   }
 
-  static String typeToString(ModelType type) {
+  static String typeToString(ModelType? type) {
     switch (type) {
       case ModelType.CLASSIFIER:
         return "Classifier";
@@ -35,7 +35,7 @@ class MlModelMapper {
     }
   }
 
-  static String sourceToString(ModelSource source) {
+  static String sourceToString(ModelSource? source) {
     switch (source) {
       case ModelSource.TRANSFER:
         return "Transfer";
@@ -49,7 +49,7 @@ class MlModelMapper {
     }
   }
 
-  static String stepToString(ModelStep step) {
+  static String stepToString(ModelStep? step) {
     switch (step) {
       case ModelStep.CENTER:
         return "Center";
@@ -79,7 +79,7 @@ class MlModelMapper {
     }
   }
 
-  static String learnToString(ModelToLearn toLearn) {
+  static String learnToString(ModelToLearn? toLearn) {
     switch (toLearn) {
       case ModelToLearn.DN121:
         return "DenseNet121";
@@ -123,7 +123,7 @@ class MlModelMapper {
     }
   }
 
-  static String layerToString(ModelLayer layer) {
+  static String layerToString(ModelLayer? layer) {
     switch (layer) {
       case ModelLayer.C2D:
         return "Conv 2D";
@@ -158,7 +158,7 @@ class MlModelMapper {
     }
   }
 
-  static String optimizerToString(ModelOptimizer optimizer) {
+  static String optimizerToString(ModelOptimizer? optimizer) {
     switch (optimizer) {
       case ModelOptimizer.ADADELTA:
         return "Adedelta";
@@ -182,7 +182,7 @@ class MlModelMapper {
     }
   }
 
-  static String metricToString(ModelMetric metric) {
+  static String metricToString(ModelMetric? metric) {
     switch (metric) {
       case ModelMetric.ACCURACY:
         return "Accuracy";

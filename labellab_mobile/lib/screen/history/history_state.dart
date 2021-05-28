@@ -1,9 +1,9 @@
 import 'package:labellab_mobile/model/classification.dart';
 
 class HistoryState {
-  bool isLoading;
-  String error;
-  List<Classification> classifications;
+  late bool isLoading;
+  String? error;
+  List<Classification>? classifications;
 
   HistoryState.loading({this.classifications}) {
     isLoading = true;

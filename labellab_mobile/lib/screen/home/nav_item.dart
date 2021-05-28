@@ -4,11 +4,11 @@ class NavItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   NavItem({
-    @required this.icon,
-    @required this.label,
+    required this.icon,
+    required this.label,
     this.color = Colors.black,
     this.onTap,
   });

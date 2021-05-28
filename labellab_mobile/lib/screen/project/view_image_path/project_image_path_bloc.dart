@@ -13,9 +13,9 @@ class ProjectImagePathBloc {
   final String projectId;
   final String imageId;
 
-  List<Image> _images;
-  List<Label> _labels;
-  List<Location> _locations;
+  late List<Image> _images;
+  List<Label>? _labels;
+  List<Location>? _locations;
   bool _isLoading = false;
 
   ProjectImagePathBloc(this.projectId, this.imageId) {
@@ -30,8 +30,8 @@ class ProjectImagePathBloc {
       _images = images;
       _labels = images
           .firstWhere((image) => image.id == imageId)
-          .labels
-          .map((selection) => selection.label)
+          .labels!
+          .map((selection) => selection!.label)
           .toList();
       _isLoading = false;
       _stateController.add(ProjectImagePathState.success(
@@ -44,14 +44,14 @@ class ProjectImagePathBloc {
     });
   }
 
-  void selectLabel(String labelId) {
+  void selectLabel(String? labelId) {
     if (_isLoading) return;
     _isLoading = true;
     _stateController.add(ProjectImagePathState.loading());
-    List<String> ids = _images
+    List<String?> ids = _images
         .where((image) =>
-            image.labels.map((label) => label.label.id).contains(labelId))
-        .map((image) => image.id);
+            image.labels!.map((label) => label!.label.id).contains(labelId))
+        .map((image) => image.id) as List<String?>;
     _repository.getImagesPath(projectId, ids).then((locations) {
       _locations = locations;
       _stateController.add(ProjectImagePathState.success(

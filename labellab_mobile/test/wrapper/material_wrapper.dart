@@ -3,7 +3,7 @@ import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
 
 // Helper to wrap with material app
-Widget wrapWidget({Widget child}) {
+Widget wrapWidget({Widget? child}) {
   return ChangeNotifierProvider<AuthState>(
     create: (context) => AuthState(),
     child: MaterialApp(

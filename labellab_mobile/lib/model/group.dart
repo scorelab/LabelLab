@@ -1,10 +1,10 @@
 import 'package:labellab_mobile/model/image.dart';
 
 class Group {
-  String id;
-  String name;
-  String projectId;
-  List<Image> images;
+  String? id;
+  String? name;
+  String? projectId;
+  List<Image>? images;
 
   Group({this.id, this.name, this.projectId, this.images});
 

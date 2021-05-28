@@ -10,7 +10,7 @@ class ModelHistoryBloc {
   final String projectId;
   final String modelId;
 
-  List<MlModel> _trainedModels;
+  List<MlModel>? _trainedModels;
   bool _isLoading = false;
 
   ModelHistoryBloc(this.projectId, this.modelId) {
@@ -23,7 +23,7 @@ class ModelHistoryBloc {
     _stateController.add(ModelHistoryState.loading());
     _repository.getTrainedModels(projectId).then((models) {
       if (models.isNotEmpty)
-        _trainedModels = models.where((model) => model.id == modelId);
+        _trainedModels = models.where((model) => model.id == modelId) as List<MlModel>?;
       _isLoading = false;
       _stateController.add(ModelHistoryState.success(models: _trainedModels));
     }).catchError((error) {

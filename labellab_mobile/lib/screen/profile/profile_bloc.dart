@@ -9,7 +9,7 @@ import 'package:labellab_mobile/screen/profile/profile_state.dart';
 class ProfileBloc {
   Repository _repository = Repository();
 
-  User _user;
+  User? _user;
   bool _isLoading = false;
 
   ProfileBloc() {
@@ -19,7 +19,7 @@ class ProfileBloc {
   void uploadImage(File image) {
     _setState(ProfileState.uploadingPhoto(user: _user));
     _repository.uploadUserImage(image).then((res) {
-      if (res.success) {
+      if (res.success!) {
         print("Success");
         _loadUser();
       }
@@ -33,8 +33,8 @@ class ProfileBloc {
     _loadUser();
   }
 
-  String getUsername() {
-    return _user.username;
+  String? getUsername() {
+    return _user!.username;
   }
 
   // State stream

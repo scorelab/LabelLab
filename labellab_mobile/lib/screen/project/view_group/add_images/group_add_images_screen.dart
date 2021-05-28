@@ -14,7 +14,7 @@ class GroupAddImagesScreen extends StatelessWidget {
       builder:
           (BuildContext context, AsyncSnapshot<GroupAddImagesState> snapshot) {
         if (snapshot.hasData) {
-          GroupAddImagesState _state = snapshot.data;
+          GroupAddImagesState _state = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
               title: Text("Add Images"),
@@ -31,7 +31,7 @@ class GroupAddImagesScreen extends StatelessWidget {
                             mainAxisSpacing: 8,
                             crossAxisSpacing: 8,
                             crossAxisCount: 4,
-                            children: _state.images.map((image) {
+                            children: _state.images!.map((image) {
                               return InkWell(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
@@ -44,13 +44,13 @@ class GroupAddImagesScreen extends StatelessWidget {
                                         children: <Widget>[
                                           Image(
                                             image: CachedNetworkImageProvider(
-                                              image.imageUrl,
+                                              image.imageUrl!,
                                             ),
                                             fit: BoxFit.cover,
                                           ),
                                           AnimatedCrossFade(
                                             crossFadeState: _state
-                                                    .selectedImages
+                                                    .selectedImages!
                                                     .contains(image.id)
                                                 ? CrossFadeState.showFirst
                                                 : CrossFadeState.showSecond,
@@ -101,7 +101,7 @@ class GroupAddImagesScreen extends StatelessWidget {
                             child: Text("No images so far"),
                           ),
                   ),
-            floatingActionButton: _state.selectedImages.isNotEmpty
+            floatingActionButton: _state.selectedImages!.isNotEmpty
                 ? FloatingActionButton(
                     child: Icon(Icons.done),
                     onPressed: () => _addImages(context),
@@ -115,7 +115,7 @@ class GroupAddImagesScreen extends StatelessWidget {
     );
   }
 
-  void _selectImage(BuildContext context, String id) {
+  void _selectImage(BuildContext context, String? id) {
     Provider.of<GroupAddImagesBloc>(context).switchSelection(id);
   }
 

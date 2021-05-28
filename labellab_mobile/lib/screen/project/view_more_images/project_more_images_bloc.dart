@@ -10,7 +10,7 @@ class ProjectMoreImagesBloc {
 
   String projectId;
 
-  List<Image> _images;
+  List<Image>? _images;
   bool _isLoading = false;
 
   ProjectMoreImagesBloc(this.projectId) {

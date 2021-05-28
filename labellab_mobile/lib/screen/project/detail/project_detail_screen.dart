@@ -32,9 +32,9 @@ class ProjectDetailScreen extends StatelessWidget {
       stream: Provider.of<ProjectDetailBloc>(context).state,
       initialData: ProjectDetailState.loading(),
       builder: (context, snapshot) {
-        ProjectDetailState _state = snapshot.data;
+        ProjectDetailState _state = snapshot.data!;
         bool _hasImages =
-            (_state.project != null) ? _state.project.images.length > 0 : false;
+            (_state.project != null) ? _state.project!.images!.length > 0 : false;
         return Scaffold(
           key: _scaffoldKey,
           body: CustomScrollView(
@@ -50,7 +50,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   background: _hasImages ? _buildCover(_state) : Container(),
                   centerTitle: true,
                   title: Text(
-                    _state.project != null ? _state.project.name : "",
+                    _state.project != null ? _state.project!.name! : "",
                     style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
@@ -71,8 +71,8 @@ class ProjectDetailScreen extends StatelessWidget {
               _state.project != null
                   ? SliverList(
                       delegate: SliverChildListDelegate([
-                        _state.project.description != null
-                            ? _buildInfo(context, _state.project.description)
+                        _state.project!.description != null
+                            ? _buildInfo(context, _state.project!.description!)
                             : Container(),
                         Padding(
                           padding: const EdgeInsets.only(
@@ -85,13 +85,13 @@ class ProjectDetailScreen extends StatelessWidget {
                               Container(
                                 child: Row(
                                   children: <Widget>[
-                                    _state.project.images.length > 8
+                                    _state.project!.images!.length > 8
                                         ? FlatButton(
                                             child: Text("More"),
                                             onPressed: () =>
                                                 _gotoMoreImagesScreen(
                                               context,
-                                              _state.project.id,
+                                              _state.project!.id,
                                             ),
                                           )
                                         : Container(),
@@ -117,38 +117,38 @@ class ProjectDetailScreen extends StatelessWidget {
                       ]),
                     )
                   : SliverFillRemaining(),
-              _state.project != null && _state.project.images != null
+              _state.project != null && _state.project!.images != null
                   ? _buildImages(
                       context,
-                      _state.project.id,
-                      _state.project.images,
+                      _state.project!.id,
+                      _state.project!.images!,
                       _state.isSelecting,
                       _state.selectedImages)
                   : SliverFillRemaining(),
               _state.project != null
                   ? _buildGroupsHeading(context)
                   : SliverFillRemaining(),
-              _state.project != null && _state.project.groups != null
+              _state.project != null && _state.project!.groups != null
                   ? _buildGroups(
-                      context, _state.project.id, _state.project.groups)
+                      context, _state.project!.id, _state.project!.groups!)
                   : SliverFillRemaining(),
               _state.project != null
                   ? _buildLabelsHeading(context)
                   : SliverFillRemaining(),
-              _state.project != null && _state.project.labels != null
+              _state.project != null && _state.project!.labels != null
                   ? _buildLabels(
-                      context, _state.project.images, _state.project.labels)
+                      context, _state.project!.images, _state.project!.labels!)
                   : SliverFillRemaining(),
               _state.project != null
                   ? _buildModelsHeading(context)
                   : SliverFillRemaining(),
-              _state.project != null && _state.project.models != null
+              _state.project != null && _state.project!.models != null
                   ? _buildModels(
-                      context, _state.project.id, _state.project.models)
+                      context, _state.project!.id, _state.project!.models!)
                   : SliverFillRemaining(),
               _buildMembersHeading(context, _state.project),
-              _state.project != null && _state.project.members != null
-                  ? _buildMembers(context, _state.project.members)
+              _state.project != null && _state.project!.members != null
+                  ? _buildMembers(context, _state.project!.members!)
                   : SliverFillRemaining(),
             ],
           ),
@@ -158,7 +158,7 @@ class ProjectDetailScreen extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () => _state.project != null
-                ? _gotoUploadImage(context, _state.project.id)
+                ? _gotoUploadImage(context, _state.project!.id)
                 : null,
           ),
         );
@@ -169,14 +169,14 @@ class ProjectDetailScreen extends StatelessWidget {
   Widget _buildCover(ProjectDetailState state) {
     return Container(
       child: Row(
-        children: state.project.images
-            .sublist(0, min(state.project.images.length, 4))
+        children: state.project!.images!
+            .sublist(0, min(state.project!.images!.length, 4))
             .map(
               (image) => Expanded(
                 child: Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: CachedNetworkImageProvider(image.imageUrl),
+                          image: CachedNetworkImageProvider(image.imageUrl!),
                           fit: BoxFit.cover)),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
@@ -193,13 +193,13 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildActions(BuildContext context, Project project) {
+  List<Widget> _buildActions(BuildContext context, Project? project) {
     return project != null
         ? [
             PopupMenuButton<int>(
               onSelected: (int value) {
                 if (value == 0) {
-                  _gotoEditProject(context, project.id);
+                  _gotoEditProject(context, project.id!);
                 } else if (value == 1) {
                   _showProjectDeleteConfirmation(context, project);
                 }
@@ -242,10 +242,10 @@ class ProjectDetailScreen extends StatelessWidget {
 
   Widget _buildImages(
       BuildContext context,
-      String projectId,
+      String? projectId,
       List<LabelLab.Image> images,
       bool isSelecting,
-      List<String> selectedImages) {
+      List<String?>? selectedImages) {
     return images.length > 0
         ? SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -266,7 +266,7 @@ class ProjectDetailScreen extends StatelessWidget {
                         children: <Widget>[
                           Image(
                             image: CachedNetworkImageProvider(
-                              image.imageUrl,
+                              image.imageUrl!,
                             ),
                             fit: BoxFit.cover,
                           ),
@@ -285,8 +285,8 @@ class ProjectDetailScreen extends StatelessWidget {
                             right: 8,
                             child: Text(
                               image.labels != null
-                                  ? image.labels.length != 1
-                                      ? image.labels.length.toString() +
+                                  ? image.labels!.length != 1
+                                      ? image.labels!.length.toString() +
                                           " Labels"
                                       : "1 Label"
                                   : "",
@@ -295,7 +295,7 @@ class ProjectDetailScreen extends StatelessWidget {
                             ),
                           ),
                           AnimatedCrossFade(
-                            crossFadeState: selectedImages.contains(image.id)
+                            crossFadeState: selectedImages!.contains(image.id)
                                 ? CrossFadeState.showFirst
                                 : CrossFadeState.showSecond,
                             duration: Duration(milliseconds: 200),
@@ -380,7 +380,7 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildGroups(
-      BuildContext context, String projectId, List<Group> groups) {
+      BuildContext context, String? projectId, List<Group> groups) {
     return SliverPadding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         sliver: SliverList(
@@ -429,7 +429,7 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildLabels(
-      BuildContext context, List<LabelLab.Image> images, List<Label> labels) {
+      BuildContext context, List<LabelLab.Image>? images, List<Label> labels) {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       sliver: SliverList(
@@ -440,7 +440,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   children: labels.map((label) {
                     return InkWell(
                       child: Chip(
-                        label: Text(label.name),
+                        label: Text(label.name!),
                         deleteIcon: Icon(Icons.cancel),
                         onDeleted: () =>
                             _showLabelDeleteConfirmation(context, label),
@@ -481,7 +481,7 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildModels(
-      BuildContext context, String projectId, List<MlModel> models) {
+      BuildContext context, String? projectId, List<MlModel> models) {
     return models.length > 0
         ? SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -500,7 +500,7 @@ class ProjectDetailScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(model.name),
+                              Text(model.name!),
                               Row(
                                 children: [
                                   Icon(_getIcon(model.source)),
@@ -533,7 +533,7 @@ class ProjectDetailScreen extends StatelessWidget {
           );
   }
 
-  Widget _buildMembersHeading(BuildContext context, Project project) {
+  Widget _buildMembersHeading(BuildContext context, Project? project) {
     return SliverPadding(
       padding: EdgeInsets.only(top: 8, left: 16, right: 16),
       sliver: SliverList(
@@ -548,7 +548,7 @@ class ProjectDetailScreen extends StatelessWidget {
               FlatButton.icon(
                 icon: Icon(Icons.add),
                 label: Text("Add"),
-                onPressed: () => _gotoAddMemberScreen(context, project),
+                onPressed: () => _gotoAddMemberScreen(context, project!),
               ),
             ],
           ),
@@ -557,7 +557,7 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  IconData _getIcon(ModelSource source) {
+  IconData _getIcon(ModelSource? source) {
     switch (source) {
       case ModelSource.TRANSFER:
         return Icons.swap_vert;
@@ -571,16 +571,16 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildMembers(BuildContext context, List<Member> members) {
-    final User _currentUser = Provider.of<AuthState>(context).user;
+    final User? _currentUser = Provider.of<AuthState>(context).user;
     return SliverPadding(
       padding: EdgeInsets.only(bottom: 72),
       sliver: SliverList(
         delegate: SliverChildListDelegate(
           members.map((member) {
             return ListTile(
-              title: Text(member.name),
-              subtitle: Text(member.email),
-              trailing: _currentUser.email != member.email
+              title: Text(member.name!),
+              subtitle: Text(member.email!),
+              trailing: _currentUser!.email != member.email
                   ? PopupMenuButton<int>(
                       onSelected: (value) {
                         if (value == 0) {
@@ -654,11 +654,11 @@ class ProjectDetailScreen extends StatelessWidget {
     }
   }
 
-  void _switchToMultiSelect(BuildContext context, String id) {
+  void _switchToMultiSelect(BuildContext context, String? id) {
     Provider.of<ProjectDetailBloc>(context).selectImage(id);
   }
 
-  void _selectImage(BuildContext context, String id) {
+  void _selectImage(BuildContext context, String? id) {
     Provider.of<ProjectDetailBloc>(context).switchSelection(id);
   }
 
@@ -670,7 +670,7 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewImage(BuildContext context, String projectId, String imageId) {
+  void _gotoViewImage(BuildContext context, String? projectId, String? imageId) {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {
@@ -678,7 +678,7 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoUploadImage(BuildContext context, String id) {
+  void _gotoUploadImage(BuildContext context, String? id) {
     Application.router
         .navigateTo(context, "/project/$id/upload")
         .whenComplete(() {
@@ -694,7 +694,7 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoMoreImagesScreen(BuildContext context, String projectId) {
+  void _gotoMoreImagesScreen(BuildContext context, String? projectId) {
     Application.router
         .navigateTo(context, "/project/$projectId/images")
         .whenComplete(() {
@@ -702,7 +702,7 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewGroup(BuildContext context, String projectId, String groupId) {
+  void _gotoViewGroup(BuildContext context, String? projectId, String? groupId) {
     Application.router
         .navigateTo(context, "/project/$projectId/group/$groupId")
         .whenComplete(() {
@@ -710,7 +710,7 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewModel(BuildContext context, String projectId, String modelId) {
+  void _gotoViewModel(BuildContext context, String? projectId, String? modelId) {
     Application.router
         .navigateTo(context, "/train/$projectId/$modelId")
         .whenComplete(() {
@@ -770,7 +770,7 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   void _showAddEditLabelModel(BuildContext baseContext,
-      {String projectId, Label label}) {
+      {String? projectId, Label? label}) {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {
@@ -779,14 +779,14 @@ class ProjectDetailScreen extends StatelessWidget {
           label: label,
         );
       },
-    ).then((bool isSuccess) {
-      if (isSuccess) {
+    ).then((bool? isSuccess) {
+      if (isSuccess!) {
         Provider.of<ProjectDetailBloc>(baseContext).refresh();
       }
     });
   }
 
-  void _showAddEditGroupsModel(BuildContext baseContext, Group group) {
+  void _showAddEditGroupsModel(BuildContext baseContext, Group? group) {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {
@@ -795,14 +795,14 @@ class ProjectDetailScreen extends StatelessWidget {
           group: group,
         );
       },
-    ).then((bool isSuccess) {
-      if (isSuccess) {
+    ).then((bool? isSuccess) {
+      if (isSuccess!) {
         Provider.of<ProjectDetailBloc>(baseContext).refresh();
       }
     });
   }
 
-  void _showAddEditModelPrompt(BuildContext baseContext, {MlModel model}) {
+  void _showAddEditModelPrompt(BuildContext baseContext, {MlModel? model}) {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {
@@ -811,8 +811,8 @@ class ProjectDetailScreen extends StatelessWidget {
           model: model,
         );
       },
-    ).then((bool isSuccess) {
-      if (isSuccess) {
+    ).then((bool? isSuccess) {
+      if (isSuccess!) {
         Provider.of<ProjectDetailBloc>(baseContext).refresh();
       }
     });

@@ -6,7 +6,7 @@ import 'package:labellab_mobile/widgets/label_text_field.dart';
 class AddEditGroupDialog extends StatefulWidget {
   final Repository _repository = Repository();
   final String projectId;
-  final Group group;
+  final Group? group;
 
   AddEditGroupDialog(this.projectId, {this.group});
 
@@ -15,8 +15,8 @@ class AddEditGroupDialog extends StatefulWidget {
 }
 
 class AddEditGroupDialogState extends State<AddEditGroupDialog> {
-  String _groupId;
-  String _error;
+  String? _groupId;
+  String? _error;
 
   bool _isLoading = false;
 
@@ -54,7 +54,7 @@ class AddEditGroupDialogState extends State<AddEditGroupDialog> {
               height: 16,
             ),
             this._error != null
-                ? Text(this._error, style: TextStyle(color: Colors.redAccent))
+                ? Text(this._error!, style: TextStyle(color: Colors.redAccent))
                 : Container(),
           ],
         ),
@@ -74,8 +74,8 @@ class AddEditGroupDialogState extends State<AddEditGroupDialog> {
 
   void _loadGroup() {
     setState(() {
-      _groupId = widget.group.id;
-      _nameController.text = widget.group.name;
+      _groupId = widget.group!.id;
+      _nameController.text = widget.group!.name!;
     });
   }
 
@@ -107,11 +107,11 @@ class AddEditGroupDialogState extends State<AddEditGroupDialog> {
     if (group.id == null) {
       return widget._repository
           .createGroup(widget.projectId, group)
-          .then((res) => res.success ? "Success" : res.msg);
+          .then((res) => res.success! ? "Success" : res.msg!);
     } else {
       return widget._repository
           .updateGroup(group)
-          .then((res) => res.success ? "Success" : res.msg);
+          .then((res) => res.success! ? "Success" : res.msg!);
     }
   }
 }

@@ -10,7 +10,7 @@ class ProjectAddMemberBloc {
 
   String projectId;
 
-  List<User> _users;
+  List<User>? _users;
   bool _isLoading = false;
 
   final _searchSubject = PublishSubject<String>();
@@ -34,7 +34,7 @@ class ProjectAddMemberBloc {
     _searchSubject.add(email);
   }
 
-  void addMember(String email) {
+  void addMember(String? email) {
     if (_isLoading) return;
     _isLoading = true;
     _repository.addMember(projectId, email).then((res) {

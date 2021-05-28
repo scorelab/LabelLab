@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
           stream: Provider.of<ProfileBloc>(context).state,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              ProfileState _state = snapshot.data;
+              ProfileState _state = snapshot.data!;
               return ListView(
                 children: <Widget>[
                   _state.isLoading
@@ -84,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _userInfoSection(BuildContext context, ProfileState state) {
-    final User user = state.user;
+    final User user = state.user!;
     return Column(
       children: <Widget>[
         SizedBox(
@@ -101,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
                     ? Image(
                         width: 128,
                         height: 128,
-                        image: CachedNetworkImageProvider(user.thumbnail),
+                        image: CachedNetworkImageProvider(user.thumbnail!),
                         fit: BoxFit.cover,
                       )
                     : null,
@@ -114,21 +114,21 @@ class ProfileScreen extends StatelessWidget {
           height: 16,
         ),
         Text(
-          user.name,
+          user.name!,
           style: Theme.of(context).textTheme.headline6,
         ),
         SizedBox(
           height: 8,
         ),
         Text(
-          user.email,
+          user.email!,
           style: Theme.of(context).textTheme.subtitle1,
         ),
         SizedBox(
           height: 8,
         ),
         Text(
-          user.username,
+          user.username!,
           style: Theme.of(context).textTheme.subtitle1,
         ),
       ],
@@ -142,7 +142,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _goToEditInfo(BuildContext context) async {
-    String username = Provider.of<ProfileBloc>(context).getUsername();
+    String username = Provider.of<ProfileBloc>(context).getUsername()!;
     Application.router
         .navigateTo(context, "/editinfo/" + username)
         .whenComplete(() {

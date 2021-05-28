@@ -1,5 +1,5 @@
 class Member {
-  String name, email, role, teamId, teamName, projectId;
+  String? name, email, role, teamId, teamName, projectId;
 
   Member(
       {this.name,

@@ -1,10 +1,10 @@
 import 'package:labellab_mobile/model/project.dart';
 
 class ProjectState {
-  bool isLoading;
-  String error;
-  String updateError;
-  List<Project> projects;
+  late bool isLoading;
+  String? error;
+  String? updateError;
+  List<Project>? projects;
 
   ProjectState.loading({this.projects}) {
     isLoading = true;

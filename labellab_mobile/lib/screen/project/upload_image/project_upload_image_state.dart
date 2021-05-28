@@ -1,10 +1,10 @@
 import 'package:labellab_mobile/model/upload_image.dart';
 
 class ProjectUploadImageState {
-  bool isLoading;
+  late bool isLoading;
   bool isSuccess = false;
-  String error;
-  List<UploadImage> images = [];
+  String? error;
+  List<UploadImage>? images = [];
 
   ProjectUploadImageState.initial() {
     this.isLoading = false;

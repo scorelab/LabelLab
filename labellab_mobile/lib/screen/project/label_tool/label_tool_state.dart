@@ -3,11 +3,11 @@ import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 
 class LabelToolState {
-  List<LabelSelection> selections;
-  LabelSelection currentSelection;
-  Image image;
-  List<Label> labels;
-  String error;
+  List<LabelSelection?>? selections;
+  LabelSelection? currentSelection;
+  Image? image;
+  List<Label>? labels;
+  String? error;
   bool isLoading = false;
   bool isSaving = false;
   bool isSuccess = false;

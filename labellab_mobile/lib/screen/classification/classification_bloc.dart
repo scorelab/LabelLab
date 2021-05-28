@@ -9,7 +9,7 @@ class ClassificationBloc {
   Repository _repository = Repository();
 
   String classficationId;
-  Classification _classification;
+  Classification? _classification;
   bool _isLoading = false;
 
   ClassificationBloc(this.classficationId) {

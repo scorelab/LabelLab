@@ -2,8 +2,8 @@ import 'package:labellab_mobile/model/group.dart';
 
 class ProjectViewGroupState {
   bool isLoading = false;
-  String error;
-  Group group;
+  String? error;
+  Group? group;
 
   ProjectViewGroupState.loading({this.group}) {
     isLoading = true;

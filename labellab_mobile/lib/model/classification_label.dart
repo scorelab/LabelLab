@@ -1,7 +1,7 @@
 class ClassificationLabel {
-  String id;
-  String name;
-  double confidence;
+  String? id;
+  String? name;
+  double? confidence;
 
   ClassificationLabel();
 

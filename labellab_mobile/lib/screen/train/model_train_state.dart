@@ -6,13 +6,13 @@ import 'package:labellab_mobile/screen/train/dialogs/dto/step_dto.dart';
 class ModelTrainState {
   bool isLoading = false;
   bool isTraining = false;
-  String error;
-  MlModel model;
-  List<Label> labels;
+  String? error;
+  MlModel? model;
+  List<Label>? labels;
 
-  List<Label> currentClasses;
-  List<StepDto> currentSteps;
-  List<LayerDto> currentLayers;
+  List<Label>? currentClasses;
+  List<StepDto>? currentSteps;
+  List<LayerDto>? currentLayers;
 
   ModelTrainState.initial();
 

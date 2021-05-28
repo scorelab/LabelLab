@@ -4,12 +4,12 @@ import 'package:labellab_mobile/model/classification.dart';
 
 class HistoryItem extends StatelessWidget {
   final Classification classification;
-  final VoidCallback onSelected;
-  final VoidCallback onDeleteSelected;
+  final VoidCallback? onSelected;
+  final VoidCallback? onDeleteSelected;
   final bool shouldHaveOptions;
 
   const HistoryItem(this.classification,
-      {Key key,
+      {Key? key,
       this.onSelected,
       this.onDeleteSelected,
       this.shouldHaveOptions = true})
@@ -33,16 +33,16 @@ class HistoryItem extends StatelessWidget {
               ),
               child: Image(
                 height: 240,
-                image: CachedNetworkImageProvider(classification.imageUrl),
+                image: CachedNetworkImageProvider(classification.imageUrl!),
                 fit: BoxFit.cover,
               ),
             ),
             ListTile(
               title: Row(
                 children: classification.labels != null
-                    ? classification.labels
+                    ? classification.labels!
                         .map((label) => Chip(
-                              label: Text(label.name),
+                              label: Text(label.name!),
                             ))
                         .toList()
                     : [],
@@ -52,7 +52,7 @@ class HistoryItem extends StatelessWidget {
                       onSelected: (int selected) {
                         switch (selected) {
                           case 0:
-                            if (onDeleteSelected != null) onDeleteSelected();
+                            if (onDeleteSelected != null) onDeleteSelected!();
                             break;
                         }
                       },

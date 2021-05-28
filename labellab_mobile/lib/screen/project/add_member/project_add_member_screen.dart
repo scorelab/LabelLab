@@ -6,7 +6,7 @@ import 'package:labellab_mobile/widgets/label_text_field.dart';
 import 'package:provider/provider.dart';
 
 class ProjectAddMemberScreen extends StatefulWidget {
-  ProjectAddMemberScreen({Key key}) : super(key: key);
+  ProjectAddMemberScreen({Key? key}) : super(key: key);
 
   _ProjectAddMemberScreenState createState() => _ProjectAddMemberScreenState();
 }
@@ -26,11 +26,11 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
         initialData: ProjectAddMemberState.initial(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.setSuccess) {
-              WidgetsBinding.instance
+            if (snapshot.data!.setSuccess) {
+              WidgetsBinding.instance!
                   .addPostFrameCallback((_) => Application.router.pop(context));
             }
-            final _state = snapshot.data;
+            final _state = snapshot.data!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -78,10 +78,10 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
                 _state.users != null
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _state.users.map((user) {
+                        children: _state.users!.map((user) {
                           return ListTile(
-                            title: Text(user.name),
-                            subtitle: Text(user.email),
+                            title: Text(user.name!),
+                            subtitle: Text(user.email!),
                             onTap: () {
                               Provider.of<ProjectAddMemberBloc>(context)
                                   .addMember(user.email);

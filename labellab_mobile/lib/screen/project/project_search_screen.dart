@@ -42,7 +42,7 @@ class ProjectSearchScreen extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return state.projects != null && state.projects.isNotEmpty
+    return state.projects != null && state.projects!.isNotEmpty
         ? ListView(
             children: <Widget>[
               state.isLoading
@@ -54,26 +54,26 @@ class ProjectSearchScreen extends SearchDelegate {
                     ),
               state.error != null
                   ? ListTile(
-                      title: Text(state.error),
+                      title: Text(state.error!),
                     )
                   : Container(),
               state.projects != null
                   ? Column(
-                      children: state.projects
+                      children: state.projects!
                           .where((project) =>
-                      project.name
+                      project.name!
                           .toLowerCase()
                           .contains(query.toLowerCase()) ||
-                          project.description
+                          project.description!
                               .toLowerCase()
                               .contains(query.toLowerCase()))
                           .map((project) => ProjectItem(
                                 project,
                                 onItemTapped: () {
-                                  _gotoProjectDetail(context, project.id);
+                                  _gotoProjectDetail(context, project.id!);
                                 },
                                 onEditSelected: () {
-                                  _gotoEditProject(context, project.id);
+                                  _gotoEditProject(context, project.id!);
                                 },
                                 onDeleteSelected: () {
                                   _showDeleteConfirmation(context, project);
@@ -89,7 +89,7 @@ class ProjectSearchScreen extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return state.projects != null && state.projects.isNotEmpty
+    return state.projects != null && state.projects!.isNotEmpty
         ? ListView(
             children: <Widget>[
               state.isLoading
@@ -101,23 +101,23 @@ class ProjectSearchScreen extends SearchDelegate {
                     ),
               state.error != null
                   ? ListTile(
-                      title: Text(state.error),
+                      title: Text(state.error!),
                     )
                   : Container(),
               state.projects != null
                   ? Column(
-                      children: state.projects
+                      children: state.projects!
                           .where((project) =>
-                              project.name
+                              project.name!
                                   .toLowerCase()
                                   .contains(query.toLowerCase()) ||
-                              project.description
+                              project.description!
                                   .toLowerCase()
                                   .contains(query.toLowerCase()))
                           .map((project) => ProjectItem(
                                 project,
                                 onItemTapped: () {
-                                  _gotoProjectDetail(context, project.id);
+                                  _gotoProjectDetail(context, project.id!);
                                 },
                         shouldHaveOptions: false,
                               ))

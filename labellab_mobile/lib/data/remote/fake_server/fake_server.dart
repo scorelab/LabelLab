@@ -4,20 +4,20 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class FakeServer {
-  Group _instanceGroup;
+  Group? _instanceGroup;
 
-  List<charts.Series> _results;
+  List<charts.Series>? _results;
 
   void initGroup(String projectId, List<Image> images) {
-    _instanceGroup.projectId = projectId;
-    _instanceGroup.images = [images.first, images.last];
+    _instanceGroup!.projectId = projectId;
+    _instanceGroup!.images = [images.first, images.last];
 
     initResults();
   }
 
-  Group get getGroup => _instanceGroup;
+  Group? get getGroup => _instanceGroup;
 
-  List<Group> get getGroups => [_instanceGroup];
+  List<Group?> get getGroups => [_instanceGroup];
 
   void initResults() {
     List<TimeValue> data = [
@@ -35,7 +35,7 @@ class FakeServer {
     ];
   }
 
-  List<charts.Series> get getResults => _results;
+  List<charts.Series>? get getResults => _results;
 
   // Singleton
 

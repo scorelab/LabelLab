@@ -9,7 +9,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String _validateEmail(String email) {
+  String? _validateEmail(String email) {
     if (email.isEmpty) {
       return "Email can't be empty";
     } else if (!RegExp(
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  String _validatePassword(String password) {
+  String? _validatePassword(String password) {
     if (password.isEmpty) {
       return "Password can't be empty";
     }
@@ -150,8 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onSubmit(BuildContext context) {
-    if (_key.currentState.validate()) {
-      _key.currentState.save();
+    if (_key.currentState!.validate()) {
+      _key.currentState!.save();
 
       setState(() {
         _isLoginIn = true;
@@ -202,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.push<String>(
       context,
       MaterialPageRoute(builder: (context) => GithubSigninScreen()),
-    ).then((String code) {
+    ).then((String? code) {
       if (code != null) {
         Provider.of<AuthState>(context).signInWithGitHub(code).then((success) {
           if (success) {

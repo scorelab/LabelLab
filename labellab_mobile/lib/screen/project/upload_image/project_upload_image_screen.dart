@@ -20,8 +20,8 @@ class ProjectUploadImageScreen extends StatelessWidget {
         stream: Provider.of<ProjectUploadImageBloc>(context).state,
         initialData: ProjectUploadImageState.initial(),
         builder: (context, AsyncSnapshot<ProjectUploadImageState> snapshot) {
-          if (snapshot.data.isSuccess) {
-            WidgetsBinding.instance
+          if (snapshot.data!.isSuccess) {
+            WidgetsBinding.instance!
                 .addPostFrameCallback((_) => Application.router.pop(context));
           }
           return Scaffold(
@@ -30,10 +30,10 @@ class ProjectUploadImageScreen extends StatelessWidget {
               elevation: 0,
             ),
             body: _buildBody(context, snapshot),
-            floatingActionButton: snapshot.data.images.length > 0
+            floatingActionButton: snapshot.data!.images!.length > 0
                 ? FloatingActionButton(
                     child: Icon(Icons.done),
-                    onPressed: !snapshot.data.isLoading
+                    onPressed: !snapshot.data!.isLoading
                         ? () {
                             Provider.of<ProjectUploadImageBloc>(context)
                                 .uploadImages();
@@ -48,8 +48,8 @@ class ProjectUploadImageScreen extends StatelessWidget {
   Widget _buildBody(
       BuildContext context, AsyncSnapshot<ProjectUploadImageState> snapshot) {
     if (snapshot.hasData) {
-      ProjectUploadImageState _state = snapshot.data;
-      List<Widget> _imageList = _state.images.map((image) {
+      ProjectUploadImageState _state = snapshot.data!;
+      List<Widget> _imageList = _state.images!.map((image) {
         return _imageItem(context, image);
       }).toList();
       _imageList.add(_selectImageAction(context));
@@ -77,7 +77,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
           children: <Widget>[
             Image(
               fit: BoxFit.cover,
-              image: FileImage(image.image),
+              image: FileImage(image.image!),
             ),
             image.state == UploadImageState.PENDING
                 ? Positioned(
@@ -149,7 +149,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
 
   void _selectImages(BuildContext context) async {
     if (await Permission.accessMediaLocation.request().isGranted) {
-      List<UploadImage> uploadImages = List<UploadImage>();
+      List<UploadImage> uploadImages = [];
 
       MultiImagePicker.pickImages(
         maxImages: 100,
@@ -166,7 +166,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
           // To create a temp image file
           Future<File> fetchImageFile = image.getByteData().then((byteData) {
             return getTemporaryDirectory().then((tempDir) {
-              return new File(tempDir.path + '/' + image.name).writeAsBytes(
+              return new File(tempDir.path + '/' + image.name!).writeAsBytes(
                   byteData.buffer.asUint8List(
                       byteData.offsetInBytes, byteData.lengthInBytes));
             });
@@ -177,7 +177,9 @@ class ProjectUploadImageScreen extends StatelessWidget {
 
           return Future.wait([fetchImageFile, fetchMetadata]).then((result) {
             return UploadImage(
-                name: image.name, image: result.first, metadata: result.last);
+                name: image.name,
+                image: result.first as File?,
+                metadata: result.last as Metadata?);
           }).asStream();
         }).doOnDone(() {
           Provider.of<ProjectUploadImageBloc>(context)
@@ -195,8 +197,8 @@ class ProjectUploadImageScreen extends StatelessWidget {
     final imageIndex =
         Provider.of<ProjectUploadImageBloc>(context).getImageIndex(image);
 
-    File editedFile = await ImageCropper.cropImage(
-        sourcePath: image.image.path,
+    File? editedFile = await ImageCropper.cropImage(
+        sourcePath: image.image!.path,
         aspectRatioPresets: Platform.isAndroid
             ? [
                 CropAspectRatioPreset.square,

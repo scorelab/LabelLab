@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class LabelTextFormField extends StatefulWidget {
-  final Key key;
-  final String hintText;
-  final String labelText;
-  final String errorText;
+  final Key? key;
+  final String? hintText;
+  final String? labelText;
+  final String? errorText;
   final bool isObscure;
   final TextCapitalization textCapitalization;
   final TextInputType keyboardType;
   final validator;
   final onSaved;
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   LabelTextFormField({
     this.key,

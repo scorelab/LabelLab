@@ -10,9 +10,9 @@ class ProjectDetailBloc {
 
   String projectId;
 
-  Project _project;
+  Project? _project;
   bool _isLoading = false;
-  List<String> _selectedImages = [];
+  List<String?> _selectedImages = [];
 
   ProjectDetailBloc(this.projectId) {
     _loadProject();
@@ -26,27 +26,27 @@ class ProjectDetailBloc {
     _repository.deleteProject(projectId);
   }
 
-  void removeUser(String email) {
+  void removeUser(String? email) {
     _repository.removeMember(projectId, email).then((_) {
       refresh();
     });
   }
 
-  void deleteLabel(String id) {
+  void deleteLabel(String? id) {
     _repository.deleteLabel(projectId, id).then((_) {
       refresh();
     });
   }
 
   // Used for initial selection of image
-  void selectImage(String id) {
+  void selectImage(String? id) {
     _selectedImages.add(id);
     _setState(ProjectDetailState.multiSelect(_project,
         selectedImages: _selectedImages));
   }
 
   // Used to switch selection state
-  void switchSelection(String id) {
+  void switchSelection(String? id) {
     _selectedImages.contains(id)
         ? _selectedImages.remove(id)
         : _selectedImages.add(id);
@@ -56,7 +56,7 @@ class ProjectDetailBloc {
 
   // Used to select all images
   void selectAllImages() {
-    _selectedImages = _project.images.map((image) => image.id).toList();
+    _selectedImages = _project!.images!.map((image) => image.id).toList();
     _setState(ProjectDetailState.multiSelect(_project,
         selectedImages: _selectedImages));
   }
@@ -88,7 +88,7 @@ class ProjectDetailBloc {
     _repository.getProject(projectId).then((project) {
       this._project = project;
       _repository.getModels(projectId).then((models) {
-        this._project.models = models;
+        this._project!.models = models;
         _setState(ProjectDetailState.success(_project));
         _isLoading = false;
       });

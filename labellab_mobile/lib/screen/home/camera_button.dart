@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class CameraButton extends StatelessWidget {
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const CameraButton({Key key, this.onTap}) : super(key: key);
+  const CameraButton({Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

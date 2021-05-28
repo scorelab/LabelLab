@@ -1,9 +1,9 @@
 import 'package:labellab_mobile/model/classification.dart';
 
 class ClassificationState {
-  bool isLoading;
-  String error;
-  Classification classification;
+  late bool isLoading;
+  String? error;
+  Classification? classification;
 
   ClassificationState.loading({this.classification}) {
     isLoading = true;

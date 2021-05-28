@@ -41,7 +41,7 @@ class HistorySearchScreen extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return state.classifications != null && state.classifications.isNotEmpty
+    return state.classifications != null && state.classifications!.isNotEmpty
         ? ListView(
             children: <Widget>[
               state.isLoading
@@ -53,16 +53,16 @@ class HistorySearchScreen extends SearchDelegate {
                     ),
               state.error != null
                   ? ListTile(
-                      title: Text(state.error),
+                      title: Text(state.error!),
                     )
                   : Container(),
               state.classifications != null
                   ? Column(
-                      children: state.classifications
+                      children: state.classifications!
                           .where((classification) {
                             bool found = false;
-                            classification.labels.forEach((label) {
-                              if (label.name
+                            classification.labels!.forEach((label) {
+                              if (label.name!
                                   .toLowerCase()
                                   .contains(query.toLowerCase())) {
                                 found = true;
@@ -87,7 +87,7 @@ class HistorySearchScreen extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return state.classifications != null && state.classifications.isNotEmpty
+    return state.classifications != null && state.classifications!.isNotEmpty
         ? ListView(
             children: <Widget>[
               state.isLoading
@@ -99,16 +99,16 @@ class HistorySearchScreen extends SearchDelegate {
                     ),
               state.error != null
                   ? ListTile(
-                      title: Text(state.error),
+                      title: Text(state.error!),
                     )
                   : Container(),
               state.classifications != null
                   ? Column(
-                      children: state.classifications
+                      children: state.classifications!
                           .where((classification) {
                             bool found = false;
-                            classification.labels.forEach((label) {
-                              if (label.name
+                            classification.labels!.forEach((label) {
+                              if (label.name!
                                   .toLowerCase()
                                   .contains(query.toLowerCase())) {
                                 found = true;
@@ -154,7 +154,7 @@ class HistorySearchScreen extends SearchDelegate {
     );
   }
 
-  void _gotoClassification(BuildContext context, String id) {
+  void _gotoClassification(BuildContext context, String? id) {
     Application.router.navigateTo(context, "/classification/$id").then((_) {
       Provider.of<HistoryBloc>(context).refresh();
     });
