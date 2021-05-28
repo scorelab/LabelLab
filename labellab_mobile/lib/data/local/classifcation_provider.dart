@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 class ClassificationProvider {
   static const String _path = "labellab/classification";
 
-  Database db;
+  late Database db;
 
   Future open() async {
     db = await openDatabase(_path, version: 1,
@@ -32,7 +32,7 @@ class ClassificationProvider {
         ClassificationEntity.from(classification).toMap());
   }
 
-  Future<Classification> getClassification(String id) async {
+  Future<Classification?> getClassification(String id) async {
     List<Map> maps = await db.query(ClassificationEntity.table,
         columns: [
           ClassificationEntity.columnId,
@@ -41,23 +41,23 @@ class ClassificationProvider {
         where: '${ClassificationEntity.columnId} = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      return ClassificationEntity.fromMap(maps.first);
+      return ClassificationEntity.fromMap(maps.first as Map<String, dynamic>);
     }
     return null;
   }
 
-  Future<List<Classification>> getClassifications() async {
+  Future<List<Classification>?> getClassifications() async {
     List<Map> maps = await db.query(ClassificationEntity.table, columns: [
       ClassificationEntity.columnId,
       ClassificationEntity.columnImageURL
     ]);
     if (maps.length > 0) {
-      return maps.map((item) => ClassificationEntity.fromMap(item)).toList();
+      return maps.map((item) => ClassificationEntity.fromMap(item as Map<String, dynamic>)).toList();
     }
     return null;
   }
 
-  Future<void> delete(String id) async {
+  Future<void> delete(String? id) async {
     await db.delete(ClassificationEntity.table,
         where: '${ClassificationEntity.columnId} = ?', whereArgs: [id]);
   }

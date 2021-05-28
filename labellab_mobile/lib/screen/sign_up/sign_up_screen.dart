@@ -6,7 +6,7 @@ import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
-  SignUpScreen({Key key}) : super(key: key);
+  SignUpScreen({Key? key}) : super(key: key);
 
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -145,21 +145,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  String _validateUsername(String username) {
+  String? _validateUsername(String username) {
     if (username.isEmpty) {
       return "Username can't be empty";
     }
     return null;
   }
 
-  String _validateName(String name) {
+  String? _validateName(String name) {
     if (name.isEmpty) {
       return "Name can't be empty";
     }
     return null;
   }
 
-  String _validateEmail(String email) {
+  String? _validateEmail(String email) {
     if (email.isEmpty) {
       return "Email can't be empty";
     } else if (!RegExp(
@@ -170,7 +170,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  String _validatePassword(String password) {
+  String? _validatePassword(String password) {
     if (password.isEmpty) {
       return "Password can't be empty";
     } else if (password.length < 6) {
@@ -179,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  String _validateConfirmPassword(String password) {
+  String? _validateConfirmPassword(String password) {
     if (password.isEmpty || _user.password != _user.password2) {
       return "Passwords doesn't match";
     }
@@ -187,8 +187,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onSubmit(BuildContext context) {
-    _key.currentState.save();
-    if (_key.currentState.validate()) {
+    _key.currentState!.save();
+    if (_key.currentState!.validate()) {
       setState(() {
         _isRegistering = true;
       });

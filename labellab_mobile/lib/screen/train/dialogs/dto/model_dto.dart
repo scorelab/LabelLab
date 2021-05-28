@@ -4,14 +4,14 @@ import 'package:labellab_mobile/screen/train/dialogs/dto/layer_dto.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/step_dto.dart';
 
 class ModelDto {
-  final String train, validation, test, epochs, batchSize, learningRate;
-  final ModelToLearn modelToLearn;
-  final ModelLoss loss;
-  final ModelOptimizer optimizer;
-  final ModelMetric metric;
-  List<Label> classes;
-  List<StepDto> steps;
-  List<LayerDto> layers;
+  final String? train, validation, test, epochs, batchSize, learningRate;
+  final ModelToLearn? modelToLearn;
+  final ModelLoss? loss;
+  final ModelOptimizer? optimizer;
+  final ModelMetric? metric;
+  List<Label>? classes;
+  late List<StepDto> steps;
+  late List<LayerDto> layers;
 
   ModelDto(
       {this.train,

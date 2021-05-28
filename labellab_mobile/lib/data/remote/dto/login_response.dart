@@ -1,8 +1,8 @@
 class LoginResponse {
-  bool success;
-  String accessToken;
-  String refreshToken;
-  String msg;
+  bool? success;
+  String? accessToken;
+  String? refreshToken;
+  String? msg;
 
   LoginResponse(dynamic json) {
     this.success = json['success'];

@@ -10,11 +10,11 @@ class AddStepDialog extends StatefulWidget {
 }
 
 class _AddStepDialogState extends State<AddStepDialog> {
-  ModelStep _currentValue;
+  ModelStep? _currentValue;
 
   // Extra args
   List<String> _typeextras = ["Samplewise", "Featurewise"];
-  String _currenttypeExtra;
+  String? _currenttypeExtra;
 
   TextEditingController _extraRangeController = TextEditingController();
   TextEditingController _extraFactorController = TextEditingController();
@@ -53,7 +53,7 @@ class _AddStepDialogState extends State<AddStepDialog> {
                         ),
                       ))
                   .toList(),
-              onChanged: (ModelStep value) {
+              onChanged: (ModelStep? value) {
                 setState(() {
                   _currentValue = value;
                 });
@@ -114,7 +114,7 @@ class _AddStepDialogState extends State<AddStepDialog> {
     );
   }
 
-  Widget _buildExtraArgs(ModelStep currentValue) {
+  Widget _buildExtraArgs(ModelStep? currentValue) {
     switch (currentValue) {
       case ModelStep.CENTER:
       case ModelStep.STDNORM:
@@ -129,7 +129,7 @@ class _AddStepDialogState extends State<AddStepDialog> {
                     ),
                   ))
               .toList(),
-          onChanged: (String value) {
+          onChanged: (String? value) {
             setState(() {
               _currenttypeExtra = value;
             });

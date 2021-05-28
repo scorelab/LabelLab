@@ -3,7 +3,7 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 
 class GithubSigninScreen extends StatefulWidget {
-  GithubSigninScreen({Key key}) : super(key: key);
+  GithubSigninScreen({Key? key}) : super(key: key);
 
   _GithubSigninScreenState createState() => _GithubSigninScreenState();
 }

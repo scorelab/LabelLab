@@ -15,13 +15,13 @@ class ProjectViewGroupScreen extends StatelessWidget {
       builder: (BuildContext context,
           AsyncSnapshot<ProjectViewGroupState> snapshot) {
         if (snapshot.hasData) {
-          ProjectViewGroupState _state = snapshot.data;
+          ProjectViewGroupState _state = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
-              title: Text(_state.isLoading ? "" : _state.group.name),
+              title: Text(_state.isLoading ? "" : _state.group!.name!),
               elevation: 0,
               actions: _buildActions(
-                  context, _state.group != null ? _state.group.id : null),
+                  context, _state.group != null ? _state.group!.id : null),
             ),
             body: _state.isLoading
                 ? LinearProgressIndicator(
@@ -29,12 +29,12 @@ class ProjectViewGroupScreen extends StatelessWidget {
                   )
                 : Container(
                     margin: EdgeInsets.symmetric(horizontal: 16),
-                    child: _state.group.images != null
+                    child: _state.group!.images != null
                         ? GridView.count(
                             mainAxisSpacing: 8,
                             crossAxisSpacing: 8,
                             crossAxisCount: 4,
-                            children: _state.group.images.map((image) {
+                            children: _state.group!.images!.map((image) {
                               return InkWell(
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
@@ -44,14 +44,14 @@ class ProjectViewGroupScreen extends StatelessWidget {
                                     color: Colors.black12,
                                     child: Image(
                                       image: CachedNetworkImageProvider(
-                                        image.imageUrl,
+                                        image.imageUrl!,
                                       ),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                                 onTap: () => _gotoViewImage(
-                                    context, _state.group.projectId, image.id),
+                                    context, _state.group!.projectId, image.id),
                               );
                             }).toList(),
                           )
@@ -71,7 +71,7 @@ class ProjectViewGroupScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildActions(BuildContext context, String groupId) {
+  List<Widget> _buildActions(BuildContext context, String? groupId) {
     return [
       PopupMenuButton<int>(
         onSelected: (int value) {
@@ -100,7 +100,7 @@ class ProjectViewGroupScreen extends StatelessWidget {
     );
   }
 
-  void _gotoViewImage(BuildContext context, String projectId, String imageId) {
+  void _gotoViewImage(BuildContext context, String? projectId, String? imageId) {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {
@@ -108,7 +108,7 @@ class ProjectViewGroupScreen extends StatelessWidget {
     });
   }
 
-  void _gotoTrainGroup(BuildContext context, String groupId) {
+  void _gotoTrainGroup(BuildContext context, String? groupId) {
     Application.router.navigateTo(context, '/train/$groupId');
   }
 

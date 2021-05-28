@@ -12,8 +12,8 @@ class GroupAddImagesBloc {
   final String projectId;
   final String groupId;
 
-  List<Image> _unselectedImages;
-  List<String> _selectedImages = [];
+  List<Image>? _unselectedImages;
+  List<String?> _selectedImages = [];
 
   bool _isLoading = false;
 
@@ -29,11 +29,11 @@ class GroupAddImagesBloc {
     Future.wait(
             [_repository.getProject(projectId), _repository.getGroup(groupId)])
         .then((result) {
-      Project _currentProject = result.first;
-      Group _currentGroup = result.last;
+      Project _currentProject = result.first as Project;
+      Group _currentGroup = result.last as Group;
       _isLoading = false;
-      _currentGroup.images
-          .forEach((image) => _currentProject.images.remove(image));
+      _currentGroup.images!
+          .forEach((image) => _currentProject.images!.remove(image));
       _unselectedImages = _currentProject.images;
       _stateController.add(GroupAddImagesState.success(
           images: _unselectedImages, selectedImages: _selectedImages));
@@ -44,7 +44,7 @@ class GroupAddImagesBloc {
     });
   }
 
-  void switchSelection(String id) {
+  void switchSelection(String? id) {
     _selectedImages.contains(id)
         ? _selectedImages.remove(id)
         : _selectedImages.add(id);

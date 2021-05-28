@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DeleteConfirmDialog extends StatelessWidget {
-  final String name;
-  final VoidCallback onCancel;
-  final VoidCallback onConfirm;
+  final String? name;
+  final VoidCallback? onCancel;
+  final VoidCallback? onConfirm;
 
   DeleteConfirmDialog({this.name, this.onCancel, this.onConfirm});
 

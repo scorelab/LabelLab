@@ -18,8 +18,8 @@ class ProjectScreen extends StatelessWidget {
       stream: Provider.of<ProjectBloc>(context).projects,
       initialData: ProjectState.loading(),
       builder: (context, AsyncSnapshot<ProjectState> snapshot) {
-        final ProjectState state = snapshot.data;
-        if (state.projects != null && state.projects.isNotEmpty) {
+        final ProjectState state = snapshot.data!;
+        if (state.projects != null && state.projects!.isNotEmpty) {
           return Scaffold(
             appBar: AppBar(
               title: Text("Projects"),
@@ -48,19 +48,19 @@ class ProjectScreen extends StatelessWidget {
                         ),
                   state.error != null
                       ? ListTile(
-                          title: Text(state.error),
+                          title: Text(state.error!),
                         )
                       : Container(),
                   state.projects != null
                       ? Column(
-                          children: state.projects
+                          children: state.projects!
                               .map((project) => ProjectItem(
                                     project,
                                     onItemTapped: () {
-                                      _gotoProjectDetail(context, project.id);
+                                      _gotoProjectDetail(context, project.id!);
                                     },
                                     onEditSelected: () {
-                                      _gotoEditProject(context, project.id);
+                                      _gotoEditProject(context, project.id!);
                                     },
                                     onDeleteSelected: () {
                                       _showDeleteConfirmation(context, project);

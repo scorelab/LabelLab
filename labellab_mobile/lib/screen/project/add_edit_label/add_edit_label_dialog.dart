@@ -9,7 +9,7 @@ typedef void OnUpdateError(String message);
 class AddEditLabelDialog extends StatefulWidget {
   final Repository _repository = Repository();
   final String projectId;
-  final Label label;
+  final Label? label;
 
   AddEditLabelDialog(this.projectId, {this.label});
 
@@ -18,12 +18,12 @@ class AddEditLabelDialog extends StatefulWidget {
 }
 
 class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
-  String _labelId;
+  String? _labelId;
 
   int _type = 0;
 
   bool _isLoading = false;
-  String _error;
+  String? _error;
 
   final TextEditingController _nameController = TextEditingController();
 
@@ -62,7 +62,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
               leading: Radio(
                 value: 0,
                 groupValue: _type,
-                onChanged: (_) {
+                onChanged: (dynamic _) {
                   setState(() {
                     _type = 0;
                   });
@@ -75,7 +75,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
               leading: Radio(
                 value: 1,
                 groupValue: _type,
-                onChanged: (_) {
+                onChanged: (dynamic _) {
                   setState(() {
                     _type = 1;
                   });
@@ -85,7 +85,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
             ),
             this._error != null
                 ? Text(
-                    this._error,
+                    this._error!,
                     style: TextStyle(color: Colors.red),
                   )
                 : Container(),
@@ -125,9 +125,9 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       }
     }).catchError((err) {
       if (err is DioError) {
-        if (err.response != null && err.response.data is Map) {
+        if (err.response != null && err.response!.data is Map) {
           setState(() {
-            _error = err.response.data['msg'].toString();
+            _error = err.response!.data['msg'].toString();
             _isLoading = false;
           });
         } else {
@@ -151,7 +151,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       return widget._repository
           .createLabel(widget.projectId, label)
           .then((res) {
-        if (!res.success) return res.msg;
+        if (!res.success!) return res.msg!;
         return "Success";
       });
     } else {
@@ -159,7 +159,7 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
       return widget._repository
           .updateLabel(widget.projectId, label)
           .then((res) {
-        if (!res.success) return res.msg;
+        if (!res.success!) return res.msg!;
         return "Success";
       });
     }
@@ -167,9 +167,9 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
 
   void _loadLabel() {
     setState(() {
-      _labelId = widget.label.id;
-      _nameController.text = widget.label.name;
-      if (widget.label.type == "Rectangle") {
+      _labelId = widget.label!.id;
+      _nameController.text = widget.label!.name!;
+      if (widget.label!.type == "Rectangle") {
         _type = 0;
       } else {
         _type = 1;

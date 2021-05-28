@@ -1,6 +1,6 @@
 class ApiResponse {
-  bool success;
-  String msg;
+  bool? success;
+  String? msg;
 
   ApiResponse(dynamic json) {
     this.success = json['success'];

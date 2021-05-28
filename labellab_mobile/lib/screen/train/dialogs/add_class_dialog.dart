@@ -5,12 +5,12 @@ class AddClassDialog extends StatefulWidget {
   @override
   _AddClassDialogState createState() => _AddClassDialogState();
 
-  final List<Label> labels;
+  final List<Label>? labels;
   AddClassDialog(this.labels);
 }
 
 class _AddClassDialogState extends State<AddClassDialog> {
-  String _currentValue;
+  String? _currentValue;
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +25,16 @@ class _AddClassDialogState extends State<AddClassDialog> {
           children: <Widget>[
             DropdownButton(
               value: _currentValue,
-              items: widget.labels
+              items: widget.labels!
                   .map((label) => DropdownMenuItem<String>(
                         value: label.id,
                         child: Text(
-                          label.name,
+                          label.name!,
                           style: TextStyle(fontSize: 14),
                         ),
                       ))
                   .toList(),
-              onChanged: (String value) {
+              onChanged: (String? value) {
                 setState(() {
                   _currentValue = value;
                 });
@@ -43,7 +43,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
             SizedBox(height: 16),
             _currentValue != null
                 ? Text("Selected class has " +
-                    widget.labels
+                    widget.labels!
                         .where((label) => label.id == _currentValue)
                         .first
                         .imageIds

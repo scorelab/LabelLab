@@ -11,11 +11,11 @@ class UploadImageState {
 }
 
 class UploadImage {
-  int state;
-  File image;
-  String name;
-  List<Label> labels;
-  Metadata metadata;
+  int? state;
+  File? image;
+  String? name;
+  List<Label>? labels;
+  Metadata? metadata;
 
   UploadImage({this.image, this.name, this.labels, this.metadata}) {
     this.state = UploadImageState.PENDING;

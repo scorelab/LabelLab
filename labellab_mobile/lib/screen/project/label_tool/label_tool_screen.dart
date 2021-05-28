@@ -25,9 +25,9 @@ class LabelToolScreen extends StatelessWidget {
         initialData: LabelToolState.initial(),
         stream: Provider.of<LabelToolBloc>(context).state,
         builder: (context, AsyncSnapshot<LabelToolState> snapshot) {
-          final LabelToolState _state = snapshot.data;
-          if (snapshot.data.isSuccess) {
-            WidgetsBinding.instance
+          final LabelToolState _state = snapshot.data!;
+          if (snapshot.data!.isSuccess) {
+            WidgetsBinding.instance!
                 .addPostFrameCallback((_) => Application.router.pop(context));
           }
           return _buildBody(context, _state);
@@ -68,9 +68,9 @@ class LabelToolScreen extends StatelessWidget {
                   child: state.currentSelection != null
                       ? _buildDrawTools(
                           context,
-                          state.currentSelection.label.type ==
+                          state.currentSelection!.label.type ==
                                   LabelType.POLYGON &&
-                              state.currentSelection.points.length > 0,
+                              state.currentSelection!.points.length > 0,
                           state.isUpdating)
                       : _buildMainActions(context, state),
                 ),
@@ -89,7 +89,8 @@ class LabelToolScreen extends StatelessWidget {
               decoration: new BoxDecoration(
                 image: state.image != null
                     ? DecorationImage(
-                        image: CachedNetworkImageProvider(state.image.imageUrl),
+                        image:
+                            CachedNetworkImageProvider(state.image!.imageUrl!),
                       )
                     : null,
               ),
@@ -97,16 +98,16 @@ class LabelToolScreen extends StatelessWidget {
                 size: Size.infinite,
                 painter: LabelSelectionPainter(
                     state.selections, state.currentSelection, state.image,
-                    sizeCallback: (Size size) {
+                    sizeCallback: (Size? size) {
                   final SelectionOffset offset =
-                      calculateImageOffset(state.image, size);
+                      calculateImageOffset(state.image!, size!);
                   Provider.of<LabelToolBloc>(context)
                       .setCanvasSelectionOffset(offset);
                 }),
               ),
             ),
             onPanStart: state.currentSelection != null &&
-                    state.currentSelection.label.type == LabelType.RECTANGLE
+                    state.currentSelection!.label.type == LabelType.RECTANGLE
                 ? (event) {
                     Provider.of<LabelToolBloc>(context).startCurrentSelection(
                       Point(event.localPosition.dx, event.localPosition.dy),
@@ -114,7 +115,7 @@ class LabelToolScreen extends StatelessWidget {
                   }
                 : null,
             onPanUpdate: state.currentSelection != null &&
-                    state.currentSelection.label.type == LabelType.RECTANGLE
+                    state.currentSelection!.label.type == LabelType.RECTANGLE
                 ? (event) {
                     Provider.of<LabelToolBloc>(context).updateCurrentSelection(
                       Point(event.localPosition.dx, event.localPosition.dy),
@@ -122,7 +123,7 @@ class LabelToolScreen extends StatelessWidget {
                   }
                 : null,
             onTapUp: state.currentSelection != null &&
-                    state.currentSelection.label.type == LabelType.POLYGON
+                    state.currentSelection!.label.type == LabelType.POLYGON
                 ? (event) {
                     Provider.of<LabelToolBloc>(context)
                         .appendToCurrentSelection(
@@ -146,7 +147,7 @@ class LabelToolScreen extends StatelessWidget {
                       Chip(
                         backgroundColor: Colors.blue,
                         label: Text(
-                          state.currentSelection.label.name,
+                          state.currentSelection!.label.name!,
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -155,7 +156,7 @@ class LabelToolScreen extends StatelessWidget {
                       ),
                       !state.isUpdating
                           ? Text(
-                              state.currentSelection.label.type ==
+                              state.currentSelection!.label.type ==
                                       LabelType.POLYGON
                                   ? "Tap to draw a polygon"
                                   : "Touch and drag to draw a rectangle",
@@ -265,9 +266,9 @@ class LabelToolScreen extends StatelessWidget {
                   ? LinearProgressIndicator()
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: state.labels.map((label) {
+                      children: state.labels!.map((label) {
                         return InkWell(
-                          child: Chip(label: Text(label.name)),
+                          child: Chip(label: Text(label.name!)),
                           onTap: () {
                             Provider.of<LabelToolBloc>(baseContext)
                                 .selectLabel(label);
@@ -291,8 +292,8 @@ class LabelToolScreen extends StatelessWidget {
           Provider.of<LabelToolBloc>(baseContext).projectId,
         );
       },
-    ).then((bool isSuccess) {
-      if (isSuccess) {
+    ).then((bool? isSuccess) {
+      if (isSuccess!) {
         Provider.of<LabelToolBloc>(baseContext).refresh();
       }
     });

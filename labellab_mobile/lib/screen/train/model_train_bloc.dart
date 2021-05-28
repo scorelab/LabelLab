@@ -13,8 +13,8 @@ class ModelTrainBloc {
   final String projectId, modelId;
   bool _isLoading = false;
 
-  MlModel _model;
-  List<Label> _labels;
+  MlModel? _model;
+  List<Label>? _labels;
 
   // State data
   List<Label> _currentClasses = [];
@@ -48,7 +48,7 @@ class ModelTrainBloc {
   }
 
   void addClass(String labelId) {
-    Label _toAdd = _labels.where((label) => label.id == labelId).first;
+    Label _toAdd = _labels!.where((label) => label.id == labelId).first;
     if (!_currentClasses.contains(_toAdd)) _currentClasses.add(_toAdd);
     _stateController.add(ModelTrainState.success(
         model: _model,
@@ -129,7 +129,7 @@ class ModelTrainBloc {
 
   void trainModel() {
     _repository.trainModel(modelId).then((response) {
-      if (response.success) {
+      if (response.success!) {
         _stateController.add(ModelTrainState.training());
       } else {
         _stateController.add(ModelTrainState.error(error: "Training aborted"));

@@ -4,8 +4,8 @@ class ProjectAddMemberState {
   bool isLoading = false;
   bool fetchSuccess = false;
   bool setSuccess = false;
-  String error;
-  List<User> users;
+  String? error;
+  List<User>? users;
 
   ProjectAddMemberState.initial();
   

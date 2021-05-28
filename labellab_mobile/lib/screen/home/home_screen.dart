@@ -9,7 +9,7 @@ import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +56,8 @@ class HomeScreen extends StatelessWidget {
           end: Alignment.topCenter,
           stops: [0.1, 0.9],
           colors: [
-            Colors.teal[800].withAlpha(100),
-            Colors.teal[400].withAlpha(40),
+            Colors.teal[800]!.withAlpha(100),
+            Colors.teal[400]!.withAlpha(40),
           ],
         ),
       ),
@@ -105,7 +105,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildUserDetails(BuildContext context) {
     final _authState = Provider.of<AuthState>(context);
     if (_authState.isAuthenticated) {
-      User user = _authState.user;
+      User user = _authState.user!;
       return Card(
         child: ListTile(
           leading: CircleAvatar(
@@ -115,14 +115,14 @@ class HomeScreen extends StatelessWidget {
                   ? Image(
                       height: 48,
                       width: 48,
-                      image: CachedNetworkImageProvider(user.thumbnail),
+                      image: CachedNetworkImageProvider(user.thumbnail!),
                       fit: BoxFit.cover,
                     )
                   : null,
             ),
           ),
-          title: Text(user.name),
-          subtitle: Text(user.email),
+          title: Text(user.name!),
+          subtitle: Text(user.email!),
           onTap: () => _goToProfile(context),
         ),
       );

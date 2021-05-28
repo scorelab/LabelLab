@@ -3,9 +3,9 @@ import 'package:labellab_mobile/model/location.dart';
 
 class ProjectImagePathState {
   bool isLoading = false;
-  String error;
-  List<Label> labels;
-  List<Location> locations;
+  String? error;
+  List<Label>? labels;
+  List<Location>? locations;
 
   ProjectImagePathState.loading({this.locations}) {
     isLoading = true;

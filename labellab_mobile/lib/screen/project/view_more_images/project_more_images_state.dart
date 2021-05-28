@@ -1,9 +1,9 @@
 import 'package:labellab_mobile/model/image.dart';
 
 class ProjectMoreImagesState {
-  bool isLoading;
-  String error;
-  List<Image> images;
+  bool? isLoading;
+  String? error;
+  List<Image>? images;
 
   ProjectMoreImagesState.loading({this.images}) {
     isLoading = true;

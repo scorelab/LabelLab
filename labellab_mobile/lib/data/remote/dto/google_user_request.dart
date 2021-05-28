@@ -1,11 +1,11 @@
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleUserRequest {
-  String id;
-  String displayName;
-  String photoUrl;
-  String email;
-  String accessToken;
+  String? id;
+  String? displayName;
+  String? photoUrl;
+  String? email;
+  String? accessToken;
 
   GoogleUserRequest(GoogleSignInAccount user, this.accessToken) {
     this.id = user.id;

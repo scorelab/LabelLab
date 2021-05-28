@@ -29,15 +29,15 @@ import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:logger/logger.dart';
 
 class LabelLabAPIImpl extends LabelLabAPI {
-  Dio _dio;
-  FakeServer _fake;
+  Dio? _dio;
+  late FakeServer _fake;
 
   LabelLabAPIImpl() {
     _dio = Dio();
     _fake = FakeServer();
 
-    _dio.interceptors.clear();
-    _dio.interceptors.add(RetryOnAuthFailInterceptor(_dio));
+    _dio!.interceptors.clear();
+    _dio!.interceptors.add(RetryOnAuthFailInterceptor(_dio));
   }
 
   /// BASE_URL - Change according to current labellab server
@@ -89,7 +89,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<LoginResponse> login(AuthUser user) {
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_LOGIN, data: user.toMap())
         .then((response) {
       return LoginResponse(response.data);
@@ -98,11 +98,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<RefreshResponse> refreshToken(String refreshToken) {
+  Future<RefreshResponse> refreshToken(String? refreshToken) {
     Options options = Options(
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + refreshToken});
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + refreshToken!});
 
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_REFRESH, options: options)
         .then((response) => RefreshResponse(response.data))
         .catchError((err) {
@@ -112,7 +112,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<LoginResponse> loginWithGoogle(GoogleUserRequest user) {
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_LOGIN_GOOGLE, data: user.toMap())
         .then((response) {
       return LoginResponse(response.data);
@@ -123,7 +123,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<LoginResponse> loginWithGithub(String code) {
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_LOGIN_GITHUB + "/callback?code=" + code)
         .then((response) {
       return LoginResponse(response.data);
@@ -132,7 +132,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<RegisterResponse> register(RegisterUser user) {
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_REGISTER, data: user.toMap())
         .then((response) {
       return RegisterResponse(response.data);
@@ -142,11 +142,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> updatePassword(
-      String token, String currentPassword, String newPassword) {
+      String? token, String currentPassword, String newPassword) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .put(
           API_URL + ENDPOINT_UPDATE_PASSWORD,
           options: options,
@@ -161,11 +161,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<User> usersInfo(String token) {
+  Future<User> usersInfo(String? token) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_USERS_INFO, options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -179,11 +179,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<List<User>> searchUser(String token, String email) {
+  Future<List<User>> searchUser(String? token, String email) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_USERS_SEARCH + "/$email", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -198,15 +198,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> uploadUserImage(String token, File image) {
+  Future<ApiResponse> uploadUserImage(String? token, File image) {
     final imageBytes = image.readAsBytesSync();
     final encodedBytes = base64Encode(imageBytes);
     final data = {"image": "base64," + encodedBytes, "format": "image/jpg"};
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
       // contentType: ContentType.parse("application/x-www-form-urlencoded"),
     );
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_UPLOAD_USER_IMAGE,
             options: options, data: data)
         .then((response) {
@@ -215,12 +215,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> editInfo(String token, String username) {
+  Future<ApiResponse> editInfo(String? token, String username) {
     final data = {"username": username};
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_EDIT_INFO, options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
@@ -229,11 +229,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> createProject(String token, Project project) {
+  Future<ApiResponse> createProject(String? token, Project project) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_PROJECT_CREATE,
             options: options, data: project.toMap())
         .then((response) {
@@ -242,11 +242,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<Project> getProject(String token, String id) {
+  Future<Project> getProject(String? token, String? id) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_PROJECT_INFO + "/$id", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -261,11 +261,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<List<Project>> getProjects(String token) {
+  Future<List<Project>> getProjects(String? token) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_PROJECT_GET, options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -280,11 +280,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> updateProject(String token, Project project) {
+  Future<ApiResponse> updateProject(String? token, Project project) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_PROJECT_UPDATE + "/${project.id}",
             options: options, data: project.toMap())
         .then((response) {
@@ -293,11 +293,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> deleteProject(String token, String id) {
+  Future<ApiResponse> deleteProject(String? token, String? id) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .delete(API_URL + ENDPOINT_PROJECT_DELETE + "/$id", options: options)
         .then((response) {
       return ApiResponse(response.data);
@@ -305,14 +305,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> addMember(String token, String projectId, String email) {
+  Future<ApiResponse> addMember(String? token, String projectId, String? email) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     final data = {
       "memberEmail": email,
     };
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_PROJECT_ADD_MEMBER + "/$projectId",
             options: options, data: data)
         .then((response) {
@@ -322,14 +322,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> removeMember(
-      String token, String projectId, String email) {
+      String? token, String projectId, String? email) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     final data = {
       "member_email": email,
     };
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_PROJECT_REMOVE_MEMBER + "/$projectId",
             options: options, data: data)
         .then((response) {
@@ -339,7 +339,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> uploadImage(
-      String token, String projectId, UploadImage image) async {
+      String? token, String projectId, UploadImage image) async {
     // final imageBytes = image.image.readAsBytesSync();
     // final encodedBytes = base64Encode(imageBytes);
 
@@ -372,11 +372,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
     // };
 
     FormData data = FormData.fromMap(
-        {"images": await MultipartFile.fromFile(image.image.path)});
+        {"images": await MultipartFile.fromFile(image.image!.path)});
 
     Options options =
-        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    return _dio
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token!});
+    return _dio!
         .post(API_URL + ENDPOINT_IMAGE + "/create/$projectId",
             options: options, data: data)
         .then((response) {
@@ -385,11 +385,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<List<Image>> getImages(String token, String projectId) {
+  Future<List<Image>> getImages(String? token, String projectId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_IMAGE + "/get/$projectId", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -404,11 +404,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<Image> getImage(String token, String id) {
+  Future<Image> getImage(String? token, String id) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_IMAGE + "/get_image/$id", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -423,21 +423,21 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> updateImage(String token, String projectId, Image image,
-      List<LabelSelection> selections) {
+  Future<ApiResponse> updateImage(String? token, String projectId, Image? image,
+      List<LabelSelection?> selections) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     final data = {
       "project_id": projectId,
       "labelled": true,
       "labels": selections.map((selection) {
-        return selection.toMap();
+        return selection!.toMap();
       }).toList(),
-      "width": image.width,
+      "width": image!.width,
       "height": image.height,
     };
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_IMAGE + "/update/${image.id}",
             options: options, data: data)
         .then((response) {
@@ -447,14 +447,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> deleteImage(
-      String token, String projectId, String imageId) {
+      String? token, String projectId, String imageId) {
     final data = {
       "images": [imageId]
     };
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_IMAGE + "/delete/$projectId",
             options: options, data: data)
         .then((response) {
@@ -464,12 +464,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> deleteImages(
-      String token, String projectId, List<String> imageIds) {
+      String? token, String projectId, List<String?> imageIds) {
     final data = {"images": imageIds};
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_IMAGE + "/delete/$projectId",
             options: options, data: data)
         .then((response) {
@@ -479,12 +479,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<List<Location>> getImagesPath(
-      String token, String projectId, List<String> ids) {
+      String? token, String projectId, List<String?> ids) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
 
-    return _dio
+    return _dio!
         .post(
             API_URL + ENDPOINT_IMAGES + "/" + ENDPOINT_METADATA + "/$projectId",
             options: options)
@@ -501,14 +501,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> createGroup(String token, String projectId, Group group) {
+  Future<ApiResponse> createGroup(String? token, String projectId, Group group) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     final data = {
       "group": group.toMap(),
     };
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_GROUP + "/$projectId/create",
             options: options, data: data)
         .then((response) {
@@ -518,11 +518,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> addGroupImages(
-      String token, String projectId, String groupId, List<String> images) {
+      String? token, String projectId, String groupId, List<String?> images) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_GROUP + "/$groupId/add-images",
             options: options, data: images)
         .then((response) {
@@ -531,11 +531,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> updateGroup(String token, Group group) {
+  Future<ApiResponse> updateGroup(String? token, Group group) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_GROUP + "/${group.id}/update",
             options: options, data: group.toMap())
         .then((response) {
@@ -544,7 +544,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<Group> getGroup(String token, String id) {
+  Future<Group> getGroup(String? token, String id) {
     // Options options = Options(
     //   headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
     // );
@@ -559,15 +559,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
     //   }
     // });
 
-    return Future.delayed(Duration(seconds: 1)).then((value) => _fake.getGroup);
+    return Future.delayed(Duration(seconds: 1)).then((value) => _fake.getGroup!);
   }
 
   @override
-  Future<List<Label>> getLabels(String token, String projectId) {
+  Future<List<Label>> getLabels(String? token, String projectId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_LABEL + "/get/$projectId", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -583,11 +583,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> createLabel(String token, String projectId, Label label) {
+  Future<ApiResponse> createLabel(String? token, String projectId, Label label) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_LABEL + "/create/$projectId",
             options: options, data: label.toMap())
         .then((response) {
@@ -596,11 +596,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> updateLabel(String token, String projectId, Label label) {
+  Future<ApiResponse> updateLabel(String? token, String projectId, Label label) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_LABEL + "/label_info/${label.id}/$projectId",
             options: options, data: label.toMap())
         .then((response) {
@@ -610,11 +610,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> deleteLabel(
-      String token, String projectId, String labelId) {
+      String? token, String projectId, String? labelId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .delete(API_URL + ENDPOINT_LABEL + "/label_info/$labelId/$projectId",
             options: options)
         .then((response) {
@@ -623,25 +623,25 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<Classification> classify(String token, File image) async {
+  Future<Classification> classify(String? token, File image) async {
     Options options =
-        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token!});
 
     FormData data =
         FormData.fromMap({"image": await MultipartFile.fromFile(image.path)});
 
-    final response = await _dio.post(API_URL + ENDPOINT_CLASSIFICAITON_CLASSIFY,
+    final response = await _dio!.post(API_URL + ENDPOINT_CLASSIFICAITON_CLASSIFY,
         options: options, data: data);
     return Classification.fromJson(response.data['body'],
         staticEndpoint: STATIC_CLASSIFICATION_URL);
   }
 
   @override
-  Future<Classification> getClassification(String token, String id) {
+  Future<Classification> getClassification(String? token, String id) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_CLASSIFICATION_GET + "/$id", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -655,11 +655,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<List<Classification>> getClassifications(String token) {
+  Future<List<Classification>> getClassifications(String? token) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_CLASSIFICATION_ALL, options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -675,11 +675,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> deleteClassification(String token, String id) {
+  Future<ApiResponse> deleteClassification(String? token, String? id) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .delete(API_URL + ENDPOINT_CLASSIFICATION_DELETE + "/$id",
             options: options)
         .then((response) {
@@ -693,17 +693,17 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<List<Series>> getResults(String token) {
+  Future<List<Series>> getResults(String? token) {
     return Future.delayed(Duration(seconds: 2))
-        .then((value) => _fake.getResults);
+        .then((value) => _fake.getResults!);
   }
 
   @override
-  Future<List<MlModel>> getModels(String token, String projectId) {
+  Future<List<MlModel>> getModels(String? token, String projectId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_ML_CLASSIFIER + "/all/$projectId",
             options: options)
         .then((response) {
@@ -719,11 +719,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<List<MlModel>> getTrainedModels(String token, String projectId) {
+  Future<List<MlModel>> getTrainedModels(String? token, String projectId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_ML_CLASSIFIER + "/trained/$projectId",
             options: options)
         .then((response) {
@@ -739,11 +739,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<MlModel> getModel(String token, String modelId) {
+  Future<MlModel> getModel(String? token, String modelId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .get(API_URL + ENDPOINT_ML_CLASSIFIER + "/$modelId", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -757,12 +757,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> createModel(
-      String token, String projectId, MlModel model) {
+      String? token, String projectId, MlModel model) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     model.projectId = projectId;
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_ML_CLASSIFIER,
             options: options, data: model.toMap())
         .then((response) {
@@ -772,12 +772,12 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> updateModel(
-      String token, String projectId, MlModel model) {
+      String? token, String projectId, MlModel model) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     model.projectId = projectId;
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_ML_CLASSIFIER + '/${model.id}',
             options: options, data: model.toMap())
         .then((response) {
@@ -787,13 +787,13 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   @override
   Future<ApiResponse> saveModel(
-      String token, String modelId, MlModel model, ModelDto modelDto) {
+      String? token, String modelId, MlModel? model, ModelDto modelDto) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     Map<String, dynamic> _data = {
       "id": int.parse(modelId),
-      "accuracyGraphUrl": model.accuracyGraphUrl,
+      "accuracyGraphUrl": model!.accuracyGraphUrl,
       "batchSize": modelDto.batchSize,
       "epochs": modelDto.epochs,
       "labels": model.labels,
@@ -858,10 +858,10 @@ class LabelLabAPIImpl extends LabelLabAPI {
             return {
               "name": MlModelMapper.layerToString(layer.layer),
               "settings": [
-                {"name": "Filters", "value": layer.args[0]},
-                {"name": "Kernel Size", "value": layer.args[1]},
-                {"name": "X Strides", "value": layer.args[2]},
-                {"name": "Y Strides", "value": layer.args[3]}
+                {"name": "Filters", "value": layer.args![0]},
+                {"name": "Kernel Size", "value": layer.args![1]},
+                {"name": "X Strides", "value": layer.args![2]},
+                {"name": "Y Strides", "value": layer.args![3]}
               ]
             };
 
@@ -869,7 +869,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
             return {
               "name": MlModelMapper.layerToString(layer.layer),
               "settings": [
-                {"name": "Activation", "value": layer.args.first}
+                {"name": "Activation", "value": layer.args!.first}
               ]
             };
 
@@ -877,8 +877,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
             return {
               "name": MlModelMapper.layerToString(layer.layer),
               "settings": [
-                {"name": "Pool Size X", "value": layer.args.first},
-                {"name": "Pool Size Y", "value": layer.args.last}
+                {"name": "Pool Size X", "value": layer.args!.first},
+                {"name": "Pool Size Y", "value": layer.args!.last}
               ]
             };
 
@@ -886,7 +886,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
             return {
               "name": MlModelMapper.layerToString(layer.layer),
               "settings": [
-                {"name": "Units", "value": layer.args.first}
+                {"name": "Units", "value": layer.args!.first}
               ]
             };
 
@@ -894,7 +894,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
             return {
               "name": MlModelMapper.layerToString(layer.layer),
               "settings": [
-                {"name": "Rate", "value": layer.args.first}
+                {"name": "Rate", "value": layer.args!.first}
               ]
             };
 
@@ -906,7 +906,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
         }
       }).toList()
     };
-    return _dio
+    return _dio!
         .put(API_URL + ENDPOINT_ML_CLASSIFIER + "/$modelId",
             options: options, data: _data)
         .then((response) {
@@ -915,11 +915,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> trainModel(String token, String modelId) {
+  Future<ApiResponse> trainModel(String? token, String modelId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .post(API_URL + ENDPOINT_ML_CLASSIFIER + "/train/$modelId",
             options: options)
         .then((response) {
@@ -928,11 +928,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> deleteModel(String token, String modelId) {
+  Future<ApiResponse> deleteModel(String? token, String modelId) {
     Options options = Options(
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token},
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-    return _dio
+    return _dio!
         .delete(API_URL + ENDPOINT_ML_CLASSIFIER + "/$modelId",
             options: options)
         .then((response) {

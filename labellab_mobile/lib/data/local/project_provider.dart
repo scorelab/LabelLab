@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 class ProjectProvider {
   static const String _path = "labellab/project";
 
-  Database db;
+  late Database db;
 
   Future open() async {
     db = await openDatabase(_path, version: 1,
@@ -32,22 +32,22 @@ class ProjectProvider {
     await db.insert(ProjectEntity.table, ProjectEntity.from(project).toMap());
   }
 
-  Future<Project> getProject(String id) async {
+  Future<Project?> getProject(String id) async {
     List<Map> maps = await db.query(ProjectEntity.table,
         columns: [ProjectEntity.columnId, ProjectEntity.columnName],
         where: '${ProjectEntity.columnId} = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      return ProjectEntity.fromMap(maps.first);
+      return ProjectEntity.fromMap(maps.first as Map<String, dynamic>);
     }
     return null;
   }
 
-  Future<List<Project>> getProjects() async {
+  Future<List<Project>?> getProjects() async {
     List<Map> maps = await db.query(ProjectEntity.table,
         columns: [ProjectEntity.columnId, ProjectEntity.columnName]);
     if (maps.length > 0) {
-      return maps.map((item) => ProjectEntity.fromMap(item)).toList();
+      return maps.map((item) => ProjectEntity.fromMap(item as Map<String, dynamic>)).toList();
     }
     return null;
   }

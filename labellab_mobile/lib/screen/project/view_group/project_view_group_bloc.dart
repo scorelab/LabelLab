@@ -10,7 +10,7 @@ class ProjectViewGroupBloc {
   final String projectId;
   final String groupId;
 
-  Group _group;
+  Group? _group;
   bool _isLoading = false;
 
   ProjectViewGroupBloc(this.projectId, this.groupId) {

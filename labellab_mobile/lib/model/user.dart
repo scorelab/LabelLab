@@ -1,10 +1,10 @@
 class User {
-  String id;
-  String name;
-  String username;
-  String email;
-  String thumbnail;
-  List<String> projectIds;
+  String? id;
+  String? name;
+  String? username;
+  String? email;
+  String? thumbnail;
+  List<String>? projectIds;
 
   User({this.id, this.name, this.username, this.email});
 
@@ -17,7 +17,7 @@ class User {
     if (hasProjects) {
       projectIds = json["project"];
     }
-    if (thumbnail != null && !thumbnail.startsWith("http")) {
+    if (thumbnail != null && !thumbnail!.startsWith("http")) {
       thumbnail = (imageEndpoint != null ? imageEndpoint : "") + thumbnail;
     }
   }

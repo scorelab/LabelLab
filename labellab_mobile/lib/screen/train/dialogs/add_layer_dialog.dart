@@ -11,7 +11,7 @@ class AddLayerDialog extends StatefulWidget {
 }
 
 class _AddLayerDialogState extends State<AddLayerDialog> {
-  ModelLayer _currentValue;
+  ModelLayer? _currentValue;
 
   // Extra args
   List<String> _activationExtra = [
@@ -22,7 +22,7 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
     "Softmax",
     "Tanh"
   ];
-  String _currentActivationExtra;
+  String? _currentActivationExtra;
 
   TextEditingController _extraFiltersController = TextEditingController();
   TextEditingController _extraKernelSizeController = TextEditingController();
@@ -65,7 +65,7 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
                         ),
                       ))
                   .toList(),
-              onChanged: (ModelLayer value) {
+              onChanged: (ModelLayer? value) {
                 setState(() {
                   _currentValue = value;
                 });
@@ -98,7 +98,7 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
                       break;
 
                     case ModelLayer.ACTIVATION:
-                      List<String> _args = [];
+                      List<String?> _args = [];
                       _args.add(_currentActivationExtra);
 
                       Navigator.pop(
@@ -141,7 +141,7 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
     );
   }
 
-  Widget _buildExtraArgs(ModelLayer currentValue) {
+  Widget _buildExtraArgs(ModelLayer? currentValue) {
     switch (currentValue) {
       case ModelLayer.C2D:
         return Column(
@@ -184,7 +184,7 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
                     ),
                   ))
               .toList(),
-          onChanged: (String value) {
+          onChanged: (String? value) {
             setState(() {
               _currentActivationExtra = value;
             });

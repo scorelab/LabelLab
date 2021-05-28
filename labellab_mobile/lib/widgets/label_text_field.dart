@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LabelTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final String labelText;
-  final String errorText;
+  final TextEditingController? controller;
+  final String? hintText;
+  final String? labelText;
+  final String? errorText;
   final bool isObscure;
   final TextCapitalization textCapitalization;
   final TextInputType keyboardType;

@@ -28,7 +28,7 @@ class ProjectViewImageScreen extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () =>
-                _gotoLabelImageScreen(context, snapshot.data.image.id),
+                _gotoLabelImageScreen(context, snapshot.data!.image!.id),
           ),
         );
       },
@@ -42,7 +42,7 @@ class ProjectViewImageScreen extends StatelessWidget {
         onSelected: (int value) {
           switch (value) {
             case 0:
-              _gotoImagePathScreen(context, snapshot.data.image.id);
+              _gotoImagePathScreen(context, snapshot.data!.image!.id);
               break;
             case 1:
               _showDeleteConfirmation(context);
@@ -68,15 +68,15 @@ class ProjectViewImageScreen extends StatelessWidget {
   Widget _buildBody(
       BuildContext context, AsyncSnapshot<ProjectViewImageState> snapshot) {
     if (snapshot.hasData) {
-      ProjectViewImageState _state = snapshot.data;
+      ProjectViewImageState _state = snapshot.data!;
       return Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _state.isLoading ? LinearProgressIndicator() : Container(),
-          _state.error != null ? Text(_state.error) : Container(),
-          _state.image != null && _state.image.labels != null
-              ? LabelSelectionList(_state.image.labels, false)
+          _state.error != null ? Text(_state.error!) : Container(),
+          _state.image != null && _state.image!.labels != null
+              ? LabelSelectionList(_state.image!.labels, false)
               : Container(),
           _state.image != null
               ? Expanded(
@@ -84,12 +84,12 @@ class ProjectViewImageScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: CachedNetworkImageProvider(
-                                _state.image.imageUrl))),
+                                _state.image!.imageUrl!))),
                     child: CustomPaint(
                       size: Size.infinite,
-                      painter: _state.image.labels != null
+                      painter: _state.image!.labels != null
                           ? LabelSelectionPainter(
-                              _state.image.labels,
+                              _state.image!.labels,
                               null,
                               _state.image,
                             )
@@ -105,7 +105,7 @@ class ProjectViewImageScreen extends StatelessWidget {
     }
   }
 
-  void _gotoLabelImageScreen(BuildContext context, String imageId) {
+  void _gotoLabelImageScreen(BuildContext context, String? imageId) {
     final String projectId =
         Provider.of<ProjectViewImageBloc>(context).projectId;
     Application.router
@@ -128,13 +128,13 @@ class ProjectViewImageScreen extends StatelessWidget {
             },
           );
         }).then((success) {
-      if (success) {
+      if (success!) {
         Navigator.pop(baseContext);
       }
     });
   }
 
-  void _gotoImagePathScreen(BuildContext context, String imageId) {
+  void _gotoImagePathScreen(BuildContext context, String? imageId) {
     final String projectId =
         Provider.of<ProjectViewImageBloc>(context).projectId;
     Application.router.navigateTo(context, "/project/$projectId/path/$imageId");

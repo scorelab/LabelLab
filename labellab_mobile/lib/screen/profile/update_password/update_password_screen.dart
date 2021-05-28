@@ -97,13 +97,13 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   }
 
   void _updatePassword() {
-    _key.currentState.save();
-    if (_key.currentState.validate()) {
+    _key.currentState!.save();
+    if (_key.currentState!.validate()) {
       _repository.updatePassword(_currentPassword, _newPassword).then((res) {
-        if (res.success) {
+        if (res.success!) {
           Application.router.pop(context);
         } else {
-          _showError(res.msg);
+          _showError(res.msg!);
         }
       }).catchError((err) {
         _showError(err.message);
@@ -111,7 +111,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
     }
   }
 
-  String _validatePassword(String password) {
+  String? _validatePassword(String password) {
     if (password.isEmpty) {
       return "Password can't be empty";
     } else if (password.length < 6) {
@@ -120,7 +120,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
     return null;
   }
 
-  String _validateConfirmPassword(String password) {
+  String? _validateConfirmPassword(String password) {
     if (password.isEmpty || _newPassword != _confirmNewPassword) {
       return "Passwords doesn't match";
     }
@@ -128,7 +128,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   }
 
   void _showError(String message) {
-    _scaffoldKey.currentState.showSnackBar(
+    _scaffoldKey.currentState!.showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.redAccent,

@@ -14,16 +14,16 @@ class LabelToolBloc {
   final String projectId;
   final String imageId;
 
-  List<LabelSelection> _selections = [];
-  LabelSelection _currentSelection;
+  List<LabelSelection?>? _selections = [];
+  LabelSelection? _currentSelection;
 
   bool _isUpdating = false;
 
   // Holds the previous index and the selection
-  int _tempIndex;
-  LabelSelection _tempSelection;
+  late int _tempIndex;
+  LabelSelection? _tempSelection;
 
-  Image _image;
+  Image? _image;
   List<Label> _labels = [];
   bool _isLoading = false;
   SelectionOffset _selectionOffset = SelectionOffset.zero;
@@ -58,7 +58,7 @@ class LabelToolBloc {
   }
 
   void startCurrentSelection(Point point) {
-    _currentSelection.setStartPoint(point);
+    _currentSelection!.setStartPoint(point);
     _setState(_isUpdating
         ? LabelToolState.updatingSelection(_selections, _image,
             labels: _labels, currentSelection: _currentSelection)
@@ -67,7 +67,7 @@ class LabelToolBloc {
   }
 
   void updateCurrentSelection(Point point) {
-    _currentSelection.setEndPoint(point);
+    _currentSelection!.setEndPoint(point);
     _setState(_isUpdating
         ? LabelToolState.updatingSelection(_selections, _image,
             labels: _labels, currentSelection: _currentSelection)
@@ -76,7 +76,7 @@ class LabelToolBloc {
   }
 
   void appendToCurrentSelection(Point point) {
-    _currentSelection.appendPoint(point);
+    _currentSelection!.appendPoint(point);
     _setState(_isUpdating
         ? LabelToolState.updatingSelection(_selections, _image,
             labels: _labels, currentSelection: _currentSelection)
@@ -91,7 +91,7 @@ class LabelToolBloc {
   }
 
   void resetCurrentSelection() {
-    _currentSelection.points.removeRange(0, _currentSelection.points.length);
+    _currentSelection!.points.removeRange(0, _currentSelection!.points.length);
     _setState(_isUpdating
         ? LabelToolState.updatingSelection(_selections, _image,
             labels: _labels, currentSelection: _currentSelection)
@@ -100,7 +100,7 @@ class LabelToolBloc {
   }
 
   void undoFromCurrentSelection() {
-    _currentSelection.points.removeLast();
+    _currentSelection!.points.removeLast();
     _setState(_isUpdating
         ? LabelToolState.updatingSelection(_selections, _image,
             labels: _labels, currentSelection: _currentSelection)
@@ -110,27 +110,27 @@ class LabelToolBloc {
 
   void saveCurrentSelection() {
     _isUpdating
-        ? _selections.insert(_tempIndex, _currentSelection)
-        : _selections.add(_currentSelection);
+        ? _selections!.insert(_tempIndex, _currentSelection)
+        : _selections!.add(_currentSelection);
     _isUpdating = false;
     _currentSelection = null;
     _setState(
         LabelToolState.doneSelection(_selections, _image, labels: _labels));
   }
 
-  void removeSelection(LabelSelection selection) {
-    _selections.remove(selection);
+  void removeSelection(LabelSelection? selection) {
+    _selections!.remove(selection);
     _setState(LabelToolState.drawingSelection(_selections, _image,
         currentSelection: _currentSelection, labels: _labels));
   }
 
   // Provoke selection update
-  void updateSelection(LabelSelection selection) {
+  void updateSelection(LabelSelection? selection) {
     _isUpdating = true;
-    _tempIndex = _selections.indexOf(selection);
+    _tempIndex = _selections!.indexOf(selection);
     _tempSelection = selection;
-    _selections.remove(selection);
-    _currentSelection = LabelSelection(selection.label);
+    _selections!.remove(selection);
+    _currentSelection = LabelSelection(selection!.label);
     _setState(LabelToolState.updatingSelection(_selections, _image,
         labels: _labels, currentSelection: _currentSelection));
   }
@@ -138,7 +138,7 @@ class LabelToolBloc {
   // Cancel selection update
   void cancelUpdatingSelection() {
     _isUpdating = false;
-    _selections.insert(_tempIndex, _tempSelection);
+    _selections!.insert(_tempIndex, _tempSelection);
     _currentSelection = null;
     _setState(
         LabelToolState.doneSelection(_selections, _image, labels: _labels));
@@ -156,8 +156,8 @@ class LabelToolBloc {
     _setState(LabelToolState.saving(_selections, _image, labels: _labels));
 
     // Scale and remove offset from unadjusted images
-    final adjustedSelections = _selections.map((selection) {
-      if (selection.isAdjusted) return selection;
+    final adjustedSelections = _selections!.map((selection) {
+      if (selection!.isAdjusted) return selection;
       final adjustedPoints = selection.points.map((point) {
         return Point((point.x - _selectionOffset.dx) * _selectionOffset.scale,
             (point.y - _selectionOffset.dy) * _selectionOffset.scale);
@@ -168,7 +168,7 @@ class LabelToolBloc {
 
     _repository.updateImage(projectId, _image, adjustedSelections).then((res) {
       _isLoading = false;
-      if (res.success) {
+      if (res.success!) {
         _setState(LabelToolState.success(_selections, _image, labels: _labels));
       } else {
         _setState(LabelToolState.error(res.msg, _selections, _image,

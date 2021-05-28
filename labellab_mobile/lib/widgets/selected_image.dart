@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class SelectedImage extends StatelessWidget {
-  final File image;
-  final double height;
+  final File? image;
+  final double? height;
 
   SelectedImage({this.image, this.height});
 
@@ -16,7 +16,7 @@ class SelectedImage extends StatelessWidget {
         color: Colors.grey,
         child: image != null
             ? Image(
-                image: FileImage(image),
+                image: FileImage(image!),
                 height: height != null ? height : 320,
                 fit: BoxFit.cover,
               )

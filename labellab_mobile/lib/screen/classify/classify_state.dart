@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:labellab_mobile/model/classification.dart';
 
 class ClassifyState {
-  bool isClassifing;
-  Classification classification;
-  String error;
-  File image;
+  late bool isClassifing;
+  Classification? classification;
+  String? error;
+  File? image;
 
   ClassifyState.initial() {
     isClassifing = false;

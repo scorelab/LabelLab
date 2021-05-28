@@ -5,14 +5,14 @@ import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/util/util.dart';
 
-typedef void SizeCallback(Size size);
+typedef void SizeCallback(Size? size);
 
 class LabelSelectionPainter extends CustomPainter {
-  final List<LabelSelection> labelSelections;
-  final LabelSelection current;
-  final LabelLab.Image image;
-  final SizeCallback sizeCallback;
-  Size _size;
+  final List<LabelSelection?>? labelSelections;
+  final LabelSelection? current;
+  final LabelLab.Image? image;
+  final SizeCallback? sizeCallback;
+  Size? _size;
 
   LabelSelectionPainter(this.labelSelections, this.current, this.image,
       {this.sizeCallback});
@@ -22,21 +22,21 @@ class LabelSelectionPainter extends CustomPainter {
     if (sizeCallback != null) {
       if (_size == null || _size != size) {
         _size = size;
-        sizeCallback(_size);
+        sizeCallback!(_size);
       }
     }
 
-    final SelectionOffset selectionOffset = calculateImageOffset(image, size);
+    final SelectionOffset selectionOffset = calculateImageOffset(image!, size);
 
-    for (var labelSelection in labelSelections) {
-      drawPath(canvas, labelSelection.color, labelSelection.points,
+    for (var labelSelection in labelSelections!) {
+      drawPath(canvas, labelSelection!.color, labelSelection.points,
           offset: labelSelection.isAdjusted
               ? selectionOffset
               : SelectionOffset.zero,
           withVertices: false);
     }
     if (current != null) {
-      drawPath(canvas, Colors.blue, current.points);
+      drawPath(canvas, Colors.blue, current!.points);
     }
   }
 

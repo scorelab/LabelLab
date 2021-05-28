@@ -1,13 +1,13 @@
 enum LabelType { RECTANGLE, POLYGON }
 
 class Label {
-  String id;
-  String name;
-  LabelType type;
-  String projectId;
-  String count;
-  DateTime createdAt;
-  List<String> imageIds;
+  String? id;
+  String? name;
+  LabelType? type;
+  String? projectId;
+  String? count;
+  DateTime? createdAt;
+  late List<String> imageIds;
 
   Label({this.id, this.name, this.type});
 

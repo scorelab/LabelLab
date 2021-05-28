@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UserDetailLoading extends StatelessWidget {
-  const UserDetailLoading({Key key}) : super(key: key);
+  const UserDetailLoading({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

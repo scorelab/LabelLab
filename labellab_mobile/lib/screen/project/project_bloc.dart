@@ -8,7 +8,7 @@ import 'package:labellab_mobile/screen/project/project_state.dart';
 class ProjectBloc {
   Repository _repository = Repository();
 
-  List<Project> _projects;
+  List<Project>? _projects;
   bool _isLoading = false;
 
   ProjectBloc() {
@@ -19,7 +19,7 @@ class ProjectBloc {
     _loadProjects();
   }
 
-  void delete(String id) {
+  void delete(String? id) {
     _repository.deleteProject(id).then((_) {
       _loadProjects();
     });

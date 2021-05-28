@@ -22,10 +22,10 @@ class ModelTrainScreen extends StatefulWidget {
 }
 
 class _ModelTrainScreenState extends State<ModelTrainScreen> {
-  ModelToLearn _currentLearningOn;
-  ModelLoss _currentLoss;
-  ModelOptimizer _currentOptimizer;
-  ModelMetric _currentMetric;
+  ModelToLearn? _currentLearningOn;
+  ModelLoss? _currentLoss;
+  ModelOptimizer? _currentOptimizer;
+  ModelMetric? _currentMetric;
   Repository _repository = Repository();
 
   TextEditingController _trainController = TextEditingController();
@@ -49,7 +49,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         builder:
             (BuildContext context, AsyncSnapshot<ModelTrainState> snapshot) {
           if (snapshot.hasData) {
-            final ModelTrainState _state = snapshot.data;
+            final ModelTrainState _state = snapshot.data!;
             if (_state.isLoading)
               return _buildLoadingBody();
             else
@@ -63,10 +63,10 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
   }
 
   SingleChildScrollView _buildPreTrainBody(
-      List<Label> labels,
-      List<Label> currentClasses,
-      List<StepDto> currentSteps,
-      List<LayerDto> currentLayers,
+      List<Label>? labels,
+      List<Label>? currentClasses,
+      List<StepDto>? currentSteps,
+      List<LayerDto>? currentLayers,
       bool isTraining) {
     return SingleChildScrollView(
       child: Container(
@@ -98,7 +98,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  Widget _buildCurrentClasses(List<Label> currentClasses) {
+  Widget _buildCurrentClasses(List<Label>? currentClasses) {
     return currentClasses != null
         ? Column(
             children: currentClasses
@@ -114,7 +114,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(c.name),
+                            Text(c.name!),
                             Row(
                               children: <Widget>[
                                 Text(
@@ -148,7 +148,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  Widget _buildAddClassButton(List<Label> labels) {
+  Widget _buildAddClassButton(List<Label>? labels) {
     return Container(
       child: InkWell(
         child: ClipRRect(
@@ -174,7 +174,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     );
   }
 
-  Widget _buildTrainBody(List<StepDto> steps, List<LayerDto> layers) {
+  Widget _buildTrainBody(List<StepDto>? steps, List<LayerDto>? layers) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -282,7 +282,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                       ),
                     ))
                 .toList(),
-            onChanged: (ModelToLearn value) {
+            onChanged: (ModelToLearn? value) {
               setState(() {
                 _currentLearningOn = value;
               });
@@ -311,8 +311,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                 children: layers
                     .map((layer) => Chip(
                           label: Text(MlModelMapper.layerToString(layer.layer) +
-                              (layer.args.isNotEmpty
-                                  ? " | " + layer.args.map((a) => a).toString()
+                              (layer.args!.isNotEmpty
+                                  ? " | " + layer.args!.map((a) => a).toString()
                                   : "")),
                           deleteIcon: Icon(Icons.cancel),
                           onDeleted: () {
@@ -374,7 +374,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                       ),
                     ))
                 .toList(),
-            onChanged: (ModelLoss value) {
+            onChanged: (ModelLoss? value) {
               setState(() {
                 _currentLoss = value;
               });
@@ -405,7 +405,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                       ),
                     ))
                 .toList(),
-            onChanged: (ModelOptimizer value) {
+            onChanged: (ModelOptimizer? value) {
               setState(() {
                 _currentOptimizer = value;
               });
@@ -429,7 +429,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                       ),
                     ))
                 .toList(),
-            onChanged: (ModelMetric value) {
+            onChanged: (ModelMetric? value) {
               setState(() {
                 _currentMetric = value;
               });
@@ -476,12 +476,12 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
           );
   }
 
-  void _showAddClassDialog(BuildContext baseContext, List<Label> labels) {
+  void _showAddClassDialog(BuildContext baseContext, List<Label>? labels) {
     showDialog<String>(
         context: baseContext,
         builder: (context) {
           return AddClassDialog(labels);
-        }).then((String labelId) {
+        }).then((String? labelId) {
       if (labelId != null)
         Provider.of<ModelTrainBloc>(context).addClass(labelId);
     });
@@ -492,7 +492,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         context: baseContext,
         builder: (context) {
           return AddStepDialog();
-        }).then((StepDto step) {
+        }).then((StepDto? step) {
       if (step != null) Provider.of<ModelTrainBloc>(context).addStep(step);
     });
   }
@@ -502,7 +502,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         context: baseContext,
         builder: (context) {
           return AddLayerDialog();
-        }).then((LayerDto layer) {
+        }).then((LayerDto? layer) {
       if (layer != null) Provider.of<ModelTrainBloc>(context).addLayer(layer);
     });
   }

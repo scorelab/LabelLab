@@ -7,7 +7,7 @@ import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 
 class AddEditProjectScreen extends StatefulWidget {
   final Repository _repository = Repository();
-  final String id;
+  final String? id;
 
   AddEditProjectScreen({this.id});
 
@@ -17,13 +17,13 @@ class AddEditProjectScreen extends StatefulWidget {
 
 class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   GlobalKey<FormState> _key = GlobalKey();
-  String _projectId;
+  String? _projectId;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
   bool _isLoading = false;
-  String _error;
+  String? _error;
 
   @override
   void initState() {
@@ -72,7 +72,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
               ),
               this._error != null
                   ? Text(
-                      this._error,
+                      this._error!,
                       style: TextStyle(color: Colors.red),
                     )
                   : Container(),
@@ -97,14 +97,14 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     );
   }
 
-  String _validateName(String name) {
+  String? _validateName(String name) {
     if (name.isEmpty) {
       return 'Please enter a name';
     }
     return null;
   }
 
-  String _validateDescription(String description) {
+  String? _validateDescription(String description) {
     if (description.isEmpty) {
       return 'Please enter a description';
     }
@@ -112,7 +112,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   }
 
   void _update(BuildContext context) {
-    final form = _key.currentState;
+    final form = _key.currentState!;
     if (!form.validate()) return;
     form.save();
     setState(() {
@@ -133,9 +133,9 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
       }
     }).catchError((err) {
       if (err is DioError) {
-        if (err.response != null && err.response.data is Map) {
+        if (err.response != null && err.response!.data is Map) {
           setState(() {
-            _error = err.response.data['msg'].toString();
+            _error = err.response!.data['msg'].toString();
             _isLoading = false;
           });
         } else {
@@ -157,13 +157,13 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     if (project.id == null) {
       // Create new project
       return widget._repository.createProject(project).then((res) {
-        if (!res.success) return res.msg;
+        if (!res.success!) return res.msg!;
         return "Success";
       });
     } else {
       // Update the existing project
       return widget._repository.updateProject(project).then((res) {
-        if (!res.success) return res.msg;
+        if (!res.success!) return res.msg!;
         return "Success";
       });
     }
@@ -174,8 +174,8 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
       print(project.description);
       setState(() {
         _projectId = project.id;
-        _nameController.text = project.name;
-        _descriptionController.text = project.description;
+        _nameController.text = project.name!;
+        _descriptionController.text = project.description!;
       });
     });
   }

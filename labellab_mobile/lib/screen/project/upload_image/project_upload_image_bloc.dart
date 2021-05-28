@@ -12,7 +12,7 @@ class ProjectUploadImageBloc {
   Repository _repository = Repository();
 
   String projectId;
-  StreamSubscription<ApiResponse> _uploadProgress;
+  StreamSubscription<ApiResponse>? _uploadProgress;
   List<UploadImage> _images = [];
 
   bool _isUploading = false;
@@ -72,7 +72,7 @@ class ProjectUploadImageBloc {
   Stream<ProjectUploadImageState> get state => _stateController.stream;
 
   void dispose() {
-    if (_uploadProgress != null) _uploadProgress.cancel();
+    if (_uploadProgress != null) _uploadProgress!.cancel();
     _stateController.close();
   }
 }

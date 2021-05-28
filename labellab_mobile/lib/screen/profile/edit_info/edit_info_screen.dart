@@ -75,10 +75,10 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
       return;
     }
     _repository.editInfo(newUsername).then((res) {
-      if (res.success) {
+      if (res.success!) {
         Application.router.pop(context);
       } else {
-        _showError(res.msg);
+        _showError(res.msg!);
       }
     }).catchError((err) {
       print(err.toString());
@@ -87,7 +87,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   }
 
   void _showError(String message) {
-    _scaffoldKey.currentState.showSnackBar(
+    _scaffoldKey.currentState!.showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.redAccent,

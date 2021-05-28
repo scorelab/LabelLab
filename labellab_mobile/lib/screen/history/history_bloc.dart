@@ -8,7 +8,7 @@ import 'package:labellab_mobile/screen/history/history_state.dart';
 class HistoryBloc {
   Repository _repository = Repository();
 
-  List<Classification> _classifications;
+  List<Classification>? _classifications;
   bool _isLoading = false;
 
   HistoryBloc() {
@@ -19,7 +19,7 @@ class HistoryBloc {
     _loadClassifications();
   }
 
-  Future delete(String id) {
+  Future delete(String? id) {
     _setState(HistoryState.loading(classifications: _classifications));
     return _repository.deleteClassification(id).then((success) {
       if (success) _loadClassifications();

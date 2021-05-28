@@ -4,7 +4,7 @@ class LabelIconButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   LabelIconButton(this.icon, this.label,
       {this.onTap, this.color = Colors.black});

@@ -11,10 +11,10 @@ class AuthState with ChangeNotifier {
   final Repository _respository = Repository();
 
   // State
-  User user;
+  User? user;
 
-  bool get isAuthenticated => user != null && user.id != null;
-  bool get isLoading => user != null && user.id == null;
+  bool get isAuthenticated => user != null && user!.id != null;
+  bool get isLoading => user != null && user!.id == null;
 
   AuthState() {
     user = User(username: "", name: "", email: "");
@@ -24,7 +24,7 @@ class AuthState with ChangeNotifier {
         _respository.usersInfoLocal().then((user) async {
           this.user = user;
           notifyListeners();
-          await _respository.usersInfo().then((User user) {
+          await _respository.usersInfo().then((User? user) {
             this.user = user;
             notifyListeners();
           }).catchError((err) {});
@@ -54,7 +54,7 @@ class AuthState with ChangeNotifier {
     );
     return _googleSignIn.signIn().then((res) async {
       print(res.toString());
-      var auth = await res.authentication;
+      var auth = await res!.authentication;
       return await _respository
           .loginWithGoogle(GoogleUserRequest(res, auth.accessToken))
           .then((response) => _loadUserData(response));
@@ -74,11 +74,11 @@ class AuthState with ChangeNotifier {
   }
 
   Future<bool> _loadUserData(LoginResponse response) {
-    print("Success: " + response.accessToken);
-    return _respository.usersInfo().then((User user) {
+    print("Success: " + response.accessToken!);
+    return _respository.usersInfo().then((User? user) {
       this.user = user;
       notifyListeners();
-      return response.success;
+      return response.success!;
     });
   }
 

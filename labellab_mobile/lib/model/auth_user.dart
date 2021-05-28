@@ -1,6 +1,6 @@
 class AuthUser {
-  String email;
-  String password;
+  String? email;
+  String? password;
 
   AuthUser(this.email, this.password);
 
