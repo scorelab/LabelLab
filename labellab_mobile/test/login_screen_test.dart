@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:labellab_mobile/data/remote/dto/login_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:mockito/mockito.dart';
 import 'mock_labellab_api_impl.dart';

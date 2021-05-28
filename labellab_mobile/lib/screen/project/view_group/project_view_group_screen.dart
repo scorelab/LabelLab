@@ -4,7 +4,6 @@ import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/view_group/project_view_group_bloc.dart';
 import 'package:labellab_mobile/screen/project/view_group/project_view_group_state.dart';
 import 'package:provider/provider.dart';
-import 'package:labellab_mobile/model/image.dart' as Labellab;
 
 class ProjectViewGroupScreen extends StatelessWidget {
   @override
@@ -100,7 +99,8 @@ class ProjectViewGroupScreen extends StatelessWidget {
     );
   }
 
-  void _gotoViewImage(BuildContext context, String? projectId, String? imageId) {
+  void _gotoViewImage(
+      BuildContext context, String? projectId, String? imageId) {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {

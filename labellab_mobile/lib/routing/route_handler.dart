@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
@@ -203,8 +201,8 @@ var modelTrainHandler = Handler(
 var modelHistoryHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   return Provider<ModelHistoryBloc>(
-    create: (context) =>
-        ModelHistoryBloc(params['project_id']!.first, params['model_id']!.first),
+    create: (context) => ModelHistoryBloc(
+        params['project_id']!.first, params['model_id']!.first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ModelHistoryScreen(),
   );
