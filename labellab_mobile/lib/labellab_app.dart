@@ -25,6 +25,11 @@ class LabelLabApp extends StatelessWidget {
           primaryColorDark: Color(0xffc2c2c2),
           accentColor: Color(0xff00a89f),
           accentColorBrightness: Brightness.light,
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              primary: Color(0xff575151),
+            ),
+          ),
         ),
         //darkTheme: ThemeData.dark(),
         darkTheme: ThemeData(
@@ -33,6 +38,11 @@ class LabelLabApp extends StatelessWidget {
           primaryColorDark: Color(0xffc2c2c2),
           accentColor: Color(0xff00a89f),
           accentColorBrightness: Brightness.dark,
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              primary: Color(0xff575151),
+            ),
+          ),
         ),
         debugShowCheckedModeBanner: false,
         onGenerateRoute: Application.router.generator,
