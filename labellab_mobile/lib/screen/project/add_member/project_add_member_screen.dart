@@ -84,7 +84,8 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
                             title: Text(user.name!),
                             subtitle: Text(user.email!),
                             onTap: () {
-                              Provider.of<ProjectAddMemberBloc>(context)
+                              Provider.of<ProjectAddMemberBloc>(context,
+                                      listen: false)
                                   .addMember(user.email);
                             },
                           );
@@ -102,6 +103,6 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
   }
 
   void _searchUser(String email) {
-    Provider.of<ProjectAddMemberBloc>(context).searchUser(email);
+    Provider.of<ProjectAddMemberBloc>(context, listen: false).searchUser(email);
   }
 }

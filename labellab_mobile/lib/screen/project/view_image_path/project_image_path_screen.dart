@@ -47,7 +47,8 @@ class ProjectImagePathScreen extends StatelessWidget {
                                         initialCameraPosition: CameraPosition(
                                           target: LatLng(
                                               _state.locations!.first.latitude!,
-                                              _state.locations!.first.longitude!),
+                                              _state
+                                                  .locations!.first.longitude!),
                                           zoom: 12,
                                         ),
                                         onMapCreated:
@@ -85,6 +86,7 @@ class ProjectImagePathScreen extends StatelessWidget {
   }
 
   void _updateMap(BuildContext context, String? labelId) {
-    Provider.of<ProjectImagePathBloc>(context).selectLabel(labelId);
+    Provider.of<ProjectImagePathBloc>(context, listen: false)
+        .selectLabel(labelId);
   }
 }

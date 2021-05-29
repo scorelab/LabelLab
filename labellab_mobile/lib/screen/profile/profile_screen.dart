@@ -136,17 +136,18 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _signOut(BuildContext context) {
-    Provider.of<AuthState>(context).signout().then((_) {
+    Provider.of<AuthState>(context, listen: false).signout().then((_) {
       Application.router.pop(context);
     });
   }
 
   void _goToEditInfo(BuildContext context) async {
-    String username = Provider.of<ProfileBloc>(context).getUsername()!;
+    String username =
+        Provider.of<ProfileBloc>(context, listen: false).getUsername()!;
     Application.router
         .navigateTo(context, "/editinfo/" + username)
         .whenComplete(() {
-      Provider.of<ProfileBloc>(context).refresh();
+      Provider.of<ProfileBloc>(context, listen: false).refresh();
     });
   }
 
@@ -186,7 +187,7 @@ class ProfileScreen extends StatelessWidget {
     _imagePicker.getImage(source: source).then((image) {
       if (image != null) {
         File imageFile = File(image.path);
-        Provider.of<ProfileBloc>(context).uploadImage(imageFile);
+        Provider.of<ProfileBloc>(context, listen: false).uploadImage(imageFile);
         Navigator.pop(context);
       }
     });

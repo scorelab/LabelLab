@@ -16,11 +16,9 @@ class RetryOnAuthFailInterceptor extends Interceptor {
       _dio!.interceptors.requestLock.unlock();
       _dio!.interceptors.responseLock.unlock();
 
-      final RequestOptions options = err.response!.requestOptions;
-
-      return Dio().fetch(options);
+      return handler.resolve(err.response!);
     }
 
-    return err;
+    return handler.next(err);
   }
 }

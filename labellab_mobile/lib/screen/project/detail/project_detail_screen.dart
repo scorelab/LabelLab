@@ -570,7 +570,8 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildMembers(BuildContext context, List<Member> members) {
-    final User? _currentUser = Provider.of<AuthState>(context).user;
+    final User? _currentUser =
+        Provider.of<AuthState>(context, listen: false).user;
     return SliverPadding(
       padding: EdgeInsets.only(bottom: 72),
       sliver: SliverList(
@@ -642,30 +643,32 @@ class ProjectDetailScreen extends StatelessWidget {
   void _onImageAction(BuildContext context, int index) {
     switch (index) {
       case 0:
-        Provider.of<ProjectDetailBloc>(context).selectAllImages();
+        Provider.of<ProjectDetailBloc>(context, listen: false)
+            .selectAllImages();
         break;
       case 1:
-        Provider.of<ProjectDetailBloc>(context).deleteSelected();
+        Provider.of<ProjectDetailBloc>(context, listen: false).deleteSelected();
         break;
       case 2:
-        Provider.of<ProjectDetailBloc>(context).cancelSelection();
+        Provider.of<ProjectDetailBloc>(context, listen: false)
+            .cancelSelection();
         break;
     }
   }
 
   void _switchToMultiSelect(BuildContext context, String? id) {
-    Provider.of<ProjectDetailBloc>(context).selectImage(id);
+    Provider.of<ProjectDetailBloc>(context, listen: false).selectImage(id);
   }
 
   void _selectImage(BuildContext context, String? id) {
-    Provider.of<ProjectDetailBloc>(context).switchSelection(id);
+    Provider.of<ProjectDetailBloc>(context, listen: false).switchSelection(id);
   }
 
   void _gotoEditProject(BuildContext context, String id) {
     Application.router
         .navigateTo(context, "/project/edit/" + id)
         .whenComplete(() {
-      Provider.of<ProjectDetailBloc>(context).refresh();
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });
   }
 
@@ -674,7 +677,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {
-      Provider.of<ProjectDetailBloc>(context).refresh();
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });
   }
 
@@ -682,7 +685,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/$id/upload")
         .whenComplete(() {
-      Provider.of<ProjectDetailBloc>(context).refresh();
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });
   }
 
@@ -690,7 +693,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/${project.id}/add")
         .whenComplete(() {
-      Provider.of<ProjectDetailBloc>(context).refresh();
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });
   }
 
@@ -698,7 +701,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/$projectId/images")
         .whenComplete(() {
-      Provider.of<ProjectDetailBloc>(context).refresh();
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });
   }
 
@@ -707,7 +710,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/$projectId/group/$groupId")
         .whenComplete(() {
-      Provider.of<ProjectDetailBloc>(context).refresh();
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });
   }
 
@@ -716,7 +719,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/train/$projectId/$modelId")
         .whenComplete(() {
-      Provider.of<ProjectDetailBloc>(context).refresh();
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });
   }
 

@@ -107,11 +107,11 @@ class ProjectViewImageScreen extends StatelessWidget {
 
   void _gotoLabelImageScreen(BuildContext context, String? imageId) {
     final String projectId =
-        Provider.of<ProjectViewImageBloc>(context).projectId;
+        Provider.of<ProjectViewImageBloc>(context, listen: false).projectId;
     Application.router
         .navigateTo(context, "/project/$projectId/label/$imageId")
         .whenComplete(() {
-      Provider.of<ProjectViewImageBloc>(context).fetchImage();
+      Provider.of<ProjectViewImageBloc>(context, listen: false).fetchImage();
     });
   }
 
@@ -136,7 +136,7 @@ class ProjectViewImageScreen extends StatelessWidget {
 
   void _gotoImagePathScreen(BuildContext context, String? imageId) {
     final String projectId =
-        Provider.of<ProjectViewImageBloc>(context).projectId;
+        Provider.of<ProjectViewImageBloc>(context, listen: false).projectId;
     Application.router.navigateTo(context, "/project/$projectId/path/$imageId");
   }
 }

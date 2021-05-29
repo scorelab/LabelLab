@@ -116,11 +116,11 @@ class GroupAddImagesScreen extends StatelessWidget {
   }
 
   void _selectImage(BuildContext context, String? id) {
-    Provider.of<GroupAddImagesBloc>(context).switchSelection(id);
+    Provider.of<GroupAddImagesBloc>(context, listen: false).switchSelection(id);
   }
 
   void _addImages(context) {
-    Provider.of<GroupAddImagesBloc>(context).addImages();
+    Provider.of<GroupAddImagesBloc>(context, listen: false).addImages();
     Application.router.pop(context);
   }
 }

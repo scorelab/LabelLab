@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildTopNav(BuildContext context) {
-    final _authState = Provider.of<AuthState>(context);
+    final _authState = Provider.of<AuthState>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildUserDetails(BuildContext context) {
-    final _authState = Provider.of<AuthState>(context);
+    final _authState = Provider.of<AuthState>(context, listen: false);
     if (_authState.isAuthenticated) {
       User user = _authState.user!;
       return Card(
@@ -143,7 +143,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _goToPage(BuildContext context, int page) {
-    Provider.of<PageController>(context).animateToPage(
+    Provider.of<PageController>(context, listen: false).animateToPage(
       page,
       duration: Duration(milliseconds: 420),
       curve: ElasticOutCurve(),

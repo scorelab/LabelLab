@@ -38,7 +38,10 @@ class ProjectMoreImagesScreen extends StatelessWidget {
                       ),
                       onTap: () => _gotoViewImage(
                         context,
-                        Provider.of<ProjectMoreImagesBloc>(context).projectId,
+                        Provider.of<ProjectMoreImagesBloc>(
+                          context,
+                          listen: false,
+                        ).projectId,
                         image.id,
                       ),
                     );
@@ -54,7 +57,7 @@ class ProjectMoreImagesScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {
-      Provider.of<ProjectMoreImagesBloc>(context).refresh();
+      Provider.of<ProjectMoreImagesBloc>(context, listen: false).refresh();
     });
   }
 }

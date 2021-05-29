@@ -91,8 +91,8 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                       : TextButton(
                           child: Text("Upload"),
                           onPressed: () async {
-                            Provider.of<ClassifyBloc>(context).classifyImage(
-                                uploadWithCompression!
+                            Provider.of<ClassifyBloc>(context, listen: false)
+                                .classifyImage(uploadWithCompression!
                                     ? await _compressImage(state.image!)
                                     : state.image);
                           },
@@ -127,7 +127,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
         TextButton(
           child: Text("Retry"),
           onPressed: () {
-            Provider.of<ClassifyBloc>(context).retry();
+            Provider.of<ClassifyBloc>(context, listen: false).retry();
           },
         ),
       ],
@@ -146,7 +146,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
           TextButton(
             child: Text("Cancel"),
             onPressed: () {
-              Provider.of<ClassifyBloc>(context).cancel();
+              Provider.of<ClassifyBloc>(context, listen: false).cancel();
               Application.router.pop(context);
             },
           ),
@@ -159,7 +159,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
     _imagePicker.getImage(source: source).then((image) async {
       if (image != null) {
         File imageFile = File(image.path);
-        Provider.of<ClassifyBloc>(context).setImage(imageFile);
+        Provider.of<ClassifyBloc>(context, listen: false).setImage(imageFile);
       } else {
         Application.router.pop(context);
       }
