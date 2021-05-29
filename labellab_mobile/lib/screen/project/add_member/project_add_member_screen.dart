@@ -52,14 +52,15 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
                         onChange: _searchUser,
                       ),
                       SizedBox(height: 8),
-                      RaisedButton(
-                        elevation: 0,
-                        color: Theme.of(context).accentColor,
-                        colorBrightness: Brightness.dark,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          primary: Theme.of(context).accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
                         child: Text("Search"),
                         onPressed: () => _searchUser(_controller.text),
                       ),

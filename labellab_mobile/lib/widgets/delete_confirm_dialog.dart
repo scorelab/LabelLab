@@ -17,11 +17,11 @@ class DeleteConfirmDialog extends StatelessWidget {
       elevation: 8,
       content: Text("This can't be undone. Are you sure?"),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: new Text("Cancel"),
           onPressed: onCancel,
         ),
-        FlatButton(
+        TextButton(
           child: new Text("Delete"),
           onPressed: onConfirm,
         ),

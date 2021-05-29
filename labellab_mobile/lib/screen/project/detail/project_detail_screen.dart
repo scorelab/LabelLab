@@ -85,7 +85,7 @@ class ProjectDetailScreen extends StatelessWidget {
                                 child: Row(
                                   children: <Widget>[
                                     _state.project!.images!.length > 8
-                                        ? FlatButton(
+                                        ? TextButton(
                                             child: Text("More"),
                                             onPressed: () =>
                                                 _gotoMoreImagesScreen(
@@ -315,7 +315,7 @@ class ProjectDetailScreen extends StatelessWidget {
                             layoutBuilder: (topChild, topChildKey, bottomChild,
                                 bottomChildKey) {
                               return Stack(
-                                overflow: Overflow.visible,
+                                clipBehavior: Clip.none,
                                 alignment: Alignment.center,
                                 children: <Widget>[
                                   Positioned(
@@ -366,7 +366,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 "Groups",
                 style: Theme.of(context).textTheme.headline6,
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: Icon(Icons.add),
                 label: Text("Add"),
                 onPressed: () => _showAddEditGroupsModel(context, null),
@@ -413,9 +413,9 @@ class ProjectDetailScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Labels",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: Icon(Icons.add),
                 label: Text("Add"),
                 onPressed: () => _showAddEditLabelModel(context),
@@ -465,9 +465,9 @@ class ProjectDetailScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Models",
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.headline6,
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: Icon(Icons.add),
                 label: Text("Add"),
                 onPressed: () => _showAddEditModelPrompt(context),
@@ -544,7 +544,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 "Members",
                 style: Theme.of(context).textTheme.headline6,
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: Icon(Icons.add),
                 label: Text("Add"),
                 onPressed: () => _gotoAddMemberScreen(context, project!),
@@ -771,8 +771,7 @@ class ProjectDetailScreen extends StatelessWidget {
         });
   }
 
-  void _showAddEditLabelModel(BuildContext baseContext,
-      {String? projectId, Label? label}) {
+  void _showAddEditLabelModel(BuildContext baseContext, {Label? label}) {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {

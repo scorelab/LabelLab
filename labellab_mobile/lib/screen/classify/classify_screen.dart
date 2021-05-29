@@ -88,7 +88,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                   ),
                   state.isClassifing
                       ? Container()
-                      : FlatButton(
+                      : TextButton(
                           child: Text("Upload"),
                           onPressed: () async {
                             Provider.of<ClassifyBloc>(context).classifyImage(
@@ -102,7 +102,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
                   ),
                   state.isClassifing
                       ? Container()
-                      : FlatButton(
+                      : TextButton(
                           child: Text("Cancel"),
                           onPressed: () {
                             Application.router.pop(context);
@@ -124,7 +124,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
     return Column(
       children: <Widget>[
         Text(error is DioError ? error.message.toString() : error.toString()),
-        FlatButton(
+        TextButton(
           child: Text("Retry"),
           onPressed: () {
             Provider.of<ClassifyBloc>(context).retry();
@@ -143,7 +143,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
           SizedBox(
             height: 24,
           ),
-          FlatButton(
+          TextButton(
             child: Text("Cancel"),
             onPressed: () {
               Provider.of<ClassifyBloc>(context).cancel();
@@ -163,7 +163,9 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
       } else {
         Application.router.pop(context);
       }
-    }).catchError((err) => print(err));
+    }).catchError((err) {
+      print(err);
+    });
   }
 
   void _gotoClassificationDetail(String? id) {

@@ -187,7 +187,9 @@ class ProjectUploadImageScreen extends StatelessWidget {
         }).listen((uploadImage) {
           uploadImages.add(uploadImage);
         });
-      }).catchError((err) => Logger().e(err.toString()));
+      }).catchError((err) {
+        Logger().e(err.toString());
+      });
     } else {
       Logger().e("Permission denied");
     }

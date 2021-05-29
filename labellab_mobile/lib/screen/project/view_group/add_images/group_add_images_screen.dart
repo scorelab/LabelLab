@@ -75,7 +75,7 @@ class GroupAddImagesScreen extends StatelessWidget {
                                                 bottomChild,
                                                 bottomChildKey) {
                                               return Stack(
-                                                overflow: Overflow.visible,
+                                                clipBehavior: Clip.none,
                                                 alignment: Alignment.center,
                                                 children: <Widget>[
                                                   Positioned(

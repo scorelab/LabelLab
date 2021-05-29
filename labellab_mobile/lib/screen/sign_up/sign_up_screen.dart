@@ -104,15 +104,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       Builder(
-                        builder: (context) => RaisedButton(
+                        builder: (context) => TextButton(
                           key: Key("signup-button"),
-                          elevation: 0,
-                          color: Theme.of(context).accentColor,
-                          colorBrightness: Brightness.dark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                          style: TextButton.styleFrom(
+                            elevation: 0,
+                            primary: Theme.of(context).accentColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: _isRegistering
                               ? Text("Signnig Up")
                               : Text("Sign Up"),
@@ -129,11 +130,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 16,
                 ),
-                FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
                   child: Text("Already have an account?"),
                   onPressed: _onSignIn,
                 ),
@@ -206,7 +209,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isRegistering = false;
         });
         print(err.message.toString());
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(err.message ?? "Sign in failed"),
           backgroundColor: Colors.redAccent,
         ));
