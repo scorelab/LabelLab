@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/login/github_signin_screen.dart';
@@ -72,15 +71,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 16,
                       ),
                       Builder(
-                        builder: (context) => RaisedButton(
+                        builder: (context) => ElevatedButton(
                           key: Key("signin-button"),
-                          elevation: 0,
-                          color: Theme.of(context).accentColor,
-                          colorBrightness: Brightness.dark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: Theme.of(context).accentColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: _isLoginIn
                               ? Text("Signing In...")
                               : Text("Sign In"),
@@ -115,11 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 16,
                 ),
-                FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
                   child: Text("or Create an account?"),
                   onPressed: _onCreateAccount,
                 ),
@@ -232,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _showAuthFailSnackbar(BuildContext context,
       {String message = "Sign in failed"}) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
       backgroundColor: Colors.redAccent,
     ));

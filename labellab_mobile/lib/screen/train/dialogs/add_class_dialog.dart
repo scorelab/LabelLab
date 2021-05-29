@@ -55,11 +55,11 @@ class _AddClassDialogState extends State<AddClassDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: new Text("Cancel"),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: new Text("Add"),
           onPressed: _currentValue != null
               ? () => Navigator.pop(context, _currentValue)

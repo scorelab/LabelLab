@@ -93,11 +93,11 @@ class _AddEditProjectScreenState extends State<AddEditLabelDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: new Text("Cancel"),
           onPressed: () => Navigator.pop(context, false),
         ),
-        FlatButton(
+        TextButton(
           child: new Text(_buttonText),
           onPressed: !_isLoading ? () => _update(context) : null,
         ),

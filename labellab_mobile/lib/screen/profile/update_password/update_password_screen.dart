@@ -16,10 +16,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   bool _isUpdating = false;
   String _currentPassword = "", _newPassword = "", _confirmNewPassword = "";
 
-  final _currentPasswordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
-  final _confirmNewPasswordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,15 +71,16 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               SizedBox(
                 height: 16,
               ),
-              RaisedButton(
+              ElevatedButton(
                 key: Key("signup-button"),
-                elevation: 0,
-                color: Theme.of(context).accentColor,
-                colorBrightness: Brightness.dark,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  primary: Theme.of(context).accentColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 16.0),
                 child: _isUpdating
                     ? Text("Updating Password")
                     : Text("Update Password"),
@@ -128,7 +125,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   }
 
   void _showError(String message) {
-    _scaffoldKey.currentState!.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.redAccent,

@@ -50,14 +50,15 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
             SizedBox(height: 10),
             Container(
               width: double.infinity,
-              child: RaisedButton(
-                elevation: 0,
-                color: Theme.of(context).accentColor,
-                colorBrightness: Brightness.dark,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  primary: Theme.of(context).accentColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 16.0),
                 child: Text('Update Info'),
                 onPressed: _updateInfo,
               ),
@@ -87,7 +88,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   }
 
   void _showError(String message) {
-    _scaffoldKey.currentState!.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.redAccent,

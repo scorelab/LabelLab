@@ -65,11 +65,11 @@ class _AddStepDialogState extends State<AddStepDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: new Text("Cancel"),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: new Text("Add"),
           onPressed: _currentValue != null
               ? () {

@@ -25,8 +25,12 @@ class AddEditGroupDialogState extends State<AddEditGroupDialog> {
   bool get _isEditing => widget.group != null;
 
   String get _buttonText => _isEditing
-      ? !_isLoading ? "Update" : "Updating..."
-      : !_isLoading ? "Create" : "Creating...";
+      ? !_isLoading
+          ? "Update"
+          : "Updating..."
+      : !_isLoading
+          ? "Create"
+          : "Creating...";
 
   @override
   void initState() {
@@ -60,11 +64,11 @@ class AddEditGroupDialogState extends State<AddEditGroupDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text("Cancel"),
           onPressed: () => Navigator.pop(context, false),
         ),
-        FlatButton(
+        TextButton(
           child: Text(_buttonText),
           onPressed: !_isLoading ? () => update() : null,
         ),

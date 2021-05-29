@@ -184,7 +184,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
               "Pre processing steps",
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
-            FlatButton.icon(
+            TextButton.icon(
               icon: Icon(Icons.add),
               label: Text("Add"),
               onPressed: () => _showAddStepsDialog(context),
@@ -296,7 +296,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
               "Layers",
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
-            FlatButton.icon(
+            TextButton.icon(
               icon: Icon(Icons.add),
               label: Text("Add"),
               onPressed: () => _showAddLayersDialog(context),
@@ -443,19 +443,23 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
     return !isTraining
         ? Row(
             children: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text("Save Model"),
-                color: Colors.black12,
+                style: TextButton.styleFrom(
+                  primary: Colors.black12,
+                ),
                 onPressed: _saveModel,
               ),
               SizedBox(width: 8),
               Expanded(
-                child: FlatButton(
+                child: TextButton(
                   child: Text(
                     "Train",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Theme.of(context).accentColor,
+                  style: TextButton.styleFrom(
+                    primary: Theme.of(context).accentColor,
+                  ),
                   onPressed: _trainModel,
                 ),
               ),

@@ -77,11 +77,11 @@ class _AddLayerDialogState extends State<AddLayerDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: new Text("Cancel"),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: new Text("Add"),
           onPressed: _currentValue != null
               ? () {

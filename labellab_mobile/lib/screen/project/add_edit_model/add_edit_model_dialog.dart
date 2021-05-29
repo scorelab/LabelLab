@@ -103,11 +103,11 @@ class _AddEditModelDialogState extends State<AddEditModelDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: new Text("Cancel"),
           onPressed: () => Navigator.pop(context, false),
         ),
-        FlatButton(
+        TextButton(
           child: new Text(_buttonText),
           onPressed: !_isLoading ? () => _update(context) : null,
         ),
