@@ -195,7 +195,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         _isRegistering = true;
       });
-      Provider.of<AuthState>(context).register(_user).then((success) {
+      Provider.of<AuthState>(context, listen: false)
+          .register(_user)
+          .then((success) {
         if (success) {
           Application.router
               .navigateTo(context, "/", replace: true, clearStack: true);

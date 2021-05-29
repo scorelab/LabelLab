@@ -35,8 +35,10 @@ class ProjectUploadImageScreen extends StatelessWidget {
                     child: Icon(Icons.done),
                     onPressed: !snapshot.data!.isLoading
                         ? () {
-                            Provider.of<ProjectUploadImageBloc>(context)
-                                .uploadImages();
+                            Provider.of<ProjectUploadImageBloc>(
+                              context,
+                              listen: false,
+                            ).uploadImages();
                           }
                         : null,
                   )
@@ -105,8 +107,10 @@ class ProjectUploadImageScreen extends StatelessWidget {
                             color: Colors.black54,
                           ),
                           onTap: () {
-                            Provider.of<ProjectUploadImageBloc>(context)
-                                .unselectImage(image);
+                            Provider.of<ProjectUploadImageBloc>(
+                              context,
+                              listen: false,
+                            ).unselectImage(image);
                           },
                         ),
                       ],
@@ -182,7 +186,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
                 metadata: result.last as Metadata?);
           }).asStream();
         }).doOnDone(() {
-          Provider.of<ProjectUploadImageBloc>(context)
+          Provider.of<ProjectUploadImageBloc>(context, listen: false)
               .selectImages(uploadImages);
         }).listen((uploadImage) {
           uploadImages.add(uploadImage);
@@ -197,7 +201,8 @@ class ProjectUploadImageScreen extends StatelessWidget {
 
   void _showImageEdit(BuildContext context, UploadImage image) async {
     final imageIndex =
-        Provider.of<ProjectUploadImageBloc>(context).getImageIndex(image);
+        Provider.of<ProjectUploadImageBloc>(context, listen: false)
+            .getImageIndex(image);
 
     File? editedFile = await ImageCropper.cropImage(
         sourcePath: image.image!.path,
@@ -230,7 +235,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
           title: 'Edit Image',
         ));
     if (editedFile != null) {
-      Provider.of<ProjectUploadImageBloc>(context)
+      Provider.of<ProjectUploadImageBloc>(context, listen: false)
           .updateImage(imageIndex, editedFile);
     }
   }

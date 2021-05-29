@@ -122,8 +122,10 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                                 InkWell(
                                   child: Icon(Icons.close, size: 16),
                                   onTap: () {
-                                    Provider.of<ModelTrainBloc>(context)
-                                        .removeClass(c);
+                                    Provider.of<ModelTrainBloc>(
+                                      context,
+                                      listen: false,
+                                    ).removeClass(c);
                                   },
                                 ),
                               ],
@@ -202,7 +204,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                               step.extra.toString()),
                           deleteIcon: Icon(Icons.cancel),
                           onDeleted: () {
-                            Provider.of<ModelTrainBloc>(context)
+                            Provider.of<ModelTrainBloc>(context, listen: false)
                                 .removeStep(step);
                           },
                         ))
@@ -315,7 +317,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
                                   : "")),
                           deleteIcon: Icon(Icons.cancel),
                           onDeleted: () {
-                            Provider.of<ModelTrainBloc>(context)
+                            Provider.of<ModelTrainBloc>(context, listen: false)
                                 .removeLayer(layer);
                           },
                         ))
@@ -486,7 +488,7 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
           return AddClassDialog(labels);
         }).then((String? labelId) {
       if (labelId != null)
-        Provider.of<ModelTrainBloc>(context).addClass(labelId);
+        Provider.of<ModelTrainBloc>(context, listen: false).addClass(labelId);
     });
   }
 
@@ -496,7 +498,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         builder: (context) {
           return AddStepDialog();
         }).then((StepDto? step) {
-      if (step != null) Provider.of<ModelTrainBloc>(context).addStep(step);
+      if (step != null)
+        Provider.of<ModelTrainBloc>(context, listen: false).addStep(step);
     });
   }
 
@@ -506,7 +509,8 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
         builder: (context) {
           return AddLayerDialog();
         }).then((LayerDto? layer) {
-      if (layer != null) Provider.of<ModelTrainBloc>(context).addLayer(layer);
+      if (layer != null)
+        Provider.of<ModelTrainBloc>(context, listen: false).addLayer(layer);
     });
   }
 
@@ -524,11 +528,11 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
       metric: _currentMetric,
     );
 
-    Provider.of<ModelTrainBloc>(context).saveModel(model);
+    Provider.of<ModelTrainBloc>(context, listen: false).saveModel(model);
   }
 
   void _trainModel() {
-    Provider.of<ModelTrainBloc>(context).trainModel();
+    Provider.of<ModelTrainBloc>(context, listen: false).trainModel();
   }
 
   List<Widget> _buildActions(BuildContext context) {
@@ -561,14 +565,17 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
   }
 
   void _deleteModel() async {
-    String modelId = Provider.of<ModelTrainBloc>(context).modelId;
+    String modelId =
+        Provider.of<ModelTrainBloc>(context, listen: false).modelId;
     await _repository.deleteModel(modelId);
     Navigator.of(context).pop(true);
   }
 
   void _gotoHistory() {
-    String projectId = Provider.of<ModelTrainBloc>(context).projectId;
-    String modelId = Provider.of<ModelTrainBloc>(context).modelId;
+    String projectId =
+        Provider.of<ModelTrainBloc>(context, listen: false).projectId;
+    String modelId =
+        Provider.of<ModelTrainBloc>(context, listen: false).modelId;
 
     Application.router
         .navigateTo(context, "/project/$projectId/history/$modelId");

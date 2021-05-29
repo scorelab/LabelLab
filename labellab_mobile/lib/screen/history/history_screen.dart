@@ -17,7 +17,8 @@ class HistoryScreen extends StatelessWidget {
       initialData: HistoryState.loading(),
       builder: (context, AsyncSnapshot<HistoryState> snapshot) {
         final HistoryState state = snapshot.data!;
-        if (state.classifications != null && state.classifications!.isNotEmpty) {
+        if (state.classifications != null &&
+            state.classifications!.isNotEmpty) {
           return Scaffold(
             appBar: AppBar(
               title: Text("History"),
@@ -33,7 +34,7 @@ class HistoryScreen extends StatelessWidget {
             ),
             body: RefreshIndicator(
               onRefresh: () async {
-                Provider.of<HistoryBloc>(context).refresh();
+                Provider.of<HistoryBloc>(context, listen: false).refresh();
               },
               child: ListView(
                 children: <Widget>[
@@ -105,7 +106,7 @@ class HistoryScreen extends StatelessWidget {
 
   void _gotoClassification(BuildContext context, String? id) {
     Application.router.navigateTo(context, "/classification/$id").then((_) {
-      Provider.of<HistoryBloc>(context).refresh();
+      Provider.of<HistoryBloc>(context, listen: false).refresh();
     });
   }
 

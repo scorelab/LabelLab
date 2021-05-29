@@ -60,8 +60,10 @@ class ProjectViewGroupScreen extends StatelessWidget {
                   ),
             floatingActionButton: _buildFloatingActionButton(
                 context,
-                Provider.of<ProjectViewGroupBloc>(context).projectId,
-                Provider.of<ProjectViewGroupBloc>(context).groupId),
+                Provider.of<ProjectViewGroupBloc>(context, listen: false)
+                    .projectId,
+                Provider.of<ProjectViewGroupBloc>(context, listen: false)
+                    .groupId),
           );
         } else {
           return Container();
@@ -104,7 +106,7 @@ class ProjectViewGroupScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/$projectId/view/$imageId")
         .whenComplete(() {
-      Provider.of<ProjectViewGroupBloc>(context).refresh();
+      Provider.of<ProjectViewGroupBloc>(context, listen: false).refresh();
     });
   }
 
@@ -117,7 +119,7 @@ class ProjectViewGroupScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/$projectId/group/$groupId/add")
         .whenComplete(() {
-      Provider.of<ProjectViewGroupBloc>(context).refresh();
+      Provider.of<ProjectViewGroupBloc>(context, listen: false).refresh();
     });
   }
 }

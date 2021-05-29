@@ -156,7 +156,7 @@ class HistorySearchScreen extends SearchDelegate {
 
   void _gotoClassification(BuildContext context, String? id) {
     Application.router.navigateTo(context, "/classification/$id").then((_) {
-      Provider.of<HistoryBloc>(context).refresh();
+      Provider.of<HistoryBloc>(context, listen: false).refresh();
     });
   }
 }

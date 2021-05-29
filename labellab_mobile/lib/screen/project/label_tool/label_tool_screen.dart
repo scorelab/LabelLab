@@ -48,11 +48,13 @@ class LabelToolScreen extends StatelessWidget {
           true,
           onTap: (selection) {
             !state.isUpdating
-                ? Provider.of<LabelToolBloc>(context).updateSelection(selection)
+                ? Provider.of<LabelToolBloc>(context, listen: false)
+                    .updateSelection(selection)
                 : null;
           },
           onDeleted: (selection) {
-            Provider.of<LabelToolBloc>(context).removeSelection(selection);
+            Provider.of<LabelToolBloc>(context, listen: false)
+                .removeSelection(selection);
           },
         ),
         state.image != null
@@ -101,7 +103,7 @@ class LabelToolScreen extends StatelessWidget {
                     sizeCallback: (Size? size) {
                   final SelectionOffset offset =
                       calculateImageOffset(state.image!, size!);
-                  Provider.of<LabelToolBloc>(context)
+                  Provider.of<LabelToolBloc>(context, listen: false)
                       .setCanvasSelectionOffset(offset);
                 }),
               ),
@@ -109,7 +111,8 @@ class LabelToolScreen extends StatelessWidget {
             onPanStart: state.currentSelection != null &&
                     state.currentSelection!.label.type == LabelType.RECTANGLE
                 ? (event) {
-                    Provider.of<LabelToolBloc>(context).startCurrentSelection(
+                    Provider.of<LabelToolBloc>(context, listen: false)
+                        .startCurrentSelection(
                       Point(event.localPosition.dx, event.localPosition.dy),
                     );
                   }
@@ -117,7 +120,8 @@ class LabelToolScreen extends StatelessWidget {
             onPanUpdate: state.currentSelection != null &&
                     state.currentSelection!.label.type == LabelType.RECTANGLE
                 ? (event) {
-                    Provider.of<LabelToolBloc>(context).updateCurrentSelection(
+                    Provider.of<LabelToolBloc>(context, listen: false)
+                        .updateCurrentSelection(
                       Point(event.localPosition.dx, event.localPosition.dy),
                     );
                   }
@@ -125,7 +129,7 @@ class LabelToolScreen extends StatelessWidget {
             onTapUp: state.currentSelection != null &&
                     state.currentSelection!.label.type == LabelType.POLYGON
                 ? (event) {
-                    Provider.of<LabelToolBloc>(context)
+                    Provider.of<LabelToolBloc>(context, listen: false)
                         .appendToCurrentSelection(
                       Point(event.localPosition.dx, event.localPosition.dy),
                     );
@@ -189,7 +193,8 @@ class LabelToolScreen extends StatelessWidget {
           Icons.save,
           "Save",
           onTap: () {
-            Provider.of<LabelToolBloc>(context).uploadSelections();
+            Provider.of<LabelToolBloc>(context, listen: false)
+                .uploadSelections();
           },
         )
       ],
@@ -204,28 +209,30 @@ class LabelToolScreen extends StatelessWidget {
           Icons.close,
           "Cancel",
           onTap: () => isUpdating
-              ? Provider.of<LabelToolBloc>(context).cancelUpdatingSelection()
-              : Provider.of<LabelToolBloc>(context).cancelCurrentSelection(),
+              ? Provider.of<LabelToolBloc>(context, listen: false)
+                  .cancelUpdatingSelection()
+              : Provider.of<LabelToolBloc>(context, listen: false)
+                  .cancelCurrentSelection(),
         ),
         LabelIconButton(
           Icons.refresh,
           "Reset",
-          onTap: () =>
-              Provider.of<LabelToolBloc>(context).resetCurrentSelection(),
+          onTap: () => Provider.of<LabelToolBloc>(context, listen: false)
+              .resetCurrentSelection(),
         ),
         LabelIconButton(
           Icons.undo,
           "Undo",
           onTap: isUndoEnable
-              ? () =>
-                  Provider.of<LabelToolBloc>(context).undoFromCurrentSelection()
+              ? () => Provider.of<LabelToolBloc>(context, listen: false)
+                  .undoFromCurrentSelection()
               : null,
         ),
         LabelIconButton(
           Icons.done,
           isUpdating ? "Update" : "Done",
-          onTap: () =>
-              Provider.of<LabelToolBloc>(context).saveCurrentSelection(),
+          onTap: () => Provider.of<LabelToolBloc>(context, listen: false)
+              .saveCurrentSelection(),
         ),
       ],
     );

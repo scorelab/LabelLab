@@ -61,12 +61,12 @@ class ProjectSearchScreen extends SearchDelegate {
                   ? Column(
                       children: state.projects!
                           .where((project) =>
-                      project.name!
-                          .toLowerCase()
-                          .contains(query.toLowerCase()) ||
-                          project.description!
-                              .toLowerCase()
-                              .contains(query.toLowerCase()))
+                              project.name!
+                                  .toLowerCase()
+                                  .contains(query.toLowerCase()) ||
+                              project.description!
+                                  .toLowerCase()
+                                  .contains(query.toLowerCase()))
                           .map((project) => ProjectItem(
                                 project,
                                 onItemTapped: () {
@@ -119,7 +119,7 @@ class ProjectSearchScreen extends SearchDelegate {
                                 onItemTapped: () {
                                   _gotoProjectDetail(context, project.id!);
                                 },
-                        shouldHaveOptions: false,
+                                shouldHaveOptions: false,
                               ))
                           .toList(),
                     )
@@ -133,7 +133,7 @@ class ProjectSearchScreen extends SearchDelegate {
     Application.router
         .navigateTo(context, "/project/detail/" + id)
         .whenComplete(() {
-      Provider.of<ProjectBloc>(context).refresh();
+      Provider.of<ProjectBloc>(context, listen: false).refresh();
     });
   }
 
@@ -141,7 +141,7 @@ class ProjectSearchScreen extends SearchDelegate {
     Application.router
         .navigateTo(context, "/project/edit/" + id)
         .whenComplete(() {
-      Provider.of<ProjectBloc>(context).refresh();
+      Provider.of<ProjectBloc>(context, listen: false).refresh();
     });
   }
 

@@ -35,7 +35,7 @@ class ProjectScreen extends StatelessWidget {
             ),
             body: RefreshIndicator(
               onRefresh: () async {
-                Provider.of<ProjectBloc>(context).refresh();
+                Provider.of<ProjectBloc>(context, listen: false).refresh();
               },
               child: ListView(
                 children: <Widget>[
@@ -106,7 +106,7 @@ class ProjectScreen extends StatelessWidget {
 
   void _gotoAddProject(BuildContext context) {
     Application.router.navigateTo(context, "/project/add").whenComplete(() {
-      Provider.of<ProjectBloc>(context).refresh();
+      Provider.of<ProjectBloc>(context, listen: false).refresh();
     });
   }
 
@@ -118,7 +118,7 @@ class ProjectScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/detail/" + id)
         .whenComplete(() {
-      Provider.of<ProjectBloc>(context).refresh();
+      Provider.of<ProjectBloc>(context, listen: false).refresh();
     });
   }
 
@@ -126,7 +126,7 @@ class ProjectScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/edit/" + id)
         .whenComplete(() {
-      Provider.of<ProjectBloc>(context).refresh();
+      Provider.of<ProjectBloc>(context, listen: false).refresh();
     });
   }
 

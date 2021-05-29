@@ -158,7 +158,9 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoginIn = true;
       });
-      Provider.of<AuthState>(context).signin(_user).then((success) {
+      Provider.of<AuthState>(context, listen: false)
+          .signin(_user)
+          .then((success) {
         if (success) {
           Application.router.pop(context);
         } else {
@@ -180,7 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoginIn = true;
     });
-    Provider.of<AuthState>(context).signInWithGoogle().then((success) {
+    Provider.of<AuthState>(context, listen: false)
+        .signInWithGoogle()
+        .then((success) {
       if (success) {
         Application.router.pop(context);
       } else {
@@ -206,7 +210,9 @@ class _LoginScreenState extends State<LoginScreen> {
       MaterialPageRoute(builder: (context) => GithubSigninScreen()),
     ).then((String? code) {
       if (code != null) {
-        Provider.of<AuthState>(context).signInWithGitHub(code).then((success) {
+        Provider.of<AuthState>(context, listen: false)
+            .signInWithGitHub(code)
+            .then((success) {
           if (success) {
             Application.router.pop(context);
           } else {
