@@ -104,9 +104,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 16,
                       ),
                       Builder(
-                        builder: (context) => TextButton(
+                        builder: (context) => ElevatedButton(
                           key: Key("signup-button"),
-                          style: TextButton.styleFrom(
+                          style: ElevatedButton.styleFrom(
                             elevation: 0,
                             primary: Theme.of(context).accentColor,
                             shape: RoundedRectangleBorder(
