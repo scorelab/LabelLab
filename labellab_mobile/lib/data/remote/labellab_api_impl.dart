@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:charts_common/src/data/series.dart';
+// import 'package:charts_common/src/data/series.dart';
 import 'package:dio/dio.dart';
 import 'package:labellab_mobile/config.dart';
 import 'package:labellab_mobile/data/interceptor/token_interceptor.dart';
@@ -305,7 +305,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> addMember(String? token, String projectId, String? email) {
+  Future<ApiResponse> addMember(
+      String? token, String projectId, String? email) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
@@ -501,7 +502,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> createGroup(String? token, String projectId, Group group) {
+  Future<ApiResponse> createGroup(
+      String? token, String projectId, Group group) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
@@ -559,7 +561,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
     //   }
     // });
 
-    return Future.delayed(Duration(seconds: 1)).then((value) => _fake.getGroup!);
+    return Future.delayed(Duration(seconds: 1))
+        .then((value) => _fake.getGroup!);
   }
 
   @override
@@ -583,7 +586,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> createLabel(String? token, String projectId, Label label) {
+  Future<ApiResponse> createLabel(
+      String? token, String projectId, Label label) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
@@ -596,7 +600,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> updateLabel(String? token, String projectId, Label label) {
+  Future<ApiResponse> updateLabel(
+      String? token, String projectId, Label label) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
@@ -630,8 +635,10 @@ class LabelLabAPIImpl extends LabelLabAPI {
     FormData data =
         FormData.fromMap({"image": await MultipartFile.fromFile(image.path)});
 
-    final response = await _dio!.post(API_URL + ENDPOINT_CLASSIFICAITON_CLASSIFY,
-        options: options, data: data);
+    final response = await _dio!.post(
+        API_URL + ENDPOINT_CLASSIFICAITON_CLASSIFY,
+        options: options,
+        data: data);
     return Classification.fromJson(response.data['body'],
         staticEndpoint: STATIC_CLASSIFICATION_URL);
   }
@@ -692,11 +699,11 @@ class LabelLabAPIImpl extends LabelLabAPI {
     });
   }
 
-  @override
-  Future<List<Series>> getResults(String? token) {
-    return Future.delayed(Duration(seconds: 2))
-        .then((value) => _fake.getResults!);
-  }
+  // @override
+  // Future<List<Series>> getResults(String? token) {
+  //   return Future.delayed(Duration(seconds: 2))
+  //       .then((value) => _fake.getResults!);
+  // }
 
   @override
   Future<List<MlModel>> getModels(String? token, String projectId) {
