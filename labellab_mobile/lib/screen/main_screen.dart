@@ -5,7 +5,7 @@ import 'package:labellab_mobile/screen/home/home_screen.dart';
 import 'package:labellab_mobile/screen/project/project_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_screen.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
-import 'package:page_view_indicator/page_view_indicator.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -74,22 +74,17 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildPageIndicator(BuildContext context, int length) {
     return SafeArea(
-      child: PageViewIndicator(
-        indicatorPadding: EdgeInsets.symmetric(horizontal: 4),
-        pageIndexNotifier: pageIndexNotifier,
-        length: length,
-        normalBuilder: (animationController, index) => Circle(
-          size: 4.0,
-          color: Colors.black87,
-        ),
-        highlightedBuilder: (animationController, index) => ScaleTransition(
-          scale: CurvedAnimation(
-            parent: animationController,
-            curve: Curves.ease,
-          ),
-          child: Circle(
-            size: 6.0,
-            color: Colors.black,
+      child: Container(
+        alignment: Alignment.topCenter,
+        child: SmoothPageIndicator(
+          onDotClicked: (index) => pageIndexNotifier.value = index,
+          count: length,
+          controller: _pageController,
+          effect: WormEffect(
+            activeDotColor: Colors.black,
+            dotHeight: 6.0,
+            dotColor: Colors.black45,
+            dotWidth: 6.0,
           ),
         ),
       ),
