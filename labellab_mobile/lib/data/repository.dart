@@ -24,7 +24,7 @@ import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+// import 'package:charts_flutter/flutter.dart' as charts;
 
 class Repository {
   LabelLabAPI _api;
@@ -370,13 +370,13 @@ class Repository {
     return _api.deleteModel(accessToken, modelId);
   }
 
-  Future<List<charts.Series>> getResults() {
-    try {
-      return _api.getResults(accessToken!);
-    } catch (e) {
-      return Future.error(ERROR_MESSAGE);
-    }
-  }
+  // Future<List<charts.Series>> getResults() {
+  //   try {
+  //     return _api.getResults(accessToken!);
+  //   } catch (e) {
+  //     return Future.error(ERROR_MESSAGE);
+  //   }
+  // }
 
   // Singleton
   static final Repository _respository = Repository._internal();
