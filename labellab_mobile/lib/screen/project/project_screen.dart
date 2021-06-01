@@ -138,7 +138,8 @@ class ProjectScreen extends StatelessWidget {
             name: project.name,
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
-              Provider.of<ProjectBloc>(baseContext).delete(project.id);
+              Provider.of<ProjectBloc>(baseContext, listen: false)
+                  .delete(project.id);
               Navigator.of(context).pop(true);
             },
           );

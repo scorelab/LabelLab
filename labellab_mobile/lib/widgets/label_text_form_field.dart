@@ -61,8 +61,12 @@ class _LabelTextFormFieldState extends State<LabelTextFormField> {
         textCapitalization: widget.textCapitalization,
         keyboardType: widget.keyboardType,
         obscureText: widget.isObscure ? _textShown : widget.isObscure,
-        validator: widget.validator,
-        onSaved: widget.onSaved,
+        validator: (String? value) {
+          if (value != null) widget.validator(value);
+        },
+        onSaved: (String? value) {
+          if (value != null) widget.onSaved(value);
+        },
       ),
     );
   }
