@@ -96,7 +96,8 @@ class HistoryScreen extends StatelessWidget {
             Navigator.pop(context);
           },
           onConfirm: () {
-            Provider.of<HistoryBloc>(baseContext).delete(classification.id);
+            Provider.of<HistoryBloc>(baseContext, listen: false)
+                .delete(classification.id);
             Navigator.pop(context);
           },
         );

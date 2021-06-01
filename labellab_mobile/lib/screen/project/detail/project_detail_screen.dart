@@ -732,7 +732,8 @@ class ProjectDetailScreen extends StatelessWidget {
             name: project.name,
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
-              Provider.of<ProjectDetailBloc>(baseContext).delete();
+              Provider.of<ProjectDetailBloc>(baseContext, listen: false)
+                  .delete();
               Navigator.of(context).pop(true);
             },
           );
@@ -751,7 +752,7 @@ class ProjectDetailScreen extends StatelessWidget {
             name: member.name,
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
-              Provider.of<ProjectDetailBloc>(baseContext)
+              Provider.of<ProjectDetailBloc>(baseContext, listen: false)
                   .removeUser(member.email);
               Navigator.of(context).pop(true);
             },
@@ -767,7 +768,8 @@ class ProjectDetailScreen extends StatelessWidget {
             name: label.name,
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
-              Provider.of<ProjectDetailBloc>(baseContext).deleteLabel(label.id);
+              Provider.of<ProjectDetailBloc>(baseContext, listen: false)
+                  .deleteLabel(label.id);
               Navigator.of(context).pop(true);
             },
           );
@@ -779,13 +781,13 @@ class ProjectDetailScreen extends StatelessWidget {
       context: baseContext,
       builder: (context) {
         return AddEditLabelDialog(
-          Provider.of<ProjectDetailBloc>(baseContext).projectId,
+          Provider.of<ProjectDetailBloc>(baseContext, listen: false).projectId,
           label: label,
         );
       },
     ).then((bool? isSuccess) {
       if (isSuccess!) {
-        Provider.of<ProjectDetailBloc>(baseContext).refresh();
+        Provider.of<ProjectDetailBloc>(baseContext, listen: false).refresh();
       }
     });
   }
@@ -795,13 +797,13 @@ class ProjectDetailScreen extends StatelessWidget {
       context: baseContext,
       builder: (context) {
         return AddEditGroupDialog(
-          Provider.of<ProjectDetailBloc>(baseContext).projectId,
+          Provider.of<ProjectDetailBloc>(baseContext, listen: false).projectId,
           group: group,
         );
       },
     ).then((bool? isSuccess) {
       if (isSuccess!) {
-        Provider.of<ProjectDetailBloc>(baseContext).refresh();
+        Provider.of<ProjectDetailBloc>(baseContext, listen: false).refresh();
       }
     });
   }
@@ -811,13 +813,13 @@ class ProjectDetailScreen extends StatelessWidget {
       context: baseContext,
       builder: (context) {
         return AddEditModelDialog(
-          Provider.of<ProjectDetailBloc>(baseContext).projectId,
+          Provider.of<ProjectDetailBloc>(baseContext, listen: false).projectId,
           model: model,
         );
       },
     ).then((bool? isSuccess) {
       if (isSuccess!) {
-        Provider.of<ProjectDetailBloc>(baseContext).refresh();
+        Provider.of<ProjectDetailBloc>(baseContext, listen: false).refresh();
       }
     });
   }

@@ -123,7 +123,8 @@ class ProjectViewImageScreen extends StatelessWidget {
             name: "image",
             onCancel: () => Navigator.pop(context),
             onConfirm: () {
-              Provider.of<ProjectViewImageBloc>(baseContext).delete();
+              Provider.of<ProjectViewImageBloc>(baseContext, listen: false)
+                  .delete();
               Navigator.of(context).pop(true);
             },
           );

@@ -279,7 +279,8 @@ class LabelToolScreen extends StatelessWidget {
                         return InkWell(
                           child: Chip(label: Text(label.name!)),
                           onTap: () {
-                            Provider.of<LabelToolBloc>(baseContext)
+                            Provider.of<LabelToolBloc>(baseContext,
+                                    listen: false)
                                 .selectLabel(label);
                             Navigator.pop(context);
                           },
@@ -298,12 +299,12 @@ class LabelToolScreen extends StatelessWidget {
       context: baseContext,
       builder: (context) {
         return AddEditLabelDialog(
-          Provider.of<LabelToolBloc>(baseContext).projectId,
+          Provider.of<LabelToolBloc>(baseContext, listen: false).projectId,
         );
       },
     ).then((bool? isSuccess) {
       if (isSuccess!) {
-        Provider.of<LabelToolBloc>(baseContext).refresh();
+        Provider.of<LabelToolBloc>(baseContext, listen: false).refresh();
       }
     });
   }

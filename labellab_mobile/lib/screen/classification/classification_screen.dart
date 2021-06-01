@@ -123,7 +123,8 @@ class ClassificationScreen extends StatelessWidget {
               Navigator.pop(context, false);
             },
             onConfirm: () {
-              Provider.of<ClassificationBloc>(baseContext).delete();
+              Provider.of<ClassificationBloc>(baseContext, listen: false)
+                  .delete();
               Navigator.pop(context, true);
             },
           );
