@@ -43,6 +43,7 @@ from api.helpers.image import (
 )
 from path_tracking.extract_exif import ImageMetaData
 from api.middleware.logs_decorator import record_logs
+from api.helpers.log import fetch_recent_project_logs
 
 allowed_teams = config[os.getenv("FLASK_CONFIG") or "development"].TEAMS_ALLOWED
 
@@ -184,6 +185,7 @@ class ProjectInfo(MethodView):
             
             project = find_by_project_id(project_id)
             project['members'] = get_projectmembers(project_id)
+            project['logs'] = fetch_recent_project_logs(project_id)
             response = {
                 "success": True,
                 "msg": "Project found",

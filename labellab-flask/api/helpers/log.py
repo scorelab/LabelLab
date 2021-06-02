@@ -27,6 +27,11 @@ def fetch_all_entity_logs(project_id, entity_type, entity_id):
   ).order_by(desc('timestamp')).all()
   return list(map(lambda log: to_json(log), logs))
 
+# Fetch last 5 logs of a project
+def fetch_recent_project_logs(project_id):
+  logs = Log.query.filter_by(project_id=project_id).order_by(desc('timestamp')).limit(5)
+  return list(map(lambda log: to_json(log), logs))
+
 # Save a log to db
 def save_log(log):
   db.session.add(log)
