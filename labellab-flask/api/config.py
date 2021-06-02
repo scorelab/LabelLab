@@ -20,6 +20,8 @@ class Config:
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh"]
     LABELS_ALLOWED = ["bbox","polygon"]
     TEAMS_ALLOWED = ["labels","images","image labelling","models"]
+    CATEGORIES_ALLOWED = ["general","labels","images","image labelling","models","misc"]
+    ENTITY_TYPES_ALLOWED = ["label","image", "model"]
     @staticmethod
     def init_app(app):
         pass
