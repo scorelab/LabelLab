@@ -20,12 +20,14 @@ from api.helpers.label import (
     delete_by_id as delete_label,
     update_label
 )
+from api.middleware.logs_decorator import record_logs
 
 allowed_labels = config[os.getenv("FLASK_CONFIG") or "development"].LABELS_ALLOWED
 
 class CreateLabel(MethodView):
     """This class creates a new Label."""
     @jwt_required
+    @record_logs
     def post(self, project_id):
         """
         Handle POST request for this view.
@@ -168,6 +170,7 @@ class LabelInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @record_logs
     def delete(self, label_id, project_id):
 
         current_user = get_jwt_identity()
@@ -206,6 +209,7 @@ class LabelInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @record_logs
     def put(self, label_id, project_id):
         """Handle PUT request for this view. Url --> /api/v1/Label/<int:label_id>/<int:project_id>"""
         # getting JSON data from request

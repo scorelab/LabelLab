@@ -28,6 +28,7 @@ from api.helpers.projectmember import (
     delete_by_user_id_team_id, 
     count_users_in_team
 )
+from api.middleware.logs_decorator import record_logs
             
 allowed_teams = config[os.getenv("FLASK_CONFIG") or "development"].TEAMS_ALLOWED
 
@@ -98,6 +99,7 @@ class TeamInfo(MethodView):
             return make_response(jsonify(response)), 500
     
     @jwt_required
+    @record_logs
     def delete(self, project_id, team_id):
         """Handle DELETE request for this view. Url --> /api/v1/team/team_info/<int:project_id>/<int:team_id>"""
         current_user = get_jwt_identity()
@@ -131,6 +133,7 @@ class TeamInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @record_logs
     def put(self, project_id, team_id):
         """Handle PUT request for this view. Url --> /api/v1/team/team_info/<int:project_id>/<int:team_id>"""
         # getting JSON data from request
@@ -205,6 +208,7 @@ class AddTeamMember(MethodView):
     This method adds a member to the team.
     """
     @jwt_required
+    @record_logs
     def post(self, project_id, team_id):
         """
         Handle POST request for this view.
@@ -270,6 +274,7 @@ class RemoveTeamMember(MethodView):
     This method removes a member from a team.
     """
     @jwt_required
+    @record_logs
     def post(self, project_id, team_id):
         """
         Handle POST request for this view.
