@@ -131,7 +131,7 @@ def upgrade():
     op.create_table('log',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('message', sa.String(length=120), nullable=False),
-    sa.Column('category', sa.String(length=10), nullable=False),
+    sa.Column('category', sa.String(length=20), nullable=False),
     sa.Column('entity_type', sa.String(length=10), nullable=True),
     sa.Column('entity_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
