@@ -5,7 +5,7 @@ from api.extensions import db
 class Log(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   message = db.Column(db.String(120), nullable=False)
-  category = db.Column(db.String(10), nullable=False)
+  category = db.Column(db.String(20), nullable=False)
   entity_type = db.Column(db.String(10))
   entity_id = db.Column(db.Integer)
   user_id = db.Column(db.Integer, nullable=False)
