@@ -36,10 +36,12 @@ from api.helpers.point import (
     save as save_point
 )
 from path_tracking.extract_exif import ImageMetaData
+from api.middleware.logs_decorator import record_logs
 
 class SubmitImage(MethodView):
     """This class saves a new image."""
     @jwt_required
+    @record_logs
     def post(self, project_id):
         """
         Handle POST request for this view.
@@ -194,6 +196,7 @@ class DeleteImages(MethodView):
     Url --> /api/v1/image/delete/<int:project_id>
     """
     @jwt_required
+    @record_logs
     def post(self, project_id):
         current_user = get_jwt_identity()
         roles = get_user_roles(current_user, project_id)
@@ -246,6 +249,7 @@ class UpdateLabels(MethodView):
     Url --> /api/v1/image/update/<int:image_id>/
     """
     @jwt_required
+    @record_logs
     def put(self, image_id):
         current_user = get_jwt_identity()
         post_data = request.get_json(silent=True,

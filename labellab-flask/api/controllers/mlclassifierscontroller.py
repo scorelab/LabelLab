@@ -21,12 +21,14 @@ from api.helpers.mlclassifier import (
     find_by_id as find_ml_classifier,
     find_all_by_project_id as find_ml_classifiers
 )
+from api.middleware.logs_decorator import record_logs
 
 ml_files_dir = config["development"].ML_FILES_DIR
 
 class CreateMLClassifier(MethodView):
     """This class creates a new classifier model."""
     @jwt_required
+    @record_logs
     def post(self):
         """
         Handle POST request for this view.
@@ -120,6 +122,7 @@ class MLClassifierInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @record_logs
     def delete(self, mlclassifier_id):
         try:
             if not mlclassifier_id:
@@ -146,6 +149,7 @@ class MLClassifierInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @record_logs
     def put(self, mlclassifier_id):
         # getting JSON data from request
         post_data = request.get_json(silent=True, force=True)
@@ -273,6 +277,7 @@ class Train(MethodView):
     This class trains a saved model
     """
     @jwt_required
+    @record_logs
     def post(self, mlclassifier_id):
         """Handle POST request for this view. Url --> /api/v1/mlclassifier/train/<int:mlclassifier_id>"""
         try:
@@ -381,6 +386,7 @@ class Train(MethodView):
 class Test(MethodView):
     """This class tests a trained model using an image."""
     @jwt_required
+    @record_logs
     def post(self, mlclassifier_id):
         """
         Handle POST request for this view.
@@ -435,6 +441,7 @@ class Test(MethodView):
 class Export(MethodView):
     """This class exports a model."""
     @jwt_required
+    @record_logs
     def get(self, mlclassifier_id, export_type):
         """
         Handle GET request for this view.
@@ -512,6 +519,7 @@ class Export(MethodView):
 class Upload(MethodView):
     """This class saves an uploaded model."""
     @jwt_required
+    @record_logs
     def post(self, mlclassifier_id):
         """
         Handle POST request for this view.

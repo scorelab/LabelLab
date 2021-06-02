@@ -42,6 +42,7 @@ from api.helpers.image import (
     get_path
 )
 from path_tracking.extract_exif import ImageMetaData
+from api.middleware.logs_decorator import record_logs
 
 allowed_teams = config[os.getenv("FLASK_CONFIG") or "development"].TEAMS_ALLOWED
 
@@ -200,6 +201,7 @@ class ProjectInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @record_logs
     def delete(self, project_id):
         try:
             if not project_id:
@@ -226,6 +228,7 @@ class ProjectInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @record_logs
     def put(self, project_id):
         """Handle PUT request for this view. Url --> /api/v1/project/update"""
         # getting JSON data from request
@@ -291,6 +294,7 @@ class AddProjectMember(MethodView):
     This method adds a member to the project.
     """
     @jwt_required
+    @record_logs
     def post(self, project_id):
         """
         Handle POST request for this view.
@@ -416,6 +420,7 @@ class RemoveProjectMember(MethodView):
     This method removes a member to the project.
     """
     @jwt_required
+    @record_logs
     def post(self, project_id):
         """
         Handle POST request for this view.
