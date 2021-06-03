@@ -38,6 +38,9 @@ class Routes {
   // History
   static const modelHistory = "/project/:project_id/history/:model_id";
 
+  // Backend Selection
+  static const backendSelection = "/backend-selection";
+
   static void configureRouter(FluroRouter router) {
     router.define(main, handler: mainHandler);
     router.define(login,
@@ -88,5 +91,11 @@ class Routes {
         handler: modelTrainHandler, transitionType: TransitionType.native);
     router.define(modelHistory,
         handler: modelHistoryHandler, transitionType: TransitionType.native);
+
+    router.define(
+      backendSelection,
+      handler: backendServiceSelectionHandler,
+      transitionType: TransitionType.native,
+    );
   }
 }
