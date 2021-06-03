@@ -2,7 +2,8 @@ import 'package:fluro/fluro.dart';
 import 'package:labellab_mobile/routing/route_handler.dart';
 
 class Routes {
-  static const main = "/";
+  static const init = "/";
+  static const main = "/main";
   static const login = "/login";
   static const signup = "/signup";
   static const profile = "/profile";
@@ -42,6 +43,7 @@ class Routes {
   static const backendSelection = "/backend-selection";
 
   static void configureRouter(FluroRouter router) {
+    router.define(init, handler: initHandler);
     router.define(main, handler: mainHandler);
     router.define(login,
         handler: loginHandler, transitionType: TransitionType.native);
