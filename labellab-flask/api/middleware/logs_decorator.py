@@ -205,6 +205,7 @@ def record_logs(fun):
         project_id=project_id,
         entity_type=entity_type,
         entity_id=entity_id,
+        username=user['username'],
       )
       save_log(log)
 
