@@ -44,7 +44,7 @@ class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
             ),
             SizedBox(height: 15),
             Text(
-              'For example:\nhttp://192.186.0.1:5000',
+              'For example:\nhttp://192.186.0.1:5000/',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black54,
@@ -55,7 +55,7 @@ class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
             LabelTextField(
               labelText: 'Backend URL',
               controller: _controller,
-              hintText: 'http://<ip_address>:<port_number>',
+              hintText: 'http://<ip_address>:<port_number>/',
             ),
             SizedBox(height: 10),
             Container(
