@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:labellab_mobile/screen/backend_selection/backend_selection_screen.dart';
+import 'package:labellab_mobile/screen/backend_selection/init_screen.dart';
 import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
 import 'package:labellab_mobile/screen/classification/classification_screen.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
@@ -36,6 +37,11 @@ import 'package:labellab_mobile/screen/sign_up/sign_up_screen.dart';
 import 'package:labellab_mobile/screen/train/model_train_bloc.dart';
 import 'package:labellab_mobile/screen/train/model_train_screen.dart';
 import 'package:provider/provider.dart';
+
+var initHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return InitScreen();
+});
 
 var mainHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
