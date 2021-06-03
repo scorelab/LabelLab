@@ -13,4 +13,9 @@ class BackendServiceSelector {
       return null;
     }
   }
+
+  void saveURLToLocalStorage(String url) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.setString(URL_STORAGE_KEY, url);
+  }
 }

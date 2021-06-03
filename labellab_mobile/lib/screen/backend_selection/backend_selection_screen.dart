@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/backend_selection/backend_service_selector.dart';
 import 'package:labellab_mobile/widgets/label_text_field.dart';
 
 class BackendSelectionScreen extends StatefulWidget {
@@ -61,11 +63,35 @@ class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
                   padding: EdgeInsets.symmetric(vertical: 16.0),
                 ),
                 child: Text('Save'),
-                onPressed: () {},
+                onPressed: _saveBackendURL,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _saveBackendURL() {
+    String backendUrl = _controller.text;
+    if (backendUrl.isEmpty) {
+      _showError('Please provide a URL');
+      return;
+    }
+    bool isValidUrl = Uri.parse(backendUrl).isAbsolute;
+    if (!isValidUrl) {
+      _showError('Invalid URL');
+      return;
+    }
+    BackendServiceSelector().saveURLToLocalStorage(backendUrl);
+    Application.router.navigateTo(context, '/', replace: true);
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.redAccent,
       ),
     );
   }

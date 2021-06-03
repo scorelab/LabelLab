@@ -15,13 +15,12 @@ class InitScreen extends StatelessWidget {
             String? url = snapshot.data;
             if (url == null) {
               Future.delayed(Duration(milliseconds: 200), () {
-                Application.router.pop(context);
-                Application.router.navigateTo(context, '/backend-selection');
+                Application.router
+                    .navigateTo(context, '/backend-selection', replace: true);
               });
             } else {
               Future.delayed(Duration(milliseconds: 200), () {
-                Application.router.pop(context);
-                Application.router.navigateTo(context, '/main');
+                Application.router.navigateTo(context, '/main', replace: true);
               });
             }
           }
