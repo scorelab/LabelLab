@@ -3,7 +3,7 @@ import 'dart:io';
 
 // import 'package:charts_common/src/data/series.dart';
 import 'package:dio/dio.dart';
-import 'package:labellab_mobile/config.dart';
+import 'package:labellab_mobile/data/interceptor/backend_url_interceptor.dart';
 import 'package:labellab_mobile/data/interceptor/token_interceptor.dart';
 import 'package:labellab_mobile/data/remote/dto/google_user_request.dart';
 import 'package:labellab_mobile/data/remote/dto/login_response.dart';
@@ -38,16 +38,15 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
     _dio!.interceptors.clear();
     _dio!.interceptors.add(RetryOnAuthFailInterceptor(_dio));
+    _dio!.interceptors.add(BackendUrlInterceptor(_dio));
   }
 
   /// BASE_URL - Change according to current labellab server
-  static const String BASE_URL = API_BASE_URL;
 
-  static const String API_URL = BASE_URL + "api/v1/";
-  static const String STATIC_CLASSIFICATION_URL =
-      BASE_URL + "static/uploads/classifications/";
-  static const String STATIC_IMAGE_URL = BASE_URL + "static/img/";
-  static const String STATIC_UPLOADS_URL = BASE_URL + "static/uploads/";
+  static const String API_URL = "api/v1/";
+  static String STATIC_CLASSIFICATION_URL = "static/uploads/classifications/";
+  static String STATIC_IMAGE_URL = "static/img/";
+  static String STATIC_UPLOADS_URL = "static/uploads/";
 
   // Endpoints
   static const ENDPOINT_LOGIN = "auth/login";
