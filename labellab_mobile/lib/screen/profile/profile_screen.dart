@@ -33,6 +33,9 @@ class ProfileScreen extends StatelessWidget {
                   _goToUpdatePassword(context);
                   break;
                 case 3:
+                  _goToBackendServiceSelection(context);
+                  break;
+                case 4:
                   _signOut(context);
                   break;
                 default:
@@ -52,8 +55,12 @@ class ProfileScreen extends StatelessWidget {
                 value: 2,
               ),
               PopupMenuItem<int>(
-                child: Text("Logout"),
+                child: Text("Update Backend URL"),
                 value: 3,
+              ),
+              PopupMenuItem<int>(
+                child: Text("Logout"),
+                value: 4,
               ),
             ],
           ),
@@ -153,6 +160,10 @@ class ProfileScreen extends StatelessWidget {
 
   void _goToUpdatePassword(BuildContext context) {
     Application.router.navigateTo(context, "/update-password");
+  }
+
+  void _goToBackendServiceSelection(BuildContext context) {
+    Application.router.navigateTo(context, "/backend-selection");
   }
 
   void _showChangePictureMethodSelect(BuildContext pageContext) {

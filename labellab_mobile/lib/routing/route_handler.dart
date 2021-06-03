@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
+import 'package:labellab_mobile/screen/backend_selection/backend_selection_screen.dart';
 import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
 import 'package:labellab_mobile/screen/classification/classification_screen.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
@@ -206,4 +207,9 @@ var modelHistoryHandler = Handler(
     dispose: (context, bloc) => bloc.dispose(),
     child: ModelHistoryScreen(),
   );
+});
+
+var backendServiceSelectionHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return BackendSelectionScreen();
 });
