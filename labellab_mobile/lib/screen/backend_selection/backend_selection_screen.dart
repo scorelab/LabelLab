@@ -11,7 +11,14 @@ class BackendSelectionScreen extends StatefulWidget {
 }
 
 class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
+  bool _isEditing = false;
   final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _checkIfEditing();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +69,7 @@ class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 16.0),
                 ),
-                child: Text('Save'),
+                child: Text(_isEditing ? 'Update' : 'Save'),
                 onPressed: _saveBackendURL,
               ),
             ),
@@ -70,6 +77,17 @@ class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
         ),
       ),
     );
+  }
+
+  void _checkIfEditing() async {
+    String? backendUrl =
+        await BackendServiceSelector().getBackendURLFromLocalStorage();
+    if (backendUrl != null) {
+      setState(() {
+        _isEditing = true;
+        _controller.text = backendUrl;
+      });
+    }
   }
 
   void _saveBackendURL() {
@@ -84,7 +102,11 @@ class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
       return;
     }
     BackendServiceSelector().saveURLToLocalStorage(backendUrl);
-    Application.router.navigateTo(context, '/', replace: true);
+    if (_isEditing) {
+      Application.router.pop(context);
+    } else {
+      Application.router.navigateTo(context, '/', replace: true);
+    }
   }
 
   void _showError(String message) {
