@@ -19,6 +19,7 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
+import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
@@ -68,6 +69,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_DELETE = "project/project_info";
   static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add";
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
+
+  static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
   static const ENDPOINT_IMAGE = "image";
   static const ENDPOINT_IMAGES = "images";
@@ -334,6 +337,28 @@ class LabelLabAPIImpl extends LabelLabAPI {
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
+    });
+  }
+
+  // Logs
+
+  @override
+  Future<List<Log>> getProjectActivityLogs(String? token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get('$API_URL$ENDPOINT_PROJECT_GET_ACTIVITY_LOGS/$projectId',
+            options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['data'] as List<dynamic>)
+            .map((item) => Log.fromJSON(item))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessful");
+      }
     });
   }
 

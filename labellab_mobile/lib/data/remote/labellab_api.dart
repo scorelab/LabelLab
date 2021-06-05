@@ -12,6 +12,7 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
+import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
@@ -44,6 +45,9 @@ abstract class LabelLabAPI {
   Future<ApiResponse> addMember(String? token, String projectId, String? email);
   Future<ApiResponse> removeMember(
       String? token, String projectId, String? email);
+
+  // Logs
+  Future<List<Log>> getProjectActivityLogs(String? token, String projectId);
 
   // Image
   Future<ApiResponse> uploadImage(
