@@ -51,6 +51,7 @@ def to_json(log):
     'entity_id': log.entity_id,
     'entity_type': log.entity_type,
     'user_id': log.user_id,
+    'username': log.username,
     'project_id': log.project_id,
     'timestamp': log.timestamp,
   }
