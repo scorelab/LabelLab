@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/screen/project/project_activity/local_widgets/filter_bottom_sheet.dart';
 import 'package:labellab_mobile/screen/project/project_activity/project_activity_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_activity/project_activity_state.dart';
 import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
@@ -12,6 +13,12 @@ class ProjectActivityScreen extends StatelessWidget {
         title: Text('Project Activity'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () => _openFiltersBottomSheet(context),
+            icon: Icon(Icons.settings),
+          )
+        ],
       ),
       body: StreamBuilder<ProjectActivityState>(
         initialData: ProjectActivityState.loading(),
@@ -47,6 +54,14 @@ class ProjectActivityScreen extends StatelessWidget {
   Widget _loadingIndicator(BuildContext context) {
     return LinearProgressIndicator(
       backgroundColor: Theme.of(context).canvasColor,
+    );
+  }
+
+  void _openFiltersBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (ctx) => FilterBottomSheet(),
     );
   }
 }
