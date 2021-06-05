@@ -78,6 +78,8 @@ class RecentActivityListTile extends StatelessWidget {
         return Color(0xff980000).withOpacity(0.3);
       case 'models':
         return Color(0xffCBBD00).withOpacity(0.3);
+      case 'image labelling':
+        return Color(0xfff26d5b).withOpacity(0.3);
       default:
         return Colors.black.withOpacity(0.2);
     }
@@ -93,6 +95,8 @@ class RecentActivityListTile extends StatelessWidget {
         return Color(0xff980000);
       case 'models':
         return Color(0xffCBBD00);
+      case 'image labelling':
+        return Color(0xfff26d5b);
       default:
         return Colors.black;
     }
