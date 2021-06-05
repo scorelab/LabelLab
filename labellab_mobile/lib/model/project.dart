@@ -1,5 +1,6 @@
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
+import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
@@ -14,18 +15,22 @@ class Project {
   List<Label>? labels;
   List<Group>? groups;
   List<MlModel>? models;
+  List<Log>? logs;
 
-  Project(
-      {this.id,
-      this.adminId,
-      this.name,
-      this.description,
-      this.members,
-      this.images,
-      this.labels,
-      this.groups});
+  Project({
+    this.id,
+    this.adminId,
+    this.name,
+    this.description,
+    this.members,
+    this.images,
+    this.labels,
+    this.groups,
+    this.logs,
+  });
 
-  Project.fromJson(dynamic json, {bool isDense = false, String? imageEndpoint}) {
+  Project.fromJson(dynamic json,
+      {bool isDense = false, String? imageEndpoint}) {
     id = json["id"].toString();
     adminId = json["admin_id"].toString();
     name = json["project_name"];
@@ -57,6 +62,9 @@ class Project {
     //       .map((group) => Group.fromJson(group))
     //       .toList();
     // }
+    if (json["logs"] != null && !isDense) {
+      logs = (json["logs"] as List).map((log) => Log.fromJSON(log)).toList();
+    }
   }
 
   Map<String, dynamic> toMap() {
