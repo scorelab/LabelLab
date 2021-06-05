@@ -14,6 +14,7 @@ class Routes {
   static const addProject = "/project/add";
   static const editProject = "/project/edit/:id";
   static const detailProject = "/project/detail/:id";
+  static const projectActivity = "/project/activity/:id";
   static const addMemberProject = "/project/:id/add";
   static const moreImagesProject = "/project/:id/images";
 
@@ -62,6 +63,8 @@ class Routes {
         handler: editProjectHandler, transitionType: TransitionType.native);
     router.define(detailProject,
         handler: detailProjectHandler, transitionType: TransitionType.native);
+    router.define(projectActivity,
+        handler: projectActivityHandler, transitionType: TransitionType.native);
     router.define(addMemberProject,
         handler: addMemberProjectHandler,
         transitionType: TransitionType.native);
