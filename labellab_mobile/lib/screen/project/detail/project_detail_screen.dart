@@ -14,6 +14,7 @@ import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/add_edit_group/add_edit_group.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_edit_model/add_edit_model_dialog.dart';
+import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
@@ -73,6 +74,7 @@ class ProjectDetailScreen extends StatelessWidget {
                         _state.project!.description != null
                             ? _buildInfo(context, _state.project!.description!)
                             : Container(),
+                        _buildRecentActivity(context, _state.project!),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 8, left: 16, right: 16),
@@ -234,6 +236,39 @@ class ProjectDetailScreen extends StatelessWidget {
             height: 8,
           ),
           Text(description),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentActivity(BuildContext context, Project project) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Recent Activity',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.more_horiz_rounded),
+                label: Text("More"),
+                onPressed: () => _goToProjectActivityLogs(context, project.id!),
+              ),
+            ],
+          ),
+          Container(
+            height: 170,
+            child: ListView(
+              padding: const EdgeInsets.all(0),
+              children: [
+                for (var log in project.logs!) RecentActivityListTile(log)
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -638,6 +673,14 @@ class ProjectDetailScreen extends StatelessWidget {
         child: Text("Cancel"),
       ),
     ];
+  }
+
+  void _goToProjectActivityLogs(BuildContext context, String projectId) {
+    Application.router
+        .navigateTo(context, "/project/activity/" + projectId)
+        .whenComplete(() {
+      Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
+    });
   }
 
   void _onImageAction(BuildContext context, int index) {
