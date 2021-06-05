@@ -21,6 +21,7 @@ import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_screen.dart';
 import 'package:labellab_mobile/screen/project/ml_model/history/model_history_bloc.dart';
 import 'package:labellab_mobile/screen/project/ml_model/history/model_history_screen.dart';
+import 'package:labellab_mobile/screen/project/project_activity/project_activity_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_activity/project_activity_screen.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_screen.dart';
@@ -103,7 +104,11 @@ var detailProjectHandler = Handler(
 
 var projectActivityHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return ProjectActivityScreen(params['id']!.first);
+    return Provider<ProjectActivityBloc>(
+      create: (context) => ProjectActivityBloc(params['id']!.first),
+      dispose: (context, bloc) => bloc.dispose(),
+      child: ProjectActivityScreen(),
+    );
   },
 );
 
