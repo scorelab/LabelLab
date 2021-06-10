@@ -22,7 +22,6 @@ class ProjectActivityBloc {
   void _fetchLogs() {
     _repository.getProjectActivityLogs(this._projectId).then((logs) {
       this._logs = [...logs];
-      this._logs.forEach((element) => print(element.toMap()));
       this._setState(ProjectActivityState.success(this._logs));
       this._isLoading = false;
     }).catchError((err) {

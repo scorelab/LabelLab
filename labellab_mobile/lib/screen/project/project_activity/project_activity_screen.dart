@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_activity/local_widgets/filter_bottom_sheet.dart';
 import 'package:labellab_mobile/screen/project/project_activity/project_activity_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_activity/project_activity_state.dart';
@@ -58,10 +59,16 @@ class ProjectActivityScreen extends StatelessWidget {
   }
 
   void _openFiltersBottomSheet(BuildContext context) {
+    String projectId =
+        Provider.of<ProjectActivityBloc>(context, listen: false).projectId;
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
-      builder: (ctx) => FilterBottomSheet(),
+      builder: (ctx) => Provider<ProjectDetailBloc>(
+        create: (context) => ProjectDetailBloc(projectId),
+        dispose: (context, bloc) => bloc.dispose(),
+        child: FilterBottomSheet(),
+      ),
     );
   }
 }
