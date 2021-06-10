@@ -47,6 +47,9 @@ class ProjectViewImageScreen extends StatelessWidget {
             case 1:
               _showDeleteConfirmation(context);
               break;
+            case 2:
+              _showImageLogs(context, snapshot.data!.image!.id!);
+              break;
           }
         },
         itemBuilder: (context) {
@@ -58,6 +61,10 @@ class ProjectViewImageScreen extends StatelessWidget {
             PopupMenuItem(
               value: 1,
               child: Text("Delete"),
+            ),
+            PopupMenuItem(
+              value: 2,
+              child: Text("View Logs"),
             )
           ];
         },
@@ -139,5 +146,12 @@ class ProjectViewImageScreen extends StatelessWidget {
     final String projectId =
         Provider.of<ProjectViewImageBloc>(context, listen: false).projectId;
     Application.router.navigateTo(context, "/project/$projectId/path/$imageId");
+  }
+
+  void _showImageLogs(BuildContext context, String imageId) {
+    final String projectId =
+        Provider.of<ProjectViewImageBloc>(context, listen: false).projectId;
+    Application.router
+        .navigateTo(context, "/project/activity/$projectId/image/$imageId");
   }
 }

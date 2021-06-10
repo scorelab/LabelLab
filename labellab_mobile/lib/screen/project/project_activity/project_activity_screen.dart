@@ -7,6 +7,10 @@ import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class ProjectActivityScreen extends StatelessWidget {
+  final bool entitySpecific;
+
+  ProjectActivityScreen({this.entitySpecific = false});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,10 +19,12 @@ class ProjectActivityScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         actions: [
-          IconButton(
-            onPressed: () => _openFiltersBottomSheet(context),
-            icon: Icon(Icons.settings),
-          )
+          entitySpecific
+              ? Container()
+              : IconButton(
+                  onPressed: () => _openFiltersBottomSheet(context),
+                  icon: Icon(Icons.settings),
+                )
         ],
       ),
       body: StreamBuilder<ProjectActivityState>(

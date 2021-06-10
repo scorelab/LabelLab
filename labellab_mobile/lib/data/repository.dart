@@ -247,6 +247,13 @@ class Repository {
     return _api.getMemberSpecificLogs(accessToken, projectId, userEmail);
   }
 
+  Future<List<Log>> getEntitySpecificLogs(
+      String projectId, String entityType, String entityId) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getEntitySpecificLogs(
+        accessToken, projectId, entityType, entityId);
+  }
+
   // Group
   Future<ApiResponse> createGroup(String projectId, Group group) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);

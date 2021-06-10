@@ -546,6 +546,9 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
             case 1:
               _deleteModel();
               break;
+            case 2:
+              _viewModelLogs();
+              break;
           }
         },
         itemBuilder: (context) {
@@ -558,10 +561,23 @@ class _ModelTrainScreenState extends State<ModelTrainScreen> {
               value: 1,
               child: Text("Delete"),
             ),
+            PopupMenuItem(
+              value: 2,
+              child: Text("View Logs"),
+            ),
           ];
         },
       ),
     ];
+  }
+
+  void _viewModelLogs() {
+    String projectId =
+        Provider.of<ModelTrainBloc>(context, listen: false).projectId;
+    String modelId =
+        Provider.of<ModelTrainBloc>(context, listen: false).modelId;
+    Application.router
+        .navigateTo(context, "/project/activity/$projectId/model/$modelId");
   }
 
   void _deleteModel() async {

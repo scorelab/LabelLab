@@ -479,8 +479,9 @@ class ProjectDetailScreen extends StatelessWidget {
                         onDeleted: () =>
                             _showLabelDeleteConfirmation(context, label),
                       ),
-                      onTap: () =>
+                      onLongPress: () =>
                           _showAddEditLabelModel(context, label: label),
+                      onTap: () => _goToLabelLogs(context, label.id!),
                     );
                   }).toList(),
                 )
@@ -801,6 +802,13 @@ class ProjectDetailScreen extends StatelessWidget {
             },
           );
         });
+  }
+
+  void _goToLabelLogs(BuildContext context, String labelId) {
+    String projectId =
+        Provider.of<ProjectDetailBloc>(context, listen: false).projectId;
+    Application.router
+        .navigateTo(context, "/project/activity/$projectId/label/$labelId");
   }
 
   void _showLabelDeleteConfirmation(BuildContext baseContext, Label label) {
