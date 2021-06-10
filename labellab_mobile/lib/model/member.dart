@@ -1,8 +1,9 @@
 class Member {
-  String? name, email, role, teamId, teamName, projectId;
+  String? id, name, email, role, teamId, teamName, projectId;
 
   Member(
-      {this.name,
+      {this.id,
+      this.name,
       this.email,
       this.role,
       this.teamId,
@@ -10,6 +11,7 @@ class Member {
       this.projectId});
 
   Member.fromJson(dynamic json) {
+    id = json['id'];
     name = json['name'];
     email = json['email'];
     teamId = json['team_id'].toString();
