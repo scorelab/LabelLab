@@ -48,6 +48,10 @@ abstract class LabelLabAPI {
 
   // Logs
   Future<List<Log>> getProjectActivityLogs(String? token, String projectId);
+  Future<List<Log>> getCategorySpecificLogs(
+      String? token, String projectId, String category);
+  Future<List<Log>> getMemberSpecificLogs(
+      String? token, String projectId, String userEmail);
 
   // Image
   Future<ApiResponse> uploadImage(

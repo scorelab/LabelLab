@@ -69,6 +69,10 @@ class ProjectActivityScreen extends StatelessWidget {
         dispose: (context, bloc) => bloc.dispose(),
         child: FilterBottomSheet(),
       ),
-    );
+    ).then((logs) {
+      if (logs != null) {
+        Provider.of<ProjectActivityBloc>(context, listen: false).setLogs(logs);
+      }
+    });
   }
 }
