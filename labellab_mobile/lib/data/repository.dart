@@ -237,6 +237,16 @@ class Repository {
     return _api.getProjectActivityLogs(accessToken, projectId);
   }
 
+  Future<List<Log>> getCategorySpecificLogs(String projectId, String category) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getCategorySpecificLogs(accessToken, projectId, category);
+  }
+
+  Future<List<Log>> getMemberSpecificLogs(String projectId, String userEmail) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getMemberSpecificLogs(accessToken, projectId, userEmail);
+  }
+
   // Group
   Future<ApiResponse> createGroup(String projectId, Group group) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);

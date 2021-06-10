@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/screen/project/project_activity/local_widgets/filter_dropdown.dart';
@@ -10,6 +11,7 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
+  Repository _repository = new Repository();
   int _filteringOption = 0;
   String _selectedCategory = 'all';
   String? _selectedMember;
@@ -30,7 +32,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 350,
+      height: 280,
       margin: const EdgeInsets.all(5),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
@@ -47,33 +49,44 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             if (_project != null) {
               _members =
                   _project.members!.map((member) => member.email!).toList();
+              _selectedMember = _members[0];
             }
           }
           return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Filtering Options',
-                style: Theme.of(context).textTheme.headline6,
-                textAlign: TextAlign.center,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Filtering Options',
+                    style: Theme.of(context).textTheme.headline6,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 15),
+                  FilterDropdown(_filteringOptions, _setFilteringOption),
+                  SizedBox(height: 5),
+                  _filteringOption == 1
+                      ? FilterDropdown(
+                          _categoryOptions,
+                          _setCategory,
+                          isDisabled: _filteringOption != 1,
+                        )
+                      : Container(),
+                  SizedBox(height: 5),
+                  _members.isEmpty
+                      ? Container()
+                      : _filteringOption == 2
+                          ? FilterDropdown(
+                              _members,
+                              _setSelectMember,
+                              isDisabled: _filteringOption != 2,
+                            )
+                          : Container(),
+                  SizedBox(height: 25),
+                ],
               ),
-              SizedBox(height: 15),
-              FilterDropdown(_filteringOptions, _setFilteringOption),
-              SizedBox(height: 5),
-              FilterDropdown(
-                _categoryOptions,
-                _setCategory,
-                isDisabled: _filteringOption != 1,
-              ),
-              SizedBox(height: 5),
-              _members.isEmpty
-                  ? Container()
-                  : FilterDropdown(
-                      _members,
-                      _setSelectMember,
-                      isDisabled: _filteringOption != 2,
-                    ),
-              SizedBox(height: 25),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
@@ -94,10 +107,21 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   void _applyFilteringOptions() {
-    switch (_filteringOption) {
-      case 1:
+    String projectId =
+        Provider.of<ProjectDetailBloc>(context, listen: false).projectId;
+    if (_filteringOption == 0) {
+      _repository
+          .getProjectActivityLogs(projectId)
+          .then((logs) => Navigator.of(context).pop(logs));
+    } else if (_filteringOption == 1) {
+      _repository
+          .getCategorySpecificLogs(projectId, _selectedCategory)
+          .then((logs) => Navigator.of(context).pop(logs));
+    } else {
+      _repository
+          .getMemberSpecificLogs(projectId, _selectedMember!)
+          .then((logs) => Navigator.of(context).pop(logs));
     }
-    Navigator.of(context).pop();
   }
 
   void _setFilteringOption(String value) {

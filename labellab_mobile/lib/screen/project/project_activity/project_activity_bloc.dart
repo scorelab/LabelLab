@@ -30,6 +30,11 @@ class ProjectActivityBloc {
     });
   }
 
+  void setLogs(List<Log> logs) {
+    this._logs = [...logs];
+    this._setState(ProjectActivityState.success(this._logs));
+  }
+
   _setState(ProjectActivityState state) {
     if (!_stateController.isClosed) _stateController.add(state);
   }

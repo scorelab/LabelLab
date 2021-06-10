@@ -363,6 +363,52 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<List<Log>> getCategorySpecificLogs(
+      String? token, String projectId, String category) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(
+      '$API_URL$ENDPOINT_PROJECT_GET_ACTIVITY_LOGS/$projectId/category/$category',
+      options: options,
+    )
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['data'] as List<dynamic>)
+            .map((item) => Log.fromJSON(item))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessful");
+      }
+    });
+  }
+
+  @override
+  Future<List<Log>> getMemberSpecificLogs(
+      String? token, String projectId, String userEmail) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(
+      '$API_URL$ENDPOINT_PROJECT_GET_ACTIVITY_LOGS/$projectId/user/$userEmail',
+      options: options,
+    )
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['data'] as List<dynamic>)
+            .map((item) => Log.fromJSON(item))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessful");
+      }
+    });
+  }
+
+  @override
   Future<ApiResponse> uploadImage(
       String? token, String projectId, UploadImage image) async {
     // final imageBytes = image.image.readAsBytesSync();
