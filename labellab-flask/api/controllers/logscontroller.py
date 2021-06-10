@@ -55,8 +55,8 @@ class FetchUserLogsView(MethodView):
   /api/v1/logs/<int:project_id>/user/<int:user_id>
   '''
   @jwt_required
-  def get(self, project_id, user_id):
-    user_logs = fetch_all_user_logs(project_id, user_id)
+  def get(self, project_id, user_email):
+    user_logs = fetch_all_user_logs(project_id, user_email)
     response = {
       'success': True,
       'data': user_logs,

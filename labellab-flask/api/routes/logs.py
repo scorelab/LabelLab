@@ -17,7 +17,7 @@ logs_blueprint.add_url_rule(
 )
 
 logs_blueprint.add_url_rule(
-    '/logs/<int:project_id>/user/<int:user_id>',
+    '/logs/<int:project_id>/user/<string:user_email>',
     view_func=logs_controller['fetch_user_logs'],
     methods=['GET'],
 )
