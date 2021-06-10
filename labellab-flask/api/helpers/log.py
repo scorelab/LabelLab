@@ -2,6 +2,7 @@ from sqlalchemy import desc
 
 from api.extensions import db
 from api.models.Log import Log
+from api.helpers.user import find_by_email as find_user_by_email
 
 # Fetch all logs related to a project
 def fetch_all_project_logs(project_id):
@@ -14,8 +15,9 @@ def fetch_all_category_logs(project_id, category):
   return list(map(lambda log: to_json(log), logs))
 
 # Fetch all project logs of a particular project member
-def fetch_all_user_logs(project_id, user_id):
-  logs = Log.query.filter_by(project_id=project_id, user_id=user_id).order_by(desc('timestamp')).all()
+def fetch_all_user_logs(project_id, user_email):
+  user = find_user_by_email(user_email)
+  logs = Log.query.filter_by(project_id=project_id, user_id=user.id).order_by(desc('timestamp')).all()
   return list(map(lambda log: to_json(log), logs))
 
 # Fetch all logs of a particular entity in a project
