@@ -17,6 +17,8 @@ class Routes {
   static const projectActivity = "/project/activity/:id";
   static const addMemberProject = "/project/:id/add";
   static const moreImagesProject = "/project/:id/images";
+  static const entitySpecificProjectActivity =
+      "/project/activity/:id/:entity_type/:entity_id";
 
   // Image
   static const uploadImage = "/project/:project_id/upload";
@@ -71,6 +73,11 @@ class Routes {
     router.define(moreImagesProject,
         handler: moreImagesProjectHandler,
         transitionType: TransitionType.native);
+    router.define(
+      entitySpecificProjectActivity,
+      handler: entitySpecificProjectActivityHandler,
+      transitionType: TransitionType.native,
+    );
 
     router.define(uploadImage,
         handler: uploadImageHandler, transitionType: TransitionType.native);
