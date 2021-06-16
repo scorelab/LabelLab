@@ -21,12 +21,15 @@ from api.helpers.label import (
     update_label
 )
 from api.middleware.logs_decorator import record_logs
+from api.middleware.label_access import label_only
+from api.middleware.project_member_access import project_member_only
 
 allowed_labels = config[os.getenv("FLASK_CONFIG") or "development"].LABELS_ALLOWED
 
 class CreateLabel(MethodView):
     """This class creates a new Label."""
     @jwt_required
+    @label_only
     @record_logs
     def post(self, project_id):
         """
@@ -34,20 +37,7 @@ class CreateLabel(MethodView):
         Url --> /api/v1/label/create/<int:project_id>
         """
         # getting JSON data from request
-        current_user = get_jwt_identity()
-        roles = get_user_roles(current_user, project_id)
-
-        if "admin" not in roles:
-             if "labels" not in roles:
-                print("Error occured: user not admin or has labels role")
-                response = {
-                        "success": False,
-                        "msg": "User neither has 'admin' nor 'labels' role."
-                    }
-                return make_response(jsonify(response)), 403
-
-        post_data = request.get_json(silent=True,
-                                     force=True)
+        post_data = request.get_json(silent=True, force=True)
         try:
             label_name = post_data["label_name"]
             label_type = post_data["label_type"]
@@ -95,6 +85,7 @@ class GetAllLabels(MethodView):
     """This class-based view handles fetching of all Labels in a project."""
     
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         """
         Handle GET request for this view. 
@@ -143,6 +134,7 @@ class LabelInfo(MethodView):
     Url --> /api/v1/label/label_info/<int:label_id>/<int:project_id>
     """
     @jwt_required
+    @project_member_only
     def get(self, label_id, project_id):
         try:
             if not label_id:
@@ -170,6 +162,7 @@ class LabelInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @label_only
     @record_logs
     def delete(self, label_id, project_id):
 
@@ -209,24 +202,13 @@ class LabelInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @label_only
     @record_logs
     def put(self, label_id, project_id):
         """Handle PUT request for this view. Url --> /api/v1/Label/<int:label_id>/<int:project_id>"""
         # getting JSON data from request
-        current_user = get_jwt_identity()
-        roles = get_user_roles(current_user, project_id)
 
-        if "admin" not in roles:
-             if "labels" not in roles:
-                print("Error occured: user not admin or has role of labels")
-                response = {
-                        "success": False,
-                        "msg": "User neither has 'admin' nor 'labels' role."
-                    }
-                return make_response(jsonify(response)), 403
-
-        post_data = request.get_json(silent=True,
-                                     force=True)
+        post_data = request.get_json(silent=True, force=True)
         try:
             
             label_name = post_data["label_name"]

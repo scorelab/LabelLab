@@ -37,10 +37,14 @@ from api.helpers.point import (
 )
 from path_tracking.extract_exif import ImageMetaData
 from api.middleware.logs_decorator import record_logs
+from api.middleware.image_access import image_only
+from api.middleware.image_labelling_access import image_labelling_only
+from api.middleware.project_member_access import project_member_only
 
 class SubmitImage(MethodView):
     """This class saves a new image."""
     @jwt_required
+    @image_only
     @record_logs
     def post(self, project_id):
         """
@@ -48,16 +52,6 @@ class SubmitImage(MethodView):
         Url --> /api/v1/image/create/<int:project_id>
         """
         current_user = get_jwt_identity()
-        roles = get_user_roles(current_user, project_id)
-
-        if "admin" not in roles:
-            if "images" not in roles:
-                print("Error occured: user not admin or has images role")
-                response = {
-                        "success": False,
-                        "msg": "User neither has 'admin' nor 'images' role."
-                    }
-                return make_response(jsonify(response)), 403
         try:
             images = request.files.getlist("images")
 
@@ -122,6 +116,7 @@ class GetAllImages(MethodView):
     """This class-based view handles fetching of all the images of a image."""
     
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         """
         Handle GET request for this view. 
@@ -162,6 +157,7 @@ class GetImage(MethodView):
     Url --> /api/v1/image/get_image/<int:image_id>
     """
     @jwt_required
+    @project_member_only
     def get(self, image_id):
         try:
             if not image_id:
@@ -196,21 +192,11 @@ class DeleteImages(MethodView):
     Url --> /api/v1/image/delete/<int:project_id>
     """
     @jwt_required
+    @image_only
     @record_logs
     def post(self, project_id):
-        current_user = get_jwt_identity()
-        roles = get_user_roles(current_user, project_id)
-
-        if "admin" not in roles:
-            if "images" not in roles:
-                print("Error occured: user not admin or has images role")
-                response = {
-                        "success": False,
-                        "msg": "User neither has 'admin' nor 'images' role."
-                    }
-                return make_response(jsonify(response)), 403
-        post_data = request.get_json(silent=True,
-                                     force=True)
+        
+        post_data = request.get_json(silent=True, force=True)
 
         try:
             images_id = post_data["images"]

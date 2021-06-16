@@ -10,6 +10,7 @@ from api.helpers.log import (
   fetch_all_user_logs,
   fetch_all_entity_logs,
 )
+from api.middleware.project_member_access import project_member_only
 
 allowed_categories = config[os.getenv("FLASK_CONFIG") or "development"].CATEGORIES_ALLOWED
 allowed_entity_types = config[os.getenv("FLASK_CONFIG") or "development"].ENTITY_TYPES_ALLOWED
@@ -20,6 +21,7 @@ class FetchProjectLogsView(MethodView):
   /api/v1/logs/<int:project_id>
   '''
   @jwt_required
+  @project_member_only
   def get(self, project_id):
     project_logs = fetch_all_project_logs(project_id)
     response = {
@@ -34,6 +36,7 @@ class FetchCategoryLogsView(MethodView):
   /api/v1/logs/<int:project_id>/category/<string:category>
   '''
   @jwt_required
+  @project_member_only
   def get(self, project_id, category):
     if category not in allowed_categories:
       response = {
@@ -69,6 +72,7 @@ class FetchEntityLogsView(MethodView):
   /api/v1/logs/<int:project_id>/entity/<string:entity_type>/<int:entity_id>
   '''
   @jwt_required
+  @project_member_only
   def get(self, project_id, entity_type, entity_id):
     if entity_type not in allowed_entity_types:
       response = {
