@@ -39,3 +39,9 @@ projectsprint.add_url_rule(
     view_func=projectscontroller.projectController["get_coordinates"], 
     methods=["GET"]
 )
+
+projectsprint.add_url_rule(
+    "/project/leave/<int:project_id>",
+    view_func=projectscontroller.projectController["leave_project"], 
+    methods=["GET"]
+)
