@@ -45,3 +45,15 @@ projectsprint.add_url_rule(
     view_func=projectscontroller.projectController["leave_project"], 
     methods=["GET"]
 )
+
+projectsprint.add_url_rule(
+    "/project/make_admin/<int:project_id>",
+    view_func=projectscontroller.projectController["make_admin"], 
+    methods=["POST"]
+)
+
+projectsprint.add_url_rule(
+    "/project/remove_admin/<int:project_id>",
+    view_func=projectscontroller.projectController["remove_admin"], 
+    methods=["POST"]
+)

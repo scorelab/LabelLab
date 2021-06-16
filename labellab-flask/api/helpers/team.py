@@ -77,6 +77,10 @@ def delete_by_role(role):
     Team.query.filter_by(role=role).delete()
     db.session.commit()
 
+def find_admin_team_of_project(project_id):
+    team = Team.query.filter_by(project_id=project_id, role='admin').first()
+    return team_schema.dump(team).data
+
 def save(team):
     """
     Save a team to the database.

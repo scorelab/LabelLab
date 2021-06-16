@@ -74,6 +74,14 @@ def record_logs(fun):
         message = f'{user["username"]} has left the project'
         category = 'general'
 
+      if url == f'/api/v1/project/make_admin/{project_id}':
+        message = f'{user["username"]} has been made admin'
+        category = 'general'
+
+      if url == f'/api/v1/project/remove_admin/{project_id}':
+        message = f'{user["username"]} has been removed as admin'
+        category = 'general'
+
       # Teams controller
       if url.startswith(f'/api/v1/team/team_info/{project_id}/'):
         team_id = kwargs.get('team_id')

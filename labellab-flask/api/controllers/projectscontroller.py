@@ -31,6 +31,7 @@ from api.helpers.team import (
     find_by_team_name, 
     delete_by_id as delete_team,
     find_all as find_all_teams_of_project,
+    find_admin_team_of_project,
 )
 from api.helpers.projectmember import (
     save as save_project_member, 
@@ -566,6 +567,107 @@ class LeaveProject(MethodView):
             }
             return make_response(jsonify(response)), 500
 
+class MakeAdmin(MethodView):
+    """
+    This class-based view for making a user admin
+    URL - api/v1/project/make_admin/<int:project_id>
+    """
+    @jwt_required
+    @admin_only
+    @record_logs
+    def post(self, project_id):
+
+        post_data = request.get_json(silent=True, force=True)
+
+        try:
+            user_email = post_data["member_email"]
+        except KeyError as err:
+            response = {
+                "success": False,
+                "msg": f'{str(err)} key is not present'
+            }
+            return make_response(jsonify(response)), 400
+
+        # Check if user exists
+        user_obj = find_by_email(user_email)
+        if not user_obj:
+            response = {
+                'success': False,
+                'msg': 'User does not exist'
+            }
+            return make_response(jsonify(response)), 404
+
+        user = to_json(user_obj)
+        roles = get_user_roles(user['id'], project_id)
+
+        # Check if user is already admin
+        if 'admin' in roles:
+            response = {
+                'success': False,
+                'msg': 'User is already admin'
+            }
+            return make_response(jsonify(response)), 400
+
+        admin_team = find_admin_team_of_project(project_id)
+
+        project_member = ProjectMember(user['id'], admin_team['id'])
+        project_member = save_project_member(project_member)
+
+        response = {
+            'success': True,
+            'msg': 'User made admin successfully',
+        }
+        return make_response(jsonify(response)), 200
+
+class RemoveAdmin(MethodView):
+    """
+    This class-based view for making a user admin
+    URL - api/v1/project/remove_admin/<int:project_id>
+    """
+    @jwt_required
+    @project_owner_only
+    @record_logs
+    def post(self, project_id):
+        post_data = request.get_json(silent=True, force=True)
+
+        try:
+            user_email = post_data["member_email"]
+        except KeyError as err:
+            response = {
+                "success": False,
+                "msg": f'{str(err)} key is not present'
+            }
+            return make_response(jsonify(response)), 400
+
+        # Check if user exists
+        user_obj = find_by_email(user_email)
+        if not user_obj:
+            response = {
+                'success': False,
+                'msg': 'User does not exist'
+            }
+            return make_response(jsonify(response)), 404
+        
+        user = to_json(user_obj)
+        roles = get_user_roles(user['id'], project_id)
+
+        # Check if user is already not admin
+        if 'admin' not in roles:
+            response = {
+                'success': False,
+                'msg': 'User is already not admin'
+            }
+            return make_response(jsonify(response)), 400
+
+        admin_team = find_admin_team_of_project(project_id)
+        delete_by_user_id_team_id(user['id'], admin_team['id'])
+
+        response = {
+            'success': True,
+            'msg': 'User removed as admin',
+        }
+        return make_response(jsonify(response)), 200
+
 projectController = {
     "createproject": CreateProject.as_view("createproject"),
     "get_all_projects": GetAllProjects.as_view("get_all_projects"),
@@ -574,4 +676,6 @@ projectController = {
     "remove_project_member": RemoveProjectMember.as_view("remove_project_member"),
     "get_coordinates": GetCoordinates.as_view("get_coordinates"),
     "leave_project": LeaveProject.as_view("leave_project"),
+    "make_admin": MakeAdmin.as_view("make_admin"),
+    "remove_admin": RemoveAdmin.as_view("remove_admin"),
 }
