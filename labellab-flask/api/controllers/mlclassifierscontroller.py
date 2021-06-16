@@ -22,6 +22,8 @@ from api.helpers.mlclassifier import (
     find_all_by_project_id as find_ml_classifiers
 )
 from api.middleware.logs_decorator import record_logs
+from api.middleware.model_access import model_only
+from api.middleware.project_member_access import project_member_only
 
 ml_files_dir = config["development"].ML_FILES_DIR
 
@@ -196,6 +198,7 @@ class MLClassifierInfo(MethodView):
 class GetAllModels(MethodView):
     """This class gets all models related to a particular project."""
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         """Handle GET request for this view. Url --> /api/v1/mlclassifier/all/<int:project_id>"""
         try:
@@ -236,6 +239,7 @@ class GetAllModels(MethodView):
 class fetchTrainedModels(MethodView):
     """This class gets all trained models related to a particular project."""
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         """Handle GET request for this view. Url --> /api/v1/mlclassifier/trained/<int:project_id>"""
         try:

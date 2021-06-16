@@ -16,10 +16,12 @@ from api.helpers.analytics import (
     get_label_data,
     get_label_counts
 )
+from api.middleware.project_member_access import project_member_only
 
 class TimeLabel(MethodView):
     """This class shows the time dependency of a label after being created."""
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         """
         Handle GET request for this view.
@@ -75,6 +77,7 @@ class CountLabel(MethodView):
     """This class-based view handles fetching the info of a label data."""
     
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         """
         Handle GET request for this view. 

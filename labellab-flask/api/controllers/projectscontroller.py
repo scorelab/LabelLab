@@ -44,6 +44,9 @@ from api.helpers.image import (
 from path_tracking.extract_exif import ImageMetaData
 from api.middleware.logs_decorator import record_logs
 from api.helpers.log import fetch_recent_project_logs
+from api.middleware.project_member_access import project_member_only
+from api.middleware.project_admin_access import admin_only
+from api.middleware.project_owner_access import project_owner_only
 
 allowed_teams = config[os.getenv("FLASK_CONFIG") or "development"].TEAMS_ALLOWED
 
@@ -174,6 +177,7 @@ class ProjectInfo(MethodView):
     Url --> /api/v1/project/project_info/<int:project_id>
     """
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         try:
             if not project_id:
@@ -203,6 +207,7 @@ class ProjectInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @project_owner_only
     @record_logs
     def delete(self, project_id):
         try:
@@ -230,6 +235,7 @@ class ProjectInfo(MethodView):
             return make_response(jsonify(response)), 500
 
     @jwt_required
+    @admin_only
     @record_logs
     def put(self, project_id):
         """Handle PUT request for this view. Url --> /api/v1/project/update"""
@@ -296,6 +302,7 @@ class AddProjectMember(MethodView):
     This method adds a member to the project.
     """
     @jwt_required
+    @admin_only
     @record_logs
     def post(self, project_id):
         """
@@ -303,18 +310,7 @@ class AddProjectMember(MethodView):
         Url --> /api/v1/project/add_project_member/<int:project_id>
         """
         # getting JSON data from request
-        post_data = request.get_json(silent=True,
-                                     force=True)
-        current_user = get_jwt_identity()
-        roles = get_user_roles(current_user, project_id)
-
-        if "admin" not in roles:
-            print("Error occured: user not admin")
-            response = {
-                    "success": False,
-                    "msg": "User not admin."
-                }
-            return make_response(jsonify(response)), 403
+        post_data = request.get_json(silent=True, force=True)
 
         try:
             user_email = post_data["member_email"]
@@ -422,6 +418,7 @@ class RemoveProjectMember(MethodView):
     This method removes a member to the project.
     """
     @jwt_required
+    @admin_only
     @record_logs
     def post(self, project_id):
         """
@@ -429,18 +426,7 @@ class RemoveProjectMember(MethodView):
         Url --> /api/v1/project/remove_project_member/<int:project_id>
         """
         # getting JSON data from request
-        post_data = request.get_json(silent=True,
-                                     force=True)
-        current_user = get_jwt_identity()
-        roles = get_user_roles(current_user, project_id)
-
-        if "admin" not in roles:
-            print("Error occured: user not admin")
-            response = {
-                    "success": False,
-                    "msg": "User not admin."
-                }
-            return make_response(jsonify(response)), 403
+        post_data = request.get_json(silent=True, force=True)
 
         try:
             user_email = post_data["member_email"]
@@ -493,8 +479,8 @@ class GetCoordinates(MethodView):
     This class-based view handles fetching of all the coordinates for polylines
     fillings.
     """
-    
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         """Handle GET request for this view. Url ---> /api/v1/project/polylines/<int:project_id>"""
         
