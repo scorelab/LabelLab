@@ -29,7 +29,8 @@ from api.helpers.user import (
 from api.helpers.team import (
     save as save_team, 
     find_by_team_name, 
-    delete_by_id as delete_team
+    delete_by_id as delete_team,
+    find_all as find_all_teams_of_project,
 )
 from api.helpers.projectmember import (
     save as save_project_member, 
@@ -190,6 +191,7 @@ class ProjectInfo(MethodView):
             project = find_by_project_id(project_id)
             project['members'] = get_projectmembers(project_id)
             project['logs'] = fetch_recent_project_logs(project_id)
+            project['teams'] = find_all_teams_of_project(project_id)
             response = {
                 "success": True,
                 "msg": "Project found",
@@ -523,11 +525,53 @@ class GetCoordinates(MethodView):
 
             return make_response(jsonify(response)), 500
 
+class LeaveProject(MethodView):
+    """
+    This class-based view leaving a project
+    """
+    @jwt_required
+    @project_member_only
+    @record_logs
+    def get(self, project_id):
+        try:
+            user_id = get_jwt_identity()
+            user = find_by_user_id(user_id)
+
+            project = find_by_project_id(project_id)
+            if user_id == project['admin_id']:
+                response = {
+                    'success': False,
+                    'msg': 'Cannot leave own project',
+                }
+                return make_response(jsonify(response)), 401
+
+            team_ids = get_teams_of_user_in_project(user['id'], project_id)
+
+            for id in team_ids:
+                delete_by_user_id_team_id(user['id'], id)
+                project_members = count_users_in_team(id)
+                if project_members==0:
+                    delete_team(id)
+
+            response = {
+                'success': True,
+                'msg': 'Project left',
+            }
+            return make_response(jsonify(response)), 200
+        except Exception as err:
+            print(err)
+            response = {
+                'success': False,
+                'msg': 'Something went wrong',
+            }
+            return make_response(jsonify(response)), 500
+
 projectController = {
     "createproject": CreateProject.as_view("createproject"),
     "get_all_projects": GetAllProjects.as_view("get_all_projects"),
     "project": ProjectInfo.as_view("project"),
     "add_project_member": AddProjectMember.as_view("add_project_member"),
     "remove_project_member": RemoveProjectMember.as_view("remove_project_member"),
-    "get_coordinates": GetCoordinates.as_view("get_coordinates")
+    "get_coordinates": GetCoordinates.as_view("get_coordinates"),
+    "leave_project": LeaveProject.as_view("leave_project"),
 }

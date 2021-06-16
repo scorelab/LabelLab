@@ -70,6 +70,10 @@ def record_logs(fun):
         message = f'{member.username} has been removed from the project'
         category = 'general'
 
+      if url == f'/api/v1/project/leave/{project_id}':
+        message = f'{user["username"]} has left the project'
+        category = 'general'
+
       # Teams controller
       if url.startswith(f'/api/v1/team/team_info/{project_id}/'):
         team_id = kwargs.get('team_id')
@@ -213,5 +217,5 @@ def record_logs(fun):
     
     except Exception as e:
       print('Error - ', str(e))
-      return result
+      return fun(*args, **kwargs)
   return wrap
