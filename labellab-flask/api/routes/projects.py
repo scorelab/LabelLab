@@ -53,6 +53,12 @@ projectsprint.add_url_rule(
 )
 
 projectsprint.add_url_rule(
+    "/project/member_roles/<int:project_id>",
+    view_func=projectscontroller.projectController["member_roles"], 
+    methods=["GET"]
+)
+
+projectsprint.add_url_rule(
     "/project/remove_admin/<int:project_id>",
     view_func=projectscontroller.projectController["remove_admin"], 
     methods=["POST"]
