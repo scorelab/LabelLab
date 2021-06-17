@@ -1,6 +1,7 @@
 import os
 from flask.views import MethodView
 from flask import make_response, request, jsonify, current_app
+from flask.wrappers import Response
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity,
@@ -668,6 +669,22 @@ class RemoveAdmin(MethodView):
         }
         return make_response(jsonify(response)), 200
 
+class ProjectMemberRoles(MethodView):
+    """
+    This class-based view is for getting all roles of a project member
+    URL - api/v1/project/member_roles/<int:project_id>
+    """
+    @jwt_required
+    @project_member_only
+    def get(self, project_id):
+        user_id = get_jwt_identity()
+        roles = get_user_roles(user_id, project_id)
+        response = {
+            'success': True,
+            'body': roles,
+        }
+        return make_response(jsonify(response)), 200
+
 projectController = {
     "createproject": CreateProject.as_view("createproject"),
     "get_all_projects": GetAllProjects.as_view("get_all_projects"),
@@ -678,4 +695,5 @@ projectController = {
     "leave_project": LeaveProject.as_view("leave_project"),
     "make_admin": MakeAdmin.as_view("make_admin"),
     "remove_admin": RemoveAdmin.as_view("remove_admin"),
+    "member_roles": ProjectMemberRoles.as_view("member_roles"),
 }
