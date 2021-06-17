@@ -34,6 +34,15 @@ def fetch_recent_project_logs(project_id):
   logs = Log.query.filter_by(project_id=project_id).order_by(desc('timestamp')).limit(5)
   return list(map(lambda log: to_json(log), logs))
 
+# Fetch last 5 logs of a team
+def fetch_recent_team_logs(project_id, role):
+  if role == 'admin':
+    category = 'general'
+  else:
+    category = role
+  logs = Log.query.filter_by(project_id=project_id, category=category).order_by(desc('timestamp')).limit(5)
+  return list(map(lambda log: to_json(log), logs))
+
 # Save a log to db
 def save_log(log):
   db.session.add(log)

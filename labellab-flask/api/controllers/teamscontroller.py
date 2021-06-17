@@ -13,7 +13,8 @@ from api.helpers.user import (
     get_user_roles,
     get_data,
     find_by_email,
-    to_json
+    to_json,
+    get_team_members,
 )
 from api.helpers.team import (
     find_all,
@@ -28,6 +29,7 @@ from api.helpers.projectmember import (
     delete_by_user_id_team_id, 
     count_users_in_team
 )
+from api.helpers.log import fetch_recent_team_logs
 from api.middleware.logs_decorator import record_logs
 from api.middleware.project_admin_access import admin_only
 from api.middleware.project_member_access import project_member_only
@@ -88,6 +90,9 @@ class TeamInfo(MethodView):
                     "msg": "Team not found."
                 }
                 return make_response(jsonify(response)), 404
+
+            team['logs'] = fetch_recent_team_logs(team['project_id'], team['role'])
+            team['members'] = get_team_members(team['id'])
             
             response = {
                 "success": True,

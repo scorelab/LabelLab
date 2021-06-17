@@ -169,6 +169,14 @@ def get_projectmembers(project_id):
         all_members.append(data)
     return all_members
 
+def get_team_members(team_id):
+    members = ProjectMember.query.filter_by(team_id=team_id).all()
+    members_data = []
+    for member in members:
+        curr_user = find_by_user_id(member.user_id)
+        members_data.append(curr_user)
+    return members_data
+
 def save(user):
     """
     Save a user to the database.
