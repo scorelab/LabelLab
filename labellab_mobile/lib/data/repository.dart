@@ -200,6 +200,11 @@ class Repository {
     return _api.getMemberRoles(accessToken, projectId);
   }
 
+  Future<ApiResponse> leaveProject(String projectId) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.leaveProject(accessToken, projectId);
+  }
+
   // Teams
   Future<ApiResponse> createTeam(
       String projectId, Map<String, dynamic> postData) {

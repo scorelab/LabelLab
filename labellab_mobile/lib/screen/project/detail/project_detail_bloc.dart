@@ -27,6 +27,10 @@ class ProjectDetailBloc {
     _repository.deleteProject(projectId);
   }
 
+  void leave() {
+    _repository.leaveProject(projectId);
+  }
+
   void removeUser(String? email) {
     _repository.removeMember(projectId, email).then((_) {
       refresh();

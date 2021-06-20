@@ -69,6 +69,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add_project_member";
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
   static const ENDPOINT_PROJECT_MEMBER_ROLES = "project/member_roles";
+  static const ENDPOINT_PROJECT_LEAVE = "project/leave";
 
   static const ENDPOINT_TEAM_CREATE = "project/add_project_member";
 
@@ -365,6 +366,19 @@ class LabelLabAPIImpl extends LabelLabAPI {
         return [];
       }
     });
+  }
+
+  @override
+  Future<ApiResponse> leaveProject(String? token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(API_URL + ENDPOINT_PROJECT_LEAVE + "/$projectId", options: options)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   // Teams

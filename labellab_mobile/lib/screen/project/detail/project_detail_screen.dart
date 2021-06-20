@@ -14,6 +14,7 @@ import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_edit_model/add_edit_model_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_team_dialog/add_team_dialog.dart';
+import 'package:labellab_mobile/widgets/leave_project_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
@@ -197,7 +198,24 @@ class ProjectDetailScreen extends StatelessWidget {
   List<Widget> _buildActions(BuildContext context, Project? project) {
     if (project == null) return [];
     if (!Provider.of<ProjectDetailBloc>(context, listen: false)
-        .hasAdminAccess()) return [];
+        .hasAdminAccess())
+      return [
+        PopupMenuButton<int>(
+          onSelected: (int value) {
+            if (value == 0) {
+              _showLeaveProjectConfirmation(context, project);
+            }
+          },
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: 0,
+                child: Text("Leave"),
+              ),
+            ];
+          },
+        )
+      ];
     return [
       PopupMenuButton<int>(
         onSelected: (int value) {
@@ -799,6 +817,27 @@ class ProjectDetailScreen extends StatelessWidget {
             onConfirm: () {
               Provider.of<ProjectDetailBloc>(baseContext, listen: false)
                   .delete();
+              Navigator.of(context).pop(true);
+            },
+          );
+        }).then((success) {
+      if (success != null && success) {
+        Navigator.pop(baseContext);
+      }
+    });
+  }
+
+  void _showLeaveProjectConfirmation(
+      BuildContext baseContext, Project project) {
+    showDialog<bool>(
+        context: baseContext,
+        builder: (context) {
+          return LeaveProjectConfirmDialog(
+            name: project.name,
+            onCancel: () => Navigator.pop(context),
+            onConfirm: () {
+              Provider.of<ProjectDetailBloc>(baseContext, listen: false)
+                  .leave();
               Navigator.of(context).pop(true);
             },
           );
