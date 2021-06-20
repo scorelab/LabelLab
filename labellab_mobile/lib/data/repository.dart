@@ -218,6 +218,18 @@ class Repository {
     return _api.getTeamDetails(accessToken, projectId, teamId);
   }
 
+  Future<ApiResponse> addTeamMember(
+      String projectId, String teamId, String memberEmail) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.addTeamMember(accessToken, projectId, teamId, memberEmail);
+  }
+
+  Future<ApiResponse> removeTeamMember(
+      String projectId, String teamId, String memberEmail) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.removeTeamMember(accessToken, projectId, teamId, memberEmail);
+  }
+
   // Image
   Future<ApiResponse> uploadImage(String projectId, UploadImage image) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);

@@ -54,6 +54,10 @@ abstract class LabelLabAPI {
   Future<ApiResponse> createTeam(
       String? token, String projectId, Map<String, dynamic> postData);
   Future<Team> getTeamDetails(String? token, String projectId, String teamId);
+  Future<ApiResponse> addTeamMember(
+      String? token, String projectId, String teamId, String memberEmail);
+  Future<ApiResponse> removeTeamMember(
+      String? token, String projectId, String teamId, String memberEmail);
 
   // Logs
   Future<List<Log>> getProjectActivityLogs(String? token, String projectId);
