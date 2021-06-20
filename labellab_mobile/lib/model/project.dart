@@ -2,7 +2,7 @@ import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/member.dart';
-import 'package:labellab_mobile/model/group.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 
 class Project {
@@ -13,7 +13,7 @@ class Project {
   List<Member>? members;
   List<Image>? images;
   List<Label>? labels;
-  List<Group>? groups;
+  List<Team>? teams;
   List<MlModel>? models;
   List<Log>? logs;
 
@@ -25,7 +25,7 @@ class Project {
     this.members,
     this.images,
     this.labels,
-    this.groups,
+    this.teams,
     this.logs,
   });
 
@@ -40,6 +40,7 @@ class Project {
           .map(
             (member) => Member.fromJson(member),
           )
+          .toSet()
           .toList();
     }
     if (json["images"] != null && !isDense) {
@@ -56,12 +57,12 @@ class Project {
           )
           .toList();
     }
-    groups = [];
-    // if (json["groups"] != null && !isDense) {
-    //   groups = (json["groups"] as List)
-    //       .map((group) => Group.fromJson(group))
-    //       .toList();
-    // }
+    if (json["teams"] != null && !isDense) {
+      print(json["teams"]);
+      teams = (json["teams"] as List)
+          .map((team) => Team.fromJson(team, isDense: true))
+          .toList();
+    }
     if (json["logs"] != null && !isDense) {
       logs = (json["logs"] as List).map((log) => Log.fromJSON(log)).toList();
     }
