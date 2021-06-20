@@ -184,9 +184,10 @@ class Repository {
     return _api.deleteProject(accessToken, id);
   }
 
-  Future<ApiResponse?> addMember(String projectId, String? email) {
+  Future<ApiResponse?> addMember(
+      String projectId, String email, String teamname, String role) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
-    return _api.addMember(accessToken, projectId, email);
+    return _api.addMember(accessToken, projectId, email, teamname, role);
   }
 
   Future<ApiResponse?> removeMember(String projectId, String? email) {

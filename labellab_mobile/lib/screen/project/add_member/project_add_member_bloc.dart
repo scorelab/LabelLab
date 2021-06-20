@@ -34,10 +34,10 @@ class ProjectAddMemberBloc {
     _searchSubject.add(email);
   }
 
-  void addMember(String? email) {
+  void addMember(String email, String teamname, String role) {
     if (_isLoading) return;
     _isLoading = true;
-    _repository.addMember(projectId, email).then((res) {
+    _repository.addMember(projectId, email, teamname, role).then((res) {
       _isLoading = false;
       _setState(ProjectAddMemberState.successSet(_users));
     }).catchError((err) {
