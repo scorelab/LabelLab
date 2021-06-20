@@ -16,6 +16,7 @@ import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
@@ -52,6 +53,7 @@ abstract class LabelLabAPI {
   // Teams
   Future<ApiResponse> createTeam(
       String? token, String projectId, Map<String, dynamic> postData);
+  Future<Team> getTeamDetails(String? token, String projectId, String teamId);
 
   // Logs
   Future<List<Log>> getProjectActivityLogs(String? token, String projectId);

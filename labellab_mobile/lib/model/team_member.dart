@@ -5,7 +5,7 @@ class TeamMember {
   String? username;
 
   TeamMember.fromJson(dynamic json) {
-    id = json['id'];
+    id = json['id'].toString();
     name = json['name'];
     email = json['email'];
     username = json['username'];

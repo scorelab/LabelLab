@@ -445,7 +445,7 @@ class ProjectDetailScreen extends StatelessWidget {
               ? Wrap(
                   spacing: 8,
                   children: teams.map((team) {
-                    return TeamItem(team);
+                    return TeamItem(team, _gotoViewTeam);
                   }).toList(),
                 )
               : _buildEmptyPlaceholder(context, "No Teams yet"),
@@ -788,10 +788,9 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _gotoViewGroup(
-      BuildContext context, String? projectId, String? groupId) {
+  void _gotoViewTeam(BuildContext context, String? projectId, String? teamId) {
     Application.router
-        .navigateTo(context, "/project/$projectId/group/$groupId")
+        .navigateTo(context, "/project/$projectId/team/$teamId")
         .whenComplete(() {
       Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
     });

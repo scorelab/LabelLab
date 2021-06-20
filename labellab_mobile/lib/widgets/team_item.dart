@@ -3,13 +3,14 @@ import 'package:labellab_mobile/model/team.dart';
 
 class TeamItem extends StatelessWidget {
   final Team team;
+  final Function onClick;
 
-  TeamItem(this.team);
+  TeamItem(this.team, this.onClick);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => onClick(context, team.projectId!, team.id!),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey[300],

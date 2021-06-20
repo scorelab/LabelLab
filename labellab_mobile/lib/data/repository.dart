@@ -20,6 +20,7 @@ import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
@@ -210,6 +211,11 @@ class Repository {
       String projectId, Map<String, dynamic> postData) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.createTeam(accessToken, projectId, postData);
+  }
+
+  Future<Team> getTeamDetails(String projectId, String teamId) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getTeamDetails(accessToken, projectId, teamId);
   }
 
   // Image

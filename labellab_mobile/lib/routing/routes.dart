@@ -20,6 +20,9 @@ class Routes {
   static const entitySpecificProjectActivity =
       "/project/activity/:id/:entity_type/:entity_id";
 
+  // Team
+  static const viewTeamDetails = "/project/:project_id/team/:team_id";
+
   // Image
   static const uploadImage = "/project/:project_id/upload";
   static const viewImage = "/project/:project_id/view/:image_id";
@@ -78,6 +81,9 @@ class Routes {
       handler: entitySpecificProjectActivityHandler,
       transitionType: TransitionType.native,
     );
+
+    router.define(viewTeamDetails,
+        handler: viewTeamDetailsHandler, transitionType: TransitionType.native);
 
     router.define(uploadImage,
         handler: uploadImageHandler, transitionType: TransitionType.native);

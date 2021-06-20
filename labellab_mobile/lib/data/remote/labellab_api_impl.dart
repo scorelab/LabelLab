@@ -24,6 +24,7 @@ import 'package:labellab_mobile/model/mapper/ml_model_mapper.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/upload_image.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
@@ -72,6 +73,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_LEAVE = "project/leave";
 
   static const ENDPOINT_TEAM_CREATE = "project/add_project_member";
+  static const ENDPOINT_TEAM_GET_DETAILS = "team/team_info";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -382,6 +384,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   // Teams
+
   @override
   Future<ApiResponse> createTeam(
       String? token, String projectId, Map<String, dynamic> postData) {
@@ -395,6 +398,19 @@ class LabelLabAPIImpl extends LabelLabAPI {
       return ApiResponse(response.data);
     }).catchError((err) =>
             throw new Exception(jsonDecode(err.response.toString())['msg']));
+  }
+
+  @override
+  Future<Team> getTeamDetails(String? token, String projectId, String teamId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(API_URL + ENDPOINT_TEAM_GET_DETAILS + "/$projectId/$teamId",
+            options: options)
+        .then((response) {
+      return Team.fromJson(response.data['body']);
+    });
   }
 
   // Logs

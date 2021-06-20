@@ -23,6 +23,8 @@ import 'package:labellab_mobile/screen/project/ml_model/history/model_history_bl
 import 'package:labellab_mobile/screen/project/ml_model/history/model_history_screen.dart';
 import 'package:labellab_mobile/screen/project/project_activity/project_activity_bloc.dart';
 import 'package:labellab_mobile/screen/project/project_activity/project_activity_screen.dart';
+import 'package:labellab_mobile/screen/project/team_details/team_details_bloc.dart';
+import 'package:labellab_mobile/screen/project/team_details/team_details_screen.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_bloc.dart';
 import 'package:labellab_mobile/screen/project/upload_image/project_upload_image_screen.dart';
 import 'package:labellab_mobile/screen/project/view_group/add_images/group_add_images_bloc.dart';
@@ -132,6 +134,17 @@ var addMemberProjectHandler = Handler(
     create: (context) => ProjectAddMemberBloc(params['id']!.first),
     dispose: (context, bloc) => bloc.dispose(),
     child: ProjectAddMemberScreen(),
+  );
+});
+
+var viewTeamDetailsHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  final projectId = params['project_id']!.first;
+  final teamId = params['team_id']!.first;
+  return Provider<TeamDetailsBloc>(
+    create: (context) => TeamDetailsBloc(projectId, teamId),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: TeamDetailsScreen(),
   );
 });
 
