@@ -9,8 +9,12 @@ import 'package:provider/provider.dart';
 
 class ProjectActivityScreen extends StatelessWidget {
   final bool entitySpecific;
+  final bool categorySpecific;
 
-  ProjectActivityScreen({this.entitySpecific = false});
+  ProjectActivityScreen({
+    this.entitySpecific = false,
+    this.categorySpecific = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,7 @@ class ProjectActivityScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         actions: [
-          entitySpecific
+          (entitySpecific || categorySpecific)
               ? Container()
               : IconButton(
                   onPressed: () => _openFiltersBottomSheet(context),

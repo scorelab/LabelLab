@@ -6,6 +6,7 @@ import 'package:labellab_mobile/screen/project/team_details/team_details_state.d
 class TeamDetailsBloc {
   String? _projectId;
   String? _teamId;
+  List<String>? _roles;
   Repository _repository = Repository();
 
   TeamDetailsBloc(this._projectId, this._teamId) {
@@ -18,11 +19,14 @@ class TeamDetailsBloc {
 
   void _loadTeam() {
     _repository.getTeamDetails(this._projectId!, this._teamId!).then((team) {
-      this._setState(TeamDetailsState.success(
-        this._projectId,
-        this._teamId,
-        team,
-      ));
+      _repository.getMemberRoles(this._projectId!).then((roles) {
+        this._roles = roles;
+        this._setState(TeamDetailsState.success(
+          this._projectId,
+          this._teamId,
+          team,
+        ));
+      });
     }).catchError((err) {
       print(err);
       this._setState(TeamDetailsState.error(err.toString()));
@@ -41,5 +45,9 @@ class TeamDetailsBloc {
 
   _setState(TeamDetailsState state) {
     if (!_stateController.isClosed) _stateController.add(state);
+  }
+
+  bool isAdmin() {
+    return this._roles!.contains('admin');
   }
 }

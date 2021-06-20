@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/team_member.dart';
-import 'package:labellab_mobile/model/user.dart';
-import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
+import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +40,12 @@ class TeamDetailsScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         _getTeamOverview(context, _state.team!),
-                        _getButton(context, 'View Activity Log', () {}),
+                        _getButton(
+                          context,
+                          'View Activity Log',
+                          () => _goToTeamLogs(context, _state.team!.projectId!,
+                              _state.team!.role!),
+                        ),
                         _getButton(context, 'View Chatroom', () {}),
                         _recentTeamActivity(context, _state.team!.logs!),
                         _buildMembers(context, _state.team!.members!),
@@ -146,11 +150,13 @@ class TeamDetailsScreen extends StatelessWidget {
             'Members',
             style: Theme.of(context).textTheme.headline6,
           ),
-          TextButton.icon(
-            icon: Icon(Icons.add),
-            label: Text("Add"),
-            onPressed: () {},
-          )
+          Provider.of<TeamDetailsBloc>(context, listen: false).isAdmin()
+              ? TextButton.icon(
+                  icon: Icon(Icons.add),
+                  label: Text("Add"),
+                  onPressed: () {},
+                )
+              : Container()
         ],
       ),
       for (var member in members)
@@ -164,11 +170,14 @@ class TeamDetailsScreen extends StatelessWidget {
               // }
             },
             itemBuilder: (context) {
+              if (Provider.of<TeamDetailsBloc>(context, listen: false)
+                      .isAdmin() &&
+                  _currentUser!.email != member.email) return [];
               return [
                 PopupMenuItem(
                   value: 0,
                   child: Text("Remove"),
-                )
+                ),
               ];
             },
           ),
@@ -176,7 +185,7 @@ class TeamDetailsScreen extends StatelessWidget {
     ]);
   }
 
-  Widget _getButton(BuildContext context, String text, Function() onPressed) {
+  Widget _getButton(BuildContext context, String text, Function onPressed) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 7.5),
       width: double.infinity,
@@ -190,7 +199,7 @@ class TeamDetailsScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 16.0),
         ),
         child: Text(text),
-        onPressed: onPressed,
+        onPressed: () => onPressed(),
       ),
     );
   }
@@ -216,5 +225,15 @@ class TeamDetailsScreen extends StatelessWidget {
       default:
         return Icons.people;
     }
+  }
+
+  void _goToTeamLogs(BuildContext context, String projectId, String role) {
+    String? category;
+    if (role == 'admin')
+      category = 'general';
+    else
+      category = role;
+    Application.router
+        .navigateTo(context, "/team/activity/$projectId/$category");
   }
 }
