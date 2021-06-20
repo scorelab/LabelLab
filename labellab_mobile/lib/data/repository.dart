@@ -199,6 +199,13 @@ class Repository {
     return _api.getMemberRoles(accessToken, projectId);
   }
 
+  // Teams
+  Future<ApiResponse> createTeam(
+      String projectId, Map<String, dynamic> postData) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.createTeam(accessToken, projectId, postData);
+  }
+
   // Image
   Future<ApiResponse> uploadImage(String projectId, UploadImage image) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);

@@ -47,6 +47,10 @@ abstract class LabelLabAPI {
       String? token, String projectId, String? email);
   Future<List<String>> getMemberRoles(String? token, String projectId);
 
+  // Teams
+  Future<ApiResponse> createTeam(
+      String? token, String projectId, Map<String, dynamic> postData);
+
   // Logs
   Future<List<Log>> getProjectActivityLogs(String? token, String projectId);
   Future<List<Log>> getCategorySpecificLogs(

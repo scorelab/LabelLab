@@ -70,6 +70,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
   static const ENDPOINT_PROJECT_MEMBER_ROLES = "project/member_roles";
 
+  static const ENDPOINT_TEAM_CREATE = "project/add_project_member";
+
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
   static const ENDPOINT_IMAGE = "image";
@@ -360,6 +362,22 @@ class LabelLabAPIImpl extends LabelLabAPI {
         return [];
       }
     });
+  }
+
+  // Teams
+  @override
+  Future<ApiResponse> createTeam(
+      String? token, String projectId, Map<String, dynamic> postData) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .post(API_URL + ENDPOINT_TEAM_CREATE + "/$projectId",
+            options: options, data: postData)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   // Logs
