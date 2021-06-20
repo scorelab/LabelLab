@@ -194,6 +194,11 @@ class Repository {
     return _api.removeMember(accessToken, projectId, email);
   }
 
+  Future<List<String>> getMemberRoles(String projectId) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getMemberRoles(accessToken, projectId);
+  }
+
   // Image
   Future<ApiResponse> uploadImage(String projectId, UploadImage image) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);

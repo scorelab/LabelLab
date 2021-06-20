@@ -43,7 +43,6 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   /// BASE_URL - Change according to current labellab server
-
   static const String API_URL = "api/v1/";
   static String STATIC_CLASSIFICATION_URL = "static/uploads/classifications/";
   static String STATIC_IMAGE_URL = "static/img/";
@@ -69,6 +68,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_DELETE = "project/project_info";
   static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add";
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
+  static const ENDPOINT_PROJECT_MEMBER_ROLES = "project/member_roles";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -337,6 +337,28 @@ class LabelLabAPIImpl extends LabelLabAPI {
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<List<String>> getMemberRoles(String? token, String projectId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(
+      API_URL + ENDPOINT_PROJECT_MEMBER_ROLES + "/$projectId",
+      options: options,
+    )
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List)
+            .map((role) => role.toString())
+            .toList();
+      } else {
+        return [];
+      }
     });
   }
 
