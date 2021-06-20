@@ -24,4 +24,12 @@ class Team {
           (json['logs'] as List).map((member) => Log.fromJSON(member)).toList();
     }
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": this.id,
+      "name": this.name,
+      "role": this.role,
+    };
+  }
 }
