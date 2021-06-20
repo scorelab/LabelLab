@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart' as LabelLab;
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
@@ -12,15 +11,14 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
-import 'package:labellab_mobile/screen/project/add_edit_group/add_edit_group.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_edit_model/add_edit_model_dialog.dart';
+import 'package:labellab_mobile/screen/project/add_team_dialog/add_team_dialog.dart';
 import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
-import 'package:labellab_mobile/widgets/group_item.dart';
 import 'package:labellab_mobile/widgets/team_item.dart';
 import 'package:provider/provider.dart';
 
@@ -129,7 +127,7 @@ class ProjectDetailScreen extends StatelessWidget {
                       _state.selectedImages)
                   : SliverFillRemaining(),
               _state.project != null
-                  ? _buildTeamsHeading(context)
+                  ? _buildTeamsHeading(context, _state.project!)
                   : SliverFillRemaining(),
               _state.project != null && _state.project!.teams != null
                   ? _buildTeams(
@@ -392,7 +390,7 @@ class ProjectDetailScreen extends StatelessWidget {
           );
   }
 
-  Widget _buildTeamsHeading(BuildContext context) {
+  Widget _buildTeamsHeading(BuildContext context, Project project) {
     return SliverPadding(
       padding: EdgeInsets.only(top: 8, left: 16, right: 16),
       sliver: SliverList(
@@ -409,7 +407,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   ? TextButton.icon(
                       icon: Icon(Icons.add),
                       label: Text("Add"),
-                      onPressed: () => _showAddEditGroupsModel(context, null),
+                      onPressed: () => _showAddTeamDialog(context, project),
                     )
                   : Container(),
             ],
@@ -866,14 +864,14 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _showAddEditGroupsModel(BuildContext baseContext, Group? group) {
+  void _showAddTeamDialog(BuildContext baseContext, Project project) {
+    String projectId =
+        Provider.of<ProjectDetailBloc>(baseContext, listen: false).projectId;
+    List<String> memberEmails = project.members!.map((m) => m.email!).toList();
     showDialog<bool>(
       context: baseContext,
       builder: (context) {
-        return AddEditGroupDialog(
-          Provider.of<ProjectDetailBloc>(baseContext, listen: false).projectId,
-          group: group,
-        );
+        return AddTeamDialog(projectId, memberEmails);
       },
     ).then((bool? isSuccess) {
       if (isSuccess!) {

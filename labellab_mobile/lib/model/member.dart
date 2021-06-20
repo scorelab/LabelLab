@@ -19,4 +19,9 @@ class Member {
     role = json['team_role'];
     projectId = json['project_id'].toString();
   }
+
+  bool operator ==(Object other) =>
+      identical(this, other) || (other as Member).email == email;
+
+  int get hashCode => id.hashCode;
 }
