@@ -22,6 +22,7 @@ class Routes {
 
   // Team
   static const viewTeamDetails = "/project/:project_id/team/:team_id";
+  static const teamSpecificProjectActivity = "/team/activity/:id/:category";
 
   // Image
   static const uploadImage = "/project/:project_id/upload";
@@ -76,6 +77,11 @@ class Routes {
     router.define(moreImagesProject,
         handler: moreImagesProjectHandler,
         transitionType: TransitionType.native);
+    router.define(
+      teamSpecificProjectActivity,
+      handler: teamSpecificProjectActivityHandler,
+      transitionType: TransitionType.native,
+    );
     router.define(
       entitySpecificProjectActivity,
       handler: entitySpecificProjectActivityHandler,

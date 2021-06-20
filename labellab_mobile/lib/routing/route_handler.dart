@@ -128,6 +128,19 @@ var entitySpecificProjectActivityHandler = Handler(
   },
 );
 
+var teamSpecificProjectActivityHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return Provider<ProjectActivityBloc>(
+      create: (context) => ProjectActivityBloc(
+        params['id']!.first,
+        category: params['category']!.first,
+      ),
+      dispose: (context, bloc) => bloc.dispose(),
+      child: ProjectActivityScreen(categorySpecific: true),
+    );
+  },
+);
+
 var addMemberProjectHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   return Provider<ProjectAddMemberBloc>(

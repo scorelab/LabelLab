@@ -11,11 +11,14 @@ class ProjectActivityBloc {
   bool _isLoading = false;
   List<Log> _logs = [];
 
-  ProjectActivityBloc(this._projectId, {String? entityType, String? entityId}) {
-    if (entityId == null && entityType == null) {
-      _fetchLogs();
+  ProjectActivityBloc(this._projectId,
+      {String? entityType, String? entityId, String? category}) {
+    if (category != null) {
+      _fetchCategorySpecificLogs(category);
+    } else if (entityId != null && entityType != null) {
+      _fetchEntitySpecificLogs(entityType, entityId);
     } else {
-      _fetchEntitySpecificLogs(entityType!, entityId!);
+      _fetchLogs();
     }
   }
 
@@ -38,6 +41,17 @@ class ProjectActivityBloc {
     _repository
         .getEntitySpecificLogs(this._projectId, entityType, entityId)
         .then((logs) {
+      this._logs = [...logs];
+      this._setState(ProjectActivityState.success(this._logs));
+      this._isLoading = false;
+    }).catchError((err) {
+      print(err);
+      this._setState(ProjectActivityState.error(err));
+    });
+  }
+
+  void _fetchCategorySpecificLogs(String category) {
+    _repository.getCategorySpecificLogs(projectId, category).then((logs) {
       this._logs = [...logs];
       this._setState(ProjectActivityState.success(this._logs));
       this._isLoading = false;
