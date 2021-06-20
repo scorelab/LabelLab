@@ -45,6 +45,7 @@ abstract class LabelLabAPI {
   Future<ApiResponse> addMember(String? token, String projectId, String? email);
   Future<ApiResponse> removeMember(
       String? token, String projectId, String? email);
+  Future<List<String>> getMemberRoles(String? token, String projectId);
 
   // Logs
   Future<List<Log>> getProjectActivityLogs(String? token, String projectId);

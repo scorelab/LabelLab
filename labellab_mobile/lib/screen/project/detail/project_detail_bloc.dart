@@ -13,6 +13,7 @@ class ProjectDetailBloc {
   Project? _project;
   bool _isLoading = false;
   List<String?> _selectedImages = [];
+  List<String> _roles = [];
 
   ProjectDetailBloc(this.projectId) {
     _loadProject();
@@ -89,8 +90,11 @@ class ProjectDetailBloc {
       this._project = project;
       _repository.getModels(projectId).then((models) {
         this._project!.models = models;
-        _setState(ProjectDetailState.success(_project));
-        _isLoading = false;
+        _repository.getMemberRoles(projectId).then((roles) {
+          this._roles = roles;
+          _setState(ProjectDetailState.success(_project));
+          _isLoading = false;
+        });
       });
     }).catchError((err) {
       if (err is DioError) {
@@ -109,5 +113,26 @@ class ProjectDetailBloc {
 
   void dispose() {
     _stateController.close();
+  }
+
+  bool hasAdminAccess() {
+    return this._roles.contains('admin');
+  }
+
+  bool hasImagesAccess() {
+    return this._roles.contains('admin') || this._roles.contains('images');
+  }
+
+  bool hasModelsAccess() {
+    return this._roles.contains('admin') || this._roles.contains('models');
+  }
+
+  bool hasLabelsAccess() {
+    return this._roles.contains('admin') || this._roles.contains('labels');
+  }
+
+  bool hasImageLabellingAccess() {
+    return this._roles.contains('admin') ||
+        this._roles.contains('image labelling');
   }
 }

@@ -20,6 +20,7 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
+import 'package:labellab_mobile/widgets/group_item.dart';
 import 'package:labellab_mobile/widgets/team_item.dart';
 import 'package:provider/provider.dart';
 
@@ -196,31 +197,32 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   List<Widget> _buildActions(BuildContext context, Project? project) {
-    return project != null
-        ? [
-            PopupMenuButton<int>(
-              onSelected: (int value) {
-                if (value == 0) {
-                  _gotoEditProject(context, project.id!);
-                } else if (value == 1) {
-                  _showProjectDeleteConfirmation(context, project);
-                }
-              },
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    value: 0,
-                    child: Text("Edit"),
-                  ),
-                  PopupMenuItem(
-                    value: 1,
-                    child: Text("Delete"),
-                  ),
-                ];
-              },
+    if (project == null) return [];
+    if (!Provider.of<ProjectDetailBloc>(context, listen: false)
+        .hasAdminAccess()) return [];
+    return [
+      PopupMenuButton<int>(
+        onSelected: (int value) {
+          if (value == 0) {
+            _gotoEditProject(context, project.id!);
+          } else if (value == 1) {
+            _showProjectDeleteConfirmation(context, project);
+          }
+        },
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: 0,
+              child: Text("Edit"),
             ),
-          ]
-        : [];
+            PopupMenuItem(
+              value: 1,
+              child: Text("Delete"),
+            ),
+          ];
+        },
+      ),
+    ];
   }
 
   Widget _buildInfo(BuildContext context, String description) {
@@ -402,11 +404,14 @@ class ProjectDetailScreen extends StatelessWidget {
                 "Teams",
                 style: Theme.of(context).textTheme.headline6,
               ),
-              TextButton.icon(
-                icon: Icon(Icons.add),
-                label: Text("Add"),
-                onPressed: () => _showAddEditGroupsModel(context, null),
-              ),
+              Provider.of<ProjectDetailBloc>(context, listen: false)
+                      .hasAdminAccess()
+                  ? TextButton.icon(
+                      icon: Icon(Icons.add),
+                      label: Text("Add"),
+                      onPressed: () => _showAddEditGroupsModel(context, null),
+                    )
+                  : Container(),
             ],
           ),
         ]),
@@ -445,11 +450,14 @@ class ProjectDetailScreen extends StatelessWidget {
                 "Labels",
                 style: Theme.of(context).textTheme.headline6,
               ),
-              TextButton.icon(
-                icon: Icon(Icons.add),
-                label: Text("Add"),
-                onPressed: () => _showAddEditLabelModel(context),
-              ),
+              Provider.of<ProjectDetailBloc>(context, listen: false)
+                      .hasLabelsAccess()
+                  ? TextButton.icon(
+                      icon: Icon(Icons.add),
+                      label: Text("Add"),
+                      onPressed: () => _showAddEditLabelModel(context),
+                    )
+                  : Container(),
             ],
           ),
         ]),
@@ -471,11 +479,18 @@ class ProjectDetailScreen extends StatelessWidget {
                       child: Chip(
                         label: Text(label.name!),
                         deleteIcon: Icon(Icons.cancel),
-                        onDeleted: () =>
-                            _showLabelDeleteConfirmation(context, label),
+                        onDeleted: Provider.of<ProjectDetailBloc>(context,
+                                    listen: false)
+                                .hasLabelsAccess()
+                            ? () => _showLabelDeleteConfirmation(context, label)
+                            : null,
                       ),
-                      onLongPress: () =>
-                          _showAddEditLabelModel(context, label: label),
+                      onLongPress:
+                          Provider.of<ProjectDetailBloc>(context, listen: false)
+                                  .hasLabelsAccess()
+                              ? () =>
+                                  _showAddEditLabelModel(context, label: label)
+                              : null,
                       onTap: () => _goToLabelLogs(context, label.id!),
                     );
                   }).toList(),
@@ -498,11 +513,14 @@ class ProjectDetailScreen extends StatelessWidget {
                 "Models",
                 style: Theme.of(context).textTheme.headline6,
               ),
-              TextButton.icon(
-                icon: Icon(Icons.add),
-                label: Text("Add"),
-                onPressed: () => _showAddEditModelPrompt(context),
-              ),
+              Provider.of<ProjectDetailBloc>(context, listen: false)
+                      .hasModelsAccess()
+                  ? TextButton.icon(
+                      icon: Icon(Icons.add),
+                      label: Text("Add"),
+                      onPressed: () => _showAddEditModelPrompt(context),
+                    )
+                  : Container(),
             ],
           ),
         ]),
@@ -534,13 +552,18 @@ class ProjectDetailScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   Icon(_getIcon(model.source)),
-                                  IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: () => _showAddEditModelPrompt(
-                                      context,
-                                      model: model,
-                                    ),
-                                  ),
+                                  Provider.of<ProjectDetailBloc>(context,
+                                              listen: false)
+                                          .hasModelsAccess()
+                                      ? IconButton(
+                                          icon: Icon(Icons.edit),
+                                          onPressed: () =>
+                                              _showAddEditModelPrompt(
+                                            context,
+                                            model: model,
+                                          ),
+                                        )
+                                      : Container(),
                                 ],
                               ),
                             ],
@@ -557,7 +580,7 @@ class ProjectDetailScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                _buildEmptyPlaceholder(context, "No images yet"),
+                _buildEmptyPlaceholder(context, "No models yet"),
               ]),
             ),
           );
@@ -575,11 +598,14 @@ class ProjectDetailScreen extends StatelessWidget {
                 "Members",
                 style: Theme.of(context).textTheme.headline6,
               ),
-              TextButton.icon(
-                icon: Icon(Icons.add),
-                label: Text("Add"),
-                onPressed: () => _gotoAddMemberScreen(context, project!),
-              ),
+              Provider.of<ProjectDetailBloc>(context, listen: false)
+                      .hasAdminAccess()
+                  ? TextButton.icon(
+                      icon: Icon(Icons.add),
+                      label: Text("Add"),
+                      onPressed: () => _gotoAddMemberScreen(context, project!),
+                    )
+                  : Container(),
             ],
           ),
         ]),
@@ -611,7 +637,9 @@ class ProjectDetailScreen extends StatelessWidget {
             return ListTile(
               title: Text(member.name!),
               subtitle: Text(member.email!),
-              trailing: _currentUser!.email != member.email
+              trailing: (Provider.of<ProjectDetailBloc>(context, listen: false)
+                          .hasAdminAccess() &&
+                      _currentUser!.email != member.email)
                   ? PopupMenuButton<int>(
                       onSelected: (value) {
                         if (value == 0) {
