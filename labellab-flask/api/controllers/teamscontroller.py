@@ -229,7 +229,7 @@ class AddTeamMember(MethodView):
                 }
                 return make_response(jsonify(response)), 404
             
-            project_member = save_projectmember(user['id'], team['id'])
+            project_member = save_projectmember(ProjectMember(user['id'], team['id']))
             team_new = find_by_id(project_member['team_id'])
             
             res = {

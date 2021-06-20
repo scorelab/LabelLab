@@ -3,7 +3,9 @@ import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/team_member.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/team_details/local_widgets/add_team_member_dialog.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
+import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:labellab_mobile/screen/project/team_details/team_details_bloc.dart';
@@ -154,7 +156,7 @@ class TeamDetailsScreen extends StatelessWidget {
               ? TextButton.icon(
                   icon: Icon(Icons.add),
                   label: Text("Add"),
-                  onPressed: () {},
+                  onPressed: () => _showAddMemberConfirmation(context),
                 )
               : Container()
         ],
@@ -163,24 +165,25 @@ class TeamDetailsScreen extends StatelessWidget {
         ListTile(
           title: Text(member.name!),
           subtitle: Text(member.email!),
-          trailing: PopupMenuButton<int>(
-            onSelected: (value) {
-              // if (value == 0) {
-              //   _showRemoveMemberConfirmation(context, member);
-              // }
-            },
-            itemBuilder: (context) {
-              if (Provider.of<TeamDetailsBloc>(context, listen: false)
-                      .isAdmin() &&
-                  _currentUser!.email != member.email) return [];
-              return [
-                PopupMenuItem(
-                  value: 0,
-                  child: Text("Remove"),
-                ),
-              ];
-            },
-          ),
+          trailing:
+              (Provider.of<TeamDetailsBloc>(context, listen: false).isAdmin() &&
+                      _currentUser!.email != member.email)
+                  ? PopupMenuButton<int>(
+                      onSelected: (value) {
+                        if (value == 0) {
+                          _showRemoveMemberConfirmation(context, member.email!);
+                        }
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Text("Remove"),
+                          ),
+                        ];
+                      },
+                    )
+                  : null,
         )
     ]);
   }
@@ -225,6 +228,40 @@ class TeamDetailsScreen extends StatelessWidget {
       default:
         return Icons.people;
     }
+  }
+
+  void _showAddMemberConfirmation(BuildContext baseContext) {
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return AddTeamMemberDialog(
+          onCancel: () => Navigator.pop(baseContext),
+          onConfirm: (email) {
+            Provider.of<TeamDetailsBloc>(baseContext, listen: false)
+                .addTeamMember(email);
+            Navigator.of(baseContext).pop(true);
+          },
+        );
+      },
+    );
+  }
+
+  void _showRemoveMemberConfirmation(
+      BuildContext baseContext, String memberEmail) {
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return DeleteConfirmDialog(
+          name: 'member',
+          onCancel: () => Navigator.pop(context),
+          onConfirm: () {
+            Provider.of<TeamDetailsBloc>(baseContext, listen: false)
+                .removeTeamMember(memberEmail);
+            Navigator.of(context).pop(true);
+          },
+        );
+      },
+    );
   }
 
   void _goToTeamLogs(BuildContext context, String projectId, String role) {

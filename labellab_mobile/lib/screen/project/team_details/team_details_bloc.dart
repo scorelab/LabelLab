@@ -50,4 +50,20 @@ class TeamDetailsBloc {
   bool isAdmin() {
     return this._roles!.contains('admin');
   }
+
+  void addTeamMember(String memberEmail) {
+    _repository
+        .addTeamMember(this._projectId!, this._teamId!, memberEmail)
+        .then((res) {
+      refresh();
+    });
+  }
+
+  void removeTeamMember(String memberEmail) {
+    _repository
+        .removeTeamMember(this._projectId!, this._teamId!, memberEmail)
+        .then((res) {
+      refresh();
+    });
+  }
 }
