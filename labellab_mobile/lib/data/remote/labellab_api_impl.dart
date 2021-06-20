@@ -66,7 +66,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_CREATE = "project/create";
   static const ENDPOINT_PROJECT_UPDATE = "project/project_info";
   static const ENDPOINT_PROJECT_DELETE = "project/project_info";
-  static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add";
+  static const ENDPOINT_PROJECT_ADD_MEMBER = "project/add_project_member";
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
   static const ENDPOINT_PROJECT_MEMBER_ROLES = "project/member_roles";
 
@@ -309,20 +309,23 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
-  Future<ApiResponse> addMember(
-      String? token, String projectId, String? email) {
+  Future<ApiResponse> addMember(String? token, String projectId, String email,
+      String teamname, String role) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     final data = {
-      "memberEmail": email,
+      "member_email": email,
+      "team_name": teamname,
+      "role": role,
     };
     return _dio!
         .post(API_URL + ENDPOINT_PROJECT_ADD_MEMBER + "/$projectId",
             options: options, data: data)
         .then((response) {
       return ApiResponse(response.data);
-    });
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
   }
 
   @override
