@@ -9,6 +9,7 @@ import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/member.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/add_edit_group/add_edit_group.dart';
@@ -19,7 +20,7 @@ import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
-import 'package:labellab_mobile/widgets/group_item.dart';
+import 'package:labellab_mobile/widgets/team_item.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
@@ -127,11 +128,11 @@ class ProjectDetailScreen extends StatelessWidget {
                       _state.selectedImages)
                   : SliverFillRemaining(),
               _state.project != null
-                  ? _buildGroupsHeading(context)
+                  ? _buildTeamsHeading(context)
                   : SliverFillRemaining(),
-              _state.project != null && _state.project!.groups != null
-                  ? _buildGroups(
-                      context, _state.project!.id, _state.project!.groups!)
+              _state.project != null && _state.project!.teams != null
+                  ? _buildTeams(
+                      context, _state.project!.id, _state.project!.teams!)
                   : SliverFillRemaining(),
               _state.project != null
                   ? _buildLabelsHeading(context)
@@ -389,7 +390,7 @@ class ProjectDetailScreen extends StatelessWidget {
           );
   }
 
-  Widget _buildGroupsHeading(BuildContext context) {
+  Widget _buildTeamsHeading(BuildContext context) {
     return SliverPadding(
       padding: EdgeInsets.only(top: 8, left: 16, right: 16),
       sliver: SliverList(
@@ -398,7 +399,7 @@ class ProjectDetailScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "Groups",
+                "Teams",
                 style: Theme.of(context).textTheme.headline6,
               ),
               TextButton.icon(
@@ -413,29 +414,23 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGroups(
-      BuildContext context, String? projectId, List<Group> groups) {
+  Widget _buildTeams(
+      BuildContext context, String? projectId, List<Team> teams) {
     return SliverPadding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        sliver: SliverList(
-          delegate: SliverChildListDelegate([
-            groups.length > 0
-                ? SliverGrid.count(
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    crossAxisCount: 2,
-                    childAspectRatio: 2,
-                    children: groups
-                        .map((group) => InkWell(
-                              child: GroupItem(group),
-                              onTap: () =>
-                                  _gotoViewGroup(context, projectId, group.id),
-                            ))
-                        .toList(),
-                  )
-                : _buildEmptyPlaceholder(context, "No Groups yet"),
-          ]),
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          teams.length > 0
+              ? Wrap(
+                  spacing: 8,
+                  children: teams.map((team) {
+                    return TeamItem(team);
+                  }).toList(),
+                )
+              : _buildEmptyPlaceholder(context, "No Teams yet"),
+        ]),
+      ),
+    );
   }
 
   Widget _buildLabelsHeading(BuildContext context) {
