@@ -49,6 +49,10 @@ abstract class LabelLabAPI {
       String? token, String projectId, String? email);
   Future<List<String>> getMemberRoles(String? token, String projectId);
   Future<ApiResponse> leaveProject(String? token, String projectId);
+  Future<ApiResponse> makeAdmin(
+      String? token, String projectId, String memberEmail);
+  Future<ApiResponse> removeAdmin(
+      String? token, String projectId, String memberEmail);
 
   // Teams
   Future<ApiResponse> createTeam(

@@ -18,6 +18,10 @@ class Team {
       members = (json['members'] as List)
           .map((member) => TeamMember.fromJson(member))
           .toList();
+    } else {
+      members = (json['team_members'] as List)
+          .map((m) => TeamMember.fromSparseJson(m))
+          .toList();
     }
     if (json['logs'] != null && !isDense) {
       logs =

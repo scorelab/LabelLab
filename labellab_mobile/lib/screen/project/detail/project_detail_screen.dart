@@ -660,6 +660,10 @@ class ProjectDetailScreen extends StatelessWidget {
                       onSelected: (value) {
                         if (value == 0) {
                           _showRemoveMemberConfirmation(context, member);
+                        } else if (value == 1) {
+                          _showMakeAdminConfirmation(context, member);
+                        } else if (value == 2) {
+                          _showRemoveAdminConfirmation(context, member);
                         }
                       },
                       itemBuilder: (context) {
@@ -667,7 +671,18 @@ class ProjectDetailScreen extends StatelessWidget {
                           PopupMenuItem(
                             value: 0,
                             child: Text("Remove"),
-                          )
+                          ),
+                          !Provider.of<ProjectDetailBloc>(context,
+                                      listen: false)
+                                  .isUserAdmin(member.id!)
+                              ? PopupMenuItem(
+                                  value: 1,
+                                  child: Text("Make Admin"),
+                                )
+                              : PopupMenuItem(
+                                  value: 2,
+                                  child: Text("Remove Admin"),
+                                ),
                         ];
                       },
                     )
@@ -861,6 +876,41 @@ class ProjectDetailScreen extends StatelessWidget {
             },
           );
         });
+  }
+
+  void _showMakeAdminConfirmation(BuildContext buildContext, Member member) {
+    showDialog<bool>(
+      context: buildContext,
+      builder: (context) {
+        return DeleteConfirmDialog(
+          name: 'admin ${member.name}',
+          positiveIntent: true,
+          onCancel: () => Navigator.pop(context),
+          onConfirm: () {
+            Provider.of<ProjectDetailBloc>(buildContext, listen: false)
+                .makeAdmin(member.email!);
+            Navigator.of(context).pop(true);
+          },
+        );
+      },
+    );
+  }
+
+  void _showRemoveAdminConfirmation(BuildContext buildContext, Member member) {
+    showDialog<bool>(
+      context: buildContext,
+      builder: (context) {
+        return DeleteConfirmDialog(
+          name: 'admin ${member.name}',
+          onCancel: () => Navigator.pop(context),
+          onConfirm: () {
+            Provider.of<ProjectDetailBloc>(buildContext, listen: false)
+                .removeAdmin(member.email!);
+            Navigator.of(context).pop(true);
+          },
+        );
+      },
+    );
   }
 
   void _goToLabelLogs(BuildContext context, String labelId) {
