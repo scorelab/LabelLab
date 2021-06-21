@@ -73,6 +73,20 @@ class ProjectDetailBloc {
     });
   }
 
+  // Used to make a member admin
+  void makeAdmin(String memberEmail) {
+    _repository.makeAdmin(projectId, memberEmail).then((_) {
+      refresh();
+    });
+  }
+
+  // Used to remove admin status from a member
+  void removeAdmin(String memberEmail) {
+    _repository.removeAdmin(projectId, memberEmail).then((_) {
+      refresh();
+    });
+  }
+
   // Used to cancel current selection
   void cancelSelection() {
     _selectedImages = [];
@@ -138,5 +152,17 @@ class ProjectDetailBloc {
   bool hasImageLabellingAccess() {
     return this._roles.contains('admin') ||
         this._roles.contains('image labelling');
+  }
+
+  bool isUserAdmin(String userId) {
+    final adminTeam =
+        this._project!.teams!.firstWhere((t) => t.role == 'admin');
+    bool isAdmin = false;
+    adminTeam.members!.forEach((mem) {
+      if (mem.id == userId) {
+        isAdmin = true;
+      }
+    });
+    return isAdmin;
   }
 }

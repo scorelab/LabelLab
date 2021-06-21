@@ -156,6 +156,7 @@ def get_projectmembers(project_id):
         team_role = team_schema.dump(member.Team).data["role"]
         team_name = team_schema.dump(member.Team).data["team_name"]
         project_id = team_schema.dump(member.Team).data["project_id"]
+        user_id = user_schema.dump(member.User).data["id"]
         name = user_schema.dump(member.User).data["name"]
         email = user_schema.dump(member.User).data["email"]
         data = {
@@ -164,7 +165,8 @@ def get_projectmembers(project_id):
             "team_name": team_name,
             "project_id": project_id,
             "name": name,
-            "email": email
+            "email": email,
+            "user_id": user_id,
         }
         all_members.append(data)
     return all_members

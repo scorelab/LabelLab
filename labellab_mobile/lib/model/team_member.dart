@@ -10,4 +10,8 @@ class TeamMember {
     email = json['email'];
     username = json['username'];
   }
+
+  TeamMember.fromSparseJson(dynamic json) {
+    id = json['user_id'].toString();
+  }
 }

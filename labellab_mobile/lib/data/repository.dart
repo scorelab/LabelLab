@@ -206,6 +206,16 @@ class Repository {
     return _api.leaveProject(accessToken, projectId);
   }
 
+  Future<ApiResponse> makeAdmin(String projectId, String memberEmail) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.makeAdmin(accessToken, projectId, memberEmail);
+  }
+
+  Future<ApiResponse> removeAdmin(String projectId, String memberEmail) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.removeAdmin(accessToken, projectId, memberEmail);
+  }
+
   // Teams
   Future<ApiResponse> createTeam(
       String projectId, Map<String, dynamic> postData) {

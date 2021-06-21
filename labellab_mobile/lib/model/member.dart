@@ -11,7 +11,7 @@ class Member {
       this.projectId});
 
   Member.fromJson(dynamic json) {
-    id = json['id'];
+    id = json['user_id'].toString();
     name = json['name'];
     email = json['email'];
     teamId = json['team_id'].toString();

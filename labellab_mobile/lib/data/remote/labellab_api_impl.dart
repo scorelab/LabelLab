@@ -71,6 +71,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_REMOVE_MEMBER = "project/remove_project_member";
   static const ENDPOINT_PROJECT_MEMBER_ROLES = "project/member_roles";
   static const ENDPOINT_PROJECT_LEAVE = "project/leave";
+  static const ENDPOINT_PROJECT_MAKE_ADMIN = "project/make_admin";
+  static const ENDPOINT_PROJECT_REMOVE_ADMIN = "project/remove_admin";
 
   static const ENDPOINT_TEAM_CREATE = "project/add_project_member";
   static const ENDPOINT_TEAM_GET_DETAILS = "team/team_info";
@@ -383,6 +385,40 @@ class LabelLabAPIImpl extends LabelLabAPI {
       return ApiResponse(response.data);
     }).catchError((err) =>
             throw new Exception(jsonDecode(err.response.toString())['msg']));
+  }
+
+  @override
+  Future<ApiResponse> makeAdmin(
+      String? token, String projectId, String memberEmail) {
+    Options options =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token!});
+    final data = {"member_email": memberEmail};
+    return _dio!
+        .post(
+      API_URL + ENDPOINT_PROJECT_MAKE_ADMIN + "/$projectId",
+      options: options,
+      data: data,
+    )
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> removeAdmin(
+      String? token, String projectId, String memberEmail) {
+    Options options =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token!});
+    final data = {"member_email": memberEmail};
+    return _dio!
+        .post(
+      API_URL + ENDPOINT_PROJECT_REMOVE_ADMIN + "/$projectId",
+      options: options,
+      data: data,
+    )
+        .then((response) {
+      return ApiResponse(response.data);
+    });
   }
 
   // Teams
