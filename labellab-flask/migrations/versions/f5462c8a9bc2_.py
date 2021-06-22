@@ -140,6 +140,15 @@ def upgrade():
     sa.Column('timestamp', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('message',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('body', sa.String(length=200), nullable=False),
+    sa.Column('team_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('username', sa.String(length=20), nullable=False),
+    sa.Column('timestamp', sa.DateTime(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     # ### end Alembic commands ###
 
 
@@ -157,4 +166,5 @@ def downgrade():
     op.drop_table('user')
     op.drop_table('revoked_token')
     op.drop_table('log')
+    op.drop_table('message')
     # ### end Alembic commands ###
