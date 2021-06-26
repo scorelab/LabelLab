@@ -13,6 +13,7 @@ import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
 import 'package:labellab_mobile/model/log.dart';
+import 'package:labellab_mobile/model/message.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
@@ -62,6 +63,7 @@ abstract class LabelLabAPI {
       String? token, String projectId, String teamId, String memberEmail);
   Future<ApiResponse> removeTeamMember(
       String? token, String projectId, String teamId, String memberEmail);
+  Future<List<Message>> getChatroomMessages(String? token, String teamId);
 
   // Logs
   Future<List<Log>> getProjectActivityLogs(String? token, String projectId);
