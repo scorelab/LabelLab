@@ -17,6 +17,7 @@ import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
 import 'package:labellab_mobile/model/log.dart';
+import 'package:labellab_mobile/model/message.dart';
 import 'package:labellab_mobile/model/ml_model.dart';
 import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/register_user.dart';
@@ -238,6 +239,11 @@ class Repository {
       String projectId, String teamId, String memberEmail) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.removeTeamMember(accessToken, projectId, teamId, memberEmail);
+  }
+
+  Future<List<Message>> getChatroomMessages(String teamId) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getChatroomMessages(accessToken, teamId);
   }
 
   // Image
