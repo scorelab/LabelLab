@@ -9,6 +9,7 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
     
 from api.main import create_app
+from api.extensions import socketio
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 
@@ -18,4 +19,4 @@ def default_route(path):
     return render_template('index.html')
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
