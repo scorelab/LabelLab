@@ -41,6 +41,7 @@ dependencies:
   google_maps_flutter: ^2.0.6
   multi_image_picker: ^4.8.1
   permission_handler: ^8.0.0+2
+  socket_io_client: ^1.0.1
   # charts_flutter: ^0.10.0
 
   # The following adds the Cupertino Icons font to your application.
