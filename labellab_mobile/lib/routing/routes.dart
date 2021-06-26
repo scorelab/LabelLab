@@ -23,6 +23,7 @@ class Routes {
   // Team
   static const viewTeamDetails = "/project/:project_id/team/:team_id";
   static const teamSpecificProjectActivity = "/team/activity/:id/:category";
+  static const viewTeamChatroom = "team/chatroom/:id/:user_id";
 
   // Image
   static const uploadImage = "/project/:project_id/upload";
@@ -90,6 +91,9 @@ class Routes {
 
     router.define(viewTeamDetails,
         handler: viewTeamDetailsHandler, transitionType: TransitionType.native);
+    router.define(viewTeamChatroom,
+        handler: viewTeamChatroomHandler,
+        transitionType: TransitionType.native);
 
     router.define(uploadImage,
         handler: uploadImageHandler, transitionType: TransitionType.native);

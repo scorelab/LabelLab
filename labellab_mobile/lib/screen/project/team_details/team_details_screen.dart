@@ -48,7 +48,8 @@ class TeamDetailsScreen extends StatelessWidget {
                           () => _goToTeamLogs(context, _state.team!.projectId!,
                               _state.team!.role!),
                         ),
-                        _getButton(context, 'View Chatroom', () {}),
+                        _getButton(context, 'View Chatroom',
+                            () => _goToTeamChatroom(context, _state.team!.id!)),
                         _recentTeamActivity(context, _state.team!.logs!),
                         _buildMembers(context, _state.team!.members!),
                       ],
@@ -262,6 +263,11 @@ class TeamDetailsScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _goToTeamChatroom(BuildContext context, String teamId) {
+    String userId = Provider.of<AuthState>(context, listen: false).user!.id!;
+    Application.router.navigateTo(context, "/team/chatroom/$teamId/$userId");
   }
 
   void _goToTeamLogs(BuildContext context, String projectId, String role) {

@@ -15,6 +15,8 @@ import 'package:labellab_mobile/screen/profile/update_password/update_password_s
 import 'package:labellab_mobile/screen/project/add_edit/add_edit_project_screen.dart';
 import 'package:labellab_mobile/screen/project/add_member/project_add_member_bloc.dart';
 import 'package:labellab_mobile/screen/project/add_member/project_add_member_screen.dart';
+import 'package:labellab_mobile/screen/project/chat/chat_screen.dart';
+import 'package:labellab_mobile/screen/project/chat/chat_screen_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_screen.dart';
 import 'package:labellab_mobile/screen/project/label_tool/label_tool_bloc.dart';
@@ -158,6 +160,17 @@ var viewTeamDetailsHandler = Handler(
     create: (context) => TeamDetailsBloc(projectId, teamId),
     dispose: (context, bloc) => bloc.dispose(),
     child: TeamDetailsScreen(),
+  );
+});
+
+var viewTeamChatroomHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  final teamId = params['id']!.first;
+  final userId = params['user_id']!.first;
+  return Provider<ChatScreenBloc>(
+    create: (context) => ChatScreenBloc(teamId, userId),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: ChatScreen(),
   );
 });
 
