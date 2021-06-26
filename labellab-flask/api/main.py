@@ -9,8 +9,8 @@ from werkzeug.exceptions import HTTPException
 
 from api.config import config
 from api import commands
-from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications, logs
-from api.extensions import db, migrate, jwt, ma
+from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications, logs, chatroom
+from api.extensions import db, migrate, jwt, ma, socketio
 from api.models import User, Image, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier, Log, Message
 
 
@@ -50,7 +50,7 @@ def register_additional_extensions(app):
     migrate.init_app(app, db)
     jwt.init_app(app)
     ma.init_app(app)
-
+    socketio.init_app(app)
 
 def register_blueprint(app):
     """Register Flask blueprints."""
@@ -67,6 +67,7 @@ def register_blueprint(app):
     app.register_blueprint(static.staticprint, url_prefix="/static/uploads")
     app.register_blueprint(ml_files.mlfilesprint, url_prefix="/ml_files")
     app.register_blueprint(logs.logs_blueprint, url_prefix="/api/v1")
+    app.register_blueprint(chatroom.chatroomprint, url_prefix="/api/v1")
     return None
 
 

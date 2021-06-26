@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from sqlalchemy.ext.declarative import declarative_base
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
+from flask_socketio import SocketIO
 
 """
 Extensions for the app context. 
@@ -14,6 +15,7 @@ migrate = Migrate()
 Base = declarative_base()
 jwt = JWTManager()
 ma = Marshmallow()
+socketio = SocketIO(cors_allowed_origins="*")
 
 from api.models.RevokedToken import RevokedToken
 
