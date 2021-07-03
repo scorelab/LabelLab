@@ -9,6 +9,15 @@ class Team {
   List<TeamMember>? members;
   List<Log>? logs;
 
+  Team({
+    this.id,
+    this.name,
+    this.role,
+    this.projectId,
+    this.members,
+    this.logs,
+  });
+
   Team.fromJson(dynamic json, {bool isDense = false}) {
     id = json['id'].toString();
     name = json['team_name'];
