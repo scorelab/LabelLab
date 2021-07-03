@@ -63,6 +63,8 @@ class MlModel {
   double? train, test, validation, epochs, batchSize, learningRate;
   List<Label>? labels;
 
+  MlModel({this.id, this.name, this.type, this.source});
+
   MlModel.fromData({this.id, this.name, this.type, this.source});
 
   MlModel.fromJson(dynamic json) {
