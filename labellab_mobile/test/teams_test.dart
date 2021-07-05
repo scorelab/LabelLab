@@ -2,6 +2,7 @@ import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labellab_mobile/model/team.dart';
+import 'package:labellab_mobile/model/message.dart';
 import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 
@@ -58,5 +59,13 @@ void main() {
     expect(
         await mockAPI.removeTeamMember(token, projectId, teamId, memberEmail),
         isA<ApiResponse>());
+  });
+
+  test('Get chatroom messages', () async {
+    when(mockAPI.getChatroomMessages(token, teamId))
+        .thenAnswer((realInvocation) async => List<Message>.empty());
+
+    expect(
+        await mockAPI.getChatroomMessages(token, teamId), isA<List<Message>>());
   });
 }
