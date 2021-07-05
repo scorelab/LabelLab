@@ -33,9 +33,11 @@ class NavItem extends StatelessWidget {
               SizedBox(
                 height: 4,
               ),
-              Text(
-                label,
-                style: TextStyle(color: color),
+              FittedBox(
+                child: Text(
+                  label,
+                  style: TextStyle(color: color),
+                ),
               ),
             ],
           ),

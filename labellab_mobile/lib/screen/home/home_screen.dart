@@ -82,7 +82,11 @@ class HomeScreen extends StatelessWidget {
                   label: "Projects",
                   onTap: () => _goToPage(context, 2),
                 )
-              : Container(),
+              : NavItem(
+                  icon: Icons.settings,
+                  label: 'Settings',
+                  onTap: () => _goToBackendServiceSelection(context),
+                ),
         ],
       ),
     );
@@ -157,5 +161,9 @@ class HomeScreen extends StatelessWidget {
   void _goToClassify(BuildContext context, bool isCamera) {
     Application.router
         .navigateTo(context, '/classify/' + (isCamera ? 'camera' : "gallery"));
+  }
+
+  void _goToBackendServiceSelection(BuildContext context) {
+    Application.router.navigateTo(context, "/backend-selection");
   }
 }
