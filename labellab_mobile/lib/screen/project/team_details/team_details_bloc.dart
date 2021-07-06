@@ -78,6 +78,10 @@ class TeamDetailsBloc {
     return _roles!.contains(_team!.role);
   }
 
+  void delete() {
+    _repository.deleteTeam(this._projectId!, this._teamId!);
+  }
+
   String get projectId => this.projectId;
 
   String get teamId => this.teamId;

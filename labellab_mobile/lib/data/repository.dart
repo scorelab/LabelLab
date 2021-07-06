@@ -230,6 +230,11 @@ class Repository {
     return _api.updateTeam(accessToken, projectId, teamId, teamName, role);
   }
 
+  Future<ApiResponse> deleteTeam(String projectId, String teamId) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.deleteTeam(accessToken, projectId, teamId);
+  }
+
   Future<Team> getTeamDetails(String projectId, String teamId) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.getTeamDetails(accessToken, projectId, teamId);
