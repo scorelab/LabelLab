@@ -76,7 +76,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_PROJECT_REMOVE_ADMIN = "project/remove_admin";
 
   static const ENDPOINT_TEAM_CREATE = "project/add_project_member";
-  static const ENDPOINT_TEAM_GET_DETAILS = "team/team_info";
+  static const ENDPOINT_TEAM_INFO = "team/team_info";
   static const ENDPOINT_TEAM_ADD_MEMBER = "team/add_team_member";
   static const ENDPOINT_TEAM_REMOVE_MEMBER = "team/remove_team_member";
   static const ENDPOINT_TEAM_GET_MESSAGES = "chatroom";
@@ -441,12 +441,28 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<ApiResponse> updateTeam(String? token, String projectId, String teamId,
+      String teamName, String role) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    final putData = {'teamname': teamName, 'role': role};
+    return _dio!
+        .put(API_URL + ENDPOINT_TEAM_INFO + "/$projectId/$teamId",
+            options: options, data: putData)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
+  }
+
+  @override
   Future<Team> getTeamDetails(String? token, String projectId, String teamId) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .get(API_URL + ENDPOINT_TEAM_GET_DETAILS + "/$projectId/$teamId",
+        .get(API_URL + ENDPOINT_TEAM_INFO + "/$projectId/$teamId",
             options: options)
         .then((response) {
       return Team.fromJson(response.data['body']);
