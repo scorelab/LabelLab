@@ -224,6 +224,12 @@ class Repository {
     return _api.createTeam(accessToken, projectId, postData);
   }
 
+  Future<ApiResponse> updateTeam(
+      String projectId, String teamId, String teamName, String role) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.updateTeam(accessToken, projectId, teamId, teamName, role);
+  }
+
   Future<Team> getTeamDetails(String projectId, String teamId) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.getTeamDetails(accessToken, projectId, teamId);

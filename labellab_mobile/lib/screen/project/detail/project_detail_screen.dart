@@ -965,7 +965,7 @@ class ProjectDetailScreen extends StatelessWidget {
     showDialog<bool>(
       context: baseContext,
       builder: (context) {
-        return AddTeamDialog(projectId, memberEmails);
+        return AddTeamDialog(projectId, memberEmails: memberEmails);
       },
     ).then((bool? isSuccess) {
       if (isSuccess!) {

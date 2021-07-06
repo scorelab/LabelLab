@@ -5,9 +5,18 @@ import 'package:labellab_mobile/widgets/label_text_field.dart';
 
 class AddTeamDialog extends StatefulWidget {
   final String projectId;
-  final List<String> memberEmails;
+  final List<String>? memberEmails;
+  final bool isEditing;
+  final String? teamId;
+  final String? teamName;
+  final String? role;
 
-  AddTeamDialog(this.projectId, this.memberEmails);
+  AddTeamDialog(this.projectId,
+      {this.memberEmails,
+      this.isEditing = false,
+      this.teamId,
+      this.teamName,
+      this.role});
 
   @override
   _AddTeamDialogState createState() => _AddTeamDialogState();
@@ -26,6 +35,12 @@ class _AddTeamDialogState extends State<AddTeamDialog> {
   ];
   String? _role;
   String? _memberEmail;
+
+  @override
+  void initState() {
+    _checkIfEditing();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +68,19 @@ class _AddTeamDialogState extends State<AddTeamDialog> {
             ),
             CustomDropdown(_roles, _setRole, isDisabled: _isLoading),
             SizedBox(height: 15),
-            Text(
-              'Select a member',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
-            ),
-            CustomDropdown(widget.memberEmails, _setMemberEmail,
-                isDisabled: _isLoading),
+            widget.isEditing
+                ? Container()
+                : Text(
+                    'Select a member',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+            widget.isEditing
+                ? Container()
+                : CustomDropdown(widget.memberEmails!, _setMemberEmail,
+                    isDisabled: _isLoading),
             SizedBox(height: 15),
             this._error != null
                 ? Text(this._error!, style: TextStyle(color: Colors.redAccent))
@@ -75,11 +94,21 @@ class _AddTeamDialogState extends State<AddTeamDialog> {
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: Text("Add"),
-          onPressed: !_isLoading ? _addTeam : null,
+          child: Text(widget.isEditing ? "Update" : "Add"),
+          onPressed:
+              !_isLoading ? (widget.isEditing ? _updateTeam : _addTeam) : null,
         ),
       ],
     );
+  }
+
+  void _checkIfEditing() {
+    if (widget.isEditing) {
+      setState(() {
+        _nameController.text = widget.teamName!;
+        _role = widget.role;
+      });
+    }
   }
 
   void _addTeam() {
@@ -95,6 +124,29 @@ class _AddTeamDialogState extends State<AddTeamDialog> {
       "role": _role,
     };
     _repository.createTeam(widget.projectId, postData).then((res) {
+      if (res.success!) {
+        _toggleIsLoading(false);
+        Navigator.pop(context, true);
+      } else {
+        _toggleIsLoading(false);
+        _setError(res.msg ?? 'Something went wrong');
+      }
+    }).catchError((err) {
+      _setError(err.message.toString());
+      _toggleIsLoading(false);
+    });
+  }
+
+  void _updateTeam() {
+    String teamName = _nameController.text;
+    if (teamName.isEmpty) {
+      _setError("Please provide a team name");
+      return;
+    }
+    _toggleIsLoading(true);
+    _repository
+        .updateTeam(widget.projectId, widget.teamId!, teamName, _role!)
+        .then((res) {
       if (res.success!) {
         _toggleIsLoading(false);
         Navigator.pop(context, true);

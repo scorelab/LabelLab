@@ -4,6 +4,7 @@ import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/team_member.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/project/add_team_dialog/add_team_dialog.dart';
 import 'package:labellab_mobile/screen/project/team_details/local_widgets/add_team_member_dialog.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
@@ -23,6 +24,27 @@ class TeamDetailsScreen extends StatelessWidget {
         title: Text('Team Details'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          PopupMenuButton<int>(
+            onSelected: (int value) {
+              if (value == 0) {
+                _showEditTeamDialog(context);
+              }
+            },
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  value: 0,
+                  child: Text("Edit"),
+                ),
+                PopupMenuItem(
+                  value: 1,
+                  child: Text("Delete"),
+                ),
+              ];
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<TeamDetailsState>(
         stream: Provider.of<TeamDetailsBloc>(context).state,
@@ -311,5 +333,25 @@ class TeamDetailsScreen extends StatelessWidget {
       category = role;
     Application.router
         .navigateTo(context, "/team/activity/$projectId/$category");
+  }
+
+  void _showEditTeamDialog(BuildContext baseContext) {
+    final team = Provider.of<TeamDetailsBloc>(baseContext, listen: false).team;
+    showDialog<bool>(
+      context: baseContext,
+      builder: (context) {
+        return AddTeamDialog(
+          team.projectId!,
+          isEditing: true,
+          teamId: team.id,
+          teamName: team.name,
+          role: team.role,
+        );
+      },
+    ).then((bool? isSuccess) {
+      if (isSuccess!) {
+        Provider.of<TeamDetailsBloc>(baseContext, listen: false).refresh();
+      }
+    });
   }
 }

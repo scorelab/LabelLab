@@ -77,4 +77,10 @@ class TeamDetailsBloc {
 
     return _roles!.contains(_team!.role);
   }
+
+  String get projectId => this.projectId;
+
+  String get teamId => this.teamId;
+
+  Team get team => this._team!;
 }
