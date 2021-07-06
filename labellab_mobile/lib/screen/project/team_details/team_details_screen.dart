@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/log.dart';
 import 'package:labellab_mobile/model/team.dart';
@@ -131,15 +132,38 @@ class TeamDetailsScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.headline6,
           ),
           SizedBox(height: 10),
-          Container(
-            height: 170,
-            child: ListView(
-              padding: const EdgeInsets.all(0),
-              children: [for (var log in logs) RecentActivityListTile(log)],
-            ),
-          ),
+          logs.isNotEmpty
+              ? Container(
+                  height: min(170, logs.length * 57),
+                  child: ListView(
+                    padding: const EdgeInsets.all(0),
+                    children: [
+                      for (var log in logs) RecentActivityListTile(log)
+                    ],
+                  ),
+                )
+              : _buildEmptyPlaceholder(context, "No activity yet"),
         ],
       ),
+    );
+  }
+
+  Widget _buildEmptyPlaceholder(BuildContext context, String description) {
+    return Row(
+      children: <Widget>[
+        Icon(
+          Icons.error,
+          size: 28,
+          color: Colors.black45,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Text(
+          description,
+          style: TextStyle(color: Colors.black45),
+        ),
+      ],
     );
   }
 
