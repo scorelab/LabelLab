@@ -7,6 +7,7 @@ import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/project/team_details/local_widgets/add_team_member_dialog.dart';
 import 'package:labellab_mobile/state/auth_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
+import 'package:labellab_mobile/widgets/empty_placeholder.dart';
 import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:labellab_mobile/screen/project/team_details/team_details_bloc.dart';
@@ -38,24 +39,32 @@ class TeamDetailsScreen extends StatelessWidget {
             },
             child: _state!.isLoading
                 ? _loadingIndicator(context)
-                : SingleChildScrollView(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        _getTeamOverview(context, _state.team!),
-                        _getButton(
-                          context,
-                          'View Activity Log',
-                          () => _goToTeamLogs(context, _state.team!.projectId!,
-                              _state.team!.role!),
+                : Provider.of<TeamDetailsBloc>(context).hasTeamAccess()
+                    ? SingleChildScrollView(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            _getTeamOverview(context, _state.team!),
+                            _getButton(
+                              context,
+                              'View Activity Log',
+                              () => _goToTeamLogs(context,
+                                  _state.team!.projectId!, _state.team!.role!),
+                            ),
+                            _getButton(
+                                context,
+                                'View Chatroom',
+                                () => _goToTeamChatroom(
+                                    context, _state.team!.id!)),
+                            _recentTeamActivity(context, _state.team!.logs!),
+                            _buildMembers(context, _state.team!.members!),
+                          ],
                         ),
-                        _getButton(context, 'View Chatroom',
-                            () => _goToTeamChatroom(context, _state.team!.id!)),
-                        _recentTeamActivity(context, _state.team!.logs!),
-                        _buildMembers(context, _state.team!.members!),
-                      ],
-                    ),
-                  ),
+                      )
+                    : EmptyPlaceholder(
+                        description:
+                            'You have to be a team member to access this screen',
+                      ),
           );
         },
       ),
