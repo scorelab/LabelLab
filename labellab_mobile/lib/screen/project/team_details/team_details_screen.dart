@@ -29,6 +29,8 @@ class TeamDetailsScreen extends StatelessWidget {
             onSelected: (int value) {
               if (value == 0) {
                 _showEditTeamDialog(context);
+              } else if (value == 1) {
+                _showDeleteTeamConfirmation(context);
               }
             },
             itemBuilder: (context) {
@@ -57,11 +59,12 @@ class TeamDetailsScreen extends StatelessWidget {
           final _state = snapshot.data;
           return RefreshIndicator(
             onRefresh: () async {
-              Provider.of<TeamDetailsBloc>(context).refresh();
+              Provider.of<TeamDetailsBloc>(context, listen: false).refresh();
             },
             child: _state!.isLoading
                 ? _loadingIndicator(context)
-                : Provider.of<TeamDetailsBloc>(context).hasTeamAccess()
+                : Provider.of<TeamDetailsBloc>(context, listen: false)
+                        .hasTeamAccess()
                     ? SingleChildScrollView(
                         padding: const EdgeInsets.all(10),
                         child: Column(
@@ -351,6 +354,26 @@ class TeamDetailsScreen extends StatelessWidget {
     ).then((bool? isSuccess) {
       if (isSuccess!) {
         Provider.of<TeamDetailsBloc>(baseContext, listen: false).refresh();
+      }
+    });
+  }
+
+  void _showDeleteTeamConfirmation(BuildContext baseContext) {
+    final team = Provider.of<TeamDetailsBloc>(baseContext, listen: false).team;
+    showDialog<bool>(
+        context: baseContext,
+        builder: (context) {
+          return DeleteConfirmDialog(
+            name: team.name,
+            onCancel: () => Navigator.pop(context),
+            onConfirm: () {
+              Provider.of<TeamDetailsBloc>(baseContext, listen: false).delete();
+              Navigator.of(context).pop(true);
+            },
+          );
+        }).then((success) {
+      if (success != null && success) {
+        Navigator.pop(baseContext);
       }
     });
   }

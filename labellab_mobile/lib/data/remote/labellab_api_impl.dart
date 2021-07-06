@@ -457,6 +457,21 @@ class LabelLabAPIImpl extends LabelLabAPI {
   }
 
   @override
+  Future<ApiResponse> deleteTeam(
+      String? token, String projectId, String teamId) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .delete(API_URL + ENDPOINT_TEAM_INFO + "/$projectId/$teamId",
+            options: options)
+        .then((response) {
+      return ApiResponse(response.data);
+    }).catchError((err) =>
+            throw new Exception(jsonDecode(err.response.toString())['msg']));
+  }
+
+  @override
   Future<Team> getTeamDetails(String? token, String projectId, String teamId) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
