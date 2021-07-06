@@ -14,6 +14,8 @@ final String projectId = 'project_id';
 final String teamId = 'team_id';
 final String memberEmail = 'member_email';
 final Map<String, dynamic> jsonData = {'test': true};
+final String teamName = 'team_name';
+final String role = 'role';
 
 // This file covers tests for all team endpoints
 @GenerateMocks([LabelLabAPI])
@@ -67,5 +69,21 @@ void main() {
 
     expect(
         await mockAPI.getChatroomMessages(token, teamId), isA<List<Message>>());
+  });
+
+  test('Update team', () async {
+    when(mockAPI.updateTeam(token, projectId, teamId, teamName, role))
+        .thenAnswer((realInvocation) async => ApiResponse(jsonData));
+
+    expect(await mockAPI.updateTeam(token, projectId, teamId, teamName, role),
+        isA<ApiResponse>());
+  });
+
+  test('Delete team', () async {
+    when(mockAPI.deleteTeam(token, projectId, teamId))
+        .thenAnswer((realInvocation) async => ApiResponse(jsonData));
+
+    expect(
+        await mockAPI.deleteTeam(token, projectId, teamId), isA<ApiResponse>());
   });
 }
