@@ -84,7 +84,9 @@ def get_data(user_id):
             User.id == user_id
         )
     for project in queries:
-        all_projects.append(project_schema.dump(project.Project).data)
+        project_id = project.Project.id
+        if not any (up['id'] == project_id for up in all_projects):
+            all_projects.append(project_schema.dump(project.Project).data)
     
     for team in queries:
         all_teams.append(team_schema.dump(team.Team).data)
