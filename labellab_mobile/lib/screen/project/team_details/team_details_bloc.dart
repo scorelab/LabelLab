@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:labellab_mobile/data/repository.dart';
+import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/screen/project/team_details/team_details_state.dart';
 
 class TeamDetailsBloc {
   String? _projectId;
   String? _teamId;
   List<String>? _roles;
+  Team? _team;
   Repository _repository = Repository();
 
   TeamDetailsBloc(this._projectId, this._teamId) {
@@ -19,6 +21,7 @@ class TeamDetailsBloc {
 
   void _loadTeam() {
     _repository.getTeamDetails(this._projectId!, this._teamId!).then((team) {
+      this._team = team;
       _repository.getMemberRoles(this._projectId!).then((roles) {
         this._roles = roles;
         this._setState(TeamDetailsState.success(
@@ -65,5 +68,13 @@ class TeamDetailsBloc {
         .then((res) {
       refresh();
     });
+  }
+
+  bool hasTeamAccess() {
+    if (_team == null || _roles == null) return false;
+
+    if (_roles!.contains('admin')) return true;
+
+    return _roles!.contains(_team!.role);
   }
 }
