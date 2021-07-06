@@ -154,15 +154,19 @@ class ProjectDetailScreen extends StatelessWidget {
                   : SliverFillRemaining(),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(
-              Icons.file_upload,
-              color: Colors.white,
-            ),
-            onPressed: () => _state.project != null
-                ? _gotoUploadImage(context, _state.project!.id)
-                : null,
-          ),
+          floatingActionButton:
+              Provider.of<ProjectDetailBloc>(context, listen: false)
+                      .hasImagesAccess()
+                  ? FloatingActionButton(
+                      child: Icon(
+                        Icons.file_upload,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => _state.project != null
+                          ? _gotoUploadImage(context, _state.project!.id)
+                          : null,
+                    )
+                  : Container(),
         );
       },
     );
