@@ -283,15 +283,17 @@ class ProjectDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            height: 170,
-            child: ListView(
-              padding: const EdgeInsets.all(0),
-              children: [
-                for (var log in project.logs!) RecentActivityListTile(log)
-              ],
-            ),
-          ),
+          (project.logs != null && project.logs!.isNotEmpty)
+              ? Container(
+                  height: min(170, project.logs!.length * 57),
+                  child: ListView(
+                    padding: const EdgeInsets.all(0),
+                    children: [
+                      for (var log in project.logs!) RecentActivityListTile(log)
+                    ],
+                  ),
+                )
+              : _buildEmptyPlaceholder(context, "No activity yet"),
         ],
       ),
     );
