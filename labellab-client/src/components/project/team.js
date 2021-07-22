@@ -91,7 +91,7 @@ class TeamIndex extends Component {
     })
   }
   render() {
-    const { project, actions, history, user } = this.props
+    const { project, actions, history, user, roles } = this.props
     const { open } = this.state
     console.log(project)
     return (
@@ -163,33 +163,39 @@ class TeamIndex extends Component {
                     <Header as="h4">{member.team_name}</Header>
                   </Table.Cell>
 
-                  <Table.Cell collapsing>
-                    {member.team_role !== 'admin' &&
-                    member.email !== user.email ? (
-                      <Icon
-                        className="team-remove-user-icon"
-                        name="user delete"
-                        onClick={() =>
-                          this.handleDelete(member.email, member.team_id)
-                        }
-                      />
-                    ) : null}
-                  </Table.Cell>
+                  {roles && roles.includes('admin') ? (
+                    <Table.Cell collapsing>
+                      {member.team_role !== 'admin' &&
+                      member.email !== user.email ? (
+                        <Icon
+                          className="team-remove-user-icon"
+                          name="user delete"
+                          onClick={() =>
+                            this.handleDelete(member.email, member.team_id)
+                          }
+                        />
+                      ) : null}
+                    </Table.Cell>
+                  ) : (
+                    <Table.Cell></Table.Cell>
+                  )}
                 </Table.Row>
               ))}
           </Table.Body>
         </Table>
         <div className="add-member-button">
-          <Button
-            icon
-            positive
-            className="add-member"
-            onClick={this.handleAddMember}
-            labelPosition="left"
-          >
-            <Icon name="add" />
-            Add member
-          </Button>
+          {roles && roles.includes('admin') ? (
+            <Button
+              icon
+              positive
+              className="add-member"
+              onClick={this.handleAddMember}
+              labelPosition="left"
+            >
+              <Icon name="add" />
+              Add member
+            </Button>
+          ) : null}
         </div>
         <Container className="team-management-conatiner">
           <Table color="green" celled striped stackable className="all-teams">
@@ -225,12 +231,14 @@ class TeamIndex extends Component {
                       <Header as="h4">{team.team_members.length}</Header>
                     </Table.Cell>
                     <Table.Cell collapsing>
-                      {team.role !== 'admin' ? (
-                        <Icon
-                          className="team-remove-user-icon"
-                          name="user delete"
-                          onClick={() => this.handleTeamDelete(team.id)}
-                        />
+                      {roles && roles.includes('admin') ? (
+                        team.role !== 'admin' ? (
+                          <Icon
+                            className="team-remove-user-icon"
+                            name="user delete"
+                            onClick={() => this.handleTeamDelete(team.id)}
+                          />
+                        ) : null
                       ) : null}
                     </Table.Cell>
                   </Table.Row>
@@ -278,14 +286,16 @@ TeamIndex.propTypes = {
   match: PropTypes.object,
   memberDelete: PropTypes.func,
   addMember: PropTypes.func,
-  teamDelete: PropTypes.func
+  teamDelete: PropTypes.func,
+  roles: PropTypes.array
 }
 
 const mapStateToProps = state => {
   return {
     user: state.user.userDetails,
     project: state.projects.currentProject,
-    actions: state.projects.projectActions
+    actions: state.projects.projectActions,
+    roles: state.projects.currentProject.roles
   }
 }
 

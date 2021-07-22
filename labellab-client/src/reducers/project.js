@@ -28,7 +28,10 @@ import {
   DELETE_TEAM_SUCCESS,
   LEAVE_PROJECT_REQUEST,
   LEAVE_PROJECT_FAILURE,
-  LEAVE_PROJECT_SUCCESS
+  LEAVE_PROJECT_SUCCESS,
+  FETCH_PROJECT_ROLES_REQUEST,
+  FETCH_PROJECT_ROLES_FAILURE,
+  FETCH_PROJECT_ROLES_SUCCESS
 } from '../constants/index'
 const initialState = {
   projectActions: {
@@ -271,6 +274,32 @@ const project = (state = initialState, action) => {
         ...state,
         projectActions: {
           isdeleting: false,
+          errors: action.payload
+        }
+      }
+    case FETCH_PROJECT_ROLES_REQUEST:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: true
+        }
+      }
+    case FETCH_PROJECT_ROLES_SUCCESS:
+      return {
+        ...state,
+        currentProject: {
+          ...state.currentProject,
+          roles: action.payload
+        },
+        projectActions: {
+          isfetching: false
+        }
+      }
+    case FETCH_PROJECT_ROLES_FAILURE:
+      return {
+        ...state,
+        projectActions: {
+          isfetching: false,
           errors: action.payload
         }
       }

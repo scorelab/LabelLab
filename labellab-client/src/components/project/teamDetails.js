@@ -13,7 +13,8 @@ import {
   Confirm,
   Modal,
   Input,
-  Dropdown
+  Dropdown,
+  Message
 } from 'semantic-ui-react'
 
 import {
@@ -211,7 +212,7 @@ class TeamDetails extends Component {
   }
 
   render() {
-    const { team, teamActions, history } = this.props
+    const { team, roles, teamActions, history } = this.props
 
     return (
       <Fragment>
@@ -227,7 +228,9 @@ class TeamDetails extends Component {
           <Dimmer active>
             <Loader indeterminate>Updating...</Loader>
           </Dimmer>
-        ) : (
+        ) : roles &&
+          team &&
+          (roles.includes('admin') || roles.includes(team.role)) ? (
           <div>
             <Grid>
               <Grid.Row>
@@ -243,12 +246,20 @@ class TeamDetails extends Component {
                       <Icon name="chat" />
                       Chat
                     </Button>
-                    <Button icon onClick={this.updateTeamConfirmation}>
-                      <Icon name="edit" />
-                    </Button>
-                    <Button negative icon onClick={this.deleteTeamConfirmation}>
-                      <Icon name="delete" />
-                    </Button>
+                    {roles && roles.includes('admin') ? (
+                      <Button icon onClick={this.updateTeamConfirmation}>
+                        <Icon name="edit" />
+                      </Button>
+                    ) : null}
+                    {roles && roles.includes('admin') ? (
+                      <Button
+                        negative
+                        icon
+                        onClick={this.deleteTeamConfirmation}
+                      >
+                        <Icon name="delete" />
+                      </Button>
+                    ) : null}
                   </Grid.Row>
                 </Grid.Column>
               </Grid.Row>
@@ -284,9 +295,11 @@ class TeamDetails extends Component {
                       <Table.Row>
                         <Table.HeaderCell>Team Members </Table.HeaderCell>
                         <Table.HeaderCell width={1}>
-                          <Button icon onClick={this.addMemberConfirmation}>
-                            <Icon name="add circle" />
-                          </Button>
+                          {roles && roles.includes('admin') ? (
+                            <Button icon onClick={this.addMemberConfirmation}>
+                              <Icon name="add circle" />
+                            </Button>
+                          ) : null}
                         </Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
@@ -303,14 +316,16 @@ class TeamDetails extends Component {
                                 </Header>
                               </Table.Cell>
                               <Table.Cell>
-                                <Button
-                                  icon
-                                  onClick={() =>
-                                    this.removeTeamMember(member.email)
-                                  }
-                                >
-                                  <Icon name="user delete" />
-                                </Button>
+                                {roles && roles.includes('admin') ? (
+                                  <Button
+                                    icon
+                                    onClick={() =>
+                                      this.removeTeamMember(member.email)
+                                    }
+                                  >
+                                    <Icon name="user delete" />
+                                  </Button>
+                                ) : null}
                               </Table.Cell>
                             </Table.Row>
                           ))
@@ -321,6 +336,12 @@ class TeamDetails extends Component {
               </Grid.Row>
             </Grid>
           </div>
+        ) : (
+          <Message>
+            <Message.Header>Unauthorized</Message.Header>
+            <p>You are not allowed to access this team</p>
+            <Button onClick={() => history.goBack()}>Go Back</Button>
+          </Message>
         )}
         <Confirm
           open={this.state.isDeleteTeamModalOpen}
@@ -407,7 +428,8 @@ TeamDetails.propTypes = {
 const mapStateToProps = state => {
   return {
     team: state.teams.currentTeam,
-    teamActions: state.teams.teamActions
+    teamActions: state.teams.teamActions,
+    roles: state.projects.currentProject.roles
   }
 }
 

@@ -83,7 +83,7 @@ class LabelIndex extends Component {
       name: 'New Label',
       type: 'bbox'
     }
-    const { actions, labels } = this.props
+    const { actions, labels, roles } = this.props
     const { showform } = this.state
     return (
       <Container className="label-container">
@@ -92,9 +92,11 @@ class LabelIndex extends Component {
             <Loader indeterminate>Removing Label :)</Loader>
           </Dimmer>
         ) : null}
-        <Button onClick={this.toggleForm} positive>
-          Add Label
-        </Button>
+        {roles && (roles.includes('admin') || roles.includes('labels')) ? (
+          <Button onClick={this.toggleForm} positive>
+            Add Label
+          </Button>
+        ) : null}
         {labels !== undefined && (
           <Table color="green" celled padded striped>
             <Table.Header>
@@ -107,8 +109,8 @@ class LabelIndex extends Component {
             </Table.Header>
 
             <Table.Body>
-              {labels.length &&
-                labels.length !== 0 ? labels.map((label, index) => (
+              {labels.length && labels.length !== 0 ? (
+                labels.map((label, index) => (
                   <LabelItem
                     key={label.id}
                     index={index}
@@ -117,10 +119,15 @@ class LabelIndex extends Component {
                     onChange={this.onChange}
                     onDelete={this.handleDelete}
                     onUpdate={this.onUpdate}
+                    hasLabelsAccess={
+                      roles &&
+                      (roles.includes('admin') || roles.includes('labels'))
+                    }
                   />
-                )) : <div>
-                  There are no labels present
-                </div>}
+                ))
+              ) : (
+                <div>There are no labels present</div>
+              )}
             </Table.Body>
           </Table>
         )}
@@ -175,14 +182,16 @@ LabelIndex.propTypes = {
   fetchLabels: PropTypes.func,
   createLabel: PropTypes.func,
   deleteLabel: PropTypes.func,
-  updateALabel: PropTypes.func
+  updateALabel: PropTypes.func,
+  roles: PropTypes.array
 }
 
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,
     actions: state.labels.labelActions,
-    labels: state.labels.labels
+    labels: state.labels.labels,
+    roles: state.projects.currentProject.roles
   }
 }
 
@@ -203,4 +212,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LabelIndex)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LabelIndex)

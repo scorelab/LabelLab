@@ -63,7 +63,7 @@ class ProjectDescriptionIndex extends Component {
     })
   }
   render() {
-    const { actions } = this.props
+    const { actions, roles } = this.props
     const { edit, name, desc } = this.state
     return (
       <div className="projectDesc-parent">
@@ -75,7 +75,9 @@ class ProjectDescriptionIndex extends Component {
           <Card>
             <Card.Header className="projectDesc-header">
               <Header content={name} as="h4"></Header>
-              <Icon name="pencil alternate" onClick={this.handleUpdate} />
+              {roles && roles.includes('admin') ? (
+                <Icon name="pencil alternate" onClick={this.handleUpdate} />
+              ) : null}
             </Card.Header>
             <Card.Content>
               {edit ? (
@@ -131,7 +133,8 @@ ProjectDescriptionIndex.propTypes = {
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,
-    actions: state.projects.projectActions
+    actions: state.projects.projectActions,
+    roles: state.projects.currentProject.roles
   }
 }
 
