@@ -246,7 +246,7 @@ class TeamDetails extends Component {
                     <Button icon onClick={this.updateTeamConfirmation}>
                       <Icon name="edit" />
                     </Button>
-                    <Button icon onClick={this.deleteTeamConfirmation}>
+                    <Button negative icon onClick={this.deleteTeamConfirmation}>
                       <Icon name="delete" />
                     </Button>
                   </Grid.Row>
@@ -255,7 +255,7 @@ class TeamDetails extends Component {
               <Divider />
               <Grid.Row>
                 <Grid.Column width={6}>
-                  <Table>
+                  <Table color="green">
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell>Recent Activity </Table.HeaderCell>
@@ -279,7 +279,7 @@ class TeamDetails extends Component {
                   </Table>
                 </Grid.Column>
                 <Grid.Column width={10}>
-                  <Table>
+                  <Table color="blue">
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell>Team Members </Table.HeaderCell>
