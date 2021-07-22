@@ -10,16 +10,71 @@ import {
   Button,
   Icon,
   Table,
-  Confirm
+  Confirm,
+  Modal,
+  Input,
+  Dropdown
 } from 'semantic-ui-react'
 
-import { fetchTeam, teamDelete, fetchProject } from '../../actions/index'
+import {
+  fetchTeam,
+  teamDelete,
+  fetchProject,
+  updateTeam
+} from '../../actions/index'
+
+const teamsOptions = [
+  { key: 1, value: 'images', role: 'images', text: 'images' },
+  { key: 2, value: 'labels', role: 'labels', text: 'labels' },
+  {
+    key: 3,
+    value: 'image labelling',
+    role: 'image labelling',
+    text: 'image labelling'
+  },
+  { key: 4, value: 'models', role: 'models', text: 'models' },
+  { key: 5, value: 'admin', role: 'admin', text: 'admin' }
+]
 
 class TeamDetails extends Component {
-  state = { open: false }
+  constructor(props) {
+    super(props)
+    this.state = {
+      isDeleteTeamModalOpen: false,
+      isUpdateTeamModalOpen: false,
+      invalidDetails: false,
+      teamname: '',
+      role: ''
+    }
+  }
 
-  deleteTeamConfirmation = () => this.setState({ open: true })
-  closeDeleteTeam = () => this.setState({ open: false })
+  deleteTeamConfirmation = () => this.setState({ isDeleteTeamModalOpen: true })
+  closeDeleteTeam = () => this.setState({ isDeleteTeamModalOpen: false })
+
+  updateTeamConfirmation = () => this.setState({ isUpdateTeamModalOpen: true })
+  closeUpdateTeam = () => this.setState({ isUpdateTeamModalOpen: false })
+
+  handleChange = e => {
+    this.setState(
+      {
+        [e.target.name]: e.target.value
+      },
+      () => {
+        if (this.state.teamname === '') {
+          this.setState({
+            invalidDetails: true
+          })
+        } else {
+          this.setState({
+            invalidDetails: false
+          })
+        }
+      }
+    )
+  }
+
+  handleDropDownChange = (e, { name, value }) =>
+    this.setState({ [name]: value })
 
   componentDidMount() {
     const {
@@ -29,6 +84,16 @@ class TeamDetails extends Component {
       fetchTeam
     } = this.props
     fetchTeam(projectId, teamId)
+  }
+
+  componentDidUpdate(prevProps) {
+    const { team } = this.props
+    if (team && prevProps.team !== team) {
+      this.setState({
+        teamname: team.teamName,
+        role: team.role
+      })
+    }
   }
 
   deleteTeam = () => {
@@ -41,6 +106,22 @@ class TeamDetails extends Component {
     teamDelete(projectId, teamId, this.deleteTeamCallback)
   }
 
+  updateTeam = () => {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      updateTeam
+    } = this.props
+    updateTeam(
+      projectId,
+      teamId,
+      this.state.teamname,
+      this.state.role,
+      this.updateTeamCallback
+    )
+  }
+
   deleteTeamCallback = () => {
     const {
       match: {
@@ -51,6 +132,17 @@ class TeamDetails extends Component {
     } = this.props
     history.push({ pathname: `/project/${projectId}/team` })
     fetchProject(projectId)
+  }
+
+  updateTeamCallback = () => {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      fetchTeam
+    } = this.props
+    this.closeUpdateTeam()
+    fetchTeam(projectId, teamId)
   }
 
   capitalize = string => {
@@ -66,6 +158,14 @@ class TeamDetails extends Component {
         {teamActions.isfetching ? (
           <Dimmer active>
             <Loader indeterminate>Have some patience </Loader>
+          </Dimmer>
+        ) : teamActions.isDeleting ? (
+          <Dimmer active>
+            <Loader indeterminate>Deleting...</Loader>
+          </Dimmer>
+        ) : teamActions.isUpdating ? (
+          <Dimmer active>
+            <Loader indeterminate>Updating...</Loader>
           </Dimmer>
         ) : (
           <div>
@@ -83,7 +183,7 @@ class TeamDetails extends Component {
                       <Icon name="chat" />
                       Chat
                     </Button>
-                    <Button icon>
+                    <Button icon onClick={this.updateTeamConfirmation}>
                       <Icon name="edit" />
                     </Button>
                     <Button icon onClick={this.deleteTeamConfirmation}>
@@ -158,10 +258,50 @@ class TeamDetails extends Component {
           </div>
         )}
         <Confirm
-          open={this.state.open}
+          open={this.state.isDeleteTeamModalOpen}
           onCancel={this.closeDeleteTeam}
           onConfirm={this.deleteTeam}
         />
+        {/* Update Team Modal */}
+        <Modal
+          open={this.state.isUpdateTeamModalOpen}
+          onClose={this.closeUpdateTeam}
+          onOpen={this.updateTeamConfirmation}
+        >
+          <Header icon="group" content="Update Team" />
+          <Modal.Content>
+            <Input
+              name="teamname"
+              onChange={this.handleChange}
+              type="text"
+              placeholder="* Team Name"
+              label="Name"
+              value={this.state.teamname}
+            />
+            <Dropdown
+              name="role"
+              placeholder="Role"
+              search
+              selection
+              value={this.state.role}
+              options={teamsOptions}
+              onChange={this.handleDropDownChange}
+            />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="red" onClick={this.closeUpdateTeam}>
+              <Icon name="remove" />
+              Cancel
+            </Button>
+            <Button
+              color="green"
+              onClick={this.updateTeam}
+              disabled={this.state.invalidDetails ? true : false}
+            >
+              <Icon name="checkmark" /> Update
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </Fragment>
     )
   }
@@ -189,6 +329,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchProject: projectId => {
       dispatch(fetchProject(projectId))
+    },
+    updateTeam: (projectId, teamId, teamname, role, callback) => {
+      dispatch(updateTeam(projectId, teamId, teamname, role, callback))
     }
   }
 }

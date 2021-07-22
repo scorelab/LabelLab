@@ -7,7 +7,10 @@ import {
   DELETE_TEAM_SUCCESS,
   FETCH_TEAM_REQUEST,
   FETCH_TEAM_SUCCESS,
-  FETCH_TEAM_FAILURE
+  FETCH_TEAM_FAILURE,
+  UPDATE_TEAM_REQUEST,
+  UPDATE_TEAM_SUCCESS,
+  UPDATE_TEAM_FAILURE
 } from '../../constants/index'
 
 import FetchApi from '../../utils/FetchAPI'
@@ -86,5 +89,35 @@ export const fetchTeam = (projectId, teamId) => {
   }
   function failure(error) {
     return { type: FETCH_TEAM_FAILURE, payload: error }
+  }
+}
+
+export const updateTeam = (projectId, teamId, teamname, role, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.put(`/api/v1/team/team_info/${projectId}/${teamId}`, {
+      teamname,
+      role
+    })
+      .then(res => {
+        dispatch(success())
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: UPDATE_TEAM_REQUEST }
+  }
+  function success() {
+    return { type: UPDATE_TEAM_SUCCESS }
+  }
+  function failure(error) {
+    return { type: UPDATE_TEAM_FAILURE, payload: error }
   }
 }
