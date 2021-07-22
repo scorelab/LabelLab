@@ -13,7 +13,10 @@ import {
   UPDATE_TEAM_FAILURE,
   ADD_TEAM_MEMBER_REQUEST,
   ADD_TEAM_MEMBER_SUCCESS,
-  ADD_TEAM_MEMBER_FAILURE
+  ADD_TEAM_MEMBER_FAILURE,
+  REMOVE_TEAM_MEMBER_REQUEST,
+  REMOVE_TEAM_MEMBER_SUCCESS,
+  REMOVE_TEAM_MEMBER_FAILURE
 } from '../../constants/index'
 
 import FetchApi from '../../utils/FetchAPI'
@@ -151,5 +154,34 @@ export const addTeamMember = (projectId, teamId, memberEmail, callback) => {
   }
   function failure(error) {
     return { type: ADD_TEAM_MEMBER_FAILURE, payload: error }
+  }
+}
+
+export const removeTeamMember = (projectId, teamId, memberEmail, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.post(`api/v1/team/remove_team_member/${projectId}/${teamId}`, {
+      member_email: memberEmail
+    })
+      .then(res => {
+        dispatch(success())
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: REMOVE_TEAM_MEMBER_REQUEST }
+  }
+  function success() {
+    return { type: REMOVE_TEAM_MEMBER_SUCCESS }
+  }
+  function failure(error) {
+    return { type: REMOVE_TEAM_MEMBER_FAILURE, payload: error }
   }
 }

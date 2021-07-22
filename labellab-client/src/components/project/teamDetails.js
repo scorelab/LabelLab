@@ -21,7 +21,8 @@ import {
   teamDelete,
   fetchProject,
   updateTeam,
-  addTeamMember
+  addTeamMember,
+  removeTeamMember
 } from '../../actions/index'
 import SearchUser from './searchUser'
 
@@ -150,6 +151,16 @@ class TeamDetails extends Component {
     )
   }
 
+  removeTeamMember = email => {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      removeTeamMember
+    } = this.props
+    removeTeamMember(projectId, teamId, email, this.removeTeamMemberCallback)
+  }
+
   deleteTeamCallback = () => {
     const {
       match: {
@@ -181,6 +192,16 @@ class TeamDetails extends Component {
       fetchTeam
     } = this.props
     this.closeAddMember()
+    fetchTeam(projectId, teamId)
+  }
+
+  removeTeamMemberCallback = () => {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      fetchTeam
+    } = this.props
     fetchTeam(projectId, teamId)
   }
 
@@ -282,7 +303,12 @@ class TeamDetails extends Component {
                                 </Header>
                               </Table.Cell>
                               <Table.Cell>
-                                <Button icon>
+                                <Button
+                                  icon
+                                  onClick={() =>
+                                    this.removeTeamMember(member.email)
+                                  }
+                                >
                                   <Icon name="user delete" />
                                 </Button>
                               </Table.Cell>
@@ -401,6 +427,9 @@ const mapDispatchToProps = dispatch => {
     },
     addTeamMember: (projectId, teamId, memberEmail, callback) => {
       dispatch(addTeamMember(projectId, teamId, memberEmail, callback))
+    },
+    removeTeamMember: (projectId, teamId, memberEmail, callback) => {
+      dispatch(removeTeamMember(projectId, teamId, memberEmail, callback))
     }
   }
 }
