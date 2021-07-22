@@ -76,7 +76,7 @@ class ModelsIndex extends Component {
     fetchProject(project.projectId)
   }
 
-  openTestingModal = (modelId) => {
+  openTestingModal = modelId => {
     this.setState({
       selectedModelId: modelId,
       testing: true
@@ -90,8 +90,26 @@ class ModelsIndex extends Component {
   }
 
   render() {
-    const { project, model, models, setName, setType, setSource, createModel, deleteModel, fetchProjectModels, history } = this.props
-    const { modelType, modelSource, open, testing, selectedModelId } = this.state
+    const {
+      project,
+      model,
+      models,
+      setName,
+      setType,
+      setSource,
+      createModel,
+      deleteModel,
+      fetchProjectModels,
+      history,
+      roles
+    } = this.props
+    const {
+      modelType,
+      modelSource,
+      open,
+      testing,
+      selectedModelId
+    } = this.state
 
     return (
       <Container>
@@ -132,9 +150,17 @@ class ModelsIndex extends Component {
             />
           </Modal.Content>
           <Modal.Actions>
-            <Button positive onClick={() => createModel(model,
-              (modelId) => history.push(`/model_editor/${modelType}/${modelSource}/${project.projectId}/${modelId}`))}
-            >Create
+            <Button
+              positive
+              onClick={() =>
+                createModel(model, modelId =>
+                  history.push(
+                    `/model_editor/${modelType}/${modelSource}/${project.projectId}/${modelId}`
+                  )
+                )
+              }
+            >
+              Create
             </Button>
           </Modal.Actions>
         </Modal>
@@ -149,9 +175,11 @@ class ModelsIndex extends Component {
           modelId={selectedModelId}
         />
 
-        <Button positive onClick={this.toggleOpen}>
-          Create New Model
-        </Button>
+        {roles && (roles.includes('admin') || roles.includes('models')) ? (
+          <Button positive onClick={this.toggleOpen}>
+            Create New Model
+          </Button>
+        ) : null}
         <Table color="green" celled padded striped stackable>
           <Table.Header>
             <Table.Row>
@@ -178,21 +206,29 @@ class ModelsIndex extends Component {
                     <Header as="h4">{model.type}</Header>
                   </Table.Cell>
                   <Table.Cell collapsing>
-                    <Link
-                      to={`/model_editor/${model.type}/${model.source}/${project.projectId}/${model.id}`}
-                    >
-                      <Button icon="pencil" label="Edit" size="tiny" />
-                    </Link>
-                    <Button
-                      icon="trash"
-                      label="Delete"
-                      size="tiny"
-                      onClick={() => {
-                        deleteModel(model.id, () => fetchProjectModels(project.projectId))
-                      }}
-                      basic
-                      negative
-                    />
+                    {roles &&
+                    (roles.includes('admin') || roles.includes('models')) ? (
+                      <Link
+                        to={`/model_editor/${model.type}/${model.source}/${project.projectId}/${model.id}`}
+                      >
+                        <Button icon="pencil" label="Edit" size="tiny" />
+                      </Link>
+                    ) : null}
+                    {roles &&
+                    (roles.includes('admin') || roles.includes('models')) ? (
+                      <Button
+                        icon="trash"
+                        label="Delete"
+                        size="tiny"
+                        onClick={() => {
+                          deleteModel(model.id, () =>
+                            fetchProjectModels(project.projectId)
+                          )
+                        }}
+                        basic
+                        negative
+                      />
+                    ) : null}
                     <Button
                       icon="eye"
                       label="Test"
@@ -209,14 +245,16 @@ class ModelsIndex extends Component {
   }
 }
 
-const TestModelModal = (props) => {
-  const { open, toggleOpen, modelId } = props;
+const TestModelModal = props => {
+  const { open, toggleOpen, modelId } = props
 
-  return <Modal size="small" open={open} onClose={toggleOpen}>
-    <Modal.Content>
-      <ModelTester modelId={modelId} />
-    </Modal.Content>
-  </Modal>
+  return (
+    <Modal size="small" open={open} onClose={toggleOpen}>
+      <Modal.Content>
+        <ModelTester modelId={modelId} />
+      </Modal.Content>
+    </Modal>
+  )
 }
 
 ModelsIndex.propTypes = {
@@ -229,15 +267,17 @@ ModelsIndex.propTypes = {
   fetchProjectModels: PropTypes.func.isRequired,
   deleteModel: PropTypes.func.isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired
   }),
+  roles: PropTypes.array
 }
 
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,
     model: state.model.model,
-    models: state.model.models
+    models: state.model.models,
+    roles: state.projects.currentProject.roles
   }
 }
 

@@ -257,7 +257,7 @@ class ImagesIndex extends Component {
     return canvas.toDataURL('image/jpeg')
   }
   render() {
-    const { imageActions, project } = this.props
+    const { imageActions, project, roles } = this.props
     const {
       showform,
       image_name,
@@ -275,21 +275,23 @@ class ImagesIndex extends Component {
             <Loader indeterminate>Removing Image :(</Loader>
           </Dimmer>
         ) : null}
-        <div>
-          <input
-            type="file"
-            multiple
-            onChange={this.handleImageChange}
-            className="image-file-input"
-            id="image-embedpollfileinput"
-          />
-          <label
-            htmlFor="image-embedpollfileinput"
-            className="ui medium primary left floated button custom-margin positive"
-          >
-            Add Image
-          </label>
-        </div>
+        {roles && (roles.includes('admin') || roles.includes('images')) ? (
+          <div>
+            <input
+              type="file"
+              multiple
+              onChange={this.handleImageChange}
+              className="image-file-input"
+              id="image-embedpollfileinput"
+            />
+            <label
+              htmlFor="image-embedpollfileinput"
+              className="ui medium primary left floated button custom-margin positive"
+            >
+              Add Image
+            </label>
+          </div>
+        ) : null}
         {showform ? (
           <Form className="file-submit-form" encType="multiple/form-data">
             {this.state.images.length == 1 && (
@@ -415,6 +417,12 @@ class ImagesIndex extends Component {
                         project.images[index].id
                       )}
                       isLast={index === project.images.length - 1}
+                      hasImagesAccess={
+                        roles &&
+                        (roles.includes('admin') ||
+                          roles.includes('images') ||
+                          roles.includes('image labelling'))
+                      }
                     />
                   )}
                   overscanRowCount={10}
@@ -434,13 +442,15 @@ ImagesIndex.propTypes = {
   history: PropTypes.object,
   fetchProject: PropTypes.func,
   submitImage: PropTypes.func,
-  deleteImage: PropTypes.func
+  deleteImage: PropTypes.func,
+  roles: PropTypes.array
 }
 
 const mapStateToProps = state => {
   return {
     project: state.projects.currentProject,
-    imageActions: state.images.imageActions
+    imageActions: state.images.imageActions,
+    roles: state.projects.currentProject.roles
   }
 }
 
@@ -458,7 +468,10 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ImagesIndex)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ImagesIndex)
 
 const Row = ({
   image,
@@ -468,7 +481,8 @@ const Row = ({
   imageId,
   onSelect,
   selected,
-  isLast
+  isLast,
+  hasImagesAccess
 }) => (
   <Table.Row
     style={{
@@ -522,22 +536,24 @@ const Row = ({
       ) : null}
     </Table.Cell>
     <Table.Cell width={3}>
-      <div>
-        <Link to={`/labeller/${projectId}/${image.id}`}>
-          <Button icon="pencil" label="Edit" size="tiny" />
-        </Link>
-        <Button
-          negative
-          basic
-          icon="trash"
-          label="Delete"
-          size="tiny"
-          onClick={async () => {
-            await onSelect(image.id)
-            onDelete()
-          }}
-        />
-      </div>
+      {hasImagesAccess ? (
+        <div>
+          <Link to={`/labeller/${projectId}/${image.id}`}>
+            <Button icon="pencil" label="Edit" size="tiny" />
+          </Link>
+          <Button
+            negative
+            basic
+            icon="trash"
+            label="Delete"
+            size="tiny"
+            onClick={async () => {
+              await onSelect(image.id)
+              onDelete()
+            }}
+          />
+        </div>
+      ) : null}
     </Table.Cell>
   </Table.Row>
 )

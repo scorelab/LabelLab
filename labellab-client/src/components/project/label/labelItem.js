@@ -12,7 +12,7 @@ class LabelItem extends Component {
   }
 
   render() {
-    const { index, label, options } = this.props
+    const { index, label, options, hasLabelsAccess } = this.props
     const { onChange, onDelete, onUpdate } = this.props
     console.log(label)
     return (
@@ -47,15 +47,24 @@ class LabelItem extends Component {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Button negative basic type="button" onClick={() => onDelete(label)}>
-            <Icon name="trash" />
-          </Button>
-          <Button
-            onClick={() => onUpdate(label)}
-            disabled={this.state.changed ? false : true}
-          >
-            Update
-          </Button>
+          {hasLabelsAccess ? (
+            <Button
+              negative
+              basic
+              type="button"
+              onClick={() => onDelete(label)}
+            >
+              <Icon name="trash" />
+            </Button>
+          ) : null}
+          {hasLabelsAccess ? (
+            <Button
+              onClick={() => onUpdate(label)}
+              disabled={this.state.changed ? false : true}
+            >
+              Update
+            </Button>
+          ) : null}
         </Table.Cell>
       </Table.Row>
     )

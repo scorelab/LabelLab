@@ -10,7 +10,8 @@ import {
   getLabelCount,
   fetchLabels,
   fetchCoordinates,
-  fetchAllTeams
+  fetchAllTeams,
+  fetchProjectRoles
 } from '../../actions/index'
 import Load from '../loading/index'
 import './css/index.css'
@@ -79,7 +80,8 @@ class ProjectIndex extends Component {
       fetchLabels,
       fetchLabelCount,
       fetchCoordinates,
-      fetchAllTeams
+      fetchAllTeams,
+      fetchProjectRoles
     } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
@@ -87,6 +89,7 @@ class ProjectIndex extends Component {
     fetchLabelCount(match.params.projectId)
     fetchCoordinates(match.params.projectId)
     fetchAllTeams(match.params.projectId)
+    fetchProjectRoles(match.params.projectId)
   }
   render() {
     const { match, actions, history, actionsLabel } = this.props
@@ -199,6 +202,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchAllTeams: projectId => {
       return dispatch(fetchAllTeams(projectId))
+    },
+    fetchProjectRoles: projectId => {
+      return dispatch(fetchProjectRoles(projectId))
     }
   }
 }
