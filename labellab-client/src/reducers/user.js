@@ -17,6 +17,7 @@ const initialState = {
     errors: ''
   },
   userDetails: {
+    id: '',
     name: '',
     username: '',
     thumbnail: '',
@@ -68,6 +69,7 @@ const user = (state = initialState, action) => {
           isfetching: false
         },
         userDetails: {
+          id: action.payload.id,
           name: action.payload.name,
           email: action.payload.email,
           username: action.payload.username,

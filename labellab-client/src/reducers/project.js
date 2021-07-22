@@ -25,7 +25,10 @@ import {
   FETCH_TEAMS_SUCCESS,
   DELETE_TEAM_FAILURE,
   DELETE_TEAM_REQUEST,
-  DELETE_TEAM_SUCCESS
+  DELETE_TEAM_SUCCESS,
+  LEAVE_PROJECT_REQUEST,
+  LEAVE_PROJECT_FAILURE,
+  LEAVE_PROJECT_SUCCESS
 } from '../constants/index'
 const initialState = {
   projectActions: {
@@ -97,7 +100,8 @@ const project = (state = initialState, action) => {
           projectName: action.payload.projectName,
           projectDescription: action.payload.projectDescription,
           images: action.payload.images,
-          members: action.payload.members
+          members: action.payload.members,
+          admin: action.payload.adminId
         }
       }
     case FETCH_PROJECT_ALL_REQUEST:
@@ -169,6 +173,7 @@ const project = (state = initialState, action) => {
           msg: 'Member removed successfully'
         }
       }
+    case LEAVE_PROJECT_REQUEST:
     case DELETE_PROJECT_REQUEST:
       return {
         ...state,
@@ -176,6 +181,7 @@ const project = (state = initialState, action) => {
           isdeletingproject: true
         }
       }
+    case LEAVE_PROJECT_FAILURE:
     case DELETE_PROJECT_FAILURE:
       return {
         ...state,
@@ -184,6 +190,7 @@ const project = (state = initialState, action) => {
           errors: action.payload
         }
       }
+    case LEAVE_PROJECT_SUCCESS:
     case DELETE_PROJECT_SUCCESS:
       return {
         ...state,
