@@ -13,14 +13,25 @@ import {
   Message,
   Dropdown
 } from 'semantic-ui-react'
-import { addMember, fetchProject, memberDelete, teamDelete, fetchAllTeams } from '../../actions'
+import {
+  addMember,
+  fetchProject,
+  memberDelete,
+  teamDelete,
+  fetchAllTeams
+} from '../../actions'
 import SearchUser from './searchUser.js'
 import './css/team.css'
 
 const teamsOptions = [
   { key: 1, value: 'images', role: 'images', text: 'images' },
   { key: 2, value: 'labels', role: 'labels', text: 'labels' },
-  { key: 3, value: 'image labelling', role: 'image labelling', text: 'image labelling' },
+  {
+    key: 3,
+    value: 'image labelling',
+    role: 'image labelling',
+    text: 'image labelling'
+  },
   { key: 4, value: 'models', role: 'models', text: 'models' }
 ]
 
@@ -43,7 +54,8 @@ class TeamIndex extends Component {
       [e.target.name]: e.target.value
     })
   }
-  handleDropDownChange = (e, { name, value }) => this.setState({ [name]: value })
+  handleDropDownChange = (e, { name, value }) =>
+    this.setState({ [name]: value })
   handleMemberSubmit = () => {
     const { project, addMember } = this.props
     const { member_email, team, role } = this.state
@@ -112,12 +124,13 @@ class TeamIndex extends Component {
           <Modal.Actions>
             <SearchUser history={history} updateState={this.updateState} />
             <Dropdown
-              name='team'
-              placeholder='Team'
+              name="team"
+              placeholder="Team"
               search
               selection
               options={teamsOptions}
-              onChange={this.handleDropDownChange} />
+              onChange={this.handleDropDownChange}
+            />
             <Button
               positive
               onClick={this.handleMemberSubmit}
@@ -152,13 +165,15 @@ class TeamIndex extends Component {
 
                   <Table.Cell collapsing>
                     {member.team_role !== 'admin' &&
-                      member.email !== user.email ? (
-                        <Icon
-                          className="team-remove-user-icon"
-                          name="user delete"
-                          onClick={() => this.handleDelete(member.email, member.team_id)}
-                        />
-                      ) : null}
+                    member.email !== user.email ? (
+                      <Icon
+                        className="team-remove-user-icon"
+                        name="user delete"
+                        onClick={() =>
+                          this.handleDelete(member.email, member.team_id)
+                        }
+                      />
+                    ) : null}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -176,8 +191,8 @@ class TeamIndex extends Component {
             Add member
           </Button>
         </div>
-        <Container className='team-management-conatiner'>
-          <Table color="green" celled striped stackable className='all-teams'>
+        <Container className="team-management-conatiner">
+          <Table color="green" celled striped stackable className="all-teams">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell singleLine>Team name</Table.HeaderCell>
@@ -191,7 +206,15 @@ class TeamIndex extends Component {
               {project &&
                 project.teams &&
                 project.teams.map((team, index) => (
-                  <Table.Row key={index}>
+                  <Table.Row
+                    key={index}
+                    className="team-item"
+                    onClick={() =>
+                      history.push(
+                        `/project/${team.project_id}/team-details/${team.id}`
+                      )
+                    }
+                  >
                     <Table.Cell>
                       <Header as="h4">{team.team_name}</Header>
                     </Table.Cell>
@@ -214,7 +237,7 @@ class TeamIndex extends Component {
                 ))}
             </Table.Body>
           </Table>
-          <Table color="green" celled striped stackable className='my-team'>
+          <Table color="green" celled striped stackable className="my-team">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell singleLine>My Teams</Table.HeaderCell>
@@ -225,8 +248,9 @@ class TeamIndex extends Component {
             <Table.Body>
               {project &&
                 project.members &&
-                project.members.filter(member =>
-                  member.email === user.email).map((team, index) => (
+                project.members
+                  .filter(member => member.email === user.email)
+                  .map((team, index) => (
                     <Table.Row key={index}>
                       <Table.Cell>
                         <Header as="h4">{team.team_name}</Header>
