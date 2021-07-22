@@ -7,7 +7,10 @@ import {
   DELETE_TEAM_FAILURE,
   UPDATE_TEAM_REQUEST,
   UPDATE_TEAM_SUCCESS,
-  UPDATE_TEAM_FAILURE
+  UPDATE_TEAM_FAILURE,
+  ADD_TEAM_MEMBER_REQUEST,
+  ADD_TEAM_MEMBER_SUCCESS,
+  ADD_TEAM_MEMBER_FAILURE
 } from '../constants/index'
 
 const initialState = {
@@ -48,6 +51,7 @@ const team = (state = initialState, action) => {
         }
       }
     case UPDATE_TEAM_REQUEST:
+    case ADD_TEAM_MEMBER_REQUEST:
       return {
         ...state,
         teamActions: {
@@ -55,6 +59,7 @@ const team = (state = initialState, action) => {
         }
       }
     case UPDATE_TEAM_SUCCESS:
+    case ADD_TEAM_MEMBER_SUCCESS:
       return {
         ...state,
         teamActions: {
@@ -62,6 +67,7 @@ const team = (state = initialState, action) => {
         }
       }
     case UPDATE_TEAM_FAILURE:
+    case ADD_TEAM_MEMBER_FAILURE:
       return {
         ...state,
         teamActions: {

@@ -20,8 +20,10 @@ import {
   fetchTeam,
   teamDelete,
   fetchProject,
-  updateTeam
+  updateTeam,
+  addTeamMember
 } from '../../actions/index'
+import SearchUser from './searchUser'
 
 const teamsOptions = [
   { key: 1, value: 'images', role: 'images', text: 'images' },
@@ -42,9 +44,31 @@ class TeamDetails extends Component {
     this.state = {
       isDeleteTeamModalOpen: false,
       isUpdateTeamModalOpen: false,
+      isAddMemberModalOpen: false,
       invalidDetails: false,
       teamname: '',
-      role: ''
+      role: '',
+      memberEmail: ''
+    }
+  }
+
+  componentDidMount() {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      fetchTeam
+    } = this.props
+    fetchTeam(projectId, teamId)
+  }
+
+  componentDidUpdate(prevProps) {
+    const { team } = this.props
+    if (team && prevProps.team !== team) {
+      this.setState({
+        teamname: team.teamName,
+        role: team.role
+      })
     }
   }
 
@@ -53,6 +77,9 @@ class TeamDetails extends Component {
 
   updateTeamConfirmation = () => this.setState({ isUpdateTeamModalOpen: true })
   closeUpdateTeam = () => this.setState({ isUpdateTeamModalOpen: false })
+
+  addMemberConfirmation = () => this.setState({ isAddMemberModalOpen: true })
+  closeAddMember = () => this.setState({ isAddMemberModalOpen: false })
 
   handleChange = e => {
     this.setState(
@@ -76,24 +103,10 @@ class TeamDetails extends Component {
   handleDropDownChange = (e, { name, value }) =>
     this.setState({ [name]: value })
 
-  componentDidMount() {
-    const {
-      match: {
-        params: { projectId, teamId }
-      },
-      fetchTeam
-    } = this.props
-    fetchTeam(projectId, teamId)
-  }
-
-  componentDidUpdate(prevProps) {
-    const { team } = this.props
-    if (team && prevProps.team !== team) {
-      this.setState({
-        teamname: team.teamName,
-        role: team.role
-      })
-    }
+  updateMemberEmail = data => {
+    this.setState({
+      memberEmail: data
+    })
   }
 
   deleteTeam = () => {
@@ -122,6 +135,21 @@ class TeamDetails extends Component {
     )
   }
 
+  addTeamMember = () => {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      addTeamMember
+    } = this.props
+    addTeamMember(
+      projectId,
+      teamId,
+      this.state.memberEmail,
+      this.addTeamMemberCallback
+    )
+  }
+
   deleteTeamCallback = () => {
     const {
       match: {
@@ -145,13 +173,24 @@ class TeamDetails extends Component {
     fetchTeam(projectId, teamId)
   }
 
+  addTeamMemberCallback = () => {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      fetchTeam
+    } = this.props
+    this.closeAddMember()
+    fetchTeam(projectId, teamId)
+  }
+
   capitalize = string => {
     if (!string) return
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
   render() {
-    const { team, teamActions } = this.props
+    const { team, teamActions, history } = this.props
 
     return (
       <Fragment>
@@ -224,7 +263,7 @@ class TeamDetails extends Component {
                       <Table.Row>
                         <Table.HeaderCell>Team Members </Table.HeaderCell>
                         <Table.HeaderCell width={1}>
-                          <Button icon>
+                          <Button icon onClick={this.addMemberConfirmation}>
                             <Icon name="add circle" />
                           </Button>
                         </Table.HeaderCell>
@@ -302,6 +341,33 @@ class TeamDetails extends Component {
             </Button>
           </Modal.Actions>
         </Modal>
+        {/* Add Team Member Modal */}
+        <Modal
+          open={this.state.isAddMemberModalOpen}
+          onClose={this.closeAddMember}
+          onOpen={this.addMemberConfirmation}
+        >
+          <Header icon="user add" content="Add Team Member" />
+          <Modal.Content>
+            <SearchUser
+              history={history}
+              updateState={this.updateMemberEmail}
+            />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="red" onClick={this.closeAddMember}>
+              <Icon name="remove" />
+              Cancel
+            </Button>
+            <Button
+              color="green"
+              onClick={this.addTeamMember}
+              disabled={!this.state.memberEmail}
+            >
+              <Icon name="checkmark" /> Add
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </Fragment>
     )
   }
@@ -332,6 +398,9 @@ const mapDispatchToProps = dispatch => {
     },
     updateTeam: (projectId, teamId, teamname, role, callback) => {
       dispatch(updateTeam(projectId, teamId, teamname, role, callback))
+    },
+    addTeamMember: (projectId, teamId, memberEmail, callback) => {
+      dispatch(addTeamMember(projectId, teamId, memberEmail, callback))
     }
   }
 }
