@@ -6,7 +6,8 @@ import PropTypes from 'prop-types'
 import {
   fetchProject,
   deleteProject,
-  fetchAllProject
+  fetchAllProject,
+  leaveProject
 } from '../../actions/index'
 import './css/sidebar.css'
 
@@ -14,13 +15,15 @@ class ProjectSidebar extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      activeItem: ''
+      activeItem: '',
+      leaveProjectOpen: false
     }
   }
   componentDidMount() {
     this.setState({
       activeItem: window.location.pathname.substring(34),
-      open: false
+      open: false,
+      leaveProjectOpen: false
     })
   }
   imageCallback = () => {
@@ -35,6 +38,15 @@ class ProjectSidebar extends Component {
       this.fetchAllProjectCallback
     )
   }
+
+  handleLeaveProject = () => {
+    const {
+      project: { projectId },
+      leaveProject
+    } = this.props
+    leaveProject(projectId, this.fetchAllProjectCallback)
+  }
+
   fetchAllProjectCallback = () => {
     fetchAllProject()
     this.props.history.push({
@@ -51,8 +63,11 @@ class ProjectSidebar extends Component {
       open: false
     })
   }
+  handleLeaveProjectOpen = () => this.setState({ leaveProjectOpen: true })
+  handleLeaveProjectClose = () => this.setState({ leaveProjectOpen: false })
+
   render() {
-    const { project } = this.props
+    const { project, user } = this.props
     const { activeItem } = this.state
     return (
       <div className="sidebar-parent">
@@ -68,7 +83,7 @@ class ProjectSidebar extends Component {
                 onClick={this.handleItemClick}
               >
                 Project Team
-                </Menu.Item>
+              </Menu.Item>
 
               <Menu.Item
                 as={Link}
@@ -78,7 +93,7 @@ class ProjectSidebar extends Component {
                 onClick={this.handleItemClick}
               >
                 Project Images
-                  {project.images && <Label>{project.images.length}</Label>}
+                {project.images && <Label>{project.images.length}</Label>}
               </Menu.Item>
 
               <Menu.Item
@@ -89,7 +104,7 @@ class ProjectSidebar extends Component {
                 onClick={this.handleItemClick}
               >
                 Project Analytics
-                </Menu.Item>
+              </Menu.Item>
               <Menu.Item
                 as={Link}
                 to={`/project/${project.projectId}/labels`}
@@ -98,7 +113,7 @@ class ProjectSidebar extends Component {
                 onClick={this.handleItemClick}
               >
                 Project Labels
-                </Menu.Item>
+              </Menu.Item>
               <Menu.Item
                 as={Link}
                 to={`/project/${project.projectId}/models`}
@@ -107,7 +122,7 @@ class ProjectSidebar extends Component {
                 onClick={this.handleItemClick}
               >
                 Project Models
-                </Menu.Item>
+              </Menu.Item>
               <Menu.Item
                 as={Link}
                 to={`/project/${project.projectId}/path-tracking`}
@@ -116,7 +131,7 @@ class ProjectSidebar extends Component {
                 onClick={this.handleItemClick}
               >
                 Image Path Tracking
-                </Menu.Item>
+              </Menu.Item>
             </Menu>
           </div>
           <Confirm
@@ -126,17 +141,31 @@ class ProjectSidebar extends Component {
           />
         </div>
 
-        <Button
-          negative
-          basic
-          className="delete-project-button"
-          onClick={this.handleOpen}
-          content="Delete Project"
-        />
+        {user.id === project.admin ? (
+          <Button
+            negative
+            basic
+            className="delete-project-button"
+            onClick={this.handleOpen}
+            content="Delete Project"
+          />
+        ) : (
+          <Button
+            negative
+            className="delete-project-button"
+            onClick={this.handleLeaveProjectOpen}
+            content="Leave Project"
+          />
+        )}
         <Confirm
           open={this.state.open}
           onCancel={this.handleClose}
           onConfirm={this.handleDeleteProject}
+        />
+        <Confirm
+          open={this.state.leaveProjectOpen}
+          onCancel={this.handleLeaveProjectClose}
+          onConfirm={this.handleLeaveProject}
         />
       </div>
     )
@@ -153,7 +182,8 @@ ProjectSidebar.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    project: state.projects.currentProject
+    project: state.projects.currentProject,
+    user: state.user.userDetails
   }
 }
 
@@ -167,6 +197,9 @@ const mapDispatchToProps = dispatch => {
     },
     deleteProject: (projectId, callback) => {
       return dispatch(deleteProject(projectId, callback))
+    },
+    leaveProject: (projectId, callback) => {
+      return dispatch(leaveProject(projectId, callback))
     }
   }
 }
