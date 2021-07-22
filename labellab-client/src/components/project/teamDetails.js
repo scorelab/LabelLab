@@ -9,12 +9,18 @@ import {
   Grid,
   Button,
   Icon,
-  Table
+  Table,
+  Confirm
 } from 'semantic-ui-react'
 
-import { fetchTeam } from '../../actions/index'
+import { fetchTeam, teamDelete, fetchProject } from '../../actions/index'
 
 class TeamDetails extends Component {
+  state = { open: false }
+
+  deleteTeamConfirmation = () => this.setState({ open: true })
+  closeDeleteTeam = () => this.setState({ open: false })
+
   componentDidMount() {
     const {
       match: {
@@ -25,7 +31,29 @@ class TeamDetails extends Component {
     fetchTeam(projectId, teamId)
   }
 
-  capitalize(string) {
+  deleteTeam = () => {
+    const {
+      match: {
+        params: { projectId, teamId }
+      },
+      teamDelete
+    } = this.props
+    teamDelete(projectId, teamId, this.deleteTeamCallback)
+  }
+
+  deleteTeamCallback = () => {
+    const {
+      match: {
+        params: { projectId }
+      },
+      history,
+      fetchProject
+    } = this.props
+    history.push({ pathname: `/project/${projectId}/team` })
+    fetchProject(projectId)
+  }
+
+  capitalize = string => {
     if (!string) return
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
@@ -58,7 +86,7 @@ class TeamDetails extends Component {
                     <Button icon>
                       <Icon name="edit" />
                     </Button>
-                    <Button icon>
+                    <Button icon onClick={this.deleteTeamConfirmation}>
                       <Icon name="delete" />
                     </Button>
                   </Grid.Row>
@@ -129,6 +157,11 @@ class TeamDetails extends Component {
             </Grid>
           </div>
         )}
+        <Confirm
+          open={this.state.open}
+          onCancel={this.closeDeleteTeam}
+          onConfirm={this.deleteTeam}
+        />
       </Fragment>
     )
   }
@@ -150,6 +183,12 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchTeam: (projectId, teamId) => {
       dispatch(fetchTeam(projectId, teamId))
+    },
+    teamDelete: (projectId, teamId, callback) => {
+      dispatch(teamDelete(teamId, projectId, callback))
+    },
+    fetchProject: projectId => {
+      dispatch(fetchProject(projectId))
     }
   }
 }
