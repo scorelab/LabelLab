@@ -4,13 +4,17 @@ import {
   FETCH_TEAM_FAILURE,
   DELETE_TEAM_REQUEST,
   DELETE_TEAM_SUCCESS,
-  DELETE_TEAM_FAILURE
+  DELETE_TEAM_FAILURE,
+  UPDATE_TEAM_REQUEST,
+  UPDATE_TEAM_SUCCESS,
+  UPDATE_TEAM_FAILURE
 } from '../constants/index'
 
 const initialState = {
   teamActions: {
     isfetching: false,
     isDeleting: false,
+    isUpdating: false,
     errors: '',
     msg: ''
   },
@@ -40,6 +44,28 @@ const team = (state = initialState, action) => {
         ...state,
         teamActions: {
           isfetching: false,
+          errors: payload
+        }
+      }
+    case UPDATE_TEAM_REQUEST:
+      return {
+        ...state,
+        teamActions: {
+          isUpdating: true
+        }
+      }
+    case UPDATE_TEAM_SUCCESS:
+      return {
+        ...state,
+        teamActions: {
+          isUpdating: false
+        }
+      }
+    case UPDATE_TEAM_FAILURE:
+      return {
+        ...state,
+        teamActions: {
+          isUpdating: false,
           errors: payload
         }
       }
