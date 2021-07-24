@@ -16,6 +16,7 @@ import {
   Dropdown,
   Message
 } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 import {
   fetchTeam,
@@ -271,7 +272,11 @@ class TeamDetails extends Component {
                       <Table.Row>
                         <Table.HeaderCell>Recent Activity </Table.HeaderCell>
                         <Table.HeaderCell>
-                          <Button icon>
+                          <Button
+                            icon
+                            as={Link}
+                            to={`/project/${team.projectId}/logs/category/${team.role}`}
+                          >
                             <Icon name="arrow alternate circle right outline" />
                           </Button>
                         </Table.HeaderCell>
