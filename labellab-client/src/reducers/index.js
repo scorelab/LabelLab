@@ -10,6 +10,7 @@ import searchUser from './searchUser'
 import analytics from './analytics'
 import model from './model'
 import teams from './teams'
+import logs from './logs'
 
 const rootReducers = combineReducers({
   auth,
@@ -22,7 +23,8 @@ const rootReducers = combineReducers({
   projects: project,
   images: image,
   labels: label,
-  teams
+  teams,
+  logs
 })
 
 export default rootReducers
