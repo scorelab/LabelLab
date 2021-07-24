@@ -15,6 +15,7 @@ import {
 
 import {
   fetchProjectLogs,
+  fetchMemberSpecificLogs,
   fetchCategorySpecificLogs
 } from '../../actions/index'
 
@@ -35,7 +36,8 @@ class ProjectActivity extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      category: 'all'
+      category: 'all',
+      member: 'all'
     }
   }
 
@@ -45,7 +47,7 @@ class ProjectActivity extends Component {
       fetchProjectLogs,
       fetchCategorySpecificLogs
     } = this.props
-    this.setState({ category: value })
+    this.setState({ category: value, member: 'all' })
     if (value === 'all') {
       fetchProjectLogs(projectId)
     } else {
@@ -53,9 +55,20 @@ class ProjectActivity extends Component {
     }
   }
 
+  filterOnMember = (e, { value }) => {
+    const { projectId, fetchProjectLogs, fetchMemberSpecificLogs } = this.props
+    this.setState({ member: value, category: 'all' })
+    if (value === 'all') {
+      fetchProjectLogs(projectId)
+    } else {
+      fetchMemberSpecificLogs(projectId, value)
+    }
+  }
+
   render() {
     const {
       logs,
+      members,
       logsActions: { isFetching, errors }
     } = this.props
 
@@ -75,19 +88,40 @@ class ProjectActivity extends Component {
             </Message.Content>
           </Message>
         ) : null}
-        <Header as="h4" subheader>
-          Category
-          <Header.Subheader as="h4" className="margin-v">
-            <Dropdown
-              name="category"
-              placeholder="Category"
-              selection
-              value={this.state.category}
-              options={categoryOptions}
-              onChange={this.filterOnCategory}
-            />
-          </Header.Subheader>
-        </Header>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <Header as="h4" subheader>
+                Category
+                <Header.Subheader as="h4" className="margin-v">
+                  <Dropdown
+                    name="category"
+                    placeholder="Category"
+                    selection
+                    value={this.state.category}
+                    options={categoryOptions}
+                    onChange={this.filterOnCategory}
+                  />
+                </Header.Subheader>
+              </Header>
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <Header as="h4" subheader>
+                Member
+                <Header.Subheader as="h4" className="margin-v">
+                  <Dropdown
+                    name="member"
+                    placeholder="Member"
+                    selection
+                    value={this.state.member}
+                    options={members}
+                    onChange={this.filterOnMember}
+                  />
+                </Header.Subheader>
+              </Header>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
         <Divider />
 
         <Table color="black">
@@ -136,7 +170,19 @@ const mapStateToProps = state => {
   return {
     logs: state.logs.logs,
     logsActions: state.logs.logsActions,
-    projectId: state.projects.currentProject.projectId
+    projectId: state.projects.currentProject.projectId,
+    members: state.projects.currentProject.members
+      ? [
+          { key: 'all', value: 'all', text: 'all' },
+          ...state.projects.currentProject.members.map(member => {
+            return {
+              key: member.email,
+              value: member.email,
+              text: member.email
+            }
+          })
+        ]
+      : []
   }
 }
 
@@ -144,6 +190,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchProjectLogs: projectId => {
       return dispatch(fetchProjectLogs(projectId))
+    },
+    fetchMemberSpecificLogs: (projectId, memberEmail) => {
+      return dispatch(fetchMemberSpecificLogs(projectId, memberEmail))
     },
     fetchCategorySpecificLogs: (projectId, category) => {
       return dispatch(fetchCategorySpecificLogs(projectId, category))
