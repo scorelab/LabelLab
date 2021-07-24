@@ -235,6 +235,11 @@ class ModelsIndex extends Component {
                       size="tiny"
                       onClick={() => this.openTestingModal(model.id)}
                     />
+                    <Link
+                      to={`/project/${project.projectId}/logs/entity/model/${model.id}`}
+                    >
+                      <Button icon="history" label="Activity" size="tiny" />
+                    </Link>
                   </Table.Cell>
                 </Table.Row>
               ))}
