@@ -104,7 +104,8 @@ const project = (state = initialState, action) => {
           projectDescription: action.payload.projectDescription,
           images: action.payload.images,
           members: action.payload.members,
-          admin: action.payload.adminId
+          admin: action.payload.adminId,
+          logs: action.payload.logs
         }
       }
     case FETCH_PROJECT_ALL_REQUEST:
