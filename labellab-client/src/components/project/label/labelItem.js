@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { Input, Select, Button, Icon, Table, Header } from 'semantic-ui-react'
 import '../css/labelItem.css'
 
@@ -47,6 +48,11 @@ class LabelItem extends Component {
           />
         </Table.Cell>
         <Table.Cell collapsing>
+          <Link
+            to={`/project/${label.project_id}/logs/entity/label/${label.id}`}
+          >
+            <Button icon="history" size="tiny" />
+          </Link>
           {hasLabelsAccess ? (
             <Button
               negative

@@ -16,6 +16,7 @@ import {
 import {
   fetchProjectLogs,
   fetchMemberSpecificLogs,
+  fetchEntitySpecificLogs,
   fetchCategorySpecificLogs
 } from '../../actions/index'
 
@@ -44,10 +45,12 @@ class ProjectActivity extends Component {
   componentDidMount() {
     const {
       match: {
-        params: { projectId, category }
+        params: { projectId, category, entityType, entityId }
       },
+      fetchEntitySpecificLogs,
       fetchCategorySpecificLogs
     } = this.props
+    console.log(projectId, category, entityType, entityId)
     if (category) {
       if (category === 'admin') {
         this.setState({ category: 'general' })
@@ -56,6 +59,8 @@ class ProjectActivity extends Component {
         this.setState({ category })
         fetchCategorySpecificLogs(projectId, category)
       }
+    } else if (entityType && entityId) {
+      fetchEntitySpecificLogs(projectId, entityType, entityId)
     }
   }
 
@@ -211,6 +216,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchMemberSpecificLogs: (projectId, memberEmail) => {
       return dispatch(fetchMemberSpecificLogs(projectId, memberEmail))
+    },
+    fetchEntitySpecificLogs: (projectId, entityType, entityId) => {
+      return dispatch(fetchEntitySpecificLogs(projectId, entityType, entityId))
     },
     fetchCategorySpecificLogs: (projectId, category) => {
       return dispatch(fetchCategorySpecificLogs(projectId, category))

@@ -385,8 +385,9 @@ class ImagesIndex extends Component {
                     checked={selectAll}
                   />
                 </Table.HeaderCell>
-                <Table.HeaderCell width={11}>Image Link</Table.HeaderCell>
-                <Table.HeaderCell width={3}>
+                <Table.HeaderCell width={6}>Image Link</Table.HeaderCell>
+                <Table.HeaderCell width={3}>Activity</Table.HeaderCell>
+                <Table.HeaderCell width={5}>
                   Actions
                   <Button
                     negative
@@ -503,7 +504,7 @@ const Row = ({
         checked={selected}
       />
     </Table.Cell>
-    <Table.Cell width={11}>
+    <Table.Cell width={6}>
       <a
         rel={'external'}
         href={
@@ -536,6 +537,11 @@ const Row = ({
       ) : null}
     </Table.Cell>
     <Table.Cell width={3}>
+      <Link to={`/project/${projectId}/logs/entity/image/${image.id}`}>
+        <Button icon="history" label="Activity" size="tiny" />
+      </Link>
+    </Table.Cell>
+    <Table.Cell width={5}>
       {hasImagesAccess ? (
         <div>
           <Link to={`/labeller/${projectId}/${image.id}`}>
