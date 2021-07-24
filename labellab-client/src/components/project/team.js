@@ -13,7 +13,8 @@ import {
   Loader,
   Message,
   Dropdown,
-  Grid
+  Grid,
+  Divider
 } from 'semantic-ui-react'
 import {
   addMember,
@@ -143,16 +144,20 @@ class TeamIndex extends Component {
 
         <Grid>
           <Grid.Row>
-            <Grid.Column width={14}>
+            <Grid.Column width={13}>
               <Header as="h3">Recent Activity</Header>
             </Grid.Column>
-            <Grid.Column width={2}>
+            <Grid.Column width={3}>
               <Button
+                icon
                 primary
                 as={Link}
+                labelPosition="left"
                 to={`/project/${project.projectId}/logs`}
-                content="More"
-              />
+              >
+                <Icon name="arrow alternate circle right" />
+                More
+              </Button>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -185,10 +190,34 @@ class TeamIndex extends Component {
           </Table.Body>
         </Table>
 
+        <Divider />
+
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={13}>
+              <Header as="h3">Project Members</Header>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              {roles && roles.includes('admin') ? (
+                <Button
+                  icon
+                  positive
+                  className="add-member"
+                  onClick={this.handleAddMember}
+                  labelPosition="left"
+                >
+                  <Icon name="add" />
+                  Add
+                </Button>
+              ) : null}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+
         <Table color="green" celled padded striped stackable>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell singleLine>Project Members</Table.HeaderCell>
+              <Table.HeaderCell singleLine>Name</Table.HeaderCell>
               <Table.HeaderCell>Role</Table.HeaderCell>
               <Table.HeaderCell>Team</Table.HeaderCell>
               <Table.HeaderCell />
@@ -230,20 +259,7 @@ class TeamIndex extends Component {
               ))}
           </Table.Body>
         </Table>
-        <div className="add-member-button">
-          {roles && roles.includes('admin') ? (
-            <Button
-              icon
-              positive
-              className="add-member"
-              onClick={this.handleAddMember}
-              labelPosition="left"
-            >
-              <Icon name="add" />
-              Add member
-            </Button>
-          ) : null}
-        </div>
+
         <Container className="team-management-conatiner">
           <Table color="green" celled striped stackable className="all-teams">
             <Table.Header>
