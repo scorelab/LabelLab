@@ -156,28 +156,35 @@ class ProjectActivity extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {logs
-              ? logs.map(log => (
-                  <Table.Row
-                    negative={log.category === 'models'}
-                    positive={log.category === 'images'}
-                    warning={log.category === 'labels'}
-                    active={log.category === 'general'}
-                    key={log.id}
-                  >
-                    <Table.Cell width={12}>
-                      <Header as="h4" subheader>
-                        {log.message}
-                        <Header.Subheader as="h6">
-                          {log.timestamp}
-                        </Header.Subheader>
-                      </Header>
-                    </Table.Cell>
-                    <Table.Cell width={4}>{log.category}</Table.Cell>
-                    <Table.Cell width={4}>{log.username}</Table.Cell>
-                  </Table.Row>
-                ))
-              : null}
+            {logs && logs.length > 0 ? (
+              logs.map(log => (
+                <Table.Row
+                  negative={log.category === 'models'}
+                  positive={log.category === 'images'}
+                  warning={log.category === 'labels'}
+                  active={log.category === 'general'}
+                  key={log.id}
+                >
+                  <Table.Cell width={12}>
+                    <Header as="h4" subheader>
+                      {log.message}
+                      <Header.Subheader as="h6">
+                        {log.timestamp}
+                      </Header.Subheader>
+                    </Header>
+                  </Table.Cell>
+                  <Table.Cell width={4}>{log.category}</Table.Cell>
+                  <Table.Cell width={4}>{log.username}</Table.Cell>
+                </Table.Row>
+              ))
+            ) : (
+              <Table.Row>
+                <Table.Cell width={16}>
+                  <Icon name="warning" />
+                  <strong>Oops!</strong> No logs found
+                </Table.Cell>
+              </Table.Row>
+            )}
           </Table.Body>
         </Table>
       </Fragment>
