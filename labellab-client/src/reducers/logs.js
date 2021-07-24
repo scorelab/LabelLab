@@ -4,7 +4,10 @@ import {
   FETCH_PROJECT_LOGS_FAILURE,
   FETCH_CATEGORY_SPECIFIC_LOGS_REQUEST,
   FETCH_CATEGORY_SPECIFIC_LOGS_SUCCESS,
-  FETCH_CATEGORY_SPECIFIC_LOGS_FAILURE
+  FETCH_CATEGORY_SPECIFIC_LOGS_FAILURE,
+  FETCH_MEMBER_SPECIFIC_LOGS_FAILURE,
+  FETCH_MEMBER_SPECIFIC_LOGS_SUCCESS,
+  FETCH_MEMBER_SPECIFIC_LOGS_REQUEST
 } from '../constants/index'
 
 const initialState = {
@@ -19,6 +22,7 @@ const logs = (state = initialState, action) => {
   const { type, payload } = action
   switch (type) {
     case FETCH_PROJECT_LOGS_REQUEST:
+    case FETCH_MEMBER_SPECIFIC_LOGS_REQUEST:
     case FETCH_CATEGORY_SPECIFIC_LOGS_REQUEST:
       return {
         ...state,
@@ -27,6 +31,7 @@ const logs = (state = initialState, action) => {
         }
       }
     case FETCH_PROJECT_LOGS_SUCCESS:
+    case FETCH_MEMBER_SPECIFIC_LOGS_SUCCESS:
     case FETCH_CATEGORY_SPECIFIC_LOGS_SUCCESS:
       return {
         ...state,
@@ -36,6 +41,7 @@ const logs = (state = initialState, action) => {
         }
       }
     case FETCH_PROJECT_LOGS_FAILURE:
+    case FETCH_MEMBER_SPECIFIC_LOGS_FAILURE:
     case FETCH_CATEGORY_SPECIFIC_LOGS_FAILURE:
       return {
         ...state,
