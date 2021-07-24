@@ -41,6 +41,24 @@ class ProjectActivity extends Component {
     }
   }
 
+  componentDidMount() {
+    const {
+      match: {
+        params: { projectId, category }
+      },
+      fetchCategorySpecificLogs
+    } = this.props
+    if (category) {
+      if (category === 'admin') {
+        this.setState({ category: 'general' })
+        fetchCategorySpecificLogs(projectId, 'general')
+      } else {
+        this.setState({ category })
+        fetchCategorySpecificLogs(projectId, category)
+      }
+    }
+  }
+
   filterOnCategory = (e, { value }) => {
     const {
       projectId,

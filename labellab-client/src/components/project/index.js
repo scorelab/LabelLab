@@ -167,6 +167,11 @@ class ProjectIndex extends Component {
                 path={`${match.path}/logs`}
                 component={ProjectActivity}
               />
+              <PrivateRoute
+                exact
+                path={`${match.path}/logs/category/:category`}
+                component={ProjectActivity}
+              />
             </Switch>
           </div>
         </div>
