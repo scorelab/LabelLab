@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {
   Container,
@@ -11,7 +12,8 @@ import {
   Dimmer,
   Loader,
   Message,
-  Dropdown
+  Dropdown,
+  Grid
 } from 'semantic-ui-react'
 import {
   addMember,
@@ -91,7 +93,7 @@ class TeamIndex extends Component {
     })
   }
   render() {
-    const { project, actions, history, user, roles } = this.props
+    const { project, actions, history, user, roles, logs } = this.props
     const { open } = this.state
     console.log(project)
     return (
@@ -138,6 +140,51 @@ class TeamIndex extends Component {
             />
           </Modal.Actions>
         </Modal>
+
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={14}>
+              <Header as="h3">Recent Activity</Header>
+            </Grid.Column>
+            <Grid.Column width={2}>
+              <Button
+                primary
+                as={Link}
+                to={`/project/${project.projectId}/logs`}
+                content="More"
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+
+        <Table color="green">
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Activity</Table.HeaderCell>
+              <Table.HeaderCell>Category</Table.HeaderCell>
+              <Table.HeaderCell>Member</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {logs
+              ? logs.map(log => (
+                  <Table.Row key={log.id}>
+                    <Table.Cell width={12}>
+                      <Header as="h4" subheader>
+                        {log.message}
+                        <Header.Subheader as="h6">
+                          {log.timestamp}
+                        </Header.Subheader>
+                      </Header>
+                    </Table.Cell>
+                    <Table.Cell width={4}>{log.category}</Table.Cell>
+                    <Table.Cell width={4}>{log.username}</Table.Cell>
+                  </Table.Row>
+                ))
+              : null}
+          </Table.Body>
+        </Table>
+
         <Table color="green" celled padded striped stackable>
           <Table.Header>
             <Table.Row>
@@ -295,7 +342,8 @@ const mapStateToProps = state => {
     user: state.user.userDetails,
     project: state.projects.currentProject,
     actions: state.projects.projectActions,
-    roles: state.projects.currentProject.roles
+    roles: state.projects.currentProject.roles,
+    logs: state.projects.currentProject.logs
   }
 }
 

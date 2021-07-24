@@ -29,7 +29,7 @@ class ProjectActivity extends Component {
         <Table color="black">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Recent Activity </Table.HeaderCell>
+              <Table.HeaderCell>Activity</Table.HeaderCell>
               <Table.HeaderCell>Category</Table.HeaderCell>
               <Table.HeaderCell>Member</Table.HeaderCell>
             </Table.Row>
