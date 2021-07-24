@@ -11,7 +11,8 @@ import {
   fetchLabels,
   fetchCoordinates,
   fetchAllTeams,
-  fetchProjectRoles
+  fetchProjectRoles,
+  fetchProjectLogs
 } from '../../actions/index'
 import Load from '../loading/index'
 import './css/index.css'
@@ -66,6 +67,10 @@ const TeamDetails = Loadable({
   loader: () => import('./teamDetails'),
   loading: Loading
 })
+const ProjectActivity = Loadable({
+  loader: () => import('./projectActivity'),
+  loading: Loading
+})
 
 class ProjectIndex extends Component {
   constructor(props) {
@@ -81,7 +86,8 @@ class ProjectIndex extends Component {
       fetchLabelCount,
       fetchCoordinates,
       fetchAllTeams,
-      fetchProjectRoles
+      fetchProjectRoles,
+      fetchProjectLogs
     } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
@@ -90,6 +96,7 @@ class ProjectIndex extends Component {
     fetchCoordinates(match.params.projectId)
     fetchAllTeams(match.params.projectId)
     fetchProjectRoles(match.params.projectId)
+    fetchProjectLogs(match.params.projectId)
   }
   render() {
     const { match, actions, history, actionsLabel } = this.props
@@ -155,6 +162,11 @@ class ProjectIndex extends Component {
                 path={`${match.path}/team-details/:teamId`}
                 component={TeamDetails}
               />
+              <PrivateRoute
+                exact
+                path={`${match.path}/logs`}
+                component={ProjectActivity}
+              />
             </Switch>
           </div>
         </div>
@@ -172,7 +184,9 @@ ProjectIndex.propTypes = {
   match: PropTypes.object,
   actionsLabel: PropTypes.object,
   fetchLabels: PropTypes.func,
-  fetchAllTeams: PropTypes.func
+  fetchAllTeams: PropTypes.func,
+  fetchProjectRoles: PropTypes.func,
+  fetchProjectLogs: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -205,6 +219,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchProjectRoles: projectId => {
       return dispatch(fetchProjectRoles(projectId))
+    },
+    fetchProjectLogs: projectId => {
+      return dispatch(fetchProjectLogs(projectId))
     }
   }
 }
