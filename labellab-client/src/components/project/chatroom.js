@@ -14,9 +14,21 @@ import {
 
 import './css/chatroom.css'
 import { isEmptyObject } from '../../utils/helpers'
-import { fetchTeam, fetchTeamMessages } from '../../actions/index'
+import {
+  fetchTeam,
+  fetchTeamMessages,
+  sendMessage,
+  handleMessageReceive
+} from '../../actions/index'
 
 class Chatroom extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      text: ''
+    }
+  }
+
   componentDidMount() {
     const {
       match: {
@@ -24,17 +36,33 @@ class Chatroom extends Component {
       },
       team,
       fetchTeam,
-      fetchTeamMessages
+      fetchTeamMessages,
+      handleMessageReceive
     } = this.props
     if (!team || isEmptyObject(team)) {
       fetchTeam(projectId, teamId)
     }
     fetchTeamMessages(teamId)
+    handleMessageReceive(teamId)
   }
 
   capitalize = string => {
     if (!string) return
     return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  handleChange = e => {
+    this.setState({ text: e.target.value })
+  }
+
+  handleSendMessage = () => {
+    const { team, user, sendMessage } = this.props
+    const text = this.state.text
+    if (!text) {
+      return
+    }
+    this.setState({ text: '' })
+    sendMessage(text, team.id, user.id)
   }
 
   render() {
@@ -91,10 +119,13 @@ class Chatroom extends Component {
                   positive
                   content="Send"
                   labelPosition="right"
+                  onClick={this.handleSendMessage}
                 />
               }
               labelPosition="right"
+              value={this.state.text}
               placeholder="Write your message..."
+              onChange={this.handleChange}
             />
           </React.Fragment>
         ) : null}
@@ -147,6 +178,12 @@ const mapDispatchToProps = dispatch => {
     },
     fetchTeamMessages: teamId => {
       return dispatch(fetchTeamMessages(teamId))
+    },
+    sendMessage: (message, teamId, userId) => {
+      return dispatch(sendMessage(message, teamId, userId))
+    },
+    handleMessageReceive: teamId => {
+      return dispatch(handleMessageReceive(teamId))
     }
   }
 }
