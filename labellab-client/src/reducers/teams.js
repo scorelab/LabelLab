@@ -13,7 +13,10 @@ import {
   ADD_TEAM_MEMBER_FAILURE,
   REMOVE_TEAM_MEMBER_REQUEST,
   REMOVE_TEAM_MEMBER_SUCCESS,
-  REMOVE_TEAM_MEMBER_FAILURE
+  REMOVE_TEAM_MEMBER_FAILURE,
+  FETCH_TEAM_MESSAGES_REQUEST,
+  FETCH_TEAM_MESSAGES_SUCCESS,
+  FETCH_TEAM_MESSAGES_FAILURE
 } from '../constants/index'
 
 const initialState = {
@@ -21,10 +24,12 @@ const initialState = {
     isfetching: false,
     isDeleting: false,
     isUpdating: false,
+    isFetchingMessages: false,
     errors: '',
     msg: ''
   },
-  currentTeam: {}
+  currentTeam: {},
+  messages: []
 }
 
 const team = (state = initialState, action) => {
@@ -102,6 +107,29 @@ const team = (state = initialState, action) => {
         teamActions: {
           isDeleting: false,
           errors: payload
+        }
+      }
+    case FETCH_TEAM_MESSAGES_REQUEST:
+      return {
+        ...state,
+        teamActions: {
+          isFetchingMessages: true
+        }
+      }
+    case FETCH_TEAM_MESSAGES_SUCCESS:
+      return {
+        ...state,
+        messages: payload,
+        teamActions: {
+          isFetchingMessages: false
+        }
+      }
+    case FETCH_TEAM_MESSAGES_FAILURE:
+      return {
+        ...state,
+        teamActions: {
+          errors: payload,
+          isFetchingMessages: false
         }
       }
     default:
