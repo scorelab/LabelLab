@@ -16,7 +16,10 @@ import {
   ADD_TEAM_MEMBER_FAILURE,
   REMOVE_TEAM_MEMBER_REQUEST,
   REMOVE_TEAM_MEMBER_SUCCESS,
-  REMOVE_TEAM_MEMBER_FAILURE
+  REMOVE_TEAM_MEMBER_FAILURE,
+  FETCH_TEAM_MESSAGES_REQUEST,
+  FETCH_TEAM_MESSAGES_SUCCESS,
+  FETCH_TEAM_MESSAGES_FAILURE
 } from '../../constants/index'
 
 import FetchApi from '../../utils/FetchAPI'
@@ -183,5 +186,23 @@ export const removeTeamMember = (projectId, teamId, memberEmail, callback) => {
   }
   function failure(error) {
     return { type: REMOVE_TEAM_MEMBER_FAILURE, payload: error }
+  }
+}
+
+export const fetchTeamMessages = teamId => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.get(`api/v1/chatroom/${teamId}`)
+      .then(res => dispatch(success(res.data.body)))
+      .catch(err => dispatch(failure(err.response.data.msg)))
+  }
+  function request() {
+    return { type: FETCH_TEAM_MESSAGES_REQUEST }
+  }
+  function success(data) {
+    return { type: FETCH_TEAM_MESSAGES_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: FETCH_TEAM_MESSAGES_FAILURE, payload: error }
   }
 }
