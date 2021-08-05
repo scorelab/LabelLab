@@ -19,9 +19,12 @@ import {
   REMOVE_TEAM_MEMBER_FAILURE,
   FETCH_TEAM_MESSAGES_REQUEST,
   FETCH_TEAM_MESSAGES_SUCCESS,
-  FETCH_TEAM_MESSAGES_FAILURE
+  FETCH_TEAM_MESSAGES_FAILURE,
+  RECEIVE_MESSAGE,
+  SEND_MESSAGE
 } from '../../constants/index'
 
+import socket from '../../utils/webSocket'
 import FetchApi from '../../utils/FetchAPI'
 
 export const fetchAllTeams = projectId => {
@@ -204,5 +207,34 @@ export const fetchTeamMessages = teamId => {
   }
   function failure(error) {
     return { type: FETCH_TEAM_MESSAGES_FAILURE, payload: error }
+  }
+}
+
+export const handleMessageReceive = teamId => {
+  return dispatch => {
+    socket.on('receive_message', data => {
+      const messageTeamId = data.team_id
+      if (messageTeamId == teamId) {
+        dispatch(success(data))
+      }
+    })
+  }
+  function success(data) {
+    return { type: RECEIVE_MESSAGE, payload: data }
+  }
+}
+
+export const sendMessage = (message, teamId, userId) => {
+  return dispatch => {
+    const data = {
+      body: message,
+      team_id: teamId,
+      user_id: userId
+    }
+    socket.emit('send_message', data)
+    dispatch(success())
+  }
+  function success() {
+    return { type: SEND_MESSAGE }
   }
 }

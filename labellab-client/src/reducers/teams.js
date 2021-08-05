@@ -16,7 +16,8 @@ import {
   REMOVE_TEAM_MEMBER_FAILURE,
   FETCH_TEAM_MESSAGES_REQUEST,
   FETCH_TEAM_MESSAGES_SUCCESS,
-  FETCH_TEAM_MESSAGES_FAILURE
+  FETCH_TEAM_MESSAGES_FAILURE,
+  RECEIVE_MESSAGE
 } from '../constants/index'
 
 const initialState = {
@@ -131,6 +132,21 @@ const team = (state = initialState, action) => {
           errors: payload,
           isFetchingMessages: false
         }
+      }
+    case RECEIVE_MESSAGE:
+      return {
+        ...state,
+        messages: [
+          {
+            id: payload.id,
+            body: payload.body,
+            team_id: payload.teamId,
+            user_id: payload.userId,
+            username: payload.username,
+            timestamp: payload.timestamp
+          },
+          ...state.messages
+        ]
       }
     default:
       return state
