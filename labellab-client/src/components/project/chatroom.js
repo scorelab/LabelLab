@@ -68,6 +68,12 @@ class Chatroom extends Component {
               <Divider className="chatroom-divider" />
             </Grid>
             <div className="messages-container">
+              {messages.length === 0 ? (
+                <div className="no-messages-banner">
+                  <Icon name="warning circle" size="large" />
+                  <p>No messages</p>
+                </div>
+              ) : null}
               {messages.map(message => (
                 <MessageItem
                   key={message.id}
