@@ -243,7 +243,16 @@ class TeamDetails extends Component {
                 </Grid.Column>
                 <Grid.Column width={6}>
                   <Grid.Row>
-                    <Button positive icon labelPosition="left">
+                    <Button
+                      positive
+                      icon
+                      labelPosition="left"
+                      onClick={() =>
+                        history.push(
+                          `/project/${team.projectId}/chatroom/${team.id}`
+                        )
+                      }
+                    >
                       <Icon name="chat" />
                       Chat
                     </Button>

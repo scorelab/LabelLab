@@ -1,0 +1,42 @@
+.icon-button {
+  cursor: pointer;
+}
+.chatroom-divider {
+  margin-top: 0 !important;
+}
+.messages-container {
+  height: 55vh;
+  width: 100% !important;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.message-item {
+  display: flex;
+  flex-direction: column;
+  padding: 7.5px 25px;
+  margin: 5px 10px;
+  width: fit-content;
+  max-width: 50%;
+  border-radius: 30px;
+}
+.message-item small {
+  color: #fff;
+  opacity: 0.7;
+}
+.message-item p {
+  margin-bottom: 5px;
+}
+.own-message {
+  background-color: #2185d0;
+  color: #fff;
+  align-self: flex-end;
+  text-align: end;
+  padding-left: 40px;
+}
+.other-message {
+  background-color: #2185d0;
+  color: #fff;
+  opacity: 0.6;
+  padding-right: 40px;
+}

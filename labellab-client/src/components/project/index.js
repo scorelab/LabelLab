@@ -71,6 +71,10 @@ const ProjectActivity = Loadable({
   loader: () => import('./projectActivity'),
   loading: Loading
 })
+const Chatroom = Loadable({
+  loader: () => import('./chatroom'),
+  loading: Loading
+})
 
 class ProjectIndex extends Component {
   constructor(props) {
@@ -176,6 +180,11 @@ class ProjectIndex extends Component {
                 exact
                 path={`${match.path}/logs/entity/:entityType/:entityId`}
                 component={ProjectActivity}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/chatroom/:teamId`}
+                component={Chatroom}
               />
             </Switch>
           </div>
