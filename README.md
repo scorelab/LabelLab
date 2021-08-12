@@ -60,6 +60,8 @@ git clone https://github.com/scorelab/Labellab.git
 
   - [Mobile Setup](https://github.com/scorelab/LabelLab/wiki/Mobile-Development-Setup)
 
+> **NOTE**: The Node.js API in `labellab-server` directory is now deprecated and is no longer being used in the project. Instead, use the Flask API in `labellab-flask` directory.
+
 ## Contact
 
 - Join the [LabelLab Gitter Channel](https://gitter.im/scorelab/LabelLab) for any queries or discussions regarding the project.
