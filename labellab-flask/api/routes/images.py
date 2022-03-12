@@ -17,7 +17,7 @@ imagesprint.add_url_rule(
 )
 
 imagesprint.add_url_rule(
-    "/image/get_image/<int:image_id>", 
+    "/image/get_image/<int:project_id>/<int:image_id>",
     view_func=imagescontroller.imageController["get_image"], 
     methods=["GET"]
 )

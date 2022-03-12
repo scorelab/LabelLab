@@ -40,10 +40,14 @@ export const submitImage = (data, projectId, callback) => {
   }
 }
 
-export const fetchProjectImage = (imageId, callback) => {
+export const fetchProjectImage = (projectId, imageId, callback) => {
   return dispatch => {
+    if (imageId === undefined) {
+      dispatch(failure('ImageId is not present'))
+      return
+    }
     dispatch(request())
-    FetchApi.get('/api/v1/image/get_image/' + imageId)
+    FetchApi.get('/api/v1/image/get_image/' + projectId + '/' + imageId)
       .then(res => {
         dispatch(success(res.data.body))
         callback()
