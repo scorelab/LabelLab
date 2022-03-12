@@ -103,11 +103,11 @@ export const updateLabels = (image_id, labeldata) => {
   }
 }
 
-export const updateALabel = (label_id, labeldata, callback) => {
+export const updateALabel = (label_id, project_id, labeldata, callback) => {
   return dispatch => {
     dispatch(request())
-    FetchApi.put('/api/v1/label/label_info/' + label_id, labeldata)
-      .then(res => {
+    FetchApi.put("/api/v1/label/label_info/" + label_id + "/" + project_id, labeldata)
+      .then(() => {
         dispatch(success())
         callback()
       })
