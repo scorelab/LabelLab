@@ -26,14 +26,22 @@ class LabelingLoader extends Component {
     const { match, fetchLabels, fetchProject, fetchProjectImage } = this.props
     fetchLabels(match.params.projectId)
     fetchProject(match.params.projectId, this.setImageState)
-    fetchProjectImage(match.params.imageId, this.setImage)
+    fetchProjectImage(
+      match.params.projectId,
+      match.params.imageId,
+      this.setImage
+    )
   }
   componentDidUpdate(prevProps) {
     const { match, fetchLabels, fetchProject, fetchProjectImage } = this.props
     if (prevProps.match.params.imageId !== match.params.imageId) {
       fetchLabels(match.params.projectId)
       fetchProject(match.params.projectId, this.setImageState)
-      fetchProjectImage(match.params.imageId, this.setImage)
+      fetchProjectImage(
+        match.params.projectId,
+        match.params.imageId,
+        this.setImage
+      )
     }
   }
   setImage = () => {
@@ -120,29 +128,27 @@ class LabelingLoader extends Component {
             image_url={
               process.env.REACT_APP_SERVER_ENVIRONMENT !== 'dev'
                 ? image.image_url
-                : `http://${process.env.REACT_APP_HOST}:${
-                process.env.REACT_APP_SERVER_PORT
-                }/static/uploads/${image.projectId}/${image.imageUrl}`
+                : `http://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}/static/uploads/${image.projectId}/${image.imageUrl}`
             }
             projectUrl={`/project/${match.params.projectId}/images`}
             demo={false}
             {...props}
           />
         ) : (
-              <Modal size="small" open>
-                <Modal.Content>
-                  <p>
-                    It seems that you have not created any labels in the project.
-                    Click on the below button to create labels!
+          <Modal size="small" open>
+            <Modal.Content>
+              <p>
+                It seems that you have not created any labels in the project.
+                Click on the below button to create labels!
               </p>
-                </Modal.Content>
-                <Modal.Actions>
-                  <Link to={`/project/${match.params.projectId}}/labels`}>
-                    <Button positive content="Create Labels" />
-                  </Link>
-                </Modal.Actions>
-              </Modal>
-            )}
+            </Modal.Content>
+            <Modal.Actions>
+              <Link to={`/project/${match.params.projectId}}/labels`}>
+                <Button positive content="Create Labels" />
+              </Link>
+            </Modal.Actions>
+          </Modal>
+        )}
       </DocumentMeta>
     )
   }
@@ -185,8 +191,8 @@ const mapDispatchToProps = dispatch => {
     fetchLabels: projectId => {
       return dispatch(fetchLabels(projectId))
     },
-    fetchProjectImage: (imageId, callback) => {
-      return dispatch(fetchProjectImage(imageId, callback))
+    fetchProjectImage: (projectId, imageId, callback) => {
+      return dispatch(fetchProjectImage(projectId, imageId, callback))
     },
     updateLabels: (imageId, labeldata) => {
       return dispatch(updateLabels(imageId, labeldata))

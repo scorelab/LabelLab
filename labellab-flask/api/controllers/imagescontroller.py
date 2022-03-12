@@ -154,11 +154,11 @@ class GetImage(MethodView):
     """
     This methods gets the info of a particular image.
     Handle GET request for this view. 
-    Url --> /api/v1/image/get_image/<int:image_id>
+    Url --> /api/v1/image/get_image/<int:project_id>/<int:image_id>
     """
     @jwt_required
     @project_member_only
-    def get(self, image_id):
+    def get(self, project_id, image_id):
         try:
             if not image_id:
                 response = {
