@@ -66,12 +66,12 @@ class LabelIndex extends Component {
     fetchLabels(project.projectId)
   }
   onUpdate = value => {
-    const { updateALabel } = this.props
+    const { updateALabel, project} = this.props
     let data = {
       label_name: this.state.name,
       label_type: this.state.type
     }
-    updateALabel(value.id, data, this.callback)
+    updateALabel(value.id, project.projectId, data, this.callback)
   }
 
   handleDelete = value => {
@@ -206,8 +206,8 @@ const mapDispatchToProps = dispatch => {
     deleteLabel: (labelId, callback) => {
       return dispatch(deleteLabel(labelId, callback))
     },
-    updateALabel: (labelId, labeldata, callback) => {
-      return dispatch(updateALabel(labelId, labeldata, callback))
+    updateALabel: (labelId, projectId, labeldata, callback) => {
+      return dispatch(updateALabel(labelId, projectId, labeldata, callback))
     }
   }
 }
