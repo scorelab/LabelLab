@@ -42,23 +42,23 @@ export const submitImage = (data, projectId, callback) => {
 
 export const fetchProjectImage = (projectId, imageId, callback) => {
   return dispatch => {
-    if (imageId === undefined) {
-      dispatch(failure('ImageId is not present'))
-      return
+    if (isNaN(imageId) || !Number.isInteger(parseFloat(imageId))) {
+      dispatch(failure('ImageId is not a number'))
+    } else {
+      dispatch(request())
+      FetchApi.get('/api/v1/image/get_image/' + projectId + '/' + imageId)
+        .then(res => {
+          dispatch(success(res.data.body))
+          callback()
+        })
+        .catch(err => {
+          if (err.response) {
+            err.response.data
+              ? dispatch(failure(err.response.data.msg))
+              : dispatch(failure(err.response.statusText, null))
+          }
+        })
     }
-    dispatch(request())
-    FetchApi.get('/api/v1/image/get_image/' + projectId + '/' + imageId)
-      .then(res => {
-        dispatch(success(res.data.body))
-        callback()
-      })
-      .catch(err => {
-        if (err.response) {
-          err.response.data
-            ? dispatch(failure(err.response.data.msg))
-            : dispatch(failure(err.response.statusText, null))
-        }
-      })
   }
   function request() {
     return { type: FETCH_IMAGE_REQUEST }
