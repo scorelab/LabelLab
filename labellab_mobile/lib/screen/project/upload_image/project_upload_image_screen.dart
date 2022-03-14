@@ -203,8 +203,10 @@ class ProjectUploadImageScreen extends StatelessWidget {
     final imageIndex =
         Provider.of<ProjectUploadImageBloc>(context, listen: false)
             .getImageIndex(image);
+    
+    final _imageCropper = ImageCropper();
 
-    File? editedFile = await ImageCropper.cropImage(
+    File? editedFile = await _imageCropper.cropImage(
         sourcePath: image.image!.path,
         aspectRatioPresets: Platform.isAndroid
             ? [
