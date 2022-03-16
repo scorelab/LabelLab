@@ -14,6 +14,10 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProjectUploadImageScreen extends StatelessWidget {
+  
+  // Instance for imagecropper
+  final _imageCropper = ImageCropper();
+  
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -203,8 +207,6 @@ class ProjectUploadImageScreen extends StatelessWidget {
     final imageIndex =
         Provider.of<ProjectUploadImageBloc>(context, listen: false)
             .getImageIndex(image);
-    
-    final _imageCropper = ImageCropper();
 
     File? editedFile = await _imageCropper.cropImage(
         sourcePath: image.image!.path,
