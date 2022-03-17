@@ -83,6 +83,7 @@ class ImagesIndex extends Component {
     }
     const { project, fetchProject, submitImage } = this.props
     const { formData } = this.state
+    formData.set('image_names', this.state.image_names)
     if (this.state.file && this.state.file.size > 101200) {
       this.setState({
         maxSizeError: 'max sized reached'

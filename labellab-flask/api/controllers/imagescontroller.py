@@ -54,6 +54,7 @@ class SubmitImage(MethodView):
         current_user = get_jwt_identity()
         try:
             images = request.files.getlist("images")
+            image_names = request.form.get("image_names").split(',')
 
         except KeyError as err:
             response = {
@@ -78,7 +79,7 @@ class SubmitImage(MethodView):
             images_new = []
             for i in range(len(images)):
                 image = images[i]
-                image_name = image.filename.split('.')[0]
+                image_name = image_names[i].split('.')[0]
                 ext = image.filename.split('.')[1]
                 now = datetime.now()
                 timestamp = datetime.timestamp(now)
