@@ -193,6 +193,11 @@ class RegisterIndex extends Component {
                 {statusText}
               </Label>
             )}
+            {submitted && errors && (
+              <Label pointing color="red">
+                {errors}
+              </Label>
+            )}
           </Form.Field>
 
           <Form.Field
