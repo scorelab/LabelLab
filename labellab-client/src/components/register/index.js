@@ -188,6 +188,11 @@ class RegisterIndex extends Component {
                 Password cannot be empty!
               </Label>
             )}
+            {password && password.length < 8 && (
+              <Label pointing color="red">
+                Passwords length should be greater than 8!
+              </Label>
+            )}
             {statusText && errField === 'password' && (
               <Label pointing color="red">
                 {statusText}
