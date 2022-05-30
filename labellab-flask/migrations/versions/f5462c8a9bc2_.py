@@ -149,6 +149,39 @@ def upgrade():
     sa.Column('timestamp', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('issue',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=128), nullable=False),
+    sa.Column('description', sa.String(length=256), nullable=True),
+    sa.Column('project_id', sa.Integer(), nullable=False),
+    sa.Column('created_by', sa.Integer(), nullable=False),
+    sa.Column('assignee_id', sa.Integer(), nullable=True),
+    sa.Column('team_id', sa.Integer(), nullable=True),
+    sa.Column('category', sa.String(length=20), nullable=False),
+    sa.Column('priority', sa.String(length=20), nullable=False),
+    sa.Column('status', sa.String(length=20), nullable=False),
+    sa.Column('entity_type', sa.String(length=10), nullable=True),
+    sa.Column('entity_id', sa.Integer(), nullable=True),
+    sa.Column('due_date', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['assignee_id'], ['user.id'], onupdate='cascade', ondelete='cascade'),
+    sa.ForeignKeyConstraint(['created_by'], ['user.id'], onupdate='cascade', ondelete='cascade'),
+    sa.ForeignKeyConstraint(['project_id'], ['project.id'], onupdate='cascade', ondelete='cascade'),
+    sa.ForeignKeyConstraint(['team_id'], ['team.id'], onupdate='cascade', ondelete='cascade'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('comment',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('body', sa.String(length=200), nullable=False),
+    sa.Column('issue_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('username', sa.String(length=20), nullable=False),
+    sa.Column('thumbnail', sa.String(length=1500), nullable=True),
+    sa.Column('timestamp', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['issue_id'], ['issue.id'], onupdate='cascade', ondelete='cascade'),
+    sa.PrimaryKeyConstraint('id')
+    )
     # ### end Alembic commands ###
 
 
@@ -167,4 +200,6 @@ def downgrade():
     op.drop_table('revoked_token')
     op.drop_table('log')
     op.drop_table('message')
+    op.drop_table('comment')
+    op.drop_table('issue')
     # ### end Alembic commands ###
