@@ -31,6 +31,11 @@ class Project(db.Model):
                              lazy=True,
                              cascade="all, save-update, delete",
                              passive_deletes=True)
+    issues = db.relationship('Issue',
+                             backref='project',
+                             lazy=True,
+                             cascade="all, save-update, delete",
+                             passive_deletes=True)
     
     def __init__(self, project_name, project_description, admin_id):
         """
