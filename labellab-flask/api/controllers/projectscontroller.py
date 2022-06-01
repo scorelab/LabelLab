@@ -686,7 +686,7 @@ class ProjectMemberRoles(MethodView):
         return make_response(jsonify(response)), 200
 
 projectController = {
-    "createproject": CreateProject.as_view("createproject"),
+    "create_project": CreateProject.as_view("create_project"),
     "get_all_projects": GetAllProjects.as_view("get_all_projects"),
     "project": ProjectInfo.as_view("project"),
     "add_project_member": AddProjectMember.as_view("add_project_member"),
