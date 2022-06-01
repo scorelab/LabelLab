@@ -153,10 +153,10 @@ class FetchTeamIssuesView(MethodView):
 
     """
     This route fetches all project issue of a particular category
-     URL:- /api/v1/issue/<int:project_id>/team/<string:team>
+     URL:- /api/v1/issue/<int:project_id>/team/<int:team_id>
     """
     @jwt_required
-    def get(self,project_id, team):
+    def get(self,project_id, team_id):
         try:
                         
             response = {
@@ -177,7 +177,7 @@ class FetchTeamIssuesView(MethodView):
 
 
 issueController = {
-    "createissue": CreateIssues.as_view("createissue"),
+    "create_issue": CreateIssues.as_view("create_issue"),
     "get_all_issues": GetAllIssues.as_view("get_all_issues"),
     "issue": IssueInfo.as_view("issue"),
     "fetch_category_issue":FetchCategoryIssuesView.as_view("fetch_category_issue"),

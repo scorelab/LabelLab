@@ -6,7 +6,7 @@ projectsprint = Blueprint("projects", __name__)
 
 projectsprint.add_url_rule(
     "/project/create",
-    view_func=projectscontroller.projectController["createproject"], 
+    view_func=projectscontroller.projectController["create_project"], 
     methods=["POST"]
 )
 

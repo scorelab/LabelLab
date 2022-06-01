@@ -6,7 +6,7 @@ issuesprint = Blueprint("issues", __name__)
 
 issuesprint.add_url_rule(
     "/issue/create/<int:project_id>",
-    view_func=issuecontroller.issueController["createissue"], 
+    view_func=issuecontroller.issueController["create_issue"], 
     methods=["POST"]
 )
 
@@ -29,7 +29,7 @@ issuesprint.add_url_rule(
 )
 
 issuesprint.add_url_rule(
-    "issue/<int:project_id>/team/<string:team>",
+    "issue/<int:project_id>/team/<int:team_id>",
     view_func=issuecontroller.issueController["fetch_team_issue"], 
     methods=["GET"]
 )
