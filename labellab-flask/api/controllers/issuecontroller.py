@@ -3,35 +3,135 @@ from flask.views import MethodView
 from flask import make_response, request, jsonify, current_app
 from flask_jwt_extended import (
     jwt_required,
+    get_jwt_identity,
 )
 
 from api.config import config
 from api.models.Issue import Issue
 
+from api.helpers.issue import (
+    save as save_issue
+)
+from api.middleware.project_member_access import project_member_only
+
+allowed_priorities = config[os.getenv("FLASK_CONFIG") or "development"].ISSUE_PRIORITIES_ALLOWED
+allowed_statuses = config[os.getenv("FLASK_CONFIG") or "development"].ISSUE_STATUSES_ALLOWED
+allowed_categories = config[os.getenv("FLASK_CONFIG") or "development"].CATEGORIES_ALLOWED
+allowed_entity_types = config[os.getenv("FLASK_CONFIG") or "development"].ENTITY_TYPES_ALLOWED
+
 class CreateIssues(MethodView):
-    """
-    This class-based view handles fetching all issues within a project
-    Url --> /api/v1/issue/create/<int:project_id>
-    """
+    """This class creates a new Issue."""
     @jwt_required
+    @project_member_only
     def post(self, project_id):
+        """
+        Handle POST request for this view.
+        Url --> /api/v1/issue/create/<int:project_id>
+        """
+        # getting JSON data from request
+        post_data = request.get_json(silent=True, force=True)
+        current_user = get_jwt_identity()
+        # Load model with necessary fields 
         try:
-                        
-            response = {
-                "success": True,
-                "msg": "Issue Created",
-                "body": "New Issue Create for this project"
-            }
-            return make_response(jsonify(response)), 200
-        
+            title = post_data["title"]
+            description = post_data["description"]
+            category = post_data["category"]
         except Exception:
             response = {
-                "success":False,
-                "msg": "Something went wrong!"
-                }
-            # Return a server error using the HTTP Error Code 500 (Internal
-            # Server Error)
+                "success": False,
+                "msg": "Please provide all the required fields."
+            }
+            return make_response(jsonify(response)), 400
+        if category not in allowed_categories:
+                print("Error occured: category not allowed")
+                response = {
+                        "success": False,
+                        "msg": "category not allowed."
+                    }
+                return make_response(jsonify(response)), 400
+        
+        """Save the new Issue"""
+        try:
+            issue = Issue(
+                title=title, 
+                description=description, 
+                project_id=project_id,
+                created_by=current_user,
+                category=category,
+            )
+            # Save the model with optional fields
+            try:
+                priority=post_data["priority"]
+                if priority not in allowed_priorities:
+                    print("Error occured: priority not allowed")
+                    response = {
+                            "success": False,
+                            "msg": "priority not allowed."
+                        }
+                    return make_response(jsonify(response)), 400
+                issue.priority = priority
+            except:
+                pass
+
+            try:
+                status=post_data["status"]
+                if status not in allowed_statuses:
+                    print("Error occured: status not allowed")
+                    response = {
+                            "success": False,
+                            "msg": "status not allowed."
+                        }
+                    return make_response(jsonify(response)), 400
+                issue.status = status
+            except:
+                pass
+
+            try:
+                issue.team_id=post_data["team_id"]
+            except:
+                pass
+
+            try:
+                entity_type=post_data["entity_type"]
+                if entity_type not in allowed_entity_types:
+                    print("Error occured: entity type not allowed")
+                    response = {
+                            "success": False,
+                            "msg": "entity type not allowed."
+                        }
+                    return make_response(jsonify(response)), 400
+                issue.entity_type = entity_type
+            except:
+                pass
+
+            try:
+                issue.entity_id=post_data["entity_id"]
+            except:
+                pass
+
+            try:
+                issue.due_date=post_data["due_date"]
+            except:
+                pass
+
+            issue_new = save_issue(issue)
+            
+        except Exception as err:
+            print("Error occured: ", err)
+            response = {
+                "success": False,
+                "msg": "Something went wrong!!"
+            }
             return make_response(jsonify(response)), 500
+
+        response = {
+                    "success": True,
+                    "msg": "New Issue was created successfully.",
+                    "body": issue_new
+                    }
+        # return a response notifying the user that they registered
+        # successfully
+        return make_response(jsonify(response)), 201
 
 class GetAllIssues(MethodView):
     """
