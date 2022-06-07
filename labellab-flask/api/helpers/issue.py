@@ -29,7 +29,7 @@ issue_attribute_validator = [
         'enum': allowed_priorities
     },
     {
-        'key': 'statuses',
+        'key': 'status',
         'enum': allowed_statuses
     },
     {
