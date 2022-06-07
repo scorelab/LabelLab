@@ -10,14 +10,12 @@ from api.config import config
 from api.models.Issue import Issue
 
 from api.helpers.issue import (
-    save as save_issue
+    save as save_issue,
+    issue_attribute_validator
 )
 from api.middleware.project_member_access import project_member_only
 
-allowed_priorities = config[os.getenv("FLASK_CONFIG") or "development"].ISSUE_PRIORITIES_ALLOWED
-allowed_statuses = config[os.getenv("FLASK_CONFIG") or "development"].ISSUE_STATUSES_ALLOWED
 allowed_categories = config[os.getenv("FLASK_CONFIG") or "development"].CATEGORIES_ALLOWED
-allowed_entity_types = config[os.getenv("FLASK_CONFIG") or "development"].ENTITY_TYPES_ALLOWED
 
 class CreateIssues(MethodView):
     """This class creates a new Issue."""
@@ -36,14 +34,14 @@ class CreateIssues(MethodView):
             title = post_data["title"]
             description = post_data["description"]
             category = post_data["category"]
-        except Exception:
+        except KeyError as err:
             response = {
                 "success": False,
-                "msg": "Please provide all the required fields."
+                "msg": f'{str(err)} key is not present'
             }
             return make_response(jsonify(response)), 400
+
         if category not in allowed_categories:
-                print("Error occured: category not allowed")
                 response = {
                         "success": False,
                         "msg": "category not allowed."
@@ -59,65 +57,28 @@ class CreateIssues(MethodView):
                 created_by=current_user,
                 category=category,
             )
+
             # Save the model with optional fields
-            try:
-                priority=post_data["priority"]
-                if priority not in allowed_priorities:
-                    print("Error occured: priority not allowed")
-                    response = {
-                            "success": False,
-                            "msg": "priority not allowed."
+            for attribute in issue_attribute_validator:
+                try:
+                    attribute_value = post_data[attribute['key']]
+                    #Check if enum present
+                    #If yes, validate against it
+                    if 'enum' in attribute and attribute_value not in attribute['enum']:
+                        response = {
+                            'success': False,
+                            'msg': f'{attribute["key"]} has an invalid value'
                         }
-                    return make_response(jsonify(response)), 400
-                issue.priority = priority
-            except:
-                pass
+                        return make_response(jsonify(response)), 400
 
-            try:
-                status=post_data["status"]
-                if status not in allowed_statuses:
-                    print("Error occured: status not allowed")
-                    response = {
-                            "success": False,
-                            "msg": "status not allowed."
-                        }
-                    return make_response(jsonify(response)), 400
-                issue.status = status
-            except:
-                pass
-
-            try:
-                issue.team_id=post_data["team_id"]
-            except:
-                pass
-
-            try:
-                entity_type=post_data["entity_type"]
-                if entity_type not in allowed_entity_types:
-                    print("Error occured: entity type not allowed")
-                    response = {
-                            "success": False,
-                            "msg": "entity type not allowed."
-                        }
-                    return make_response(jsonify(response)), 400
-                issue.entity_type = entity_type
-            except:
-                pass
-
-            try:
-                issue.entity_id=post_data["entity_id"]
-            except:
-                pass
-
-            try:
-                issue.due_date=post_data["due_date"]
-            except:
-                pass
+                    setattr(issue, attribute['key'], attribute_value)
+                except:
+                    #If field not present, then continue iterating
+                    continue
 
             issue_new = save_issue(issue)
             
         except Exception as err:
-            print("Error occured: ", err)
             response = {
                 "success": False,
                 "msg": "Something went wrong!!"
