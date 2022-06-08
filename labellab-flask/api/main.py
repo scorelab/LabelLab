@@ -9,7 +9,7 @@ from werkzeug.exceptions import HTTPException
 
 from api.config import config
 from api import commands
-from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications, logs, chatroom ,issue
+from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications, logs, chatroom ,issue,comments
 from api.extensions import db, migrate, jwt, ma, socketio
 from api.models import User, Image, Comment, Issue, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier, Log, Message
 
@@ -69,6 +69,7 @@ def register_blueprint(app):
     app.register_blueprint(logs.logs_blueprint, url_prefix="/api/v1")
     app.register_blueprint(chatroom.chatroomprint, url_prefix="/api/v1")
     app.register_blueprint(issue.issuesprint,url_prefix="/api/v1")
+    app.register_blueprint(comments.commentsprint,url_prefix="/api/v1")
     return None
 
 
