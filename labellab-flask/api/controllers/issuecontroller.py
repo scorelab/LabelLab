@@ -19,6 +19,7 @@ from api.helpers.issue import (
 from api.helpers.user import get_user_roles
 from api.middleware.project_member_access import project_member_only
 from api.middleware.project_admin_access import admin_only
+from api.middleware.issue_decorator import issue_exists
 
 allowed_categories = config[os.getenv("FLASK_CONFIG") or "development"].CATEGORIES_ALLOWED
 
@@ -131,6 +132,7 @@ class IssueInfo(MethodView):
     """
     @jwt_required
     @project_member_only
+    @issue_exists
     def get(self,project_id, issue_id):
         try:
             if not issue_id:
@@ -141,12 +143,6 @@ class IssueInfo(MethodView):
                 return make_response(jsonify(response)), 400
             
             issue = find_by_id(issue_id)
-            if not issue:
-                response = {
-                    'success': False,
-                    'msg': 'Issue does not exist',
-                }
-                return make_response(jsonify(response)), 404 
 
             response = {
                 "success": True,
@@ -166,6 +162,7 @@ class IssueInfo(MethodView):
     
     @jwt_required
     @project_member_only
+    @issue_exists
     def put(self,project_id, issue_id):
         
         post_data = request.get_json(silent=True, force=True)
@@ -188,13 +185,6 @@ class IssueInfo(MethodView):
                 return make_response(jsonify(response)), 400
 
         try:
-            issue = find_by_id(issue_id)
-            if not issue:
-                response = {
-                    "success": False,
-                    "msg": "Issue not present."}
-                return make_response(jsonify(response)), 404
-
             data = {
                 "title": title,
                 "description": description,
@@ -236,6 +226,7 @@ class IssueInfo(MethodView):
     
     @jwt_required
     @project_member_only
+    @issue_exists
     def delete(self,project_id, issue_id):
         try:
             if not issue_id:
@@ -267,6 +258,7 @@ class AssignIssue(MethodView):
     """
     @jwt_required
     @admin_only
+    @issue_exists
     def put(self, project_id, issue_id):
         """
         Handle PUT request for this view.
@@ -284,13 +276,6 @@ class AssignIssue(MethodView):
             return make_response(jsonify(response)), 400
 
         try:
-            issue = find_by_id(issue_id)
-            if not issue:
-                response = {
-                    "success": False,
-                    "msg": "Issue not present."}
-                return make_response(jsonify(response)), 404
-
             # If assigned user is not a project member, return error
             user_roles = get_user_roles(assignee_id, project_id)
             if len(user_roles) == 0:
