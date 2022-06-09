@@ -18,6 +18,7 @@ from api.helpers.issue import (
 )
 from api.helpers.user import get_user_roles
 from api.middleware.project_member_access import project_member_only
+from api.middleware.project_admin_access import admin_only
 
 allowed_categories = config[os.getenv("FLASK_CONFIG") or "development"].CATEGORIES_ALLOWED
 
@@ -168,7 +169,6 @@ class IssueInfo(MethodView):
     def put(self,project_id, issue_id):
         
         post_data = request.get_json(silent=True, force=True)
-        current_user = get_jwt_identity()
         try:
             title = post_data["title"]
             description = post_data["description"]
@@ -189,7 +189,6 @@ class IssueInfo(MethodView):
 
         try:
             issue = find_by_id(issue_id)
-
             if not issue:
                 response = {
                     "success": False,
@@ -201,21 +200,6 @@ class IssueInfo(MethodView):
                 "description": description,
                 "category": category
             }
-
-            # Assign the issue if current user has admin role
-            user_roles = get_user_roles(current_user, project_id)
-
-            if 'admin' not in user_roles:
-                response = {
-                    'success': False,
-                    'msg': 'Only an admin can assign issue',
-                }
-                return make_response(jsonify(response)), 401
-
-            try:
-                data['assignee_id'] = post_data['assignee_id']
-            except:
-                pass
                 
             # Update optional fields
             for attribute in issue_attribute_validator:
@@ -277,6 +261,67 @@ class IssueInfo(MethodView):
             # Server Error)
             return make_response(jsonify(response)), 500
 
+class AssignIssue(MethodView):
+    """
+    This method assigns an issue to a user.
+    """
+    @jwt_required
+    @admin_only
+    def put(self, project_id, issue_id):
+        """
+        Handle PUT request for this view.
+        Url --> /api/v1/issue/assign/<int:project_id>/<int:issue_id>
+        """
+        # getting JSON data from request
+        post_data = request.get_json(silent=True, force=True)
+        try:
+            assignee_id = post_data['assignee_id']
+        except KeyError as err:
+            response = {
+                "success": False,
+                "msg": f'{str(err)} key is not present'
+            }
+            return make_response(jsonify(response)), 400
+
+        try:
+            issue = find_by_id(issue_id)
+            if not issue:
+                response = {
+                    "success": False,
+                    "msg": "Issue not present."}
+                return make_response(jsonify(response)), 404
+
+            # If assigned user is not a project member, return error
+            user_roles = get_user_roles(assignee_id, project_id)
+            if len(user_roles) == 0:
+                response = {
+                    'success': False,
+                    'msg': 'Assigned user is not a project member',
+                }
+                return make_response(jsonify(response)), 400
+
+            data = {
+                "assignee_id" : assignee_id
+            }
+            issue_new = update_issue(issue_id, data)
+
+            response = {
+                    "success": True,
+                    "msg": "Issue assigned.",
+                    "body": issue_new
+            }
+            return make_response(jsonify(response)), 201
+
+        except Exception:
+            response = {
+                "success":False,
+                "msg": "Something went wrong!"
+                }
+            # Return a server error using the HTTP Error Code 500 (Internal
+            # Server Error)
+            return make_response(jsonify(response)), 500
+
+
 class FetchCategoryIssuesView(MethodView):
 
     """
@@ -334,6 +379,7 @@ issueController = {
     "create_issue": CreateIssues.as_view("create_issue"),
     "get_all_issues": GetAllIssues.as_view("get_all_issues"),
     "issue": IssueInfo.as_view("issue"),
+    "assign_issue": AssignIssue.as_view("assign_issue"),
     "fetch_category_issue":FetchCategoryIssuesView.as_view("fetch_category_issue"),
     "fetch_team_issue": FetchTeamIssuesView.as_view("fetch_team_issue")
 }
