@@ -10,9 +10,13 @@ from api.config import config
 from api.models.Issue import Issue
 
 from api.helpers.issue import (
+    find_by_id,
+    delete_by_id as delete_issue,
     save as save_issue,
-    issue_attribute_validator
+    issue_attribute_validator,
+    update_issue
 )
+from api.helpers.user import get_user_roles
 from api.middleware.project_member_access import project_member_only
 
 allowed_categories = config[os.getenv("FLASK_CONFIG") or "development"].CATEGORIES_ALLOWED
@@ -125,13 +129,28 @@ class IssueInfo(MethodView):
     Url --> /api/v1/issue/issue_info/<int:project_id>/<int:issue_id>
     """
     @jwt_required
+    @project_member_only
     def get(self,project_id, issue_id):
         try:
-                        
+            if not issue_id:
+                response = {
+                    "success":False,
+                    "msg": "Issue id not provided"
+                }
+                return make_response(jsonify(response)), 400
+            
+            issue = find_by_id(issue_id)
+            if not issue:
+                response = {
+                    'success': False,
+                    'msg': 'Issue does not exist',
+                }
+                return make_response(jsonify(response)), 404 
+
             response = {
                 "success": True,
-                "msg": "Issues found",
-                "body": "Get Issue by ID"
+                "msg": "Issue found",
+                "body": issue
             }
             return make_response(jsonify(response)), 200
         
@@ -145,15 +164,82 @@ class IssueInfo(MethodView):
             return make_response(jsonify(response)), 500
     
     @jwt_required
+    @project_member_only
     def put(self,project_id, issue_id):
+        
+        post_data = request.get_json(silent=True, force=True)
+        current_user = get_jwt_identity()
         try:
-                        
+            title = post_data["title"]
+            description = post_data["description"]
+            category = post_data["category"]
+        except KeyError as err:
             response = {
-                "success": True,
-                "msg": "Issues updated",
-                "body": "Issue Details upadted"
+                "success": False,
+                "msg": f'{str(err)} key is not present'
             }
-            return make_response(jsonify(response)), 200
+            return make_response(jsonify(response)), 400
+
+        if category not in allowed_categories:
+                response = {
+                        "success": False,
+                        "msg": "category not allowed."
+                    }
+                return make_response(jsonify(response)), 400
+
+        try:
+            issue = find_by_id(issue_id)
+
+            if not issue:
+                response = {
+                    "success": False,
+                    "msg": "Issue not present."}
+                return make_response(jsonify(response)), 404
+
+            data = {
+                "title": title,
+                "description": description,
+                "category": category
+            }
+
+            # Assign the issue if current user has admin role
+            user_roles = get_user_roles(current_user, project_id)
+
+            if 'admin' not in user_roles:
+                response = {
+                    'success': False,
+                    'msg': 'Only an admin can assign issue',
+                }
+                return make_response(jsonify(response)), 401
+
+            try:
+                data['assignee_id'] = post_data['assignee_id']
+            except:
+                pass
+                
+            # Update optional fields
+            for attribute in issue_attribute_validator:
+                try:
+                    attribute_value = post_data[attribute['key']]
+                    if 'enum' in attribute and attribute_value not in attribute['enum']:
+                        response = {
+                            'success': False,
+                            'msg': f'{attribute["key"]} has an invalid value'
+                        }
+                        return make_response(jsonify(response)), 400
+
+                    data[attribute['key']] = attribute_value
+                except:
+                    continue
+
+            issue_new = update_issue(issue_id, data)
+
+            response = {
+                    "success": True,
+                    "msg": "Issue updated.",
+                    "body": issue_new
+            }
+            return make_response(jsonify(response)), 201
         
         except Exception:
             response = {
@@ -165,13 +251,20 @@ class IssueInfo(MethodView):
             return make_response(jsonify(response)), 500
     
     @jwt_required
+    @project_member_only
     def delete(self,project_id, issue_id):
         try:
-                        
+            if not issue_id:
+                response = {
+                    "success":False,
+                    "msg": "Issue id not provided"
+                    }
+                return make_response(jsonify(response)), 500
+            
+            delete_issue(issue_id)
             response = {
                 "success": True,
-                "msg": "Issues Deleted",
-                "body": "Issue Details deleted"
+                "msg": "Issue deleted."
             }
             return make_response(jsonify(response)), 200
         
