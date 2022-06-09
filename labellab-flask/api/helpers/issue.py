@@ -37,6 +37,36 @@ issue_attribute_validator = [
     },
 ]
 
+def to_json(issue):
+    """
+    Returns an Issue JSON object
+    """
+    return issue_schema.dump(issue).data
+
+def find_by_id(_id):
+    """
+    query issue on their id
+    """
+    issue = Issue.query.filter_by(id=_id).first()
+    return issue_schema.dump(issue).data
+
+def update_issue(issue_id, data):
+    """
+    update issue using its id.
+    """
+    issue = Issue.query.get(issue_id)
+    for attribute in data:
+        setattr(issue, attribute, data[attribute])
+    db.session.commit()
+    return issue_schema.dump(issue).data
+
+def delete_by_id(_id):
+    """
+    Delete issue by their id
+    """
+    Issue.query.filter_by(id=_id).delete()
+    db.session.commit()
+
 def save(issue):
     """
     Save an issue to the database.
