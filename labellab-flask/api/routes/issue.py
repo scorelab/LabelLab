@@ -33,3 +33,9 @@ issuesprint.add_url_rule(
     view_func=issuecontroller.issueController["fetch_team_issue"], 
     methods=["GET"]
 )
+
+issuesprint.add_url_rule(
+    "issue/<int:project_id>/entity/<string:entity_type>/<int:entity_id>",
+    view_func=issuecontroller.issueController["fetch_entity_issue"], 
+    methods=["GET"]
+)

@@ -1,5 +1,7 @@
+from cProfile import label
 import os
 
+from sqlalchemy import desc
 from api.extensions import db, ma
 from api.models.Issue import Issue
 from api.serializers.issue import IssueSchema
@@ -37,6 +39,22 @@ issue_attribute_validator = [
     },
 ]
 
+def find_all_issues_by_project_id(project_id):
+    """
+    find all the issue in a project
+    """
+    issues = Issue.query.filter_by(project_id=project_id).all()
+    return issues_schema.dump(issues).data
+
+def fetch_all_issue_by_category(project_id, category):
+    issues = Issue.query.filter_by(project_id=project_id, category=category).all()
+    return list(map(lambda issue: to_json(issue), issues))
+
+def fetch_all_issue_by_entity_type(project_id,entity_type, entity_id):
+    issues = Issue.query.filter_by(project_id=project_id, entity_type=entity_type,entity_id=entity_id).all()
+    return list(map(lambda issue: to_json(issue), issues))
+
+
 def save(issue):
     """
     Save an issue to the database.
@@ -44,4 +62,7 @@ def save(issue):
     """
     db.session.add(issue)
     db.session.commit()
+    return issue_schema.dump(issue).data
+
+def to_json(issue):
     return issue_schema.dump(issue).data
