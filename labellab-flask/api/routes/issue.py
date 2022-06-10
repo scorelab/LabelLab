@@ -23,6 +23,12 @@ issuesprint.add_url_rule(
 )
 
 issuesprint.add_url_rule(
+    "/issue/assign/<int:project_id>/<int:issue_id>",
+    view_func=issuecontroller.issueController["assign_issue"], 
+    methods=["PUT"]
+)
+
+issuesprint.add_url_rule(
     "issue/<int:project_id>/category/<string:category>",
     view_func=issuecontroller.issueController["fetch_category_issue"], 
     methods=["GET"]

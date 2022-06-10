@@ -54,6 +54,35 @@ def fetch_all_issue_by_entity_type(project_id,entity_type, entity_id):
     issues = Issue.query.filter_by(project_id=project_id, entity_type=entity_type,entity_id=entity_id).all()
     return list(map(lambda issue: to_json(issue), issues))
 
+def to_json(issue):
+    """
+    Returns an Issue JSON object
+    """
+    return issue_schema.dump(issue).data
+
+def find_by_id(_id):
+    """
+    query issue on their id
+    """
+    issue = Issue.query.filter_by(id=_id).first()
+    return issue_schema.dump(issue).data
+
+def update_issue(issue_id, data):
+    """
+    update issue using its id.
+    """
+    issue = Issue.query.get(issue_id)
+    for attribute in data:
+        setattr(issue, attribute, data[attribute])
+    db.session.commit()
+    return issue_schema.dump(issue).data
+
+def delete_by_id(_id):
+    """
+    Delete issue by their id
+    """
+    Issue.query.filter_by(id=_id).delete()
+    db.session.commit()
 
 def save(issue):
     """
@@ -62,7 +91,4 @@ def save(issue):
     """
     db.session.add(issue)
     db.session.commit()
-    return issue_schema.dump(issue).data
-
-def to_json(issue):
     return issue_schema.dump(issue).data
