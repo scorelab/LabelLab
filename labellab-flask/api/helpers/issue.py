@@ -47,11 +47,21 @@ def find_all_issues_by_project_id(project_id):
     return issues_schema.dump(issues).data
 
 def fetch_all_issue_by_category(project_id, category):
+    """
+    find all the issue in a project by category
+    """
     issues = Issue.query.filter_by(project_id=project_id, category=category).all()
     return list(map(lambda issue: to_json(issue), issues))
 
 def fetch_all_issue_by_entity_type(project_id,entity_type, entity_id):
+    """
+    find all the issue in a project by entity type and entity id
+    """
     issues = Issue.query.filter_by(project_id=project_id, entity_type=entity_type,entity_id=entity_id).all()
+    return list(map(lambda issue: to_json(issue), issues))
+
+def fetch_all_issue_by_team_id(project_id, team_id):
+    issues = Issue.query.filter_by(project_id=project_id, team_id=team_id).all()
     return list(map(lambda issue: to_json(issue), issues))
 
 def to_json(issue):

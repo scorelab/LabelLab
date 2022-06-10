@@ -17,11 +17,12 @@ from api.helpers.issue import (
     find_all_issues_by_project_id,
     fetch_all_issue_by_category,
     fetch_all_issue_by_entity_type,
+    update_issue,
+    fetch_all_issue_by_team_id
 )
 
 from api.helpers.team import (
     find_by_id,
-    update_issue
 )
 from api.helpers.user import get_user_roles
 from api.middleware.project_member_access import project_member_only
@@ -377,7 +378,7 @@ class FetchTeamIssuesView(MethodView):
     @project_member_only
     def get(self,project_id, team_id):
         try:
-            issue_team = find_by_id(team_id)  
+            issue_team = fetch_all_issue_by_team_id(project_id,team_id)  
             response = {
                 "success": True,
                 "msg": "Issues found",
