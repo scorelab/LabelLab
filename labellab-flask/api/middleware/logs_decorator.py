@@ -13,6 +13,7 @@ from api.helpers.user import (
 )
 from api.helpers.team import find_by_id as find_team_by_id
 from api.helpers.label import find_by_id as find_label_by_id
+from api.helpers.issue import find_by_id as find_issue_by_id
 from api.helpers.mlclassifier import find_by_id as find_mlclassifer_by_id
 
 # Use this decorator on project routes for tracking activity
@@ -133,6 +134,32 @@ def record_logs(fun):
         category = 'image labelling'
         entity_id = image_id
         entity_type = 'image'
+
+      # Issues controller
+      if url == f'/api/v1/issue/create/{project_id}':
+        message = 'New issue has been created'
+        category = 'issues'
+      
+      if url.startswith('/api/v1/issue/issue_info/'):
+        issue_id = kwargs.get('issue_id')
+        if method == 'DELETE':
+          message = f'Issue with id {issue_id} has been deleted'
+          category = 'issues'
+        elif method == 'PUT':
+          issue = find_issue_by_id(issue_id)
+          message = f'Issue {issue["title"]} has been updated'
+          category = 'issues'
+          entity_type = 'issue'
+          entity_id = issue_id
+
+      if url.startswith('/api/v1/issue/assign/'):
+        issue_id = kwargs.get('issue_id')
+        data = request.get_json(silent=True, force=True)
+        assignee_id = data['assignee_id']
+        user = find_by_user_id(assignee_id)
+        issue = find_issue_by_id(issue_id)
+        message = f'Issue {issue["title"]} assigned to {user["name"]}'
+        category = 'issues'
 
       # Labels controller
       if url == f'/api/v1/label/create/{project_id}':
