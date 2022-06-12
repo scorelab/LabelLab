@@ -25,6 +25,8 @@ from api.helpers.team import (
     find_by_id,
 )
 from api.helpers.user import get_user_roles
+
+from api.middleware.logs_decorator import record_logs
 from api.middleware.project_member_access import project_member_only
 from api.middleware.project_admin_access import admin_only
 from api.middleware.issue_decorator import issue_exists
@@ -37,6 +39,7 @@ class CreateIssues(MethodView):
     """This class creates a new Issue."""
     @jwt_required
     @project_member_only
+    @record_logs
     def post(self, project_id):
         """
         Handle POST request for this view.
@@ -191,6 +194,7 @@ class IssueInfo(MethodView):
     @jwt_required
     @project_member_only
     @issue_exists
+    @record_logs
     def put(self,project_id, issue_id):
         
         post_data = request.get_json(silent=True, force=True)
@@ -255,6 +259,7 @@ class IssueInfo(MethodView):
     @jwt_required
     @project_member_only
     @issue_exists
+    @record_logs
     def delete(self,project_id, issue_id):
         try:
             if not issue_id:
@@ -287,6 +292,7 @@ class AssignIssue(MethodView):
     @jwt_required
     @admin_only
     @issue_exists
+    @record_logs
     def put(self, project_id, issue_id):
         """
         Handle PUT request for this view.
