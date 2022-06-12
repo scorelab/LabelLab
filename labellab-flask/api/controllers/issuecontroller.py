@@ -124,7 +124,7 @@ class GetAllIssues(MethodView):
                     "success": False,
                     "msg": "Provide the project_id.",
                 }
-                return make_response(jsonify(response)), 200
+                return make_response(jsonify(response)), 422
 
             issues = find_all_issues_by_project_id(project_id)
 
@@ -134,7 +134,7 @@ class GetAllIssues(MethodView):
                         "msg": "No Issue found",
                         "body": {}
                 }
-                return make_response(jsonify(response)), 200
+                return make_response(jsonify(response)), 404
             
             response = {
                     "success": True,
@@ -345,12 +345,19 @@ class FetchCategoryIssuesView(MethodView):
     @project_member_only
     def get(self,project_id, category):
         try:
+            if not project_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the project_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
             if category not in allowed_categories:  
                 response = {
                     "success": False,
                     "msg": "Invalid category"
                 }
-                return make_response(jsonify(response)), 200
+                return make_response(jsonify(response)), 422
             
             issue_category = fetch_all_issue_by_category(project_id,category)
             response = {
@@ -378,6 +385,20 @@ class FetchTeamIssuesView(MethodView):
     @project_member_only
     def get(self,project_id, team_id):
         try:
+            if not project_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the project_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
+            if not team_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the team_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
             issue_team = fetch_all_issue_by_team_id(project_id,team_id)  
             response = {
                 "success": True,
@@ -406,6 +427,20 @@ class FetchEntityIssuesView(MethodView):
     @project_member_only
     def get(self,project_id, entity_type, entity_id):
         try:
+            if not project_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the project_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
+            if not entity_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the entity_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
             if entity_type not in allowed_entity_types:
                 response = {
                     'success': False,
