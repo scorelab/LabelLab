@@ -21,9 +21,6 @@ from api.helpers.issue import (
     fetch_all_issue_by_team_id
 )
 
-from api.helpers.team import (
-    find_by_id,
-)
 from api.helpers.user import get_user_roles
 
 from api.middleware.logs_decorator import record_logs

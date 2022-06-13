@@ -61,6 +61,9 @@ def fetch_all_issue_by_entity_type(project_id,entity_type, entity_id):
     return list(map(lambda issue: to_json(issue), issues))
 
 def fetch_all_issue_by_team_id(project_id, team_id):
+    """
+    find all the issue in a project by team ID.
+    """
     issues = Issue.query.filter_by(project_id=project_id, team_id=team_id).all()
     return list(map(lambda issue: to_json(issue), issues))
 
