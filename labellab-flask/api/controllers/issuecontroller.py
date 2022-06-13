@@ -14,8 +14,13 @@ from api.helpers.issue import (
     delete_by_id as delete_issue,
     save as save_issue,
     issue_attribute_validator,
-    update_issue
+    find_all_issues_by_project_id,
+    fetch_all_issue_by_category,
+    fetch_all_issue_by_entity_type,
+    update_issue,
+    fetch_all_issue_by_team_id
 )
+
 from api.helpers.user import get_user_roles
 
 from api.middleware.logs_decorator import record_logs
@@ -24,6 +29,8 @@ from api.middleware.project_admin_access import admin_only
 from api.middleware.issue_decorator import issue_exists
 
 allowed_categories = config[os.getenv("FLASK_CONFIG") or "development"].CATEGORIES_ALLOWED
+allowed_entity_types = config[os.getenv("FLASK_CONFIG") or "development"].ENTITY_TYPES_ALLOWED
+
 
 class CreateIssues(MethodView):
     """This class creates a new Issue."""
@@ -109,15 +116,33 @@ class GetAllIssues(MethodView):
     Url --> /api/v1/issue/get/<int:project_id>
     """
     @jwt_required
+    @project_member_only
     def get(self, project_id):
         try:
-                        
+            if not project_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the project_id.",
+                }
+                return make_response(jsonify(response)), 422
+
+            issues = find_all_issues_by_project_id(project_id)
+
+            if not issues:
+                response = {
+                        "success": False,
+                        "msg": "No Issue found",
+                        "body": {}
+                }
+                return make_response(jsonify(response)), 404
+            
             response = {
-                "success": True,
-                "msg": "Issues found",
-                "body": "All issues fetched"
-            }
-            return make_response(jsonify(response)), 200
+                    "success": True,
+                    "msg": "Label fetched successfully.",
+                    "body": issues
+                }
+
+            return make_response(jsonify(response)), 200 
         
         except Exception:
             response = {
@@ -320,16 +345,30 @@ class FetchCategoryIssuesView(MethodView):
      URL:- /api/v1/issue/<int:project_id>/category/<string:category>
     """
     @jwt_required
+    @project_member_only
     def get(self,project_id, category):
         try:
-                        
+            if not project_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the project_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
+            if category not in allowed_categories:  
+                response = {
+                    "success": False,
+                    "msg": "Invalid category"
+                }
+                return make_response(jsonify(response)), 422
+            
+            issue_category = fetch_all_issue_by_category(project_id,category)
             response = {
-                "success": True,
-                "msg": "Issues found",
-                "body": "Get Issue by Category"
+                'success':True,
+                'data':issue_category
             }
             return make_response(jsonify(response)), 200
-        
+
         except Exception:
             response = {
                 "success":False,
@@ -346,13 +385,77 @@ class FetchTeamIssuesView(MethodView):
      URL:- /api/v1/issue/<int:project_id>/team/<int:team_id>
     """
     @jwt_required
+    @project_member_only
     def get(self,project_id, team_id):
         try:
-                        
+            if not project_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the project_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
+            if not team_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the team_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
+            issue_team = fetch_all_issue_by_team_id(project_id,team_id)  
             response = {
                 "success": True,
                 "msg": "Issues found",
-                "body": "Get Issue by team"
+                "body": issue_team
+            }
+            return make_response(jsonify(response)), 200
+        
+        except Exception:
+            response = {
+                "success":False,
+                "msg": "Something went wrong!"
+                }
+            # Return a server error using the HTTP Error Code 500 (Internal
+            # Server Error)
+            return make_response(jsonify(response)), 500
+
+
+class FetchEntityIssuesView(MethodView):
+
+    """
+    This route fetches all project issue of a particular category
+     URL:- /api/v1/issue/<int:project_id>/entity/<string:entity_type>/<int:entity_id>
+    """
+    @jwt_required
+    @project_member_only
+    def get(self,project_id, entity_type, entity_id):
+        try:
+            if not project_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the project_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
+            if not entity_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the entity_id.",
+                }
+                return make_response(jsonify(response)), 422
+            
+            if entity_type not in allowed_entity_types:
+                response = {
+                    'success': False,
+                    'msg': 'Invalid entity type'
+                }
+                return make_response(jsonify(response)), 400
+            
+            issue_team = fetch_all_issue_by_entity_type(project_id, entity_type, entity_id)  
+            response = {
+                "success": True,
+                "msg": "Issues found",
+                "body": issue_team
             }
             return make_response(jsonify(response)), 200
         
@@ -372,5 +475,6 @@ issueController = {
     "issue": IssueInfo.as_view("issue"),
     "assign_issue": AssignIssue.as_view("assign_issue"),
     "fetch_category_issue":FetchCategoryIssuesView.as_view("fetch_category_issue"),
-    "fetch_team_issue": FetchTeamIssuesView.as_view("fetch_team_issue")
+    "fetch_team_issue": FetchTeamIssuesView.as_view("fetch_team_issue"),
+    "fetch_entity_issue":FetchEntityIssuesView.as_view("fetch_entity_issue")
 }
