@@ -14,8 +14,8 @@ class Comment(db.Model):
     issue_id = db.Column(db.Integer, 
                         db.ForeignKey('issue.id', ondelete="cascade", onupdate="cascade"),
                         nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-    username = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id', ondelete="cascade", onupdate="cascade"), nullable=False)
+    username = db.Column(db.String(20),db.ForeignKey('user.username', ondelete="cascade", onupdate="cascade"), nullable=False)
     thumbnail = db.Column(db.String(1500), 
                        default='https://react.semantic-ui.com/images/avatar/large/elliot.jpg')
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
