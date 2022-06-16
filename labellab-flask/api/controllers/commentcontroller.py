@@ -3,7 +3,20 @@ from flask.views import MethodView
 from flask import make_response, request, jsonify, current_app
 from flask_jwt_extended import (
     jwt_required,
+    get_jwt_identity
 )
+
+from api.helpers.user import(
+    find_by_user_id
+)
+
+from api.helpers.comment import(
+    save as save_comment
+)
+
+from api.middleware.logs_decorator import record_logs
+
+from api.models.Comment import Comment
 
 class AddComment(MethodView):
     """
@@ -11,24 +24,47 @@ class AddComment(MethodView):
     Url --> /api/v1/comment/create/<int:issue_id>
     """
     @jwt_required
+    @record_logs
     def post(self, issue_id):
+        # getting JSON data from request
+        post_data = request.get_json(silent=True, force=True)
+        current_user = get_jwt_identity()
+        # Load model with necessary fields 
         try:
-                        
+            comment_body = post_data["body"]
+            user = find_by_user_id(current_user)
+        except KeyError as err:
             response = {
-                "success": True,
-                "msg": "Comment Added",
-                "body": "New Comment added for this issue"
+                "success": False,
+                "msg": f'{str(err)} key is not present'
             }
-            return make_response(jsonify(response)), 200
-        
-        except Exception:
+            return make_response(jsonify(response)), 400
+        try:
+            comment = Comment(
+                        body=comment_body,
+                        issue_id=issue_id,
+                        user_id=current_user,
+                        username=user['username']
+                )
+
+            new_comment = save_comment(comment)
+
+        except Exception as err:
             response = {
-                "success":False,
-                "msg": "Something went wrong!"
-                }
-            # Return a server error using the HTTP Error Code 500 (Internal
-            # Server Error)
+                "success": False,
+                "msg": "Something went wrong!!"
+            }
             return make_response(jsonify(response)), 500
+        
+        
+        response = {
+                "success": True,
+                "msg": "New Comment Added",
+                "body": new_comment
+            }
+        # return a response notifying about posting a new comment
+        return make_response(jsonify(response)), 201
+        
 
 class GetAllComments(MethodView):
     """

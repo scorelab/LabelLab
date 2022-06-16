@@ -160,6 +160,13 @@ def record_logs(fun):
         issue = find_issue_by_id(issue_id)
         message = f'Issue {issue["title"]} assigned to {user["name"]}'
         category = 'issues'
+     
+      # Comment controller
+      if url.startswith('/api/v1/comment/create/'):
+        issue_id = kwargs.get('issue_id')
+        message = f'{user["username"]} posted a new comment on issue {issue_id}'
+        category = 'comments'
+        
 
       # Labels controller
       if url == f'/api/v1/label/create/{project_id}':
