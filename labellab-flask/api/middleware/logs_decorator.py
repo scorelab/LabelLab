@@ -164,6 +164,8 @@ def record_logs(fun):
       # Comment controller
       if url.startswith('/api/v1/comment/create/'):
         issue_id = kwargs.get('issue_id')
+        issue = find_issue_by_id(issue_id)
+        project_id = issue['project_id']
         message = f'{user["username"]} posted a new comment on issue {issue_id}'
         category = 'comments'
         
