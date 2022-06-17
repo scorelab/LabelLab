@@ -15,6 +15,7 @@ from api.helpers.team import find_by_id as find_team_by_id
 from api.helpers.label import find_by_id as find_label_by_id
 from api.helpers.issue import find_by_id as find_issue_by_id
 from api.helpers.mlclassifier import find_by_id as find_mlclassifer_by_id
+from api.helpers.project import find_by_project_id
 
 # Use this decorator on project routes for tracking activity
 def record_logs(fun):
@@ -166,7 +167,8 @@ def record_logs(fun):
         issue_id = kwargs.get('issue_id')
         issue = find_issue_by_id(issue_id)
         project_id = issue['project_id']
-        message = f'{user["username"]} posted a new comment on issue {issue_id}'
+        project = find_by_project_id(project_id)
+        message = f'{user["username"]} posted a new comment on {project["project_name"]}'
         category = 'comments'
         
 
