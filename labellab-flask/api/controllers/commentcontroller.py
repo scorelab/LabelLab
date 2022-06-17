@@ -29,10 +29,10 @@ class AddComment(MethodView):
         # getting JSON data from request
         post_data = request.get_json(silent=True, force=True)
         current_user = get_jwt_identity()
+        user = find_by_user_id(current_user)
         # Load model with necessary fields 
         try:
             comment_body = post_data["body"]
-            user = find_by_user_id(current_user)
         except KeyError as err:
             response = {
                 "success": False,
