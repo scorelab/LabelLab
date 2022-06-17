@@ -39,6 +39,7 @@ class AddComment(MethodView):
                 "msg": f'{str(err)} key is not present'
             }
             return make_response(jsonify(response)), 400
+        
         try:
             comment = Comment(
                         body=comment_body,
@@ -47,8 +48,6 @@ class AddComment(MethodView):
                         username=user['username']
                 )
 
-            new_comment = save_comment(comment)
-
         except Exception as err:
             response = {
                 "success": False,
@@ -56,6 +55,7 @@ class AddComment(MethodView):
             }
             return make_response(jsonify(response)), 500
         
+        new_comment = save_comment(comment)
         
         response = {
                 "success": True,
