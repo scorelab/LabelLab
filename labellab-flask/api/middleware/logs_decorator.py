@@ -167,9 +167,8 @@ def record_logs(fun):
         issue_id = kwargs.get('issue_id')
         issue = find_issue_by_id(issue_id)
         project_id = issue['project_id']
-        project = find_by_project_id(project_id)
-        message = f'{user["username"]} posted a new comment on {project["project_name"]}'
-        category = 'comments'
+        message = f'{user["username"]} posted a new comment on {issue["title"]}'
+        category = 'issues'
         
 
       # Labels controller
