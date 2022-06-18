@@ -7,6 +7,11 @@ from api.serializers.comment import CommentSchema
 comment_schema = CommentSchema()
 comments_schema = CommentSchema(many =True)
 
+# Fetch comments of an issue
+def fetch_comments_by_issue_id(issue_id):
+    comments = Comment.query.filter_by(issue_id=issue_id).all()
+    return list(map(lambda comment: to_json(comment), comments))
+
 def to_json(comment):
     """
     Returns a Comment JSON object

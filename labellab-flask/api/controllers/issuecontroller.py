@@ -20,7 +20,7 @@ from api.helpers.issue import (
     update_issue,
     fetch_all_issue_by_team_id
 )
-
+from api.helpers.comment import fetch_comments_by_issue_id
 from api.helpers.user import get_user_roles
 
 from api.middleware.logs_decorator import record_logs
@@ -171,7 +171,7 @@ class IssueInfo(MethodView):
                 return make_response(jsonify(response)), 400
             
             issue = find_by_id(issue_id)
-
+            issue['comments'] = fetch_comments_by_issue_id(issue_id)
             response = {
                 "success": True,
                 "msg": "Issue found",
