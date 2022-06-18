@@ -14,6 +14,7 @@ from api.helpers.user import (
 from api.helpers.team import find_by_id as find_team_by_id
 from api.helpers.label import find_by_id as find_label_by_id
 from api.helpers.issue import find_by_id as find_issue_by_id
+from api.helpers.comment import find_by_id as find_comment_by_id
 from api.helpers.mlclassifier import find_by_id as find_mlclassifer_by_id
 from api.helpers.project import find_by_project_id
 
@@ -169,9 +170,23 @@ def record_logs(fun):
         project_id = issue['project_id']
         project = find_by_project_id(project_id)
         message = f'{user["username"]} posted a new comment on {project["project_name"]}'
-        category = 'comments'
-        
+        category = 'issues'
 
+      if url.startswith('/api/v1/comment/comment_info/'):
+        comment_id = kwargs.get('comment_id')
+        issue_id = kwargs.get('issue_id')
+        issue = find_issue_by_id(issue_id)
+        project_id = issue['project_id']
+        if method == 'DELETE':
+          message = f'Comment with id {comment_id} has been deleted'
+          category = 'issues'
+        elif method == 'PUT':
+          comment = find_comment_by_id(comment_id)
+          message = f'{user["username"]} edited the comment'
+          category = 'issues'
+          entity_type = 'comment'
+          entity_id = comment_id
+        
       # Labels controller
       if url == f'/api/v1/label/create/{project_id}':
         message = 'New label has been created'

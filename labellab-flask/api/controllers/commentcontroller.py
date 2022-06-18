@@ -11,10 +11,15 @@ from api.helpers.user import(
 )
 
 from api.helpers.comment import(
-    save as save_comment
+    save as save_comment,
+    find_by_id as find_comment_by_id,
+    update_comment,
+    delete_by_id as delete_comment_by_id
 )
 
 from api.middleware.logs_decorator import record_logs
+from api.middleware.issue_decorator import issue_exists
+from api.middleware.comment_decorator import comment_exists
 
 from api.models.Comment import Comment
 
@@ -45,7 +50,8 @@ class AddComment(MethodView):
                         body=comment_body,
                         issue_id=issue_id,
                         user_id=current_user,
-                        username=user['username']
+                        username=user['username'],
+                        thumbnail=user['thumbnail']
                 )
 
         except Exception as err:
@@ -97,13 +103,24 @@ class CommentInfo(MethodView):
     Url --> /api/v1/comment/comment_info/<int:issue_id>/<int:comment_id>
     """
     @jwt_required
+    @issue_exists
+    @comment_exists
     def get(self, issue_id,comment_id):
+        """Handle GET request for this view. Url --> /api/v1/comment/comment_info/<int:issue_id>/<int:comment_id>"""
         try:
-                        
+            if not comment_id:
+                response = {
+                    "success":False,
+                    "msg": "Comment id not provided"
+                }
+                return make_response(jsonify(response)), 400
+            
+            comment = find_comment_by_id(comment_id)
+
             response = {
                 "success": True,
-                "msg": "Fetched the Comment",
-                "body": "Returned comment related to this issue and ID"
+                "msg": "Comment found",
+                "body": comment
             }
             return make_response(jsonify(response)), 200
         
@@ -117,16 +134,37 @@ class CommentInfo(MethodView):
             return make_response(jsonify(response)), 500
     
     @jwt_required
+    @issue_exists
+    @comment_exists
+    @record_logs
     def put(self, issue_id,comment_id):
+        """Handle PUT request for this view. Url --> /api/v1/comment/comment_info/<int:issue_id>/<int:comment_id>"""
+
+        # getting JSON data from request
+        post_data = request.get_json(silent=True, force=True)
         try:
-                        
+            comment_body = post_data["body"]
+        except KeyError as err:
             response = {
-                "success": True,
-                "msg": "Updated the Comment",
-                "body": "Updated comment related to this issue and ID"
+                "success": False,
+                "msg": f'{str(err)} key is not present'
             }
-            return make_response(jsonify(response)), 200
-        
+            return make_response(jsonify(response)), 400
+
+        try:
+            data = {
+                "body": comment_body,
+            }
+
+            comment_new = update_comment(comment_id, data)
+
+            response = {
+                    "success": True,
+                    "msg": "Comment updated.",
+                    "body": comment_new
+            }
+            return make_response(jsonify(response)), 201
+
         except Exception:
             response = {
                 "success":False,
@@ -136,15 +174,23 @@ class CommentInfo(MethodView):
             # Server Error)
             return make_response(jsonify(response)), 500
 
-
     @jwt_required
+    @issue_exists
+    @comment_exists
+    @record_logs
     def delete(self, issue_id,comment_id):
         try:
-                        
+            if not comment_id:
+                response = {
+                    "success":False,
+                    "msg": "Comment id not provided"
+                    }
+                return make_response(jsonify(response)), 500
+            
+            delete_comment_by_id(comment_id)
             response = {
                 "success": True,
-                "msg": "Deleted the Comment",
-                "body": "Deleted the comment related to this issue and ID"
+                "msg": "Comment deleted."
             }
             return make_response(jsonify(response)), 200
         
