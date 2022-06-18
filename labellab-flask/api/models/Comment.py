@@ -20,11 +20,12 @@ class Comment(db.Model):
                        default='https://react.semantic-ui.com/images/avatar/large/elliot.jpg')
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    def __init__(self, body, issue_id, user_id, username):
+    def __init__(self, body, issue_id, user_id, username, thumbnail):
         self.body = body
         self.issue_id = issue_id
         self.user_id = user_id
         self.username = username
+        self.thumbnail = thumbnail
 
     def __repr__(self):
         """

@@ -21,7 +21,7 @@ class Config:
     LABELS_ALLOWED = ["bbox","polygon"]
     TEAMS_ALLOWED = ["labels","images","image labelling","models"]
     CATEGORIES_ALLOWED = ["general","labels","images","image labelling","issues","models","misc"]
-    ENTITY_TYPES_ALLOWED = ["label","image", "model", "issue"]
+    ENTITY_TYPES_ALLOWED = ["label","image", "model", "issue","comment"]
     ISSUE_PRIORITIES_ALLOWED = ["Critical", "High", "Medium", "Low"]
     ISSUE_STATUSES_ALLOWED = ["Open", "In Progress", "Review", "Done", "Closed"]
     @staticmethod
