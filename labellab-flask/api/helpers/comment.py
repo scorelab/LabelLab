@@ -12,6 +12,13 @@ def fetch_comments_by_issue_id(issue_id):
     comments = Comment.query.filter_by(issue_id=issue_id).all()
     return list(map(lambda comment: to_json(comment), comments))
 
+def find_all_comments_by_issue_id(issue_id):
+    """
+    find all the comments in a issue
+    """
+    issues = Comment.query.filter_by(issue_id=issue_id).all()
+    return comments_schema.dump(issues).data
+
 def to_json(comment):
     """
     Returns a Comment JSON object
