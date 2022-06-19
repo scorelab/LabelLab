@@ -139,18 +139,18 @@ def record_logs(fun):
 
       # Issues controller
       if url == f'/api/v1/issue/create/{project_id}':
+        data = request.get_json(silent=True, force=True)
         message = 'New issue has been created'
-        category = 'issues'
+        category = data['category']
       
       if url.startswith('/api/v1/issue/issue_info/'):
         issue_id = kwargs.get('issue_id')
         if method == 'DELETE':
           message = f'Issue with id {issue_id} has been deleted'
-          category = 'issues'
         elif method == 'PUT':
           issue = find_issue_by_id(issue_id)
           message = f'Issue {issue["title"]} has been updated'
-          category = 'issues'
+          category = issue["category"]
           entity_type = 'issue'
           entity_id = issue_id
 
@@ -161,7 +161,7 @@ def record_logs(fun):
         user = find_by_user_id(assignee_id)
         issue = find_issue_by_id(issue_id)
         message = f'Issue {issue["title"]} assigned to {user["name"]}'
-        category = 'issues'
+        category = issue["category"]
      
       # Comment controller
       if url.startswith('/api/v1/comment/create/'):
@@ -169,23 +169,8 @@ def record_logs(fun):
         issue = find_issue_by_id(issue_id)
         project_id = issue['project_id']
         project = find_by_project_id(project_id)
-        message = f'{user["username"]} posted a new comment on {project["project_name"]}'
-        category = 'issues'
-
-      if url.startswith('/api/v1/comment/comment_info/'):
-        comment_id = kwargs.get('comment_id')
-        issue_id = kwargs.get('issue_id')
-        issue = find_issue_by_id(issue_id)
-        project_id = issue['project_id']
-        if method == 'DELETE':
-          message = f'Comment with id {comment_id} has been deleted'
-          category = 'issues'
-        elif method == 'PUT':
-          comment = find_comment_by_id(comment_id)
-          message = f'{user["username"]} edited the comment'
-          category = 'issues'
-          entity_type = 'comment'
-          entity_id = comment_id
+        message = f'{user["username"]} posted a new comment on {issue["title"]}'
+        category = issue["category"]
         
       # Labels controller
       if url == f'/api/v1/label/create/{project_id}':
