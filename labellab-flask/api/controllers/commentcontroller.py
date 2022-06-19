@@ -14,7 +14,8 @@ from api.helpers.comment import(
     save as save_comment,
     find_by_id as find_comment_by_id,
     update_comment,
-    delete_by_id as delete_comment_by_id
+    delete_by_id as delete_comment_by_id,
+    find_all_comments_by_issue_id 
 )
 
 from api.middleware.logs_decorator import record_logs
@@ -80,11 +81,19 @@ class GetAllComments(MethodView):
     @jwt_required
     def get(self, issue_id):
         try:
-                        
+            if not issue_id:        
+                response = {
+                    "success": False,
+                    "msg": "Provide the issue_id.",
+                }
+                return make_response(jsonify(response)), 422
+
+            comments =     find_all_comments_by_issue_id(issue_id)
+
             response = {
                 "success": True,
                 "msg": "Fetched all Comments",
-                "body": "Returned all comments related to this issue"
+                "body": comments
             }
             return make_response(jsonify(response)), 200
         
