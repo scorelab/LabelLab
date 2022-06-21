@@ -88,7 +88,7 @@ class GetAllComments(MethodView):
                 }
                 return make_response(jsonify(response)), 422
 
-            comments =     find_all_comments_by_issue_id(issue_id)
+            comments = find_all_comments_by_issue_id(issue_id)
 
             response = {
                 "success": True,
