@@ -11,6 +11,8 @@ from api.config import config
 allowed_priorities = config[os.getenv("FLASK_CONFIG") or "development"].ISSUE_PRIORITIES_ALLOWED
 allowed_statuses = config[os.getenv("FLASK_CONFIG") or "development"].ISSUE_STATUSES_ALLOWED
 allowed_entity_types = config[os.getenv("FLASK_CONFIG") or "development"].ENTITY_TYPES_ALLOWED
+default_page = config[os.getenv("FLASK_CONFIG") or "development"].DEFAULT_PAGE
+default_per_page = config[os.getenv("FLASK_CONFIG") or "development"].DEFAULT_PER_PAGE
 
 issue_schema = IssueSchema()
 issues_schema = IssueSchema(many=True)
@@ -107,10 +109,12 @@ def save(issue):
     db.session.commit()
     return issue_schema.dump(issue).data
 
-def pagination(query, page, per_page):
+def pagination(query, args):
     """
     Paginate issues queryset
     """
+    page = args.get('page', default_page, type=int)
+    per_page = args.get('per_page', default_per_page, type=int)
     paginated_query = query.order_by(desc(Issue.updated_at)).paginate(page, per_page, False)
     data = {
         "items": list(map(lambda issue: to_json(issue), paginated_query.items)),
