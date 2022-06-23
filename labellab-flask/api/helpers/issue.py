@@ -1,5 +1,8 @@
 import os
 
+from sqlalchemy import desc
+from flask_sqlalchemy import Pagination
+
 from api.extensions import db, ma
 from api.models.Issue import Issue
 from api.serializers.issue import IssueSchema
@@ -41,29 +44,29 @@ def find_all_issues_by_project_id(project_id):
     """
     find all the issue in a project
     """
-    issues = Issue.query.filter_by(project_id=project_id).all()
-    return issues_schema.dump(issues).data
+    issues = Issue.query.filter_by(project_id=project_id)
+    return issues
 
 def fetch_all_issue_by_category(project_id, category):
     """
     find all the issue in a project by category
     """
-    issues = Issue.query.filter_by(project_id=project_id, category=category).all()
-    return list(map(lambda issue: to_json(issue), issues))
+    issues = Issue.query.filter_by(project_id=project_id, category=category)
+    return issues
 
 def fetch_all_issue_by_entity_type(project_id,entity_type, entity_id):
     """
     find all the issue in a project by entity type and entity id
     """
-    issues = Issue.query.filter_by(project_id=project_id, entity_type=entity_type,entity_id=entity_id).all()
-    return list(map(lambda issue: to_json(issue), issues))
+    issues = Issue.query.filter_by(project_id=project_id, entity_type=entity_type,entity_id=entity_id)
+    return issues
 
 def fetch_all_issue_by_team_id(project_id, team_id):
     """
     find all the issue in a project by team ID.
     """
-    issues = Issue.query.filter_by(project_id=project_id, team_id=team_id).all()
-    return list(map(lambda issue: to_json(issue), issues))
+    issues = Issue.query.filter_by(project_id=project_id, team_id=team_id)
+    return issues
 
 def to_json(issue):
     """
@@ -103,3 +106,16 @@ def save(issue):
     db.session.add(issue)
     db.session.commit()
     return issue_schema.dump(issue).data
+
+def pagination(query, page, per_page):
+    """
+    Paginate issues queryset
+    """
+    paginated_query = query.order_by(desc(Issue.updated_at)).paginate(page, per_page, False)
+    data = {
+        "items": list(map(lambda issue: to_json(issue), paginated_query.items)),
+        "total": paginated_query.total,
+        "page": paginated_query.page,
+        "per_page": paginated_query.per_page
+    }
+    return data
