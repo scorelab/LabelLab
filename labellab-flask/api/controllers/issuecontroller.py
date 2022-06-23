@@ -127,11 +127,8 @@ class GetAllIssues(MethodView):
                 }
                 return make_response(jsonify(response)), 422
 
-            page = request.args.get('page', 1, type=int)
-            per_page = request.args.get('per_page', 6, type=int)
-
             issues = find_all_issues_by_project_id(project_id)
-            issues = pagination(issues, page, per_page)
+            issues = pagination(issues, request.args)
 
             if not issues.items:
                 response = {
@@ -367,6 +364,8 @@ class FetchCategoryIssuesView(MethodView):
                 return make_response(jsonify(response)), 422
             
             issue_category = fetch_all_issue_by_category(project_id,category)
+            issue_category = pagination(issue_category, request.args)
+
             response = {
                 'success':True,
                 'data':issue_category
@@ -406,7 +405,8 @@ class FetchTeamIssuesView(MethodView):
                 }
                 return make_response(jsonify(response)), 422
             
-            issue_team = fetch_all_issue_by_team_id(project_id,team_id)  
+            issue_team = fetch_all_issue_by_team_id(project_id,team_id) 
+            issue_team = pagination(issue_team, request.args) 
             response = {
                 "success": True,
                 "msg": "Issues found",
@@ -455,11 +455,12 @@ class FetchEntityIssuesView(MethodView):
                 }
                 return make_response(jsonify(response)), 400
             
-            issue_team = fetch_all_issue_by_entity_type(project_id, entity_type, entity_id)  
+            issue_entity = fetch_all_issue_by_entity_type(project_id, entity_type, entity_id)
+            issue_entity = pagination(issue_entity, request.args)
             response = {
                 "success": True,
                 "msg": "Issues found",
-                "body": issue_team
+                "body": issue_entity
             }
             return make_response(jsonify(response)), 200
         
