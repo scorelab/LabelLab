@@ -18,7 +18,8 @@ from api.helpers.issue import (
     fetch_all_issue_by_category,
     fetch_all_issue_by_entity_type,
     update_issue,
-    fetch_all_issue_by_team_id
+    fetch_all_issue_by_team_id,
+    pagination
 )
 from api.helpers.comment import fetch_comments_by_issue_id
 from api.helpers.user import get_user_roles
@@ -126,9 +127,13 @@ class GetAllIssues(MethodView):
                 }
                 return make_response(jsonify(response)), 422
 
-            issues = find_all_issues_by_project_id(project_id)
+            page = request.args.get('page', 1, type=int)
+            per_page = request.args.get('per_page', 6, type=int)
 
-            if not issues:
+            issues = find_all_issues_by_project_id(project_id)
+            issues = pagination(issues, page, per_page)
+
+            if not issues.items:
                 response = {
                         "success": False,
                         "msg": "No Issue found",
@@ -138,10 +143,9 @@ class GetAllIssues(MethodView):
             
             response = {
                     "success": True,
-                    "msg": "Label fetched successfully.",
+                    "msg": "Issues fetched successfully.",
                     "body": issues
                 }
-
             return make_response(jsonify(response)), 200 
         
         except Exception:
