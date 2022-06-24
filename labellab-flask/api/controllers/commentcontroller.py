@@ -17,7 +17,7 @@ from api.helpers.comment import(
     delete_by_id as delete_comment_by_id,
     find_all_comments_by_issue_id 
 )
-
+from api.extensions import socketio
 from api.middleware.logs_decorator import record_logs
 from api.middleware.issue_decorator import issue_exists
 from api.middleware.comment_decorator import comment_exists
@@ -212,6 +212,30 @@ class CommentInfo(MethodView):
             # Server Error)
             return make_response(jsonify(response)), 500
 
+@socketio.on('send_comment')
+def handle_send_comment_event(data):
+    try:
+        body = data['body']
+        issue_id = data['issue_id']
+        user_id = data['user_id']
+    except KeyError as err:
+        socketio.emit('message_error', f'{str(err)} key is missing')
+    user = find_by_user_id(user_id)
+    username = user['username']
+    thumbnail = user['thumbnail']
+    try:
+        comment = Comment(
+            body=body,
+            issue_id=issue_id,
+            user_id=user_id,
+            username=username,
+            thumbnail=thumbnail
+            )
+    except Exception as err:
+        socketio.emit('comment_error', f'Something went wrong!')
+        
+    new_comment = save_comment(comment)
+    socketio.emit('receive_comment', new_comment)
 
 commentController = {
     "add_comment": AddComment.as_view("add_comment"),
