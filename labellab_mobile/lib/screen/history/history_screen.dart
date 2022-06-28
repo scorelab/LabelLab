@@ -21,7 +21,8 @@ class HistoryScreen extends StatelessWidget {
             state.classifications!.isNotEmpty) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("History"),
+              backgroundColor: Colors.white,
+              title: Text("History",style: TextStyle(color: Colors.black)),
               centerTitle: true,
               elevation: 0,
               actions: <Widget>[
@@ -72,7 +73,8 @@ class HistoryScreen extends StatelessWidget {
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: Text("History"),
+              backgroundColor: Colors.white,
+              title: Text("History",style: TextStyle(color: Colors.black)),
               centerTitle: true,
               elevation: 0,
             ),

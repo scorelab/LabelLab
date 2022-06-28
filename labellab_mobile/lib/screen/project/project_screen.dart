@@ -22,11 +22,13 @@ class ProjectScreen extends StatelessWidget {
         if (state.projects != null && state.projects!.isNotEmpty) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Projects"),
+              backgroundColor: Colors.white,
+              title: Text("Projects",style: TextStyle(color: Colors.black),),
               centerTitle: true,
               elevation: 0,
               actions: <Widget>[
                 IconButton(
+                  color: Colors.black,
                     icon: Icon(Icons.search),
                     onPressed: () {
                       _gotoProjectSearch(context, state);
@@ -84,7 +86,8 @@ class ProjectScreen extends StatelessWidget {
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Projects"),
+              backgroundColor: Colors.white,
+              title: Text("Projects",style: TextStyle(color: Colors.black),),
               centerTitle: true,
               elevation: 0,
             ),
