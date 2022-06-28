@@ -1,0 +1,36 @@
+on:
+  push:
+    paths:
+      - 'labellab_mobile/**'
+name: Test, Build and Release apk
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./labellab_mobile
+   
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '3.0.1'
+    
+    - run: flutter clean
+    - run: flutter pub get
+
+#   - run: flutter format --set-exit-if-changed .
+   
+
+#     Test case are failing flutter SDk
+#     - run: flutter test
+
+#     Build APk (Some issue here)
+#     - run: flutter build apk 
+#     - run: flutter build apk --debug --split-per-abi
