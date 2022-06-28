@@ -37,7 +37,8 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_editing ? "Edit project" : "Add project"),
+        backgroundColor: Colors.white,
+        title: Text(_editing ? "Edit project" : "Add project",style: TextStyle(color: Colors.black),),
         elevation: 0,
       ),
       body: Padding(
