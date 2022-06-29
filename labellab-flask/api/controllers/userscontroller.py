@@ -25,6 +25,7 @@ from api.helpers.user import (
     search_user,
     update_by_id,
     update_password,
+    fetch_all_users
 )
 
 class Register(MethodView):
@@ -327,6 +328,27 @@ class UserInfo(MethodView):
         }
         return make_response(jsonify(response)), 200
 
+class AllUserInfo(MethodView):
+    """This class-based view handles retrieving the current \
+    all users information"""
+
+    @jwt_required
+    def get(self):
+        users = fetch_all_users()
+        if not users:
+            response = {
+                "success": False,
+                "msg": "No user found."
+            }
+            return make_response(jsonify(response)), 404
+
+        response = {
+            "success": True,
+            "msg": "Users information fetched successfully",
+            "body": users
+        }
+        return make_response(jsonify(response)), 200
+
 class CountInfo(MethodView):
     """This class-based view handles the count of images and labels."""
 
@@ -517,6 +539,7 @@ userController = {
     "token_refresh": TokenRefresh.as_view("token_refresh"),
     "oauth": Auth.as_view("oauth"),
     "user": UserInfo.as_view("user"),
+    "get_all_users": AllUserInfo.as_view("get_all_users"),
     "count_info": CountInfo.as_view("count_info"),
     "search_users": SearchUsers.as_view("search_users"),
     "edit_user": EditUser.as_view("edit_user"),

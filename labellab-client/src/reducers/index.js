@@ -4,6 +4,7 @@ import register from './register'
 import user from './user'
 import project from './project'
 import image from './image'
+import issues from './issue'
 import label from './label'
 import searchProjects from './search'
 import searchUser from './searchUser'
@@ -24,7 +25,8 @@ const rootReducers = combineReducers({
   images: image,
   labels: label,
   teams,
-  logs
+  logs,
+  issues
 })
 
 export default rootReducers

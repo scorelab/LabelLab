@@ -47,6 +47,12 @@ usersprint.add_url_rule(
 )
 
 usersprint.add_url_rule(
+    "/users/get",
+    view_func=userscontroller.userController["get_all_users"],
+    methods=["GET"]
+)
+
+usersprint.add_url_rule(
     "/users/count_info",
     view_func=userscontroller.userController["count_info"],
     methods=["GET"]

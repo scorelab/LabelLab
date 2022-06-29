@@ -23,6 +23,19 @@ def to_json(user):
 
     return user_detail
 
+def fetch_all_users() :
+    """
+    fetch all users information
+    """
+    users = User.query.all()
+    data = []
+    for user in users:
+        user = user_schema.dump(user).data
+        del user["projects"]
+        del user["project_members"]
+        data.append(user)
+    return data
+
 def find_by_email(email):
     """
     query user on their email

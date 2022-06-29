@@ -11,7 +11,10 @@ import {
   SEARCH_USER,
   SEARCH_USER_FAILURE,
   EDIT_USER_INFO,
-  EDIT_USER_INFO_FAILURE
+  EDIT_USER_INFO_FAILURE,
+  FETCH_ALL_USERS_FAILURE,
+  FETCH_ALL_USERS_REQUEST,
+  FETCH_ALL_USERS_SUCCESS
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -39,6 +42,32 @@ export const fetchUser = () => {
   }
   function failure(error) {
     return { type: SET_USER_DATA_FAILURE, payload: error }
+  }
+}
+
+export const fetchAllUsers = () => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.get('/api/v1/users/get')
+      .then(res => {
+        dispatch(success(res.data.body))
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: FETCH_ALL_USERS_REQUEST }
+  }
+  function success(data) {
+    return { type: FETCH_ALL_USERS_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: FETCH_ALL_USERS_FAILURE, payload: error }
   }
 }
 

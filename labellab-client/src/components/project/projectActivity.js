@@ -19,19 +19,8 @@ import {
   fetchEntitySpecificLogs,
   fetchCategorySpecificLogs
 } from '../../actions/index'
+import { categoryOptions } from '../../constants/options'
 
-const categoryOptions = [
-  { key: 1, value: 'all', text: 'all' },
-  { key: 2, value: 'general', text: 'general' },
-  { key: 3, value: 'images', text: 'images' },
-  { key: 4, value: 'labels', text: 'labels' },
-  {
-    key: 5,
-    value: 'image labelling',
-    text: 'image labelling'
-  },
-  { key: 6, value: 'models', text: 'models' }
-]
 
 class ProjectActivity extends Component {
   constructor(props) {
