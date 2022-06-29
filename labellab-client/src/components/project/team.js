@@ -23,20 +23,10 @@ import {
   teamDelete,
   fetchAllTeams
 } from '../../actions'
+import { teamsOptions } from '../../constants/options'
 import SearchUser from './searchUser.js'
 import './css/team.css'
 
-const teamsOptions = [
-  { key: 1, value: 'images', role: 'images', text: 'images' },
-  { key: 2, value: 'labels', role: 'labels', text: 'labels' },
-  {
-    key: 3,
-    value: 'image labelling',
-    role: 'image labelling',
-    text: 'image labelling'
-  },
-  { key: 4, value: 'models', role: 'models', text: 'models' }
-]
 
 class TeamIndex extends Component {
   constructor(props) {

@@ -108,6 +108,16 @@ class ProjectSidebar extends Component {
 
               <Menu.Item
                 as={Link}
+                to={`/project/${project.projectId}/issues`}
+                name="issues"
+                active={activeItem === 'issues'}
+                onClick={this.handleItemClick}
+              >
+                Project Issues
+              </Menu.Item>
+              
+              <Menu.Item
+                as={Link}
                 to={`/project/${project.projectId}/analytics`}
                 name="analytics"
                 active={activeItem === 'analytics'}

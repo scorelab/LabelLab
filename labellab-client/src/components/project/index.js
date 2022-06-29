@@ -12,7 +12,9 @@ import {
   fetchCoordinates,
   fetchAllTeams,
   fetchProjectRoles,
-  fetchProjectLogs
+  fetchProjectLogs,
+  fetchProjectIssues,
+  fetchAllUsers
 } from '../../actions/index'
 import Load from '../loading/index'
 import './css/index.css'
@@ -37,6 +39,10 @@ const ProjectNavbar = Loadable({
 })
 const Images = Loadable({
   loader: () => import('./images'),
+  loading: Loading
+})
+const Issues = Loadable({
+  loader: () => import('./issue/issues'),
   loading: Loading
 })
 const Analytics = Loadable({
@@ -91,7 +97,9 @@ class ProjectIndex extends Component {
       fetchCoordinates,
       fetchAllTeams,
       fetchProjectRoles,
-      fetchProjectLogs
+      fetchProjectLogs,
+      fetchProjectIssues,
+      fetchAllUsers
     } = this.props
     fetchProject(match.params.projectId)
     fetchTimeLabel(match.params.projectId)
@@ -101,6 +109,8 @@ class ProjectIndex extends Component {
     fetchAllTeams(match.params.projectId)
     fetchProjectRoles(match.params.projectId)
     fetchProjectLogs(match.params.projectId)
+    fetchProjectIssues(match.params.projectId)
+    fetchAllUsers(match.params.projectId)
   }
   render() {
     const { match, actions, history, actionsLabel } = this.props
@@ -132,6 +142,21 @@ class ProjectIndex extends Component {
                 exact
                 path={`${match.path}/images`}
                 component={Images}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/issues`}
+                component={Issues}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/issues/category/:category`}
+                component={Issues}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/issues/entity/:entityType/:entityId`}
+                component={Issues}
               />
               <PrivateRoute
                 exact
@@ -205,7 +230,9 @@ ProjectIndex.propTypes = {
   fetchLabels: PropTypes.func,
   fetchAllTeams: PropTypes.func,
   fetchProjectRoles: PropTypes.func,
-  fetchProjectLogs: PropTypes.func
+  fetchProjectLogs: PropTypes.func,
+  fetchProjectIssues: PropTypes.func,
+  fetchAllUsers: PropTypes.func
 }
 
 const mapStateToProps = state => {
@@ -241,6 +268,12 @@ const mapDispatchToProps = dispatch => {
     },
     fetchProjectLogs: projectId => {
       return dispatch(fetchProjectLogs(projectId))
+    },
+    fetchProjectIssues: projectId => {
+      return dispatch(fetchProjectIssues(projectId))
+    },
+    fetchAllUsers: () => {
+      return dispatch(fetchAllUsers())
     }
   }
 }

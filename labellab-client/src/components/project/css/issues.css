@@ -1,0 +1,21 @@
+.issue-status-label {
+    width: 100%
+}
+.center {
+    text-align: center !important;
+}
+.left {
+    text-align: left !important;
+}
+.user-icon {
+    font-size: 2.4em !important;
+    color: grey;
+    margin-top: 0.5rem !important;
+}
+.issue-header {
+    text-align: left !important;
+    cursor: pointer;
+}
+.issue-link {
+    color: black !important;
+}

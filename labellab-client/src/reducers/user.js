@@ -7,7 +7,10 @@ import {
   UPLOAD_USER_IMAGE_SUCCESS,
   FETCH_COUNT_FAILURE,
   FETCH_COUNT_REQUEST,
-  FETCH_COUNT_SUCCESS
+  FETCH_COUNT_SUCCESS,
+  FETCH_ALL_USERS_FAILURE,
+  FETCH_ALL_USERS_REQUEST,
+  FETCH_ALL_USERS_SUCCESS
 } from '../constants/index'
 const initialState = {
   userActions: {
@@ -28,7 +31,8 @@ const initialState = {
     totalLabels: '',
     totalProjects: '',
     totalImages: ''
-  }
+  },
+  users : []
 }
 
 const user = (state = initialState, action) => {
@@ -108,6 +112,29 @@ const user = (state = initialState, action) => {
         ...state,
         userActions: {
           errors: action.payload
+        }
+      }
+    case FETCH_ALL_USERS_REQUEST:
+      return {
+        ...state,
+        userActions: {
+            isFetching: true
+        }
+      }
+    case FETCH_ALL_USERS_SUCCESS:
+      return {
+        ...state,
+        users : action.payload,
+        userActions: {
+            isFetching: false
+        }
+      }
+    case FETCH_ALL_USERS_FAILURE:
+      return {
+        ...state,
+        users : action.payload,
+        userActions: {
+            isFetching: true
         }
       }
     default:

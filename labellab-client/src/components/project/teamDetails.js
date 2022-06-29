@@ -26,20 +26,9 @@ import {
   addTeamMember,
   removeTeamMember
 } from '../../actions/index'
+import { teamsOptions } from '../../constants/options'
 import SearchUser from './searchUser'
 
-const teamsOptions = [
-  { key: 1, value: 'images', role: 'images', text: 'images' },
-  { key: 2, value: 'labels', role: 'labels', text: 'labels' },
-  {
-    key: 3,
-    value: 'image labelling',
-    role: 'image labelling',
-    text: 'image labelling'
-  },
-  { key: 4, value: 'models', role: 'models', text: 'models' },
-  { key: 5, value: 'admin', role: 'admin', text: 'admin' }
-]
 
 class TeamDetails extends Component {
   constructor(props) {
