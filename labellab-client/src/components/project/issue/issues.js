@@ -17,6 +17,7 @@ import {
   Label,
   Pagination,
   Popup,
+  Modal
 } from 'semantic-ui-react'
 import moment from 'moment'
 
@@ -43,6 +44,7 @@ function ProjectIssues(props) {
   const [activeIssue, setActiveIssue] = useState('')
   const [update, setUpdate] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const {
@@ -120,6 +122,11 @@ function ProjectIssues(props) {
     setShowForm(!showForm)
   }
 
+  const toggleOpen = (data) => {
+    setOpen(!open)
+    setActiveIssue(data)
+  }
+
   const handleClick = (id) => {
     const { projectId } = props
     props.history.push({
@@ -142,13 +149,15 @@ function ProjectIssues(props) {
     toggleForm()
   }
 
-  const handleDelete = (e, { id }) => {
+  const handleDelete = () => {
     const { projectId, deleteIssue } = props
-    deleteIssue(projectId, id, callback)
+    if(activeIssue)
+    deleteIssue(projectId, activeIssue.id, callback)
   }
 
   const callback = () => {
     const { projectId, fetchProjectIssues } = props
+    toggleOpen('')
     fetchProjectIssues(projectId, activePage)
   }
 
@@ -341,7 +350,7 @@ function ProjectIssues(props) {
                   <Dropdown item icon='ellipsis horizontal' simple>
                     <Dropdown.Menu>
                       <Dropdown.Item onClick={handleUpdate} data={issue} icon='edit' text='Edit' />
-                      <Dropdown.Item onClick={handleDelete} id={issue.id} icon='trash' text='Delete' />
+                      <Dropdown.Item onClick={() => toggleOpen(issue)} id={issue.id} icon='trash' text='Delete' />
                       <Dropdown.Item>
                         <Link to={`/project/${issue.project_id}/logs/entity/issue/${issue.id}`} className='issue-link'>
                           <Dropdown.Item icon='history' text='Activity'/>
@@ -382,6 +391,22 @@ function ProjectIssues(props) {
         toggleForm={toggleForm}
         fetchProjectIssues={fetchProjectIssues}
       />
+      <Modal size="mini" open={open} onClose={() => toggleOpen('')}>
+        <Modal.Header>
+          Delete Issue
+        </Modal.Header>
+        <Modal.Content>
+          Are you sure you want delete {activeIssue.title} ?
+        </Modal.Content>
+        <Modal.Actions>
+          <Button positive onClick={handleDelete}>
+            Yes
+          </Button>
+          <Button negative onClick={() => toggleOpen('')}>
+            No
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </Fragment>
   )
 }
