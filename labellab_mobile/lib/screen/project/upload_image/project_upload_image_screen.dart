@@ -30,7 +30,8 @@ class ProjectUploadImageScreen extends StatelessWidget {
           }
           return Scaffold(
             appBar: AppBar(
-              title: Text("Upload Image"),
+              backgroundColor: Colors.white,
+              title: Text("Upload Image",style: TextStyle(color: Colors.black)),
               elevation: 0,
             ),
             body: _buildBody(context, snapshot),

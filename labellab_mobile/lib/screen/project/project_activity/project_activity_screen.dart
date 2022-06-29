@@ -20,7 +20,8 @@ class ProjectActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Project Activity'),
+        backgroundColor: Colors.white,
+        title: Text('Project Activity',style: TextStyle(color: Colors.black)),
         centerTitle: true,
         elevation: 0,
         actions: [
@@ -28,7 +29,7 @@ class ProjectActivityScreen extends StatelessWidget {
               ? Container()
               : IconButton(
                   onPressed: () => _openFiltersBottomSheet(context),
-                  icon: Icon(Icons.settings),
+                  icon: Icon(Icons.settings,color: Colors.black,),
                 )
         ],
       ),

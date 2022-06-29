@@ -25,7 +25,8 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add member"),
+        backgroundColor: Colors.white,
+        title: Text("Add member",style: TextStyle(color: Colors.black)),
         elevation: 0,
         centerTitle: true,
       ),
