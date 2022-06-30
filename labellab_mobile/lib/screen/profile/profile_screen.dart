@@ -17,7 +17,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        iconTheme: IconThemeData(
+    color: Colors.black, 
+  ),
+        backgroundColor: Colors.white,
+        title: Text("Profile",style: TextStyle(color: Colors.black),),
         elevation: 0,
         actions: <Widget>[
           PopupMenuButton(

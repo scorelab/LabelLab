@@ -24,6 +24,9 @@ class _BackendSelectionScreenState extends State<BackendSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+      iconTheme: IconThemeData(
+    color: Colors.black, 
+  ),
         backgroundColor: Colors.white,
         title: Text('Configure Backend',style: TextStyle(color: Colors.black)),
         centerTitle: true,
