@@ -21,7 +21,11 @@ class TeamDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Team Details'),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+    color: Colors.black, 
+  ),
+        title: Text('Team Details',style: TextStyle(color: Colors.black),),
         centerTitle: true,
         elevation: 0,
         actions: [
