@@ -25,10 +25,13 @@ import {
     FETCH_TEAM_SPECIFIC_ISSUES_FAILURE,
     FETCH_ENTITY_SPECIFIC_ISSUES_REQUEST,
     FETCH_ENTITY_SPECIFIC_ISSUES_SUCCESS,
-    FETCH_ENTITY_SPECIFIC_ISSUES_FAILURE
+    FETCH_ENTITY_SPECIFIC_ISSUES_FAILURE,
+    SEND_COMMENT,
+    RECEIVE_COMMENT
   
   } from '../constants/index'
   
+  import socket from '../utils/webSocket'
   import FetchApi from '../utils/FetchAPI'
 
   
@@ -158,13 +161,12 @@ import {
     }
   }
   
-  export const fetchIssue = (project_id, issue_id, callback) => {
+  export const fetchIssue = (project_id, issue_id) => {
     return dispatch => {
       dispatch(request())
       FetchApi.get("/api/v1/issue/issue_info/" + project_id + "/" + issue_id)
         .then(res => {
           dispatch(success(res.data.body))
-          callback()
         })
         .catch(err => {
           if (err.response) {
@@ -265,4 +267,34 @@ import {
       return { type: ASSIGN_ISSUE_FAILURE, payload: error }
     }
   }
+
+  export const handleCommentReceive = issueId => {
+    return dispatch => {
+      socket.on('receive_comment', data => {
+        const commentIssueId = data.issue_id
+        if (commentIssueId == issueId) {
+          dispatch(success(data))
+        }
+      })
+    }
+    function success(data) {
+      return { type: RECEIVE_COMMENT, payload: data }
+    }
+  }
+
+  export const sendComment = (comment, issueId, userId) => {
+    return dispatch => {
+      const data = {
+        body: comment,
+        issue_id: issueId,
+        user_id: userId
+      }
+      socket.emit('send_comment', data)
+      dispatch(success())
+    }
+    function success() {
+      return { type: SEND_COMMENT}
+    }
+  }
+  
   

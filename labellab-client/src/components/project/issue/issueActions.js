@@ -13,15 +13,8 @@ import {
   createIssue,
   updateIssue
 } from '../../../actions/index'
-import { options } from '../../../constants/options'
+import { statusOptions, categoryOptions, priorityOptions, entityTypeOptions } from '../../../constants/options'
 
-for (const [key, value] of Object.entries(options)) {
-  var optionList = []
-  value.map((option, index) => {
-    optionList.push({ key: index, value: option, text: option })
-  })
-  options[key] = optionList
-} 
 
 function IssueActions(props) {
   
@@ -158,7 +151,7 @@ function IssueActions(props) {
             <Form.Select
               required
               label='Category'
-              options={options.categoryOptions}
+              options={categoryOptions}
               placeholder='Issue category'
               name='category'
               value={issue.category}
@@ -168,7 +161,7 @@ function IssueActions(props) {
           <Form.Group widths='equal'>
             <Form.Select
               label='Priority'
-              options={options.priorityOptions}
+              options={priorityOptions}
               placeholder='Issue priority'
               name='priority'
               value={issue.priority}
@@ -176,7 +169,7 @@ function IssueActions(props) {
             />
             <Form.Select
               label='Status'
-              options={options.statusOptions}
+              options={statusOptions}
               placeholder="Issue's current status"
               name='status'
               value={issue.status}
@@ -186,7 +179,7 @@ function IssueActions(props) {
           <Form.Group widths='equal'>
             <Form.Select
               label='Entity Type'
-              options={options.entityTypeOptions}
+              options={entityTypeOptions}
               placeholder='Associate an entity e.g. image'
               name='entity_type'
               value={issue.entity_type}
