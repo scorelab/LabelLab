@@ -21,6 +21,7 @@ import {
 } from '../../actions/index'
 import { categoryOptions } from '../../constants/options'
 
+categoryOptions.push({ key: 0, value: 'all', text: 'all' })
 
 class ProjectActivity extends Component {
   constructor(props) {

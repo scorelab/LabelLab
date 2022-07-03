@@ -30,8 +30,10 @@ import {
 } from '../../../actions/index'
 import IssueActions from './issueActions'
 import '../css/issues.css'
-import { entityTypeOptions, categoryOptions, statusOptions, priorityOptions } from '../../../constants/options'
+import { entityTypeOptions, categoryOptions, statusOptions, priorityOptions, statusColorOptions, priorityColorOptions } from '../../../constants/options'
 
+categoryOptions.push({ key: 0, value: 'all', text: 'all' })
+entityTypeOptions.push({ key: 0, value: 'all', text: 'all' })
 
 function ProjectIssues(props) {
 
@@ -294,7 +296,7 @@ function ProjectIssues(props) {
                       if (issue.created_by == member.user_id)
                         return (
                           <Header.Subheader>
-                            reported {moment(issue.created_at).startOf('hour').fromNow()} by {member.name} <br />
+                            reported {moment.utc(issue.created_at).local().startOf('hour').fromNow()} by {member.name} <br />
                           </Header.Subheader>
                         )
                     })
@@ -317,12 +319,12 @@ function ProjectIssues(props) {
                   </Table.Cell>
                 )}
                 <Table.Cell width={2}>
-                  <Header as="h5" color={priorityOptions[issue.priority]}>
+                  <Header as="h5" color={priorityColorOptions[issue.priority]}>
                     {issue.priority}
                   </Header>
                 </Table.Cell>
                 <Table.Cell width={2}>
-                  <Label color={statusOptions[issue.status]} size='medium' horizontal className="issue-status-label">
+                  <Label color={statusColorOptions[issue.status]} size='medium' horizontal className="issue-status-label">
                     {issue.status}
                   </Label>
                 </Table.Cell>

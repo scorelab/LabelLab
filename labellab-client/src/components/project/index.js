@@ -45,6 +45,10 @@ const Issues = Loadable({
   loader: () => import('./issue/issues'),
   loading: Loading
 })
+const IssueDetails = Loadable({
+  loader: () => import('./issue/issueDetails'),
+  loading: Loading
+})
 const Analytics = Loadable({
   loader: () => import('./analytics'),
   loading: Loading
@@ -157,6 +161,11 @@ class ProjectIndex extends Component {
                 exact
                 path={`${match.path}/issues/entity/:entityType/:entityId`}
                 component={Issues}
+              />
+              <PrivateRoute
+                exact
+                path={`${match.path}/issue/:issueId`}
+                component={IssueDetails}
               />
               <PrivateRoute
                 exact
