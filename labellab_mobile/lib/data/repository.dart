@@ -13,6 +13,7 @@ import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
+import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
@@ -27,6 +28,8 @@ import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'local/issue_provider.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 
 class Repository {
@@ -34,6 +37,7 @@ class Repository {
   ProjectProvider _projectProvider;
   ClassificationProvider _classificationProvider;
   UserProvider _userProvider;
+  IssueProvider _issueProvider;
   static const ERROR_MESSAGE = "Can't connect to Server";
 
   String? accessToken;
@@ -457,6 +461,27 @@ class Repository {
     return _api.deleteModel(accessToken, modelId);
   }
 
+  //issue
+  Future<List<Issue>> getIssuesLocal() {
+    return _issueProvider.open().then((_) {
+      return _issueProvider.getIssues().then((issues) {
+        _projectProvider.close();
+        return issues!;
+      });
+    });
+  }
+
+  Future<List<Issue>> getIssues(String? project_id) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getIssues(accessToken, project_id).then((issues) {
+      // _projectProvider.open().then((_) async {
+      //   await _projectProvider.replaceProjects(projects);
+      //   _projectProvider.close();
+      // });
+      return issues;
+    });
+  }
+
   // Future<List<charts.Series>> getResults() {
   //   try {
   //     return _api.getResults(accessToken!);
@@ -476,5 +501,6 @@ class Repository {
       : _api = LabelLabAPIImpl(),
         _projectProvider = ProjectProvider(),
         _classificationProvider = ClassificationProvider(),
-        _userProvider = UserProvider();
+        _userProvider = UserProvider(),
+        _issueProvider = IssueProvider();
 }
