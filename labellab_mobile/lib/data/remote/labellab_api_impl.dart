@@ -16,6 +16,7 @@ import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
+import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
@@ -80,6 +81,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_TEAM_ADD_MEMBER = "team/add_team_member";
   static const ENDPOINT_TEAM_REMOVE_MEMBER = "team/remove_team_member";
   static const ENDPOINT_TEAM_GET_MESSAGES = "chatroom";
+
+  static const ENDPOINT_ISSUE_GET = "issue/get/";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -1240,4 +1243,27 @@ class LabelLabAPIImpl extends LabelLabAPI {
       return ApiResponse(response.data);
     }).catchError((error) => ApiResponse.error(error));
   }
+
+  @override
+  Future<List<Issue>> getIssues(String? token, String? project_id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+  return _dio!
+        .get(API_URL + ENDPOINT_ISSUE_GET + "/$project_id", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((item) => Issue.fromJson(item, isDense: true))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+
+
+  }
+  
+  
 }

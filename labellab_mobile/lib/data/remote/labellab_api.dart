@@ -23,6 +23,8 @@ import 'package:labellab_mobile/model/user.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 
+import '../../model/issue.dart';
+
 abstract class LabelLabAPI {
   Future<LoginResponse> login(AuthUser user);
   Future<RefreshResponse> refreshToken(String? refreshToken);
@@ -125,4 +127,7 @@ abstract class LabelLabAPI {
   Future<ApiResponse> trainModel(String? token, String modelId);
   // Future<List<charts.Series>> getResults(String? token);
   Future<ApiResponse> deleteModel(String? token, String modelId);
+  
+  // Issues
+  Future<List<Issue>> getIssues(String? token, String? project_id);
 }
