@@ -6,6 +6,7 @@ import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
 import 'package:labellab_mobile/screen/classification/classification_screen.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
 import 'package:labellab_mobile/screen/classify/classify_screen.dart';
+import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:labellab_mobile/screen/main_screen.dart';
 import 'package:labellab_mobile/screen/profile/edit_info/edit_info_screen.dart';
@@ -283,4 +284,14 @@ var modelHistoryHandler = Handler(
 var backendServiceSelectionHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   return BackendSelectionScreen();
+});
+
+
+var issueActivityHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return Provider<IssueBloc>(
+    create: (context) => IssueBloc(params['id']!.first),
+    dispose: (context, bloc) => bloc.dispose(),
+    // child: ProjectDetailScreen(),
+  );
 });

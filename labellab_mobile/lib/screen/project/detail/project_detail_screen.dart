@@ -11,9 +11,11 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
+import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_edit_model/add_edit_model_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_team_dialog/add_team_dialog.dart';
+import 'package:labellab_mobile/widgets/issue_list_tile.dart';
 import 'package:labellab_mobile/widgets/leave_project_confirm_dialog.dart';
 import 'package:labellab_mobile/widgets/recent_activity_list_tile.dart';
 import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
@@ -76,6 +78,9 @@ class ProjectDetailScreen extends StatelessWidget {
                             ? _buildInfo(context, _state.project!.description!)
                             : Container(),
                         _buildRecentActivity(context, _state.project!),
+                        _state.project != null && _state.project!.issues != null
+                  ? _buildIssue(context, _state.project!)
+                  : Container(),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 8, left: 16, right: 16),
@@ -294,6 +299,45 @@ class ProjectDetailScreen extends StatelessWidget {
                   ),
                 )
               : _buildEmptyPlaceholder(context, "No activity yet"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIssue(BuildContext context, Project project) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Recent Issues',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.more_horiz_rounded),
+                label: Text("More"),
+                onPressed: () =>_goToIssues(context,project.id!),
+              ),
+            ],
+          ),
+          (project.issues != null && project.issues!.isNotEmpty)
+              ? Container(
+                  height: min(170, project.logs!.length * 57),
+                  child: ListView(
+                    padding: const EdgeInsets.all(0),
+                    children: [
+                      for (var issue in project.issues!)
+                        IssueListTile(
+                          issue,
+                          isCustomized: true,
+                        )
+                    ],
+                  ),
+                )
+              : _buildEmptyPlaceholder(context, "No Issues yet"),
         ],
       ),
     );
@@ -741,6 +785,14 @@ class ProjectDetailScreen extends StatelessWidget {
         .navigateTo(context, "/project/activity/" + projectId)
         .whenComplete(() {
       Provider.of<ProjectDetailBloc>(context, listen: false).refresh();
+    });
+  }
+
+  void _goToIssues(BuildContext context, String projectId) {
+    Application.router
+        .navigateTo(context, "/project/issue/" + projectId)
+        .whenComplete(() {
+      Provider.of<IssueBloc>(context, listen: false).refresh();
     });
   }
 

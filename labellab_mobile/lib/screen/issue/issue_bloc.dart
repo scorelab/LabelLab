@@ -12,13 +12,14 @@ class IssueBloc {
 
   List<Issue>? _issues;
   bool _isLoading = false;
+  String _projectId;
 
-  IssueBloc() {
-    _loadIssues();
+  IssueBloc(this._projectId) {
+    _loadIssues(_projectId);
   }
 
   void refresh() {
-    _loadIssues();
+    _loadIssues(_projectId);
   }
 
   void delete(String? id) {
@@ -30,7 +31,7 @@ class IssueBloc {
 
   Stream<IssueState> get issues => _issueController.stream;
 
-  void _loadIssues() {
+  void _loadIssues(String projectId) {
     if (_isLoading) return;
     _isLoading = true;
     _setState(IssueState.loading(issues: _issues));
@@ -38,7 +39,7 @@ class IssueBloc {
       this._issues = issues;
       _setState(IssueState.loading(issues: _issues));
     });
-    _repository.getIssues("1").then((issues) {
+    _repository.getIssues(projectId).then((issues) {
       this._issues = issues;
       _setState(IssueState.success(_issues));
       _isLoading = false;
