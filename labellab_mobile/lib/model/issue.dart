@@ -9,34 +9,55 @@ enum IssuePriority { LOW, HIGH, MEDIUM, CRITICAL }
 
 enum IssueCategory { GENERAL, LABEL, IMAGE, IMAGE_LABELLING, MODELS, MISC }
 
-// "general","labels","images","image labelling","models","misc"
 class Issue {
-  String? id;
+  int? id;
+  int? project_id;
   String? issueTitle;
   String? description;
-  // User? createdbyUser;
-  // User? assignedUser;
-  // Team? assignedTeam;
+  int? created_by;
+  int? assignee_id;
+  int? entityId;
+  String? entityType;
   IssueStatus? issueStatus;
+  int? team_id;
   IssuePriority? issuePriority;
   IssueCategory? issueCategory;
-  DateTime? createdAt;
-  DateTime? dueDateAt;
-  DateTime? updatedAt;
+  String? created_At;
+  String? dueDate;
+  String? updated_At;
 
-  Issue({this.id});
+  Issue(
+      {this.id,
+      this.issueCategory,
+      this.assignee_id,
+      this.created_At,
+      this.created_by,
+      this.description,
+      this.dueDate,
+      this.entityId,
+      this.entityType,
+      this.issuePriority,
+      this.issueStatus,
+      this.issueTitle,
+      this.project_id,
+      this.team_id,
+      this.updated_At});
 
   Issue.fromJson(dynamic json, {bool isDense = false}) {
-    id = json['id'].toString();
+    id = json['id'];
     issueTitle = json['title'];
     description = json['description'];
-    // createdbyUser = json['team_id'].toString();
-    // teamName = json['team_name'];
+    // created_by = int.parse(json['created_by']);
+    // team_id = int.parse(json['team_id']);
     issueStatus = IssueMapper.mapJsonToStatus(json["status"]);
     issuePriority = IssueMapper.mapJsonToPriority(json["priority"]);
     issueCategory = IssueMapper.mapJsonToCategory(json["category"]);
-    createdAt = DateTime.parse(json["created_by"]);
-    dueDateAt = DateTime.parse(json["created_by"]);
-    updatedAt = DateTime.parse(json["updated_by"]);
+    // created_At = json["created_by"];
+    // dueDate = json["due_date"];
+    // updated_At = json["updated_at"];
+    // assignee_id = int.parse(json["assignee_id"]);
+    // entityId = int.parse(json['entity_id']);
+    // entityType = json["entity_type"];
+    // project_id = int.parse(json["project_id"]);
   }
 }

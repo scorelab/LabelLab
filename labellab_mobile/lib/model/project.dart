@@ -61,7 +61,7 @@ class Project {
           .toList();
     }
     if (json["teams"] != null && !isDense) {
-      // print(json["teams"]);
+      print(json["teams"]);
       teams = (json["teams"] as List)
           .map((team) => Team.fromJson(team, isDense: true))
           .toList();
@@ -71,7 +71,7 @@ class Project {
     }
 
     if (json["issues"] != null && !isDense) {
-      // print(json["issues"]);
+      print(json["issues"]);
       issues = (json["issues"] as List)
           .map((issue) => Issue.fromJson(issue, isDense: true))
           .toList();
