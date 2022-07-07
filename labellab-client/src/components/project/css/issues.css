@@ -19,3 +19,19 @@
 .issue-link {
     color: black !important;
 }
+.comment-section {
+    height: 30vh;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column-reverse;
+}
+.activity-section {
+    height: 30vh;
+    overflow-y: scroll;
+}
+.detail-header {
+    margin-bottom: 0.5em !important;
+}
+.ui.header:last-child {
+    margin-top: 0;
+}
