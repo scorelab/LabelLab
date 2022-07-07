@@ -10,7 +10,7 @@ import '../../data/repository.dart';
 class IssueBloc {
   Repository _repository = Repository();
 
-  List<Issue>? _issues;
+  List<Issue>  _issues =[];
   bool _isLoading = false;
   String _projectId;
 
@@ -35,10 +35,7 @@ class IssueBloc {
     if (_isLoading) return;
     _isLoading = true;
     _setState(IssueState.loading(issues: _issues));
-    _repository.getIssuesLocal().then((issues) {
-      this._issues = issues;
-      _setState(IssueState.loading(issues: _issues));
-    });
+  
     _repository.getIssues(projectId).then((issues) {
       this._issues = issues;
       _setState(IssueState.success(_issues));
@@ -53,6 +50,8 @@ class IssueBloc {
       }
       _isLoading = false;
     });
+
+    
   }
 
   _setState(IssueState state) {

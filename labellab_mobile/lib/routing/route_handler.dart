@@ -45,6 +45,8 @@ import 'package:labellab_mobile/screen/train/model_train_bloc.dart';
 import 'package:labellab_mobile/screen/train/model_train_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../screen/issue/issue_activity_screen.dart';
+
 var initHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   return InitScreen();
@@ -292,6 +294,6 @@ var issueActivityHandler = Handler(
   return Provider<IssueBloc>(
     create: (context) => IssueBloc(params['id']!.first),
     dispose: (context, bloc) => bloc.dispose(),
-    // child: ProjectDetailScreen(),
+    child: IssueActivity(),
   );
 });
