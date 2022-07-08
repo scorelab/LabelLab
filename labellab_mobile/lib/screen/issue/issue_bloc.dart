@@ -35,7 +35,10 @@ class IssueBloc {
     if (_isLoading) return;
     _isLoading = true;
     _setState(IssueState.loading(issues: _issues));
-  
+  _repository.getIssuesLocal().then((issues) { 
+      this._issues = issues;
+      _setState(IssueState.loading(issues: _issues));
+    });
     _repository.getIssues(projectId).then((issues) {
       this._issues = issues;
       _setState(IssueState.success(_issues));
@@ -61,4 +64,6 @@ class IssueBloc {
   void dispose() {
     _issueController.close();
   }
+
+  String get projectId => this._projectId;
 }

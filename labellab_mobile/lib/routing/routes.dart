@@ -51,6 +51,7 @@ class Routes {
   static const backendSelection = "/backend-selection";
 
   //Issues
+  static const addIssue = "/issue/add";
   static const issueActivity = "/project/issue/:id";
 
   static void configureRouter(FluroRouter router) {
@@ -132,6 +133,12 @@ class Routes {
     router.define(
       issueActivity,
       handler: issueActivityHandler,
+      transitionType: TransitionType.native,
+    );
+
+    router.define(
+      addIssue,
+      handler: addIssueHandler,
       transitionType: TransitionType.native,
     );
   }

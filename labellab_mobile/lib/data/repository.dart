@@ -465,7 +465,7 @@ class Repository {
   Future<List<Issue>> getIssuesLocal() {
     return _issueProvider.open().then((_) {
       return _issueProvider.getIssues().then((issues) {
-        _projectProvider.close();
+        _issueProvider.close();
         return issues!;
       });
     });
@@ -474,21 +474,25 @@ class Repository {
   Future<List<Issue>> getIssues(String? project_id) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.getIssues(accessToken, project_id).then((issues) {
-      // _projectProvider.open().then((_) async {
-      //   await _projectProvider.replaceProjects(projects);
-      //   _projectProvider.close();
-      // });
       return issues;
     });
   }
 
-  // Future<List<charts.Series>> getResults() {
-  //   try {
-  //     return _api.getResults(accessToken!);
-  //   } catch (e) {
-  //     return Future.error(ERROR_MESSAGE);
-  //   }
-  // }
+  Future<Issue> getIssue(String? id,String? project_id) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getIssue(accessToken, id,project_id);
+  }
+
+  Future<ApiResponse> createIssue(Issue issue) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.createIssue(accessToken, issue);
+  }
+
+  Future<ApiResponse> updateIssue(Issue issue) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.updateIssue(accessToken, issue);
+  }
+
 
   // Singleton
   static final Repository _respository = Repository._internal();
