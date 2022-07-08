@@ -9,8 +9,7 @@ def get_all_messages(team_id):
   return list(map(lambda message: to_json(message), messages))
 
 # Save message
-def save_message(body, team_id, user_id, username):
-  message = Message(body=body, team_id=team_id, user_id=user_id, username=username)
+def save_message(message):
   db.session.add(message)
   db.session.commit()
   return to_json(message)
@@ -22,5 +21,7 @@ def to_json(message):
     'team_id': message.team_id,
     'user_id': message.user_id,
     'username': message.username,
+    'entity_type': message.entity_type,
+    'entity_id': message.entity_id,
     'timestamp': str(message.timestamp),
   }

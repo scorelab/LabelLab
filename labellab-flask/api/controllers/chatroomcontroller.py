@@ -1,12 +1,18 @@
+import os
+import json
 from os import error
 from flask.views import MethodView
 from flask import jsonify, make_response
 from flask_jwt_extended import jwt_required
 from api.extensions import socketio
 
+from api.config import config
+from api.models.Message import Message
 from api.helpers.team import find_by_id
 from api.helpers.user import find_by_user_id
 from api.helpers.chatroom import get_all_messages, save_message
+
+allowed_tags = config[os.getenv("FLASK_CONFIG") or "development"].TAGS_ALLOWED
 
 class GetMessages(MethodView):
   '''
@@ -51,8 +57,23 @@ def handle_send_message_event(data):
     socketio.emit('message_error', f'${str(err)} key is missing')
   user = find_by_user_id(user_id)
   username = user['username']
-  message = save_message(body, team_id, user_id, username)
-  socketio.emit('receive_message', message)
+  message = Message(
+    body=body,
+    team_id=team_id,
+    user_id=user_id,
+    username=username
+  )
+  try: 
+    entity_type = data['entity_type']
+    entity_id = data['entity_id']
+    if entity_type not in allowed_tags:
+      socketio.emit('message_error', 'Tag type not allowed')
+    message.entity_type = entity_type
+    message.entity_id =entity_id
+  except:
+    pass
+  new_message = save_message(message)
+  socketio.emit('receive_message', new_message)
 
 
 chatroom_controller = {
