@@ -143,7 +143,9 @@ const team = (state = initialState, action) => {
             team_id: payload.teamId,
             user_id: payload.userId,
             username: payload.username,
-            timestamp: payload.timestamp
+            timestamp: payload.timestamp,
+            entity_id: payload.entityId,
+            entity_type: payload.entityType
           },
           ...state.messages
         ]
