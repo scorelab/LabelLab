@@ -60,4 +60,12 @@ class Issue {
     // entityType = json["entity_type"];
     // project_id = int.parse(json["project_id"]);
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "title": issueTitle,
+      "description": description,
+      // "category" : IssueMapper.categoryToString(issueCategory)
+    };
+  }
 }

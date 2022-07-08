@@ -331,8 +331,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     children: [
                       for (var issue in project.issues!)
                         IssueListTile(
-                          issue,
-                          isCustomized: true,
+                          issue
                         )
                     ],
                   ),

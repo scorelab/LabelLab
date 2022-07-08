@@ -297,3 +297,8 @@ var issueActivityHandler = Handler(
     child: IssueActivity(),
   );
 });
+
+var addHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return AddEditProjectScreen();
+});

@@ -47,7 +47,6 @@ class IssueMapper {
         return IssuePriority.HIGH;
         case "Critical":
         return IssuePriority.CRITICAL;
-        
       default:
         return IssuePriority.LOW;
     }
@@ -72,17 +71,17 @@ class IssueMapper {
 
   static IssueCategory mapJsonToCategory(String? status) {
     switch (status) {
-      case "General":
+      case "general":
         return IssueCategory.GENERAL;
-      case "Label":
+      case "label":
         return IssueCategory.LABEL;
-         case "Image":
+         case "image":
         return IssueCategory.IMAGE;
-        case "Image Labelling":
+        case "image labelling":
         return IssueCategory.IMAGE_LABELLING;
-        case "Models":
+        case "models":
         return IssueCategory.MODELS;
-        case "Misc":
+        case "misc":
         return IssueCategory.MISC;
       default:
         return IssueCategory.GENERAL;
@@ -92,17 +91,17 @@ class IssueMapper {
   static String categoryToString(IssueCategory? status) {
     switch (status) {
       case IssueCategory.GENERAL:
-        return "General";
+        return "general";
       case IssueCategory.LABEL:
-        return "Label";
+        return "label";
          case IssueCategory.IMAGE:
-        return "Image";
+        return "image";
         case IssueCategory.IMAGE_LABELLING:
-        return "Image Labelling";
+        return "image labelling";
         case IssueCategory.MODELS:
-        return "MOdels";
+        return "models";
          case IssueCategory.MISC:
-        return "Misc";
+        return "misc";
       default:
         return "";
     }

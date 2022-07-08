@@ -3,6 +3,7 @@ import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
 import 'package:labellab_mobile/widgets/issue_list_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../../routing/application.dart';
 import '../../widgets/empty_placeholder.dart';
 import 'issue_state.dart';
 
@@ -63,6 +64,14 @@ class IssueActivity extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+              heroTag: "project_add_tag",
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () => _gotoAddIssue(context),
+            ),
     );
   }
 
@@ -72,21 +81,11 @@ class IssueActivity extends StatelessWidget {
     );
   }
 
-  // void _openFiltersBottomSheet(BuildContext context) {
-  //   String projectId =
-  //       Provider.of<ProjectActivityBloc>(context, listen: false).projectId;
-  //   showModalBottomSheet(
-  //     backgroundColor: Colors.transparent,
-  //     context: context,
-  //     builder: (ctx) => Provider<ProjectDetailBloc>(
-  //       create: (context) => ProjectDetailBloc(projectId),
-  //       dispose: (context, bloc) => bloc.dispose(),
-  //       child: FilterBottomSheet(),
-  //     ),
-  //   ).then((logs) {
-  //     if (logs != null) {
-  //       Provider.of<ProjectActivityBloc>(context, listen: false).setLogs(logs);
-  //     }
-  //   });
-  // }
+  void _gotoAddIssue(BuildContext context) {
+    Application.router.navigateTo(context, "/project/add").whenComplete(() {
+      Provider.of<IssueBloc>(context, listen: false).refresh();
+    });
+  }
+
+ 
 }

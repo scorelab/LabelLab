@@ -82,7 +82,10 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_TEAM_REMOVE_MEMBER = "team/remove_team_member";
   static const ENDPOINT_TEAM_GET_MESSAGES = "chatroom";
 
-  static const ENDPOINT_ISSUE_GET = "issue/get/";
+  static const ENDPOINT_ISSUE_GET = "issue/get";
+  static const ENDPOINT_ISSUE_CREATE = "issue/create";
+   static const ENPOINT_ISSUE_INFO = "issue/issue_info";
+  static const ENPOINT_ISSUE_UPDATE = "issue/issue_info";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -1249,21 +1252,61 @@ class LabelLabAPIImpl extends LabelLabAPI {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
-  return _dio!
+    return _dio!
         .get(API_URL + ENDPOINT_ISSUE_GET + "/$project_id", options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
-        return (response.data['body'] as List<dynamic>)
+        return (response.data['body']['items'] as List<dynamic>)
             .map((item) => Issue.fromJson(item, isDense: true))
             .toList();
       } else {
         throw Exception("Request unsuccessfull");
       }
     });
-
-
   }
-  
-  
+
+  @override
+  Future<ApiResponse> createIssue(String? token, Issue issue) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .post(API_URL + ENDPOINT_ISSUE_CREATE,
+            options: options, data: issue.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> updateIssue(String? token, Issue issue) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .put(API_URL + ENPOINT_ISSUE_UPDATE + "/${issue.project_id}" +"/${issue.id}",
+            options: options, data: issue.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<Issue> getIssue(String? token, String? id, String? project_id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(API_URL + ENPOINT_ISSUE_INFO + "/$project_id" + "/$id", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        Issue issue = Issue.fromJson(response.data['body']['items'],);
+        return issue;
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
+    });
+  }
 }
