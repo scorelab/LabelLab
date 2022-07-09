@@ -1272,7 +1272,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .post(API_URL + ENDPOINT_ISSUE_CREATE,
+        .post(API_URL + ENDPOINT_ISSUE_CREATE + "/${issue.project_id}",
             options: options, data: issue.toMap())
         .then((response) {
       return ApiResponse(response.data);

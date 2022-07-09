@@ -10,8 +10,9 @@ import '../../../model/issue.dart';
 class AddEditIssueScreen extends StatefulWidget {
   final Repository _repository = Repository();
   final String? id;
+  final String? project_id;
 
-  AddEditIssueScreen({this.id});
+  AddEditIssueScreen({this.project_id,this.id});
 
   @override
   _AddEditIssueScreenState createState() => _AddEditIssueScreenState();
@@ -30,7 +31,7 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
   @override
   void initState() {
     if (_editing) {
-      // _loadProjectLogic();
+      _loadProjectLogic();
     }
     super.initState();
   }
@@ -176,16 +177,18 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
     }
   }
 
-  // void _loadProjectLogic() {
-  //   widget._repository.getProject(widget.id).then((Project project) {
-  //     print(project.description);
-  //     setState(() {
-  //       _projectId = project.id;
-  //       _nameController.text = project.name!;
-  //       _descriptionController.text = project.description!;
-  //     });
-  //   });
-  // }
+  void _loadProjectLogic() {
+    widget._repository
+        .getIssue(widget.id, widget.project_id)
+        .then((Issue issue) {
+      print(issue.description);
+      setState(() {
+        widget.project_id != issue.project_id.toString();
+        _nameController.text = issue.issueTitle!;
+        _descriptionController.text = issue.description!;
+      });
+    });
+  }
 
   String get _buttonText {
     if (_editing) {
