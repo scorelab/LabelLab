@@ -146,6 +146,8 @@ def upgrade():
     sa.Column('team_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=20), nullable=False),
+    sa.Column('entity_type', sa.String(length=10), nullable=True),
+    sa.Column('entity_id', sa.Integer(), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )

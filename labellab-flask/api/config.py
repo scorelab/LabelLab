@@ -24,6 +24,7 @@ class Config:
     ENTITY_TYPES_ALLOWED = ["label","image", "model", "issue","comment"]
     ISSUE_PRIORITIES_ALLOWED = ["Critical", "High", "Medium", "Low"]
     ISSUE_STATUSES_ALLOWED = ["Open", "In Progress", "Review", "Done", "Closed"]
+    TAGS_ALLOWED = ["log","issue"]
     DEFAULT_PAGE = 1
     DEFAULT_PER_PAGE = 6
     @staticmethod

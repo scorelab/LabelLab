@@ -4,6 +4,9 @@
 .chatroom-divider {
   margin-top: 0 !important;
 }
+.ui.button.dropdown .menu {
+  min-width: max-content;
+}
 .messages-container {
   height: 55vh;
   width: 100% !important;
@@ -14,31 +17,46 @@
 .message-item {
   display: flex;
   flex-direction: column;
-  padding: 7.5px 25px;
   margin: 5px 10px;
   width: fit-content;
   max-width: 50%;
-  border-radius: 30px;
 }
 .message-item small {
-  color: #fff;
-  opacity: 0.7;
+  opacity: 0.5;
+}
+.message-item em {
+  color: #000;
+  text-align: end;
 }
 .message-item p {
   margin-bottom: 5px;
 }
 .own-message {
-  background-color: #2185d0;
-  color: #fff;
   align-self: flex-end;
-  text-align: end;
-  padding-left: 40px;
 }
-.other-message {
+.message-item section{
+  padding:5px 30px 5px 12px;
+  border-radius: 10px;
+}
+.own-message section{
   background-color: #2185d0;
   color: #fff;
+  border-bottom-right-radius: 0px;
+}
+.other-message section{
+  background-color: #c6c6c680;
+  color: black;
+  border-bottom-left-radius: 0px;
+}
+.tag {
+  background-color: white;
+  color: black;
+  padding: 0px 5px 0px 5px;
+  border-radius: 2px;
   opacity: 0.6;
-  padding-right: 40px;
+}
+.issue-link {
+  color: black !important;
 }
 .no-messages-banner {
   display: flex;
