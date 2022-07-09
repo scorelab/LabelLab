@@ -20,7 +20,7 @@ class AddEditIssueScreen extends StatefulWidget {
 
 class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
   GlobalKey<FormState> _key = GlobalKey();
-  int? _projectId;
+  // int? _projectId;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -127,7 +127,7 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
       _isLoading = true;
     });
     final Issue _issue = Issue();
-    _issue.project_id = _projectId;
+    _issue.project_id = int.parse(widget.project_id!);
     _issue.issueTitle = _nameController.text;
     _issue.description = _descriptionController.text;
     _updateLogic(_issue).then((String message) {
