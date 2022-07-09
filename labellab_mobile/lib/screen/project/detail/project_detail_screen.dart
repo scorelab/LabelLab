@@ -319,7 +319,7 @@ class ProjectDetailScreen extends StatelessWidget {
               TextButton.icon(
                 icon: Icon(Icons.more_horiz_rounded),
                 label: Text("More"),
-                onPressed: () =>_goToIssues(context,project.id!),
+                onPressed: () =>_goToIssues(context,project),
               ),
             ],
           ),
@@ -787,9 +787,9 @@ class ProjectDetailScreen extends StatelessWidget {
     });
   }
 
-  void _goToIssues(BuildContext context, String projectId) {
+  void _goToIssues(BuildContext context, Project project) {
     Application.router
-        .navigateTo(context, "/project/issue/" + projectId)
+        .navigateTo(context, "/project/issue/" + project.id!)
         .whenComplete(() {
       Provider.of<IssueBloc>(context, listen: false).refresh();
     });

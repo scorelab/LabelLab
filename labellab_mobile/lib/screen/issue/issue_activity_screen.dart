@@ -1,37 +1,37 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
 import 'package:labellab_mobile/widgets/issue_list_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/issue.dart';
 import '../../routing/application.dart';
 import '../../widgets/empty_placeholder.dart';
 import 'issue_state.dart';
 
 class IssueActivity extends StatelessWidget {
-  final bool entitySpecific;
-  final bool categorySpecific;
-
+  Project? project;
   IssueActivity({
-    this.entitySpecific = false,
-    this.categorySpecific = false,
-  });
+    this.project,
+  }) ;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('All Issues',style: TextStyle(color: Colors.black)),
+        title: Text('All Issues', style: TextStyle(color: Colors.black)),
         centerTitle: true,
         elevation: 0,
         actions: [
-          (entitySpecific || categorySpecific)
-              ? Container()
-              : 
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.settings,color: Colors.black,),
-                )
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.settings,
+              color: Colors.black,
+            ),
+          )
         ],
       ),
       body: StreamBuilder<IssueState>(
@@ -82,10 +82,10 @@ class IssueActivity extends StatelessWidget {
   }
 
   void _gotoAddIssue(BuildContext context) {
-    Application.router.navigateTo(context, "/project/add").whenComplete(() {
+    Application.router
+        .navigateTo(context, "/issue/add")
+        .whenComplete(() {
       Provider.of<IssueBloc>(context, listen: false).refresh();
     });
   }
-
- 
 }

@@ -45,6 +45,7 @@ import 'package:labellab_mobile/screen/train/model_train_bloc.dart';
 import 'package:labellab_mobile/screen/train/model_train_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../screen/issue/add_edit/add_edit_issue_screen.dart';
 import '../screen/issue/issue_activity_screen.dart';
 
 var initHandler = Handler(
@@ -298,7 +299,7 @@ var issueActivityHandler = Handler(
   );
 });
 
-var addHandler = Handler(
+var addIssueHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-  return AddEditProjectScreen();
+  return AddEditIssueScreen();
 });
