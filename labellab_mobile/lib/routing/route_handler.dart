@@ -301,5 +301,10 @@ var issueActivityHandler = Handler(
 
 var addIssueHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-  return AddEditIssueScreen();
+    return Provider<IssueBloc>(
+    create: (context) => IssueBloc(params['id']!.first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: AddEditIssueScreen(project_id: params['id']!.first,),
+  );
+  // return AddEditIssueScreen(project_id: params['project_id']!.first,);
 });
