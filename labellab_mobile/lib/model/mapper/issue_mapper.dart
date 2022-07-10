@@ -73,9 +73,9 @@ class IssueMapper {
     switch (status) {
       case "general":
         return IssueCategory.GENERAL;
-      case "label":
+      case "labels":
         return IssueCategory.LABEL;
-         case "image":
+         case "images":
         return IssueCategory.IMAGE;
         case "image labelling":
         return IssueCategory.IMAGE_LABELLING;
@@ -93,9 +93,9 @@ class IssueMapper {
       case IssueCategory.GENERAL:
         return "general";
       case IssueCategory.LABEL:
-        return "label";
+        return "labels";
          case IssueCategory.IMAGE:
-        return "image";
+        return "images";
         case IssueCategory.IMAGE_LABELLING:
         return "image labelling";
         case IssueCategory.MODELS:

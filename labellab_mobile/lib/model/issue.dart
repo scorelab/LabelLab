@@ -47,18 +47,18 @@ class Issue {
     id = json['id'];
     issueTitle = json['title'];
     description = json['description'];
-    // created_by = int.parse(json['created_by']);
-    // team_id = int.parse(json['team_id']);
+    created_by = json['created_by'];
+    team_id = json['team_id'];
     issueStatus = IssueMapper.mapJsonToStatus(json["status"]);
     issuePriority = IssueMapper.mapJsonToPriority(json["priority"]);
     issueCategory = IssueMapper.mapJsonToCategory(json["category"]);
-    // created_At = json["created_by"];
-    // dueDate = json["due_date"];
-    // updated_At = json["updated_at"];
-    // assignee_id = int.parse(json["assignee_id"]);
-    // entityId = int.parse(json['entity_id']);
-    // entityType = json["entity_type"];
-    // project_id = int.parse(json["project_id"]);
+    created_At = json["created_at"];
+    dueDate = json["due_date"];
+    updated_At = json["updated_at"];
+    assignee_id = json["assignee_id"];
+    entityId = json['entity_id'];
+    entityType = json["entity_type"];
+    project_id = json["project_id"];
   }
 
   Map<String, dynamic> toMap() {

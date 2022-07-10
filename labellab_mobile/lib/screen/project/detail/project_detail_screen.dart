@@ -325,7 +325,7 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
           (project.issues != null && project.issues!.isNotEmpty)
               ? Container(
-                  height: min(170, project.logs!.length * 57),
+                  height: min(200, project.issues!.length * 57),
                   child: ListView(
                     padding: const EdgeInsets.all(0),
                     children: [

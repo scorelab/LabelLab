@@ -87,7 +87,7 @@ class IssueActivity extends StatelessWidget {
 
   void _gotoAddIssue(BuildContext context, String projectId) {
     Application.router
-        .navigateTo(context, "/issue/add" + projectId)
+        .navigateTo(context, "/issue/add/" + projectId)
         .whenComplete(() {
       Provider.of<IssueBloc>(context, listen: false).refresh();
     });
