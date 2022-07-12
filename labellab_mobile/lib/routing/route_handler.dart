@@ -301,7 +301,7 @@ var issueActivityHandler = Handler(
 var addIssueHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   return AddEditIssueScreen(
-    project_id: params['id']!.first,
+    project_id: params['project_id']!.first,
   );
   // return AddEditIssueScreen(project_id: params['project_id']!.first,);
 });

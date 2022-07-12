@@ -65,7 +65,7 @@ class Issue {
     return {
       "title": issueTitle,
       "description": description,
-      // "category" : IssueMapper.categoryToString(issueCategory)
+      "category" : IssueMapper.categoryToString(issueCategory)
     };
   }
 }
