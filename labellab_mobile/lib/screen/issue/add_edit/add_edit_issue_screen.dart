@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/data/repository.dart';
-import 'package:labellab_mobile/model/project.dart';
+import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 
@@ -12,7 +12,7 @@ class AddEditIssueScreen extends StatefulWidget {
   final String? id;
   final String? project_id;
 
-  AddEditIssueScreen({this.project_id,this.id});
+  AddEditIssueScreen({this.project_id, this.id});
 
   @override
   _AddEditIssueScreenState createState() => _AddEditIssueScreenState();
@@ -28,6 +28,17 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
   bool _isLoading = false;
   String? _error;
 
+  String _selectedCategory = 'all';
+
+  final _categoryOptions = [
+    'all',
+    'general',
+    'images',
+    'labels',
+    'models',
+    'image labelling',
+  ];
+
   @override
   void initState() {
     if (_editing) {
@@ -41,10 +52,13 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-    color: Colors.black,
-  ),
+          color: Colors.black,
+        ),
         backgroundColor: Colors.white,
-        title: Text(_editing ? "Edit Issue" : "Add Issue",style: TextStyle(color: Colors.black),),
+        title: Text(
+          _editing ? "Edit Issue" : "Add Issue",
+          style: TextStyle(color: Colors.black),
+        ),
         elevation: 0,
       ),
       body: Padding(
@@ -76,6 +90,21 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
                 textCapitalization: TextCapitalization.sentences,
                 validator: _validateDescription,
                 controller: _descriptionController,
+              ),
+              DropdownButton(
+                value: _selectedCategory,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: _categoryOptions.map((String items) {
+                  return DropdownMenuItem(
+                    value: items,
+                    child: Text(items),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCategory = newValue!;
+                  });
+                },
               ),
               this._error != null
                   ? Text(
@@ -130,6 +159,7 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
     _issue.project_id = int.parse(widget.project_id!);
     _issue.issueTitle = _nameController.text;
     _issue.description = _descriptionController.text;
+    _issue.issueCategory = IssueMapper.mapJsonToCategory(_selectedCategory);
     _updateLogic(_issue).then((String message) {
       if (message == "Success") {
         Application.router.pop(context);
