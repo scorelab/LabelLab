@@ -1,6 +1,8 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { MentionsInput, Mention } from 'react-mentions'
+import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types'
 import {
   Dimmer,
@@ -9,7 +11,6 @@ import {
   Header,
   Icon,
   Divider,
-  Input,
   Button,
   Dropdown,
   Message
@@ -74,12 +75,15 @@ class Chatroom extends Component {
     if (!text) {
       return
     }
+    let newComment = text;
+    newComment = newComment.split('@@@__').join("<strong><i>@")
+    newComment = newComment.split('@@@^^^').join("</i></strong>")
     this.setState({ text: '', entityType: '', entityId: null })
-    sendMessage(text, team.id, user.id, entityType, entityId)
+    sendMessage(newComment, team.id, user.id, entityType, entityId)
   }
 
   render() {
-    const { user, history, team, teamActions, messages, logs, issues } = this.props
+    const { user, history, team, teamActions, messages, logs, issues, users } = this.props
     const { entityType, entityId } = this.state
 
     return (
@@ -153,53 +157,65 @@ class Chatroom extends Component {
                 })
               )}
             </Message>
-            <Input
-              fluid
-              name='text'
-              action={
-                <Fragment>
-                  <Dropdown button upward icon='attach'>
-                    <Dropdown.Menu>
-                      <Dropdown.Item >
-                        <Dropdown
-                          upward
-                          text='Issue'
-                          options={issues}
-                          direction='left'
-                          pointing='left'
-                          onClick={() => this.handleChange('entityType', 'issue')}
-                          onChange={(e, { value }) => this.handleChange('entityId', value)}
-                        >
-                        </Dropdown>
-                      </Dropdown.Item>
-                      <Dropdown.Item>
-                        <Dropdown
-                          upward
-                          scrolling
-                          text='Activity Log'
-                          options={logs}
-                          direction='left'
-                          pointing='left'
-                          onClick={() => this.handleChange('entityType', 'log')}
-                          onChange={(e, { value }) => this.handleChange('entityId', value)}
-                        >
-                        </Dropdown>
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Button
-                    icon="angle right"
-                    positive
-                    content="Send"
-                    labelPosition="right"
-                    onClick={this.handleSendMessage}
+            <div className='message-input'>
+              <div className='message'>
+                <MentionsInput
+                  value={this.state.text}
+                  onChange={(e) => this.handleChange('text', e.target.value)}
+                  className='comments-textarea'
+                  placeholder='Write your message...'
+                >
+                  <Mention
+                    trigger="@"
+                    data={users}
+                    markup='@@@____display__@@@^^^'
+                    style={{
+                      backgroundColor: '#daf4fa'
+                    }}
                   />
-                </Fragment>
-              }
-              value={this.state.text}
-              placeholder="Write your message..."
-              onChange={(e) => this.handleChange(e.target.name, e.target.value)}
-            />
+                </MentionsInput>
+              </div>
+              <Button.Group>
+                <Dropdown button upward icon='attach'>
+                  <Dropdown.Menu>
+                    <Dropdown.Item >
+                      <Dropdown
+                        upward
+                        text='Issue'
+                        options={issues}
+                        direction='left'
+                        pointing='left'
+                        onClick={() => this.handleChange('entityType', 'issue')}
+                        onChange={(e, { value }) => this.handleChange('entityId', value)}
+                      >
+                      </Dropdown>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <Dropdown
+                        upward
+                        scrolling
+                        text='Activity Log'
+                        options={logs}
+                        direction='left'
+                        pointing='left'
+                        onClick={() => this.handleChange('entityType', 'log')}
+                        onChange={(e, { value }) => this.handleChange('entityId', value)}
+                      >
+                      </Dropdown>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <Button
+                  icon="angle right"
+                  primary
+                  size='small'
+                  content="Send"
+
+                  labelPosition="right"
+                  onClick={this.handleSendMessage}
+                />
+              </Button.Group>
+            </div>
           </React.Fragment>
         ) : null}
       </React.Fragment>
@@ -215,6 +231,17 @@ const MessageItem = ({ message, userId, issues, logs, projectId }) => {
   } else {
     messageItemClass += 'other-message'
   }
+
+  const defaultOptions = {
+    ALLOWED_TAGS: ['i', 'strong', 'br'],
+  };
+
+  const sanitize = (message, options) => ({
+    __html: DOMPurify.sanitize(
+      message,
+      { ...defaultOptions, ...options }
+    )
+  });
 
   return (
     <div className={messageItemClass}>
@@ -243,12 +270,13 @@ const MessageItem = ({ message, userId, issues, logs, projectId }) => {
             </div>
           </div>
         )}
-        <p>{message.body}</p>
+        <p dangerouslySetInnerHTML={sanitize(message.body.replace(/\n\r?/g, '<br />'))} />
       </section>
       <em><small>{moment.utc(message.timestamp).local().format('LLL')}</small></em>
     </div>
   )
 }
+
 
 Chatroom.propTypes = {
   user: PropTypes.object,
@@ -266,6 +294,16 @@ const mapStateToProps = state => {
     messages: state.teams.messages,
     teamActions: state.teams.teamActions,
     roles: state.projects.currentProject.roles,
+    users: state.user.users
+      ? [
+        ...state.user.users.map(user => {
+          return {
+            id: user.id,
+            display: user.name
+          }
+        })
+      ]
+      : [],
     logs: state.logs.logs
       ? [
         ...state.logs.logs.map(log => {
