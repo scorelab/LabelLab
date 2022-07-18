@@ -1,24 +1,24 @@
 import 'package:labellab_mobile/model/issue.dart';
 
-class IssueState {
+class IssueActivityState {
   late bool isLoading;
   String? error;
   String? updateError;
   List<Issue>? issues;
 
-  IssueState.loading({this.issues}) {
+  IssueActivityState.loading({this.issues}) {
     isLoading = true;
   }
 
-  IssueState.error(this.error, {this.issues}) {
+  IssueActivityState.error(this.error, {this.issues}) {
     this.isLoading = false;
   }
 
-  IssueState.updateError(this.error, {this.issues}) {
+  IssueActivityState.updateError(this.error, {this.issues}) {
     this.isLoading = false;
   }
 
-  IssueState.success(this.issues) {
+  IssueActivityState.success(this.issues) {
     this.isLoading = false;
   }
 }

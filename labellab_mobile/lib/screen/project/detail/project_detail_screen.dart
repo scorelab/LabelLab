@@ -11,7 +11,7 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
-import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
+import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_bloc.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_edit_model/add_edit_model_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_team_dialog/add_team_dialog.dart';
@@ -788,7 +788,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/issue/" + project.id!)
         .whenComplete(() {
-      Provider.of<IssueBloc>(context, listen: false).refresh();
+      Provider.of<IssueActivityBloc>(context, listen: false).refresh();
     });
   }
 

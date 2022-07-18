@@ -133,4 +133,5 @@ abstract class LabelLabAPI {
   Future<Issue> getIssue(String? token, String? id,String? project_id);
   Future<ApiResponse> createIssue(String? token, Issue issue);
   Future<ApiResponse> updateIssue(String? token, Issue issue);
+  Future<List<Issue>> getCategorySpecificIssue(String? token, String? project_id,String category);
 }

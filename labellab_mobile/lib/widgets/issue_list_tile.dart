@@ -1,103 +1,168 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
-import 'package:labellab_mobile/model/issue.dart';
+import 'package:provider/provider.dart';
+
+import '../model/issue.dart';
+import '../model/mapper/issue_mapper.dart';
+import '../routing/application.dart';
+import '../screen/issue/issue_activity/issue_activity_bloc.dart';
 
 class IssueListTile extends StatelessWidget {
   final Issue issue;
   final bool isCustomized;
   final VoidCallback? onItemTapped;
 
-  IssueListTile(this.issue, {this.onItemTapped, this.isCustomized = false});
+  IssueListTile(this.issue,{this.onItemTapped, this.isCustomized = false});
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return InkWell(
-      onTap: this.onItemTapped,
-      child: Card(
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 1,bottom: 10),
-          child: Container(
-            height: 80,
-            child: Row(
-               
+       onTap: this.onItemTapped,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: isCustomized ? 12 : 10,
+          horizontal: 10,
+        ),
+        margin: EdgeInsets.only(bottom: isCustomized ? 7.5 : 5),
+        decoration: BoxDecoration(
+          color: isCustomized
+              ? _getBackgroundColor(
+                  IssueMapper.priorityToString(issue.issuePriority))
+              : Color(0xff01A8A0).withOpacity(0.2),
+          border: Border.all(
+            width: 1,
+            color: isCustomized
+                ? _getPriorityTextColor(
+                    IssueMapper.priorityToString(issue.issuePriority))
+                : Color(0xff01A8A0),
+          ),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                            flex: 4,
-                            child: Row(
-                              children: [
-                                Text("#" + issue.id!.toString() + " ",
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.grey)),
-                                Text(issue.issueTitle!,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              ],
-                            )),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            coloredBox(
-                                context,
+                CircleAvatar(
+                  backgroundColor: Colors.black12,
+                  child: ClipOval(
+                      child:
+                          // user.thumbnail != null ?
+                          Image(
+                    height: 38,
+                    width: 38,
+                    image: CachedNetworkImageProvider(
+                        "https://react.semantic-ui.com/images/avatar/large/elliot.jpg"),
+                    fit: BoxFit.cover,
+                  )
+                      // : null,
+                      ),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text("Issue #" + issue.id!.toString(),
+                              style: TextStyle(
+                                fontSize: 12,
+                              )),
+                          Text(
+                            "Status: " +
                                 IssueMapper.statusToString(issue.issueStatus),
-                                Icons.replay_circle_filled_rounded,
-                                Colors.teal,
-                                Colors.teal),
-                            coloredBox(
-                                context,
-                                IssueMapper.categoryToString(issue.issueCategory),
-                                _getIcon(IssueMapper.categoryToString(
-                                    issue.issueCategory)),
-                                _getTextOrBorderColor(
-                                    IssueMapper.categoryToString(
-                                        issue.issueCategory)),
-                                _getTextOrBorderColor(
-                                    IssueMapper.categoryToString(
-                                        issue.issueCategory))),
-                            coloredBox(
-                                context,
-                                IssueMapper.priorityToString(issue.issuePriority),
-                                Icons.show_chart,
-                                _getPriorityTextColor(
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isCustomized
+                                  ? _getStatusTextColor(
+                                      IssueMapper.statusToString(
+                                          issue.issueStatus))
+                                  : Color(0xff01A8A0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: size.width / 4,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Text("Issue #" +issue.id!.toString()),
+                        Text(
+                          "Priority: " +
+                              IssueMapper.priorityToString(issue.issuePriority),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isCustomized
+                                ? _getPriorityTextColor(
                                     IssueMapper.priorityToString(
-                                        issue.issuePriority)),
-                                _getPriorityBackgroundColor(
-                                    IssueMapper.priorityToString(
-                                        issue.issuePriority))),
-                          ],
+                                        issue.issuePriority))
+                                : Color(0xff01A8A0),
+                          ),
+                        ),
+                        Text(
+                          "Category: " +
+                              IssueMapper.categoryToString(issue.issueCategory),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isCustomized
+                                ? _getTextOrBorderColor(
+                                    IssueMapper.categoryToString(
+                                        issue.issueCategory))
+                                : Color(0xff01A8A0),
+                          ),
                         )
                       ],
-                    ),
-                  ),
-                  flex: 14,
+                    )
+                  ],
                 ),
-                SizedBox(height: 10,)
               ],
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.only(left: 120),
+              child: Text(issue.issueTitle!,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+            Divider(
+              height: 5,
+              color: Colors.black,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Posted by: " + issue.created_by.toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                    )),
+                Text("Comments " + 0.toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                    )),
+              ],
+            )
+          ],
         ),
       ),
     );
   }
 
-  Color _getPriorityBackgroundColor(String priority) {
-    switch (priority) {
+  Color _getBackgroundColor(String category) {
+    switch (category) {
       case 'Low':
-        return Colors.purple.withOpacity(0.3);
+        return Colors.grey.withOpacity(0.3);
       case 'Medium':
         return Color(0xff0C7800).withOpacity(0.3);
       case 'Critical':
         return Color(0xff980000).withOpacity(0.3);
       case 'High':
-        return Colors.orange.withOpacity(0.3);
+        return Color(0xffCBBD00).withOpacity(0.3);
       default:
         return Colors.black.withOpacity(0.3);
     }
@@ -105,84 +170,50 @@ class IssueListTile extends StatelessWidget {
 
   Color _getTextOrBorderColor(String category) {
     switch (category) {
-      case 'General':
+      case 'general':
         return Color(0xff3A35C4);
-      case 'Images':
+      case 'images':
         return Color(0xff0C7800);
-      case 'Labels':
+      case 'labels':
         return Color(0xff980000);
-      case 'Models':
+      case 'models':
         return Color(0xffCBBD00);
-      case 'Labelling':
+      case 'image labelling':
         return Color(0xfff26d5b);
       default:
         return Colors.black;
     }
   }
 
-  IconData _getIcon(String role) {
-    switch (role) {
-      case 'Images':
-        return Icons.image;
-      case 'Labels':
-        return Icons.label;
-      case 'Labelling':
-        return Icons.image_search_rounded;
-      case 'Models':
-        return Icons.model_training;
-      default:
-        return Icons.people;
-    }
-  }
-
-  Color _getPriorityTextColor(String priority) {
-    switch (priority) {
-      case 'Low':
-        return Colors.purple;
-      case 'Medium':
+  Color _getStatusTextColor(String category) {
+    switch (category) {
+      case 'Review':
+        return Color(0xff3A35C4);
+      case 'Done':
         return Color(0xff0C7800);
-      case 'Critical':
+      case 'Closed':
         return Color(0xff980000);
-      case 'High':
-        return Colors.orange;
+      case 'In Progress':
+        return Color(0xffCBBD00);
+      case 'Open':
+        return Color(0xfff26d5b);
       default:
         return Colors.black;
     }
   }
 
-  Widget coloredBox(BuildContext context, String text, IconData icon,
-      Color textColor, Color backgroundColor) {
-    final size = MediaQuery.of(context).size;
-    return Container(
-        height: 30,
-        width: isCustomized ? size.width * 0.3 : size.width * 0.28,
-        decoration: BoxDecoration(
-          color: isCustomized
-              ? backgroundColor.withOpacity(0.3)
-              : Colors.teal.withOpacity(0.3),
-          border: Border.all(
-            width: 1,
-            color: isCustomized ? backgroundColor : Colors.teal,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 4),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: isCustomized ? textColor : Colors.teal,
-              ),
-              SizedBox(
-                width: 4,
-              ),
-              Text(
-                text,
-                style: TextStyle(color: isCustomized ? textColor : Colors.teal),
-              )
-            ],
-          ),
-        ));
+  Color _getPriorityTextColor(String category) {
+    switch (category) {
+      case 'Low':
+        return Colors.grey;
+      case 'Medium':
+        return Color(0xff0C7800);
+      case 'Critical':
+        return Color(0xff980000);
+      case 'High':
+        return Color(0xffCBBD00);
+      default:
+        return Colors.black;
+    }
   }
 }
