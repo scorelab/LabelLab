@@ -11,7 +11,7 @@ import 'package:labellab_mobile/model/project.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/routing/application.dart';
-import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
+import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_bloc.dart';
 import 'package:labellab_mobile/screen/project/add_edit_label/add_edit_label_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_edit_model/add_edit_model_dialog.dart';
 import 'package:labellab_mobile/screen/project/add_team_dialog/add_team_dialog.dart';
@@ -79,8 +79,8 @@ class ProjectDetailScreen extends StatelessWidget {
                             : Container(),
                         _buildRecentActivity(context, _state.project!),
                         _state.project != null && _state.project!.issues != null
-                  ? _buildIssue(context, _state.project!)
-                  : Container(),
+                            ? _buildIssue(context, _state.project!)
+                            : Container(),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 8, left: 16, right: 16),
@@ -319,7 +319,7 @@ class ProjectDetailScreen extends StatelessWidget {
               TextButton.icon(
                 icon: Icon(Icons.more_horiz_rounded),
                 label: Text("More"),
-                onPressed: () =>_goToIssues(context,project),
+                onPressed: () => _goToIssues(context, project),
               ),
             ],
           ),
@@ -329,10 +329,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.all(0),
                     children: [
-                      for (var issue in project.issues!)
-                        IssueListTile(
-                          issue
-                        )
+                      for (var issue in project.issues!) IssueListTile(issue)
                     ],
                   ),
                 )
@@ -791,7 +788,7 @@ class ProjectDetailScreen extends StatelessWidget {
     Application.router
         .navigateTo(context, "/project/issue/" + project.id!)
         .whenComplete(() {
-      Provider.of<IssueBloc>(context, listen: false).refresh();
+      Provider.of<IssueActivityBloc>(context, listen: false).refresh();
     });
   }
 

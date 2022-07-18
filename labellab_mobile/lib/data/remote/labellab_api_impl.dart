@@ -86,6 +86,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_ISSUE_CREATE = "issue/create";
    static const ENPOINT_ISSUE_INFO = "issue/issue_info";
   static const ENPOINT_ISSUE_UPDATE = "issue/issue_info";
+  static const ENDPOINT_ISSUE_GET_ACTIVITY = "issue";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -1309,4 +1310,53 @@ class LabelLabAPIImpl extends LabelLabAPI {
       }
     });
   }
+
+  @override
+  Future<List<Issue>> getCategorySpecificIssue(
+      String? token, String? projectId, String? category) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(
+          // /issue/<int:project_id>/category/<string:category>
+      '$API_URL$ENDPOINT_ISSUE_GET_ACTIVITY/$projectId/category/$category',
+      options: options,
+    )
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['data']['items'] as List<dynamic>)
+            .map((item) => Issue.fromJson(item))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessful");
+      }
+    });
+  }
+
+  // @override
+  // Future<List<Issue>> getPrirotySpecificIssue(
+  //     String? token, String? projectId, String? priroty) {
+  //   Options options = Options(
+  //     headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+  //   );
+  //   return _dio!
+  //       .get(
+  //         // /issue/<int:project_id>/category/<string:category>
+  //     '$API_URL$ENDPOINT_ISSUE_GET_ACTIVITY/$projectId/category/$priroty',
+  //     options: options,
+  //   )
+  //       .then((response) {
+  //     final bool isSuccess = response.data['success'];
+  //     if (isSuccess) {
+  //       return (response.data['data']['items'] as List<dynamic>)
+  //           .map((item) => Issue.fromJson(item))
+  //           .toList();
+  //     } else {
+  //       throw Exception("Request unsuccessful");
+  //     }
+  //   });
+  // }
+
 }
