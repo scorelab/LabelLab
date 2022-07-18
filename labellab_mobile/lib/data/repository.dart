@@ -480,7 +480,7 @@ class Repository {
 
   Future<Issue> getIssue(String? id,String? project_id) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
-    return _api.getIssue(accessToken, id,project_id);
+    return _api.getIssue(accessToken, project_id,id);
   }
 
   Future<ApiResponse> createIssue(Issue issue) {
@@ -491,6 +491,11 @@ class Repository {
   Future<ApiResponse> updateIssue(Issue issue) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.updateIssue(accessToken, issue);
+  }
+
+  Future<List<Issue>> getCategorySpecificIssue(String projectId, String category) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getCategorySpecificIssue(accessToken, projectId, category);
   }
 
 
