@@ -6,7 +6,8 @@ import 'package:labellab_mobile/screen/classification/classification_bloc.dart';
 import 'package:labellab_mobile/screen/classification/classification_screen.dart';
 import 'package:labellab_mobile/screen/classify/classify_bloc.dart';
 import 'package:labellab_mobile/screen/classify/classify_screen.dart';
-import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
+import 'package:labellab_mobile/screen/issue/details/issue_details_bloc.dart';
+import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_bloc.dart';
 import 'package:labellab_mobile/screen/login/login_screen.dart';
 import 'package:labellab_mobile/screen/main_screen.dart';
 import 'package:labellab_mobile/screen/profile/edit_info/edit_info_screen.dart';
@@ -46,7 +47,8 @@ import 'package:labellab_mobile/screen/train/model_train_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../screen/issue/add_edit/add_edit_issue_screen.dart';
-import '../screen/issue/issue_activity_screen.dart';
+import '../screen/issue/details/issue_details_screen.dart';
+import '../screen/issue/issue_activity/issue_activity_screen.dart';
 
 var initHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -291,8 +293,8 @@ var backendServiceSelectionHandler = Handler(
 
 var issueActivityHandler = Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-  return Provider<IssueBloc>(
-    create: (context) => IssueBloc(params['id']!.first),
+  return Provider<IssueActivityBloc>(
+    create: (context) => IssueActivityBloc(params['id']!.first),
     dispose: (context, bloc) => bloc.dispose(),
     child: IssueActivity(),
   );
@@ -303,5 +305,13 @@ var addIssueHandler = Handler(
   return AddEditIssueScreen(
     project_id: params['project_id']!.first,
   );
-  // return AddEditIssueScreen(project_id: params['project_id']!.first,);
+});
+
+var issuDetailHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return Provider<IssueDetailBloc>(
+    create: (context) => IssueDetailBloc(params['project_id']!.first,params['issue_id']!.first),
+    dispose: (context, bloc) => bloc.dispose(),
+    child: IssueDetailScreen(),
+  );
 });
