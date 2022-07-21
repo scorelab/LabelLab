@@ -184,6 +184,14 @@ def upgrade():
     sa.ForeignKeyConstraint(['issue_id'], ['issue.id'], onupdate='cascade', ondelete='cascade'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('notification',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('message', sa.String(length=200), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('type', sa.String(length=50), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='cascade', ondelete='cascade'),
+    sa.PrimaryKeyConstraint('id')
+    )
     # ### end Alembic commands ###
 
 
@@ -204,4 +212,5 @@ def downgrade():
     op.drop_table('message')
     op.drop_table('comment')
     op.drop_table('issue')
+    op.drop_table('notification')
     # ### end Alembic commands ###

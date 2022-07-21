@@ -24,6 +24,7 @@ class Config:
     ENTITY_TYPES_ALLOWED = ["label","image", "model", "issue","comment"]
     ISSUE_PRIORITIES_ALLOWED = ["Critical", "High", "Medium", "Low"]
     ISSUE_STATUSES_ALLOWED = ["Open", "In Progress", "Review", "Done", "Closed"]
+    NOTIFICATION_TYPES_ALLOWED = ["project_membership_changed", "team_membership_changed", "admin_status", "issue_assigned", "issue_assigned_updated", "issue_assigned_comments", "mentioned"]
     TAGS_ALLOWED = ["log","issue"]
     DEFAULT_PAGE = 1
     DEFAULT_PER_PAGE = 6

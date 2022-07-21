@@ -67,7 +67,7 @@ class Chatroom extends Component {
   handleDismiss = () => {
     this.setState({ entityType: '', entityId: null })
   }
-
+ 
   handleSendMessage = () => {
     const { team, user, sendMessage } = this.props
     const { text, entityType, entityId } = this.state
@@ -76,10 +76,20 @@ class Chatroom extends Component {
       return
     }
     let newComment = text;
-    newComment = newComment.split('@@@__').join("<strong><i>@")
+    const tagged_users = newComment.match(/\@\@\@\_\_(\d+)/g)
+    const tagged_users_id = []
+    if(tagged_users){
+        tagged_users.map( user_id => {
+          var id = user_id.match(/\@\@\@\_\_(\d+)/)[1]
+          tagged_users_id.push(parseInt(id))
+        })
+    }
+    newComment = newComment.replace(/\@\@\@\_\_(\d+)\^/g, "<strong><i>@")
+    newComment = newComment.split('^^__').join("")
     newComment = newComment.split('@@@^^^').join("</i></strong>")
+
     this.setState({ text: '', entityType: '', entityId: null })
-    sendMessage(newComment, team.id, user.id, entityType, entityId)
+    sendMessage(newComment, team.id, user.id, entityType, entityId, tagged_users_id)
   }
 
   render() {
@@ -168,7 +178,7 @@ class Chatroom extends Component {
                   <Mention
                     trigger="@"
                     data={users}
-                    markup='@@@____display__@@@^^^'
+                    markup='@@@____id__^^^____display__@@@^^^'
                     style={{
                       backgroundColor: '#daf4fa'
                     }}
@@ -337,8 +347,8 @@ const mapDispatchToProps = dispatch => {
     fetchTeamMessages: teamId => {
       return dispatch(fetchTeamMessages(teamId))
     },
-    sendMessage: (message, teamId, userId, entityType, entityId) => {
-      return dispatch(sendMessage(message, teamId, userId, entityType, entityId))
+    sendMessage: (message, teamId, userId, entityType, entityId, tagged_users_id) => {
+      return dispatch(sendMessage(message, teamId, userId, entityType, entityId, tagged_users_id))
     },
     handleMessageReceive: teamId => {
       return dispatch(handleMessageReceive(teamId))
