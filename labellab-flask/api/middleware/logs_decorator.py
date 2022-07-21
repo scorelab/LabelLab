@@ -1,11 +1,15 @@
-from flask import request
+from flask import request, current_app
 from functools import wraps
 from flask_jwt_extended import get_jwt_identity
 
 from api.models.Log import Log
+from api.models.Notification import Notification
 from api.helpers.log import (
   save_log,
   delete_all_project_logs,
+)
+from api.helpers.notification import (
+  save_notification,
 )
 from api.helpers.user import (
   find_by_user_id,
@@ -17,6 +21,8 @@ from api.helpers.issue import find_by_id as find_issue_by_id
 from api.helpers.comment import find_by_id as find_comment_by_id
 from api.helpers.mlclassifier import find_by_id as find_mlclassifer_by_id
 from api.helpers.project import find_by_project_id
+from api.controllers.notificationscontroller import notification
+from api.extensions import socketio
 
 # Use this decorator on project routes for tracking activity
 def record_logs(fun):
@@ -45,6 +51,9 @@ def record_logs(fun):
       category = 'misc'
       entity_type = None
       entity_id = None
+      notif_message = url
+      users = []
+      type = 'added_to_project'
 
       # Projects controller
       if url == f'/api/v1/project/project_info/{project_id}':
@@ -61,10 +70,14 @@ def record_logs(fun):
       if url == f'/api/v1/project/add_project_member/{project_id}':
         # Add Project Member
         data = request.get_json(silent=True, force=True)
+        project = find_by_project_id(project_id)
         member_email = data['member_email']
         member = find_by_email(member_email)
         message = f'{member.username} has been added to the project'
         category = 'general'
+        notif_message = f'You have been added to the project {project["project_name"]}'
+        type = 'project_membership_changed'
+        users = [member.id]
 
       if url == f'/api/v1/project/remove_project_member/{project_id}':
         data = request.get_json(silent=True, force=True)
@@ -72,6 +85,9 @@ def record_logs(fun):
         member = find_by_email(member_email)
         message = f'{member.username} has been removed from the project'
         category = 'general'
+        notif_message = f'You have been removed from the project {project["project_name"]}'
+        type = 'project_membership_changed'
+        users = [member.id]
 
       if url == f'/api/v1/project/leave/{project_id}':
         message = f'{user["username"]} has left the project'
@@ -80,10 +96,16 @@ def record_logs(fun):
       if url == f'/api/v1/project/make_admin/{project_id}':
         message = f'{user["username"]} has been made admin'
         category = 'general'
+        notif_message = f'You are now admin of the project {project["project_name"]}'
+        type = 'admin_status'
+        users = [user["id"]]
 
       if url == f'/api/v1/project/remove_admin/{project_id}':
         message = f'{user["username"]} has been removed as admin'
         category = 'general'
+        notif_message = f'You are no longer an admin of the project {project["project_name"]}'
+        type = 'admin_status'
+        users = [user["id"]]
 
       # Teams controller
       if url.startswith(f'/api/v1/team/team_info/{project_id}/'):
@@ -104,9 +126,11 @@ def record_logs(fun):
         data = request.get_json(silent=True, force=True)
         member_email = data['member_email']
         member = find_by_email(member_email)
-
         message = f'{member.username} has been added to team {team["team_name"]}'
         category = 'general'
+        notif_message = f'You have been added to the team {team["team_name"]}'
+        type = 'team_membership_changed'
+        users = [member.id]
 
       if url.startswith(f'/api/v1/team/remove_team_member/{project_id}'):
         team_id = kwargs.get('team_id')
@@ -114,9 +138,11 @@ def record_logs(fun):
         data = request.get_json(silent=True, force=True)
         member_email = data['member_email']
         member = find_by_email(member_email)
-
         message = f'{member.username} has been removed from team {team["team_name"]}'
         category = 'general'
+        notif_message = f'You have been removed from the team {team["team_name"]}'
+        type = 'team_membership_changed'
+        users = [member.id]
 
       # Images controller
       if url.startswith(f'/api/v1/image/create/{project_id}'):
@@ -153,6 +179,10 @@ def record_logs(fun):
           category = issue["category"]
           entity_type = 'issue'
           entity_id = issue_id
+          notif_message = f'Issue {issue["title"]} has been updated'
+          type = 'issue_assigned_updated'
+          users = [issue["assignee_id"]]
+
 
       if url.startswith('/api/v1/issue/assign/'):
         issue_id = kwargs.get('issue_id')
@@ -162,6 +192,9 @@ def record_logs(fun):
         issue = find_issue_by_id(issue_id)
         message = f'Issue {issue["title"]} assigned to {user["name"]}'
         category = issue["category"]
+        notif_message = f'You have been assigned the issue {issue["title"]}'
+        type = 'issue_assigned'
+        users = [assignee_id]
      
       # Comment controller
       if url.startswith('/api/v1/comment/create/'):
@@ -258,6 +291,13 @@ def record_logs(fun):
         username=user['username'],
       )
       save_log(log)
+
+      notification.send(
+        current_app._get_current_object(),
+        message=notif_message,
+        type=type,
+        users=users,
+      )
 
       return result
     
