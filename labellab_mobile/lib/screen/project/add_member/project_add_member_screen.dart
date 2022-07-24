@@ -36,7 +36,7 @@ class _ProjectAddMemberScreenState extends State<ProjectAddMemberScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.setSuccess) {
-              WidgetsBinding.instance!
+              WidgetsBinding.instance
                   .addPostFrameCallback((_) => Application.router.pop(context));
             }
             final _state = snapshot.data!;

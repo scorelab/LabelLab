@@ -25,7 +25,7 @@ class ProjectUploadImageScreen extends StatelessWidget {
         initialData: ProjectUploadImageState.initial(),
         builder: (context, AsyncSnapshot<ProjectUploadImageState> snapshot) {
           if (snapshot.data!.isSuccess) {
-            WidgetsBinding.instance!
+            WidgetsBinding.instance
                 .addPostFrameCallback((_) => Application.router.pop(context));
           }
           return Scaffold(

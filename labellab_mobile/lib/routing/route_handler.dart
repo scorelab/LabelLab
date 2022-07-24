@@ -315,3 +315,11 @@ var issuDetailHandler = Handler(
     child: IssueDetailScreen(),
   );
 });
+
+var editIssueHandler = Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return AddEditIssueScreen(
+    project_id: params['project_id']!.first,
+    id: params['id']!.first,
+  );
+});

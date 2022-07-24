@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_state.dart';
-import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
-import 'package:labellab_mobile/screen/project/detail/project_detail_state.dart';
 import 'package:labellab_mobile/screen/project/project_activity/local_widgets/filter_dropdown.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../model/project.dart';
 import '../issue_activity_bloc.dart';
 
 class FilterIssueSheet extends StatefulWidget {

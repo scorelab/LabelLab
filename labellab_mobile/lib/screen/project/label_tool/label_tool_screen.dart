@@ -27,7 +27,7 @@ class LabelToolScreen extends StatelessWidget {
         builder: (context, AsyncSnapshot<LabelToolState> snapshot) {
           final LabelToolState _state = snapshot.data!;
           if (snapshot.data!.isSuccess) {
-            WidgetsBinding.instance!
+            WidgetsBinding.instance
                 .addPostFrameCallback((_) => Application.router.pop(context));
           }
           return _buildBody(context, _state);
