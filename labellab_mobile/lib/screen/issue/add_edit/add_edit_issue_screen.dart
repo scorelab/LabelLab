@@ -92,20 +92,22 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
                 validator: _validateDescription,
                 controller: _descriptionController,
               ),
-              DropdownButton(
-                value: _selectedCategory,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: _categoryOptions.map((String items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Text(items),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedCategory = newValue!;
-                  });
-                },
+              Center(
+                child: DropdownButton(
+                  value: _selectedCategory,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  items: _categoryOptions.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedCategory = newValue!;
+                    });
+                  },
+                ),
               ),
               this._error != null
                   ? Text(
@@ -210,13 +212,14 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
 
   void _loadProjectLogic() {
     widget._repository
-        .getIssue(widget.id, widget.project_id)
+        .getIssue(widget.project_id,widget.id)
         .then((Issue issue) {
-      print(issue.description);
+      // print(issue.description);
       setState(() {
         widget.project_id != issue.project_id.toString();
         _nameController.text = issue.issueTitle!;
         _descriptionController.text = issue.description!;
+        _selectedCategory = IssueMapper.categoryToString(issue.issueCategory);
       });
     });
   }

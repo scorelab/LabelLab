@@ -127,6 +127,9 @@ abstract class LabelLabAPI {
   Future<ApiResponse> trainModel(String? token, String modelId);
   // Future<List<charts.Series>> getResults(String? token);
   Future<ApiResponse> deleteModel(String? token, String modelId);
+
+  //Users List
+  Future<List<User>> getUsers(String? token);
   
   // Issues
   Future<List<Issue>> getIssues(String? token, String? project_id);
@@ -134,4 +137,5 @@ abstract class LabelLabAPI {
   Future<ApiResponse> createIssue(String? token, Issue issue);
   Future<ApiResponse> updateIssue(String? token, Issue issue);
   Future<List<Issue>> getCategorySpecificIssue(String? token, String? project_id,String category);
+  Future<ApiResponse> deleteIssue(String? token, String? id, String? project_id);
 }

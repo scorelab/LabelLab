@@ -1,4 +1,5 @@
 import 'package:labellab_mobile/model/issue.dart';
+import 'package:labellab_mobile/model/user.dart';
 
 class IssueActivityState {
   late bool isLoading;

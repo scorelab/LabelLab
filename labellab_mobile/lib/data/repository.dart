@@ -133,6 +133,11 @@ class Repository {
     return _api.searchUser(accessToken, email);
   }
 
+    Future<List<User>> getUsers() {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.getUsers(accessToken);
+  }
+
   Future<ApiResponse> uploadUserImage(File image) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.uploadUserImage(accessToken, image);
@@ -496,6 +501,12 @@ class Repository {
   Future<List<Issue>> getCategorySpecificIssue(String projectId, String category) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.getCategorySpecificIssue(accessToken, projectId, category);
+  }
+
+  
+  Future<ApiResponse?> deleteIssue(String? id,String project_id) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.deleteIssue(accessToken, id,project_id);
   }
 
 
