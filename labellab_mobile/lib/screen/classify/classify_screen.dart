@@ -50,7 +50,7 @@ class _ClassifyScreenState extends State<ClassifyScreen> {
             if (snapshot.hasData) {
               ClassifyState state = snapshot.data!;
               if (state.classification != null) {
-                WidgetsBinding.instance!.addPostFrameCallback(
+                WidgetsBinding.instance.addPostFrameCallback(
                     (_) => _gotoClassificationDetail(state.classification!.id));
               }
               return ListView(

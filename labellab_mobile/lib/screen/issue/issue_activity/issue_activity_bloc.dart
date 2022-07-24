@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:labellab_mobile/model/issue.dart';
+import 'package:labellab_mobile/model/user.dart';
 import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_state.dart';
 
 import '../../../data/repository.dart';
@@ -12,6 +13,7 @@ class IssueActivityBloc {
   List<Issue> _issues = [];
   bool _isLoading = false;
   String _projectId;
+  List<User> _users = [];
 
   IssueActivityBloc(this._projectId) {
     _loadIssues(_projectId);
@@ -21,7 +23,6 @@ class IssueActivityBloc {
     _loadIssues(_projectId);
   }
 
-  void delete(String? id) {}
 
   // Issue stream
   StreamController<IssueActivityState> _issueController =
@@ -40,7 +41,7 @@ class IssueActivityBloc {
     _repository.getIssues(projectId).then((issues) {
       this._issues = issues;
       _setState(IssueActivityState.success(_issues));
-      _isLoading = false;
+        _isLoading = false;
     }).catchError((err) {
       if (err is DioError) {
         _setState(
