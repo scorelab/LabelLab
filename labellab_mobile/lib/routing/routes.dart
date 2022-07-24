@@ -54,6 +54,7 @@ class Routes {
   static const addIssue = "/issue/add/:project_id";
   static const issueActivity = "/project/issue/:id";
   static const detailIssue = "/issue/:project_id/detail/:issue_id";
+  static const editIssue = "/issue/:project_id/edit/:id";
 
 
   static void configureRouter(FluroRouter router) {
@@ -147,6 +148,12 @@ class Routes {
     router.define(
       detailIssue,
       handler: issuDetailHandler,
+      transitionType: TransitionType.native,
+    );
+
+     router.define(
+      editIssue,
+      handler: editIssueHandler,
       transitionType: TransitionType.native,
     );
   }

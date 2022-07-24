@@ -1,25 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/model/project.dart';
-import 'package:labellab_mobile/screen/issue/details/issue_details_bloc.dart';
+import 'package:labellab_mobile/model/issue.dart';
+import 'package:labellab_mobile/model/user.dart';
+import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_bloc.dart';
-import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
+import 'package:labellab_mobile/widgets/empty_placeholder.dart';
 import 'package:labellab_mobile/widgets/issue_list_tile.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/issue.dart';
-import '../../../routing/application.dart';
-import '../../../widgets/empty_placeholder.dart';
-import '../../project/project_activity/local_widgets/filter_bottom_sheet.dart';
 import 'issue_activity_state.dart';
 import 'local_widgets/filter_issue_sheet.dart';
 
 class IssueActivity extends StatelessWidget {
-  // Project? project;
-  // IssueActivity({
-  //   this.project,
-  // }) ;
-
   @override
   Widget build(BuildContext context) {
     final String projectId = Provider.of<IssueActivityBloc>(context).projectId;
@@ -33,7 +25,6 @@ class IssueActivity extends StatelessWidget {
           IconButton(
             onPressed: () {
               _openFiltersBottomSheet(context);
-              // debugPrint(projectId);
             },
             icon: Icon(
               Icons.settings,
@@ -42,47 +33,51 @@ class IssueActivity extends StatelessWidget {
           )
         ],
       ),
-      body: StreamBuilder<IssueActivityState>(
-        initialData: IssueActivityState.loading(),
-        stream: Provider.of<IssueActivityBloc>(context).issues,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              !snapshot.hasData) {
-            return _loadingIndicator(context);
-          }
-          final _state = snapshot.data;
-          return RefreshIndicator(
-            onRefresh: () async {
-              Provider.of<IssueActivityBloc>(context).refresh();
-            },
-            child: _state!.isLoading
-                ? _loadingIndicator(context)
-                : _state.issues!.isEmpty
-                    ? EmptyPlaceholder(description: 'No issues available')
-                    : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _state.issues != null
-                            ? Column(
-                                children: _state.issues!
-                                    .map(
-                                      (issue) => IssueListTile(
-                                        issue,
-                                        onItemTapped: () {
-                                          // debugPrint("heeldasdasdadasd");
-                                          _gotoIssueDetails(context, issue);
-                                        },
-                                        isCustomized: true,
-                                      ),
-                                    )
-                                    .toList(),
-                              )
-                            : Container(),
-                      ),
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          Provider.of<IssueActivityBloc>(context, listen: false).refresh();
         },
+        child: StreamBuilder<IssueActivityState>(
+          initialData: IssueActivityState.loading(),
+          stream: Provider.of<IssueActivityBloc>(context).issues,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                !snapshot.hasData) {
+               Provider.of<IssueActivityBloc>(context).refresh();
+              return _loadingIndicator(context);
+            }
+            final _state = snapshot.data;
+            
+            return RefreshIndicator(
+              onRefresh: () async {
+                Provider.of<IssueActivityBloc>(context).refresh();
+              },
+              child: _state!.isLoading
+                  ? _loadingIndicator(context)
+                  : _state.issues!.isEmpty
+                      ? EmptyPlaceholder(description: 'No issues available')
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: _state.issues != null
+                              ? Column(
+                                  children: _state.issues!.map((issue) {
+                                    return IssueListTile(
+                                      issue,
+                                      onItemTapped: () {
+                                        _gotoIssueDetails(context, issue);
+                                      },
+                                      isCustomized: true,
+                                    );
+                                  }).toList(),
+                                )
+                              : Container(),
+                        ),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: "project_add_tag",
+        heroTag: "issue_add_tag",
         child: Icon(
           Icons.add,
           color: Colors.white,
@@ -109,8 +104,12 @@ class IssueActivity extends StatelessWidget {
   void _gotoIssueDetails(BuildContext context, Issue issueId) {
     // debugPrint("heel");
     Application.router
-        .navigateTo(context,
-            "/issue/" + issueId.project_id.toString()+ "/detail/" + issueId.id.toString())
+        .navigateTo(
+            context,
+            "/issue/" +
+                issueId.project_id.toString() +
+                "/detail/" +
+                issueId.id.toString())
         .whenComplete(() {
       Provider.of<IssueActivityBloc>(context, listen: false).refresh();
     });
@@ -133,5 +132,11 @@ class IssueActivity extends StatelessWidget {
             .setCategoryIssues(issues);
       }
     });
+  }
+
+  User getCreatedIssueUser(List<User> users, String created_by) {
+    final index = users.indexWhere((element) => element.id == created_by);
+    debugPrint("ndjanda" + users[index].email!);
+    return users[index];
   }
 }
