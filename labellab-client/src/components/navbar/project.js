@@ -13,8 +13,9 @@ import {
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { hasToken } from '../../utils/token'
-import { fetchUser } from '../../actions/index'
+import { fetchUser, fetchNotification, handleNotificationReceive } from '../../actions/index'
 import { TOKEN_TYPE } from '../../constants/index'
+import Notification from './notification.js'
 import './css/navbar.css'
 
 const initialState = { isLoading: false, results: [], value: '' }
@@ -57,8 +58,11 @@ class ProjectNavbar extends Component {
     }, 300)
   }
   componentDidMount() {
+    const { fetchUser, fetchNotification, handleNotificationReceive, user } = this.props;
     if (hasToken(TOKEN_TYPE)) {
-      this.props.fetchUser()
+      fetchUser()
+      fetchNotification()
+      handleNotificationReceive(user.id)
     } else {
       this.props.history.push('/login')
     }
@@ -70,7 +74,7 @@ class ProjectNavbar extends Component {
     this.props.history.push('/logout')
   }
   render() {
-    const { title, isfetching, user } = this.props
+    const { title, isfetching, user, notifications } = this.props
     const { isLoading, value, results } = this.state
     return (
       <header className="navbar">
@@ -103,6 +107,8 @@ class ProjectNavbar extends Component {
             <Header textAlign="center" as="h2" content={title} />
           </li>
           <li className="subnavbar">
+            <Notification/>
+            <div className='profile'>
             <Link to="/profile">
               <Header
                 className="username"
@@ -136,6 +142,7 @@ class ProjectNavbar extends Component {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+            </div>
           </li>
           <li>
             <h4 className="logout">Logout</h4>
@@ -152,7 +159,8 @@ ProjectNavbar.propTypes = {
   user: PropTypes.object,
   fetchUser: PropTypes.func,
   title: PropTypes.string,
-  project: PropTypes.object
+  project: PropTypes.object,
+  notifications: PropTypes.array
 }
 
 const mapStateToProps = state => {
@@ -164,6 +172,7 @@ const mapStateToProps = state => {
     project: state.projects.currentProject,
     user: state.user.userDetails,
     isfetching: state.user.userActions.isfetching,
+    notifications: state.notifications,
     image_name
   }
 }
@@ -172,6 +181,12 @@ const mapActionToProps = dispatch => {
   return {
     fetchUser: () => {
       return dispatch(fetchUser())
+    },
+    fetchNotification: () => {
+      return dispatch(fetchNotification());
+    },
+    handleNotificationReceive: (userId) => {
+      return dispatch(handleNotificationReceive(userId));
     }
   }
 }
