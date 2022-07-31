@@ -12,6 +12,7 @@ import analytics from './analytics'
 import model from './model'
 import teams from './teams'
 import logs from './logs'
+import notifications from './notification'
 
 const rootReducers = combineReducers({
   auth,
@@ -26,7 +27,8 @@ const rootReducers = combineReducers({
   labels: label,
   teams,
   logs,
-  issues
+  issues,
+  notifications
 })
 
 export default rootReducers

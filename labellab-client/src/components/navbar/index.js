@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import './css/navbar.css'
 import Searchbar from './searchbar'
+import Notification from './notification.js'
 class Navbar extends Component {
   handleClick = () => {
     this.props.history.push('/logout')
@@ -24,39 +25,42 @@ class Navbar extends Component {
             <Searchbar history={history} />
           </li>
           <li className="subnavbar">
-            <Link to="/profile">
-              <Header
-                className="username"
-                textAlign="center"
-                as="h5"
-                content={user.username}
-              />
-              {isfetching ? (
-                <h4>LOADING</h4>
-              ) : user ? (
-                <Image
-                  className="profilepic"
-                  centered
-                  src={
-                    user.profileImage === ''
-                      ? `${user.thumbnail}`
-                      : `${user.profileImage}?${Date.now()}`
-                  }
-                  size="mini"
-                  circular
+            <Notification />
+            <div className='profile'>
+              <Link to="/profile">
+                <Header
+                  className="username"
+                  textAlign="center"
+                  as="h5"
+                  content={user.username}
                 />
-              ) : null}
-            </Link>
-            <Dropdown className="dropdown">
-              <Dropdown.Menu>
-                <Dropdown.Item>
-                  <Link to="/profile">Profile</Link>
-                </Dropdown.Item>
-                <Dropdown.Item as="label" onClick={this.handleClick}>
-                  Logout
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                {isfetching ? (
+                  <h4>LOADING</h4>
+                ) : user ? (
+                  <Image
+                    className="profilepic"
+                    centered
+                    src={
+                      user.profileImage === ''
+                        ? `${user.thumbnail}`
+                        : `${user.profileImage}?${Date.now()}`
+                    }
+                    size="mini"
+                    circular
+                  />
+                ) : null}
+              </Link>
+              <Dropdown className="dropdown">
+                <Dropdown.Menu>
+                  <Dropdown.Item>
+                    <Link to="/profile">Profile</Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item as="label" onClick={this.handleClick}>
+                    Logout
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           </li>
           <li>
             <h4 className="logout">Logout</h4>

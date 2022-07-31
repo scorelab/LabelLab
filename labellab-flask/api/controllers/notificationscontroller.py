@@ -1,9 +1,11 @@
-from email import message
 import os
 from api.config import config
 from flask.views import MethodView
 from flask import jsonify, make_response
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity,
+)
 from flask.signals import Namespace
 
 from api.models.Notification import Notification
@@ -25,13 +27,32 @@ class FetchUserNotificationsView(MethodView):
     /api/v1/notifications/<int:user_id>
     '''
     @jwt_required
-    def get(self, user_id):
-        user_notifications = fetch_all_user_notifications(user_id)
-        response = {
-        'success': True,
-        'data': user_notifications,
-        }
-        return make_response(jsonify(response)), 200
+    def get(self):  
+        try:
+            current_user = get_jwt_identity()
+            user_notifications = fetch_all_user_notifications(current_user)
+
+            if not user_notifications:
+                response = {
+                    "success": False,
+                    "msg": "No notifications found"
+                }
+                return make_response(jsonify(response)), 404
+
+            response = {
+            "success": True,
+            "msg": "Notifications fetched successfully.",
+            "body": user_notifications
+            }
+            return make_response(jsonify(response)), 200
+
+        except Exception as err:
+            print("Error occured: ", err)
+            response = {
+                "success": False,
+                "msg": "Notifications could not be fetched."
+            }
+            return make_response(jsonify(response)), 500
 
     @notification.connect
     def send_notification(app, **kwargs):
