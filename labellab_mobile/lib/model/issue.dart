@@ -1,3 +1,4 @@
+import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/team.dart';
 import 'package:labellab_mobile/model/user.dart';
 
@@ -25,6 +26,7 @@ class Issue {
   String? created_At;
   String? dueDate;
   String? updated_At;
+  List<Comment>? comments;
 
   Issue(
       {this.id,
@@ -41,7 +43,8 @@ class Issue {
       this.issueTitle,
       this.project_id,
       this.team_id,
-      this.updated_At});
+      this.updated_At,
+      this.comments});
 
   Issue.fromJson(dynamic json, {bool isDense = false}) {
     id = json['id'];
@@ -59,13 +62,22 @@ class Issue {
     entityId = json['entity_id'];
     entityType = json["entity_type"];
     project_id = json["project_id"];
+    
+    if (json["comments"] != null && !isDense) {
+      comments = (json["comments"] as List)
+          .map(
+            (comment) => Comment.fromJson(comment),
+          )
+          .toSet()
+          .toList();
+    }
   }
 
   Map<String, dynamic> toMap() {
     return {
       "title": issueTitle,
       "description": description,
-      "category" : IssueMapper.categoryToString(issueCategory)
+      "category": IssueMapper.categoryToString(issueCategory)
     };
   }
 }
