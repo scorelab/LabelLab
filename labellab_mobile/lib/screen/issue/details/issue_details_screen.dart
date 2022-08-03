@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/issue.dart';
@@ -9,25 +11,22 @@ import 'package:labellab_mobile/screen/issue/details/issue_details_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
+import 'local_widget.dart/comment_list.dart';
+import 'local_widget.dart/expnasion_tile.dart';
+
 class IssueDetailScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    User? user,assignedUser;
+    bool _selectedMore = false;
+
     return StreamBuilder<IssueDetailState>(
       stream: Provider.of<IssueDetailBloc>(context).state,
       initialData: IssueDetailState.loading(),
       builder: (context, snapshot) {
         IssueDetailState _state = snapshot.data!;
-        user = (_state.issue != null && _state.users != null)
-            ? getCreatedIssueUser(
-                _state.users!, _state.issue!.created_by.toString())
-            : null;
-        assignedUser = (_state.issue != null && _state.users != null)
-            ? getCreatedIssueUser(
-                _state.users!, _state.issue!.assignee_id.toString())
-            : null;
+
         return Scaffold(
           key: _scaffoldKey,
           body: CustomScrollView(
@@ -42,14 +41,6 @@ class IssueDetailScreen extends StatelessWidget {
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(),
                   centerTitle: true,
-                  title: Text(
-                    _state.issue != null
-                        ? "Issue #" + _state.issue!.id!.toString()
-                        : "",
-                    // _state.issue != null ? _state.issue!.issueTitle! : "",
-                    style: TextStyle(color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
                 ),
                 actions: _buildActions(context, _state.issue),
               ),
@@ -67,11 +58,56 @@ class IssueDetailScreen extends StatelessWidget {
               _state.issue != null
                   ? SliverList(
                       delegate: SliverChildListDelegate([
-                        _state.issue != null && user != null
-                            ? _buildInfo(context, _state.issue!, user!)
+                        _state.issue != null && _state.users != null
+                            ? _buildInfo(context, _state.issue!, _state.users!)
                             : Container(),
-                        _state.issue != null  && user != null && assignedUser != null
-                            ? _buildOthers(context, _state.issue!, user!,assignedUser!) :Container(),
+                        _state.issue != null && _state.users != null
+                            ? _buildOthers(
+                                context, _state.issue!, _state.users!)
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16),
+                          child: ExpandableText(issue: _state.issue!),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16),
+                          child: Text(
+                            "Description:",
+                            style: TextStyle(color: Colors.grey, fontSize: 15),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16),
+                          child: Text(
+                            _state.issue!.description!,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ),
+                        Divider(
+                          height: 2,
+                        ),
+                        (_state.issue!.comments != null &&
+                                _state.issue!.comments!.isNotEmpty)
+                            ? Container(
+                                height: min(
+                                    200, _state.issue!.comments!.length * 57),
+                                child: ExpansionTile(
+                                  leading: Icon(Icons.comment),
+                                  trailing: Text(_state.issue!.comments!.length.toString()),
+                                  title: Text(
+                                      "Comments"), // padding: const EdgeInsets.all(0),
+                                  children: [
+                                    // for (var comment in _state.issue!.comments!)
+                                    // // TODO add Comments list here
+                                    //   CommentsListTile(comment: comment)
+                                  ],
+                                ),
+                              )
+                            : _buildEmptyPlaceholder(
+                                context, "No Comments yet"),
                       ]),
                     )
                   : SliverFillRemaining()
@@ -84,38 +120,33 @@ class IssueDetailScreen extends StatelessWidget {
 
   User? getCreatedIssueUser(List<User> users, String created_by) {
     final index = users.indexWhere((element) => element.id == created_by);
-     return index != -1 ? users[index] : null;
+    return index != -1 ? users[index] : null;
   }
 
-  Widget _buildInfo(BuildContext context, Issue issue, User user) {
+  Widget _buildInfo(BuildContext context, Issue issue, List<User> users) {
     final size = MediaQuery.of(context).size;
+    User? user;
+    user = getCreatedIssueUser(users, issue.created_by.toString());
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    issue.issueTitle!,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text("reported " +
-                      timeAgo(DateTime.parse(issue.created_At!)) +
-                      " by " +
-                      user.name!),
-                  Text("last updated " +
-                      timeAgo(DateTime.parse(issue.updated_At!))),
-                ],
+              Text(
+                "#" + issue.id.toString() + " -",
+                style: TextStyle(color: Colors.grey, fontSize: 20),
+              ),
+              Text(
+                issue.issueTitle!,
+                style: Theme.of(context).textTheme.headline6,
+                overflow: TextOverflow.ellipsis,
               ),
               SizedBox(
-                width: size.width / 4,
+                width: size.width / 3.2,
               ),
               Align(
                 alignment: Alignment.topCenter,
@@ -126,7 +157,7 @@ class IssueDetailScreen extends StatelessWidget {
                       child: Image(
                     width: 60,
                     height: 60,
-                    image: CachedNetworkImageProvider(user.thumbnail!),
+                    image: CachedNetworkImageProvider(user!.thumbnail!),
                     fit: BoxFit.cover,
                   )),
                 ),
@@ -134,56 +165,144 @@ class IssueDetailScreen extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 20,
+            height: size.height / 30,
           ),
-          Divider(
-            height: 5,
-            color: Colors.black,
-          ),
-          Text(
-            "Description",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(issue.description!, style: TextStyle(fontSize: 20)),
-            ),
-          ),
-          Divider(
-            height: 5,
-            color: Colors.black,
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Status:",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              ),
+              SizedBox(
+                width: size.width / 30,
+              ),
+              Text(
+                IssueMapper.statusToString(issue.issueStatus!),
+                style: TextStyle(
+                    color: _getStatusTextColor(
+                        IssueMapper.statusToString(issue.issueStatus!)),
+                    fontSize: 20),
+              ),
+              SizedBox(
+                 width: size.width / 2.4,
+              ),
+              Icon(
+                _getPrirotyIconColor(
+                    IssueMapper.priorityToString(issue.issuePriority)),
+                color: Colors.red,
+              ),
+              SizedBox(
+                width: size.width / 40,
+              ),
+              Text(
+                IssueMapper.statusToString(issue.issueStatus!),
+                style: TextStyle(
+                    color: _getPrirotyTextColor(
+                        IssueMapper.statusToString(issue.issueStatus!)),
+                    fontSize: 20),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildOthers(BuildContext context, Issue issue, User user,User assigenedUser){
-    return  Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+  Widget _buildOthers(BuildContext context, Issue issue, List<User> users) {
+    final size = MediaQuery.of(context).size;
+    User? user, assignedUser;
+    user = getCreatedIssueUser(users, issue.created_by.toString());
+    assignedUser = getCreatedIssueUser(users, issue.assignee_id.toString());
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Reporter:",
+              style: TextStyle(color: Colors.grey, fontSize: 15),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 children: [
-                  Text("Priroty: " + IssueMapper.priorityToString(issue.issuePriority)),
-                  (assigenedUser!=null) ?Text("Assigned to : " +  assigenedUser.name!):Text("Assigned to : " +  "null"),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black12,
+                      radius: 25,
+                      child: ClipOval(
+                        child: Image(
+                          width: 60,
+                          height: 60,
+                          image: CachedNetworkImageProvider(user!.thumbnail!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: size.width / 40,
+                  ),
+                  Text(
+                    user.name!,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
                 ],
               ),
-              Column(
+            ),
+            SizedBox(
+              height: size.height / 30,
+            ),
+            Text(
+              "Assignee:",
+              style: TextStyle(color: Colors.grey, fontSize: 15),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 children: [
-                  Text("catergory: " + IssueMapper.categoryToString(issue.issueCategory)),
-                 Text("Status: " + IssueMapper.statusToString(issue.issueStatus)),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: assignedUser != null
+                        ? CircleAvatar(
+                            backgroundColor: Colors.black12,
+                            radius: 25,
+                            child: ClipOval(
+                                child: Image(
+                              width: 60,
+                              height: 60,
+                              image: CachedNetworkImageProvider(
+                                  assignedUser.thumbnail!),
+                              fit: BoxFit.cover,
+                            )),
+                          )
+                        : Icon(
+                            Icons.person_add,
+                            color: Colors.teal,
+                          ),
+                  ),
+                  SizedBox(
+                    width: size.width / 40,
+                  ),
+                  assignedUser != null
+                      ? Text(
+                          assignedUser.name!,
+                          style: Theme.of(context).textTheme.headline6,
+                        )
+                      : Text(
+                          "Assigne to Yourself",
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
                 ],
-              )
-            ],
-          );
+              ),
+            ),
+          ]),
+    );
   }
-
-  
 
   List<Widget> _buildActions(BuildContext context, Issue? issue) {
     if (issue == null) return [];
@@ -213,6 +332,25 @@ class IssueDetailScreen extends StatelessWidget {
         },
       ),
     ];
+  }
+
+  Widget _buildEmptyPlaceholder(BuildContext context, String description) {
+    return Row(
+      children: <Widget>[
+        Icon(
+          Icons.error,
+          size: 28,
+          color: Colors.black45,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Text(
+          description,
+          style: TextStyle(color: Colors.black45),
+        ),
+      ],
+    );
   }
 
   void _showIssueDeleteConfirmation(BuildContext baseContext, Issue issue) {
@@ -257,5 +395,52 @@ class IssueDetailScreen extends StatelessWidget {
     if (diff.inMinutes > 0)
       return "${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago";
     return "just now";
+  }
+}
+
+Color _getStatusTextColor(String category) {
+  switch (category) {
+    case 'Review':
+      return Color(0xff3A35C4);
+    case 'Done':
+      return Color(0xff0C7800);
+    case 'Closed':
+      return Color(0xff980000);
+    case 'In Progress':
+      return Color(0xffCBBD00);
+    case 'Open':
+      return Color(0xfff26d5b);
+    default:
+      return Colors.black;
+  }
+}
+
+Color _getPrirotyTextColor(String category) {
+  switch (category) {
+    case 'Low':
+      return Colors.grey.withOpacity(0.3);
+    case 'Medium':
+      return Color(0xff0C7800).withOpacity(0.3);
+    case 'Critical':
+      return Color(0xff980000).withOpacity(0.3);
+    case 'High':
+      return Color(0xffCBBD00).withOpacity(0.3);
+    default:
+      return Colors.black.withOpacity(0.3);
+  }
+}
+
+IconData _getPrirotyIconColor(String category) {
+  switch (category) {
+    case 'Low':
+      return Icons.network_wifi_2_bar_outlined;
+    case 'Medium':
+      return Icons.priority_high;
+    case 'Critical':
+      return Icons.info;
+    case 'High':
+      return Icons.network_wifi_2_bar_rounded;
+    default:
+      return Icons.low_priority;
   }
 }
