@@ -14,6 +14,7 @@ import 'package:labellab_mobile/data/remote/labellab_api.dart';
 import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/issue.dart';
@@ -89,6 +90,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENPOINT_ISSUE_UPDATE = "issue/issue_info";
   static const ENDPOINT_ISSUE_GET_ACTIVITY = "issue";
   static const ENDPOINT_ISSUE_DELETE = "issue/issue_info";
+
+  static const ENDPOINT_COMMENT_GET = "comment/get";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -1375,6 +1378,26 @@ class LabelLabAPIImpl extends LabelLabAPI {
         .delete(API_URL + ENDPOINT_ISSUE_DELETE + "/$project_id" + "/$id", options: options)
         .then((response) {
       return ApiResponse(response.data);
+    });
+  }
+
+
+    @override
+  Future<List<Comment>> getComments(String? token, String? issue_id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .get(API_URL + ENDPOINT_COMMENT_GET + "/$issue_id", options: options)
+        .then((response) {
+      final bool isSuccess = response.data['success'];
+      if (isSuccess) {
+        return (response.data['body'] as List<dynamic>)
+            .map((item) => Comment.fromJson(item, isDense: true))
+            .toList();
+      } else {
+        throw Exception("Request unsuccessfull");
+      }
     });
   }
 }
