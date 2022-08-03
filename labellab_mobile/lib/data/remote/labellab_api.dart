@@ -7,6 +7,7 @@ import 'package:labellab_mobile/data/remote/dto/register_response.dart';
 import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/label.dart';
@@ -138,4 +139,8 @@ abstract class LabelLabAPI {
   Future<ApiResponse> updateIssue(String? token, Issue issue);
   Future<List<Issue>> getCategorySpecificIssue(String? token, String? project_id,String category);
   Future<ApiResponse> deleteIssue(String? token, String? id, String? project_id);
+
+
+  //Comments
+  Future<List<Comment>> getComments(String? token, String? issue_id);
 }
