@@ -5,3 +5,5 @@ export FLASK_CONFIG=""
 export DEV_DATABASE_URL= "mysql+pymysql://" + username + ":" + password + "@" + host + "/labellab"   
 export TEST_DATABASE_URL="mysql+pymysql://" + username + ":" + password + "@" + host + "/test_labellab"   
 export DATABASE_URL=""  
+
+export API_KEY=""

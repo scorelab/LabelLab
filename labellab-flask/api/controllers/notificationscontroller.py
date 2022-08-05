@@ -16,6 +16,14 @@ from api.helpers.notification import (
 )
 from api.extensions import socketio
 
+from api.helpers.email.send_email import (
+    send_email
+)
+from api.helpers.user import (
+    find_by_user_id
+)
+
+
 namespace = Namespace()
 notification = namespace.signal('notification')
 
@@ -66,12 +74,19 @@ class FetchUserNotificationsView(MethodView):
         if type not in allowed_types:
             socketio.emit('notification_error', 'Type not allowed')
 
-        for user in users: 
+
+        for user_id in users: 
+            user = find_by_user_id(user_id)
+            send_email (
+                user = user,
+                message = message,
+                type = type
+            )
             try:
                 notification = Notification (
                 message = message,
                 type = type,
-                user_id = user
+                user_id = user_id
                 )
             except Exception as err:
                 socketio.emit('notification_error', f'Something went wrong!')
