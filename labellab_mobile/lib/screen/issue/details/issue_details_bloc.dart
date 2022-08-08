@@ -68,4 +68,17 @@ class IssueDetailBloc {
   void dispose() {
     _stateController.close();
   }
+
+    void assignIssue(String projectId, String issueId,String assigneeId) {
+    if (_isLoading) return;
+    _isLoading = true;
+    _repository.assignIssue(projectId, issueId, assigneeId).then((res) {
+      _isLoading = false;
+      // this._issue = issue;
+      _setState(IssueDetailState.success(_issue));
+    }).catchError((err) {
+      _isLoading = false;
+      _setState(IssueDetailState.error(err.toString(), issue: _issue));
+    });
+  }
 }

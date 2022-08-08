@@ -107,7 +107,7 @@ class ExpandableTextState extends State<ExpandableText>
               onTap: () => setState(
                 () => expanded = false,
               ),
-              child: Text('Less', style: TextStyle(color: Color(0xFF2E7D32))),
+              child: Text('Less', style: TextStyle(color: Color.fromARGB(255, 24, 138, 191))),
             )
           : InkWell(
               onTap: () => setState(
