@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
+import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
 import 'package:labellab_mobile/model/user.dart';
@@ -11,7 +13,6 @@ import 'package:labellab_mobile/screen/issue/details/issue_details_state.dart';
 import 'package:labellab_mobile/widgets/delete_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
-import 'local_widget.dart/comment_list.dart';
 import 'local_widget.dart/expnasion_tile.dart';
 
 class IssueDetailScreen extends StatelessWidget {
@@ -92,21 +93,21 @@ class IssueDetailScreen extends StatelessWidget {
                         (_state.issue!.comments != null &&
                                 _state.issue!.comments!.isNotEmpty)
                             ? Container(
-                                height: min(
-                                    200, _state.issue!.comments!.length * 57),
+                                // height: min(
+                                //     200, _state.issue!.comments!.length * 40),
                                 child: ExpansionTile(
                                   leading: Icon(Icons.comment),
-                                  trailing: Text(_state.issue!.comments!.length.toString()),
+                                  trailing: Text(_state.issue!.comments!.length
+                                      .toString()),
                                   title: Text(
                                       "Comments"), // padding: const EdgeInsets.all(0),
                                   children: [
-                                    // for (var comment in _state.issue!.comments!)
-                                    // // TODO add Comments list here
-                                    //   CommentsListTile(comment: comment)
+                                    for (var comment in _state.issue!.comments!)
+                                      _commentItem(context, comment)
                                   ],
                                 ),
                               )
-                            : _buildEmptyPlaceholder(
+                            : _buildCommentPlaceholder(
                                 context, "No Comments yet"),
                       ]),
                     )
@@ -128,81 +129,88 @@ class IssueDetailScreen extends StatelessWidget {
     User? user;
     user = getCreatedIssueUser(users, issue.created_by.toString());
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                "#" + issue.id.toString() + " -",
-                style: TextStyle(color: Colors.grey, fontSize: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                        text: "#" + issue.id.toString() + " -",
+                        style: TextStyle(color: Colors.grey, fontSize: 20),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: issue.issueTitle!,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ]),
+                  ),
+                  SizedBox(height: size.height/16,),
+                  RichText(
+                    text: TextSpan(
+                        text: "Status:",
+                        style: TextStyle(color: Colors.grey, fontSize: 15),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text:
+                                IssueMapper.statusToString(issue.issueStatus!),
+                            style: TextStyle(
+                                color: _getStatusTextColor(
+                                    IssueMapper.statusToString(
+                                        issue.issueStatus!)),
+                                fontSize: 20),
+                          ),
+                        ]),
+                  ),
+                ],
               ),
-              Text(
-                issue.issueTitle!,
-                style: Theme.of(context).textTheme.headline6,
-                overflow: TextOverflow.ellipsis,
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black12,
+                      radius: 30,
+                      child: ClipOval(
+                          child: Image(
+                        width: 60,
+                        height: 60,
+                        image: CachedNetworkImageProvider(user!.thumbnail!),
+                        fit: BoxFit.cover,
+                      )),
+                    ),
+                  ),
+                  
+                  Row(
+                    children: [
+                      Icon(
+                        _getPrirotyIconColor(
+                            IssueMapper.priorityToString(issue.issuePriority)),
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: size.width / 40,
+                      ),
+                      Text(
+                        IssueMapper.statusToString(issue.issueStatus!),
+                        style: TextStyle(
+                            color: _getPrirotyTextColor(
+                                IssueMapper.statusToString(issue.issueStatus!)),
+                            fontSize: 20),
+                      ),
+                    ],
+                  )
+                ],
               ),
-              SizedBox(
-                width: size.width / 3.2,
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: CircleAvatar(
-                  backgroundColor: Colors.black12,
-                  radius: 32,
-                  child: ClipOval(
-                      child: Image(
-                    width: 60,
-                    height: 60,
-                    image: CachedNetworkImageProvider(user!.thumbnail!),
-                    fit: BoxFit.cover,
-                  )),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: size.height / 30,
-          ),
-          Row(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Status:",
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              ),
-              SizedBox(
-                width: size.width / 30,
-              ),
-              Text(
-                IssueMapper.statusToString(issue.issueStatus!),
-                style: TextStyle(
-                    color: _getStatusTextColor(
-                        IssueMapper.statusToString(issue.issueStatus!)),
-                    fontSize: 20),
-              ),
-              SizedBox(
-                 width: size.width / 2.4,
-              ),
-              Icon(
-                _getPrirotyIconColor(
-                    IssueMapper.priorityToString(issue.issuePriority)),
-                color: Colors.red,
-              ),
-              SizedBox(
-                width: size.width / 40,
-              ),
-              Text(
-                IssueMapper.statusToString(issue.issueStatus!),
-                style: TextStyle(
-                    color: _getPrirotyTextColor(
-                        IssueMapper.statusToString(issue.issueStatus!)),
-                    fontSize: 20),
-              ),
+              // SizedBox(
+              //   width: size.width / 3.2,
+              // ),
             ],
           ),
         ],
@@ -263,42 +271,52 @@ class IssueDetailScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: assignedUser != null
-                        ? CircleAvatar(
-                            backgroundColor: Colors.black12,
-                            radius: 25,
-                            child: ClipOval(
-                                child: Image(
-                              width: 60,
-                              height: 60,
-                              image: CachedNetworkImageProvider(
-                                  assignedUser.thumbnail!),
-                              fit: BoxFit.cover,
+              child: assignedUser != null
+                  ? Row(
+                      children: [
+                        Align(
+                            alignment: Alignment.topCenter,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black12,
+                              radius: 25,
+                              child: ClipOval(
+                                  child: Image(
+                                width: 60,
+                                height: 60,
+                                image: CachedNetworkImageProvider(
+                                    assignedUser.thumbnail!),
+                                fit: BoxFit.cover,
+                              )),
                             )),
-                          )
-                        : Icon(
-                            Icons.person_add,
-                            color: Colors.teal,
-                          ),
-                  ),
-                  SizedBox(
-                    width: size.width / 40,
-                  ),
-                  assignedUser != null
-                      ? Text(
+                        SizedBox(
+                          width: size.width / 40,
+                        ),
+                        Text(
                           assignedUser.name!,
                           style: Theme.of(context).textTheme.headline6,
                         )
-                      : Text(
-                          "Assigne to Yourself",
-                          style: TextStyle(color: Colors.grey, fontSize: 15),
-                        ),
-                ],
-              ),
+                      ],
+                    )
+                  : InkWell(
+                      onTap: () {
+                        _assignIssue(context, issue, user!);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.person_add,
+                            color: Colors.teal,
+                          ),
+                          SizedBox(
+                            width: size.width / 40,
+                          ),
+                          Text(
+                            "Assigne to Yourself",
+                            style: TextStyle(color: Colors.grey, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
             ),
           ]),
     );
@@ -334,23 +352,23 @@ class IssueDetailScreen extends StatelessWidget {
     ];
   }
 
-  Widget _buildEmptyPlaceholder(BuildContext context, String description) {
-    return Row(
-      children: <Widget>[
-        Icon(
-          Icons.error,
-          size: 28,
-          color: Colors.black45,
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        Text(
-          description,
-          style: TextStyle(color: Colors.black45),
-        ),
-      ],
+  Widget _buildCommentPlaceholder(BuildContext context, String description) {
+    return ExpansionTile(
+      leading: Icon(Icons.comment),
+      trailing: Text(description),
+      title: Text("Comments"), // padding: const EdgeInsets.all(0),
     );
+  }
+
+  void _assignIssue(BuildContext context, Issue issue, User user) {
+    String assignee_ID = user.id!;
+    Provider.of<IssueDetailBloc>(context, listen: false).assignIssue(
+      issue.project_id.toString(),
+      issue.id.toString(),
+      assignee_ID,
+    );
+
+    Provider.of<IssueDetailBloc>(context, listen: false).refresh();
   }
 
   void _showIssueDeleteConfirmation(BuildContext baseContext, Issue issue) {
@@ -395,6 +413,113 @@ class IssueDetailScreen extends StatelessWidget {
     if (diff.inMinutes > 0)
       return "${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago";
     return "just now";
+  }
+
+  Widget _commentItem(BuildContext context, Comment comment) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black12,
+                    radius: 20,
+                    child: ClipOval(
+                        child: Image(
+                      width: 60,
+                      height: 60,
+                      image: CachedNetworkImageProvider(comment.thumbnail!),
+                      fit: BoxFit.cover,
+                    )),
+                  ),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 12.0,
+                                  color: Colors.grey,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: '${comment.username} ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xff3D4A5A),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '${comment.body}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        timeAgo(DateTime.parse(comment.timestamp!)),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 10.0,
+          ),
+          Align(
+            // alignment: Alignment.,
+            child: Container(
+              height: 10,
+              width: 10,
+              child: PopupMenuButton<int>(
+                onSelected: (int value) {
+                  if (value == 0) {
+                  } else if (value == 1) {
+                    // _showIssueDeleteConfirmation(context, issue);
+                  }
+                },
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      value: 0,
+                      child: Text("Edit"),
+                    ),
+                    PopupMenuItem(
+                      value: 1,
+                      child: Text("Delete"),
+                    ),
+                  ];
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
