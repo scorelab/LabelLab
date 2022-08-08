@@ -136,7 +136,7 @@ class IssueActivity extends StatelessWidget {
 
   User getCreatedIssueUser(List<User> users, String created_by) {
     final index = users.indexWhere((element) => element.id == created_by);
-    debugPrint("ndjanda" + users[index].email!);
+
     return users[index];
   }
 }

@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import '../model/issue.dart';
 import '../model/mapper/issue_mapper.dart';
 
@@ -8,13 +8,13 @@ class IssueListTile extends StatelessWidget {
   final bool isCustomized;
   final VoidCallback? onItemTapped;
 
-  IssueListTile(this.issue, {this.onItemTapped, this.isCustomized = false});
+  IssueListTile(this.issue,{this.onItemTapped, this.isCustomized = false});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return InkWell(
-      onTap: this.onItemTapped,
+       onTap: this.onItemTapped,
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical: isCustomized ? 12 : 10,
@@ -39,49 +39,43 @@ class IssueListTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Issue #" + issue.id!.toString(),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  issue.issueTitle!,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-
-            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                CircleAvatar(
+                  backgroundColor: Colors.black12,
+                  child: ClipOval(
+                      child:
+                          // user.thumbnail != null ?
+                          Image(
+                    height: 38,
+                    width: 38,
+                    image: CachedNetworkImageProvider(
+                        "https://react.semantic-ui.com/images/avatar/large/elliot.jpg"),
+                    fit: BoxFit.cover,
+                  )
+                      // : null,
+                      ),
+                ),
                 Row(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          Container(
-                            height: size.height/30,
-                            width: size.width/8,
-                            decoration: BoxDecoration(
-                            color:
-                                 _getStatusTextColor(
-                                    IssueMapper.statusToString(
-                                        issue.issueStatus)),
-                                        borderRadius: BorderRadius.circular(20)
-                            ),
-
-                                // : Color(0xff01A8A0),
-                            child: Center(
-                              child: Text(
-                                  IssueMapper.statusToString(issue.issueStatus)),
+                          Text("Issue #" + issue.id!.toString(),
+                              style: TextStyle(
+                                fontSize: 12,
+                              )),
+                          Text(
+                            "Status: " +
+                                IssueMapper.statusToString(issue.issueStatus),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isCustomized
+                                  ? _getStatusTextColor(
+                                      IssueMapper.statusToString(
+                                          issue.issueStatus))
+                                  : Color(0xff01A8A0),
                             ),
                           ),
                         ],
@@ -124,29 +118,36 @@ class IssueListTile extends StatelessWidget {
                 ),
               ],
             ),
-            // Divider(
-            //   height: 5,
-            //   color: Colors.black,
-            // ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Text("Posted by: " + issue.created_by.toString(),
-            //         style: TextStyle(
-            //           fontSize: 12,
-            //         )),
-            //     Text("Comments " + 0.toString(),
-            //         style: TextStyle(
-            //           fontSize: 12,
-            //         )),
-            //   ],
-            // )
+            Padding(
+              padding: const EdgeInsets.only(left: 120),
+              child: Text(issue.issueTitle!,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+            Divider(
+              height: 5,
+              color: Colors.black,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Posted by: " + issue.created_by.toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                    )),
+                Text("Comments " + 0.toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                    )),
+              ],
+            )
           ],
         ),
       ),
     );
   }
-
   Color _getBackgroundColor(String category) {
     switch (category) {
       case 'Low':
@@ -161,7 +162,6 @@ class IssueListTile extends StatelessWidget {
         return Colors.black.withOpacity(0.3);
     }
   }
-
   Color _getTextOrBorderColor(String category) {
     switch (category) {
       case 'general':
@@ -178,7 +178,6 @@ class IssueListTile extends StatelessWidget {
         return Colors.black;
     }
   }
-
   Color _getStatusTextColor(String category) {
     switch (category) {
       case 'Review':
@@ -195,7 +194,6 @@ class IssueListTile extends StatelessWidget {
         return Colors.black;
     }
   }
-
   Color _getPriorityTextColor(String category) {
     switch (category) {
       case 'Low':

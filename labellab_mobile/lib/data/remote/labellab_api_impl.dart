@@ -64,7 +64,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_USERS_SEARCH = "users/search";
   static const ENDPOINT_UPLOAD_USER_IMAGE = "users/upload_image";
   static const ENDPOINT_EDIT_INFO = "users/edit/";
-    static const ENDPOINT_USERS_LIST = "users/get";
+  static const ENDPOINT_USERS_LIST = "users/get";
 
   static const ENDPOINT_PROJECT_GET = "project/get";
   static const ENDPOINT_PROJECT_INFO = "project/project_info";
@@ -90,6 +90,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENPOINT_ISSUE_UPDATE = "issue/issue_info";
   static const ENDPOINT_ISSUE_GET_ACTIVITY = "issue";
   static const ENDPOINT_ISSUE_DELETE = "issue/issue_info";
+  static const ENDPOINT_ASSIGN_ISSUE = "issue/assign";
 
   static const ENDPOINT_COMMENT_GET = "comment/get";
 
@@ -209,7 +210,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .get(API_URL + ENDPOINT_USERS_LIST , options: options)
+        .get(API_URL + ENDPOINT_USERS_LIST, options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
@@ -1344,6 +1345,23 @@ class LabelLabAPIImpl extends LabelLabAPI {
     });
   }
 
+    @override
+  Future<ApiResponse> assignIssue(
+      String? token, String projectId, String issueId,String assigneeId) {
+    Options options =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token!});
+    final data = {"assignee_id": assigneeId};
+    return _dio!
+        .put(
+      API_URL + ENDPOINT_ASSIGN_ISSUE + "/$projectId" + "/$issueId",
+      options: options,
+      data: data,
+    )
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
   @override
   Future<List<Issue>> getCategorySpecificIssue(
       String? token, String? projectId, String? category) {
@@ -1352,7 +1370,6 @@ class LabelLabAPIImpl extends LabelLabAPI {
     );
     return _dio!
         .get(
-      // /issue/<int:project_id>/category/<string:category>
       '$API_URL$ENDPOINT_ISSUE_GET_ACTIVITY/$projectId/category/$category',
       options: options,
     )
@@ -1375,14 +1392,14 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .delete(API_URL + ENDPOINT_ISSUE_DELETE + "/$project_id" + "/$id", options: options)
+        .delete(API_URL + ENDPOINT_ISSUE_DELETE + "/$project_id" + "/$id",
+            options: options)
         .then((response) {
       return ApiResponse(response.data);
     });
   }
 
-
-    @override
+  @override
   Future<List<Comment>> getComments(String? token, String? issue_id) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},

@@ -509,6 +509,12 @@ class Repository {
     return _api.deleteIssue(accessToken, id,project_id);
   }
 
+    Future<ApiResponse?> assignIssue(
+      String projectId, String issueId,String assigneeId) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.assignIssue(accessToken, projectId,issueId,assigneeId);
+  }
+
 
   // Singleton
   static final Repository _respository = Repository._internal();
