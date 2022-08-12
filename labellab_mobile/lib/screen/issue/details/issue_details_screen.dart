@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:labellab_mobile/data/repository.dart';
 // import 'package:intl/intl.dart';
 import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/issue.dart';
@@ -18,9 +17,11 @@ import 'local_widget.dart/expnasion_tile.dart';
 class IssueDetailScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    bool _selectedMore = false;
+    // bool _selectedMore = false;
 
     return StreamBuilder<IssueDetailState>(
       stream: Provider.of<IssueDetailBloc>(context).state,
@@ -29,36 +30,26 @@ class IssueDetailScreen extends StatelessWidget {
         IssueDetailState _state = snapshot.data!;
 
         return Scaffold(
-          key: _scaffoldKey,
-          body: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                backgroundColor: Colors.white,
-                iconTheme: IconThemeData(color: Colors.black),
-                actionsIconTheme: IconThemeData(color: Colors.black),
-                // expandedHeight: 200,
-                elevation: 0,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Container(),
-                  centerTitle: true,
-                ),
-                actions: _buildActions(context, _state.issue),
+            key: _scaffoldKey,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              iconTheme: IconThemeData(color: Colors.black),
+              actionsIconTheme: IconThemeData(color: Colors.black),
+              // expandedHeight: 200,
+              elevation: 0,
+              // pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Container(),
+                centerTitle: true,
               ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  _state.isLoading
-                      ? LinearProgressIndicator(
-                          backgroundColor: Theme.of(context).canvasColor,
-                        )
-                      : Container(
-                          height: 6,
-                        ),
-                ]),
-              ),
-              _state.issue != null
-                  ? SliverList(
-                      delegate: SliverChildListDelegate([
+              actions: _buildActions(context, _state.issue),
+            ),
+            body: _state.issue != null && _state.users != null
+                ? SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         _state.issue != null && _state.users != null
                             ? _buildInfo(context, _state.issue!, _state.users!)
                             : Container(),
@@ -92,29 +83,24 @@ class IssueDetailScreen extends StatelessWidget {
                         ),
                         (_state.issue!.comments != null &&
                                 _state.issue!.comments!.isNotEmpty)
-                            ? Container(
-                                // height: min(
-                                //     200, _state.issue!.comments!.length * 40),
-                                child: ExpansionTile(
-                                  leading: Icon(Icons.comment),
-                                  trailing: Text(_state.issue!.comments!.length
-                                      .toString()),
-                                  title: Text(
-                                      "Comments"), // padding: const EdgeInsets.all(0),
-                                  children: [
-                                    for (var comment in _state.issue!.comments!)
-                                      _commentItem(context, comment)
-                                  ],
-                                ),
+                            ? ExpansionTile(
+                                leading: Icon(Icons.comment),
+                                trailing: Text(
+                                    _state.issue!.comments!.length.toString()),
+                                title: Text(
+                                    "Comments"), // padding: const EdgeInsets.all(0),
+                                children: [
+                                  for (var comment in _state.issue!.comments!)
+                                    _commentItem(context, comment,
+                                        _state.issue!.created_by!),
+                                ],
                               )
                             : _buildCommentPlaceholder(
                                 context, "No Comments yet"),
-                      ]),
-                    )
-                  : SliverFillRemaining()
-            ],
-          ), //error here
-        );
+                      ],
+                    ),
+                  )
+                : Container());
       },
     );
   }
@@ -151,7 +137,9 @@ class IssueDetailScreen extends StatelessWidget {
                           ),
                         ]),
                   ),
-                  SizedBox(height: size.height/16,),
+                  SizedBox(
+                    height: size.height / 16,
+                  ),
                   RichText(
                     text: TextSpan(
                         text: "Status:",
@@ -186,22 +174,23 @@ class IssueDetailScreen extends StatelessWidget {
                       )),
                     ),
                   ),
-                  
                   Row(
                     children: [
                       Icon(
                         _getPrirotyIconColor(
                             IssueMapper.priorityToString(issue.issuePriority)),
-                        color: Colors.red,
+                        color: _getPrirotyTextColor(
+                            IssueMapper.priorityToString(issue.issuePriority)),
                       ),
                       SizedBox(
                         width: size.width / 40,
                       ),
                       Text(
-                        IssueMapper.statusToString(issue.issueStatus!),
+                        IssueMapper.priorityToString(issue.issuePriority!),
                         style: TextStyle(
                             color: _getPrirotyTextColor(
-                                IssueMapper.statusToString(issue.issueStatus!)),
+                                IssueMapper.priorityToString(
+                                    issue.issuePriority!)),
                             fontSize: 20),
                       ),
                     ],
@@ -367,7 +356,7 @@ class IssueDetailScreen extends StatelessWidget {
       issue.id.toString(),
       assignee_ID,
     );
-
+    Application.router.pop(context);
     Provider.of<IssueDetailBloc>(context, listen: false).refresh();
   }
 
@@ -415,11 +404,12 @@ class IssueDetailScreen extends StatelessWidget {
     return "just now";
   }
 
-  Widget _commentItem(BuildContext context, Comment comment) {
+  Widget _commentItem(BuildContext context, Comment comment, int userId) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Row(
@@ -453,19 +443,25 @@ class IssueDetailScreen extends StatelessWidget {
                               text: TextSpan(
                                 style: TextStyle(
                                   fontFamily: 'Nunito',
-                                  fontSize: 12.0,
+                                  fontSize: 14.0,
                                   color: Colors.grey,
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: '${comment.username} ',
+                                    text: '@${comment.username}  ',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xff3D4A5A),
                                     ),
                                   ),
                                   TextSpan(
-                                    text: '${comment.body}',
+                                    text: timeAgo(
+                                        DateTime.parse(comment.timestamp!)),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10.0,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -474,12 +470,8 @@ class IssueDetailScreen extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        timeAgo(DateTime.parse(comment.timestamp!)),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10.0,
-                          color: Colors.grey,
-                        ),
+                        comment.body!,
+                        style: TextStyle(color: Colors.grey, fontSize: 15),
                       ),
                     ],
                   ),
@@ -490,33 +482,34 @@ class IssueDetailScreen extends StatelessWidget {
           SizedBox(
             width: 10.0,
           ),
-          Align(
-            // alignment: Alignment.,
-            child: Container(
-              height: 10,
-              width: 10,
-              child: PopupMenuButton<int>(
-                onSelected: (int value) {
-                  if (value == 0) {
-                  } else if (value == 1) {
-                    // _showIssueDeleteConfirmation(context, issue);
-                  }
-                },
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      value: 0,
-                      child: Text("Edit"),
+          userId == comment.userId
+              ? Align(
+                  // alignment: Alignment.topRight,
+                  child: Container(
+                    height: 10,
+                    width: 10,
+                    child: PopupMenuButton<int>(
+                      onSelected: (int value) {
+                        if (value == 0) {
+                          print("asdadasda");
+                        } else if (value == 1) {}
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Text("Edit"),
+                          ),
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text("Delete"),
+                          ),
+                        ];
+                      },
                     ),
-                    PopupMenuItem(
-                      value: 1,
-                      child: Text("Delete"),
-                    ),
-                  ];
-                },
-              ),
-            ),
-          ),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
@@ -543,29 +536,29 @@ Color _getStatusTextColor(String category) {
 Color _getPrirotyTextColor(String category) {
   switch (category) {
     case 'Low':
-      return Colors.grey.withOpacity(0.3);
+      return Color(0xff0C7800);
     case 'Medium':
-      return Color(0xff0C7800).withOpacity(0.3);
+      return Color.fromARGB(255, 205, 212, 11);
     case 'Critical':
-      return Color(0xff980000).withOpacity(0.3);
+      return Color(0xff980000);
     case 'High':
-      return Color(0xffCBBD00).withOpacity(0.3);
+      return Color.fromARGB(255, 203, 81, 0);
     default:
-      return Colors.black.withOpacity(0.3);
+      return Colors.black;
   }
 }
 
 IconData _getPrirotyIconColor(String category) {
   switch (category) {
     case 'Low':
-      return Icons.network_wifi_2_bar_outlined;
+      return Icons.south_rounded;
     case 'Medium':
-      return Icons.priority_high;
+      return Icons.density_medium_rounded;
     case 'Critical':
-      return Icons.info;
+      return Icons.crisis_alert;
     case 'High':
-      return Icons.network_wifi_2_bar_rounded;
+      return Icons.priority_high_rounded;
     default:
-      return Icons.low_priority;
+      return Icons.south_rounded;
   }
 }
