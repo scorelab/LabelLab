@@ -145,5 +145,6 @@ abstract class LabelLabAPI {
 
   //Comments
   Future<List<Comment>> getComments(String? token, String? issue_id);
+  Future<ApiResponse> postComment(String? token,Comment comment, String  text);
 
 }
