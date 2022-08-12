@@ -93,6 +93,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
   static const ENDPOINT_ASSIGN_ISSUE = "issue/assign";
 
   static const ENDPOINT_COMMENT_GET = "comment/get";
+  static const ENDPOINT_POST_COMMENT = "comment/create/";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -1415,6 +1416,19 @@ class LabelLabAPIImpl extends LabelLabAPI {
       } else {
         throw Exception("Request unsuccessfull");
       }
+    });
+  }
+
+    @override
+  Future<ApiResponse> postComment(String? token, Comment comment,String issue_id) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .post(API_URL + ENDPOINT_POST_COMMENT + "/${issue_id}",
+            options: options, data: comment.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
     });
   }
 }
