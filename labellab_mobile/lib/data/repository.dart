@@ -11,6 +11,7 @@ import 'package:labellab_mobile/data/remote/labellab_api_impl.dart';
 import 'package:labellab_mobile/data/remote/dto/api_response.dart';
 import 'package:labellab_mobile/model/auth_user.dart';
 import 'package:labellab_mobile/model/classification.dart';
+import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
 import 'package:labellab_mobile/model/issue.dart';
@@ -514,6 +515,13 @@ class Repository {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.assignIssue(accessToken, projectId,issueId,assigneeId);
   }
+
+    Future<ApiResponse> postComment(Comment comment, String  issue_id) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.postComment(accessToken, comment,issue_id);
+  }
+
+  
 
 
   // Singleton
