@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 import random
 
@@ -32,6 +33,37 @@ months = [
 	'December'
 ]
 
+issue_labels = {
+    'priority': ['Critical', 'High','Medium','Low'],
+    'category': ['general','images','labels','image labelling','models'],
+    'status': ['Open','In Progress','Review','Done','Closed']
+}
+
+issue_colors = {
+    'priority' : [
+        'rgba(219, 40, 40, 0.8)',
+        'rgba(242, 113, 28, 0.8)',
+        'rgba(33, 133, 208, 0.8)',
+        'rgba(33, 186, 69, 0.8)',
+    ],
+    'category' : [
+        'rgba(118, 118, 118, 1)',
+        'rgba(219, 40, 40, 0.8)',
+        'rgba(242, 113, 28, 0.8)',
+        'rgba(33, 133, 208, 0.8)',
+        'rgba(33, 186, 69, 0.8)',
+    ],
+    'status' : [
+        'rgba(118, 118, 118, 1)',
+        'rgba(33, 133, 208, 1)',
+        'rgba(242, 113, 28, 1)',
+        'rgba(33, 186, 69, 1)',
+        'rgba(219, 40, 40, 1)',
+    ]
+}
+
+issue_data_type = ['priority','category','status']
+
 def get_color(num):
     final = []
 
@@ -65,26 +97,49 @@ def get_label_data(label_data):
     return final
 
 def get_label_counts(labels):
+    dataset_labels = {}
+    for label in labels:
+        if label["label_name"] in dataset_labels:
+            dataset_labels[label["label_name"]]+=1
+        else:
+            dataset_labels[label["label_name"]]=1
+    
     count_data = {
         "labels": [],
         "datasets": [
             {
                 "data": [],
-                "background_color": [],
-                "hover_background_color": []
+                "backgroundColor": [],
             }
         ]
     }
 
-    for label in labels:
-        count_data["labels"].append(label["label_name"])
-        if label["count"]:
-            count_data["datasets"][0]["data"].append(label["count"])
-        else:
-            count_data["datasets"][0]["data"].append(0)
-        
-        count_data["datasets"][0]["background_color"].append(
-            "%06x" % random.randint(0, 0xFFFFFF)
+    for label in dataset_labels:
+        count_data["labels"].append(label)
+        count_data["datasets"][0]["data"].append(dataset_labels[label])
+        r = random.randint(0,255)
+        g = random.randint(0,255)
+        b = random.randint(0,255)
+        count_data["datasets"][0]["backgroundColor"].append(
+            f'rgba({r},{g},{b}, 0.8)'
         )
     
     return count_data
+
+def get_issue_data(issues):
+    map = {}
+    data = {
+        'priority' : [0 for i in range(4)],
+        'category' : [0 for i in range(5)],
+        'status' : [0 for i in range(5)]
+    }
+    for type in issue_data_type:
+        map[type] = {}
+        for i in range(len(issue_labels[type])):
+            map[type][issue_labels[type][i]] = i
+
+    for issue in issues:
+        for type in issue_data_type:
+            data[type][map[type][issue[type]]]+=1
+    
+    return data

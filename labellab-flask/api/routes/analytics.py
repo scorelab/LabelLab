@@ -15,3 +15,9 @@ analyticsprint.add_url_rule(
     view_func=analyticscontroller.analyticsController["label_counts"], 
     methods=["GET"]
 )
+
+analyticsprint.add_url_rule(
+    "/issue_analytics/get/<int:project_id>", 
+    view_func=analyticscontroller.analyticsController["issue_analytics"], 
+    methods=["GET"]
+)
