@@ -7,7 +7,7 @@ class IssueMapper {
     switch (status) {
       case "Open":
         return IssueStatus.OPEN;
-      case "in progress":
+      case "In Progress":
         return IssueStatus.IN_PROGRESS;
          case "Closed":
         return IssueStatus.CLOSED;
@@ -25,7 +25,7 @@ class IssueMapper {
       case IssueStatus.OPEN:
         return "Open";
       case IssueStatus.IN_PROGRESS:
-        return "in progress";
+        return "In Progress";
          case IssueStatus.CLOSED:
         return "Closed";
         case IssueStatus.DONE:
@@ -67,7 +67,6 @@ class IssueMapper {
     }
   }
 
-  // GENERAL, LABEL, IMAGE, IMAGE_LABELLING, MODELS, MISC
 
   static IssueCategory mapJsonToCategory(String? status) {
     switch (status) {
@@ -91,17 +90,17 @@ class IssueMapper {
   static String categoryToString(IssueCategory? status) {
     switch (status) {
       case IssueCategory.GENERAL:
-        return "general";
+        return "General";
       case IssueCategory.LABEL:
-        return "labels";
+        return "Labels";
          case IssueCategory.IMAGE:
-        return "images";
+        return "Images";
         case IssueCategory.IMAGE_LABELLING:
-        return "image labelling";
+        return "Labelling";
         case IssueCategory.MODELS:
-        return "models";
+        return "Models";
          case IssueCategory.MISC:
-        return "misc";
+        return "Misc";
       default:
         return "";
     }

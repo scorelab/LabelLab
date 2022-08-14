@@ -10,13 +10,13 @@ class IssueDetailState {
 
   List<User>? users;
 
-  IssueDetailState.loading({this.issue}) {
+  IssueDetailState.loading() {
     isLoading = true;
   }
 
-  IssueDetailState.error(this.error, {this.issue});
+  IssueDetailState.error(this.error, );
 
-  IssueDetailState.updateError(this.error, {this.issue});
+  IssueDetailState.updateError(this.error,);
 
   IssueDetailState.success(this.issue);
   IssueDetailState.userList(this.issue,{this.users});

@@ -10,6 +10,7 @@ import 'package:labellab_mobile/model/classification.dart';
 import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/group.dart';
 import 'package:labellab_mobile/model/image.dart';
+import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/label.dart';
 import 'package:labellab_mobile/model/label_selection.dart';
 import 'package:labellab_mobile/model/location.dart';
@@ -24,7 +25,6 @@ import 'package:labellab_mobile/model/user.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 
-import '../../model/issue.dart';
 
 abstract class LabelLabAPI {
   Future<LoginResponse> login(AuthUser user);
