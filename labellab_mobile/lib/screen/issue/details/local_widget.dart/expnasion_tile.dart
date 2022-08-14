@@ -118,5 +118,3 @@ class ExpandableTextState extends State<ExpandableText>
     ]);
   }
 }
-
-// onPressed: () => setState(() => expanded = false

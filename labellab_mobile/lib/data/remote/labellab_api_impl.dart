@@ -1280,7 +1280,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .get(API_URL + ENDPOINT_ISSUE_GET + "/$project_id", options: options)
+        .get('$API_URL$ENDPOINT_ISSUE_GET/$project_id', options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
@@ -1299,7 +1299,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .post(API_URL + ENDPOINT_ISSUE_CREATE + "/${issue.project_id}",
+        .post('$API_URL$ENDPOINT_ISSUE_CREATE/${issue.project_id}',
             options: options, data: issue.toMap())
         .then((response) {
       return ApiResponse(response.data);
@@ -1313,10 +1313,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
     );
     return _dio!
         .put(
-            API_URL +
-                ENPOINT_ISSUE_UPDATE +
-                "/${issue.project_id}" +
-                "/${issue.id}",
+            '$API_URL$ENPOINT_ISSUE_UPDATE/${issue.project_id}/${issue.id}',
             options: options,
             data: issue.toMap())
         .then((response) {
@@ -1330,7 +1327,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .get(API_URL + ENPOINT_ISSUE_INFO + "/$project_id" + "/$id",
+        .get('$API_URL$ENPOINT_ISSUE_INFO/$project_id/$id',
             options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
@@ -1354,7 +1351,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
     final data = {"assignee_id": assigneeId};
     return _dio!
         .put(
-      API_URL + ENDPOINT_ASSIGN_ISSUE + "/$projectId" + "/$issueId",
+      '$API_URL$ENDPOINT_ASSIGN_ISSUE/$projectId/$issueId',
       options: options,
       data: data,
     )
@@ -1393,7 +1390,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .delete(API_URL + ENDPOINT_ISSUE_DELETE + "/$project_id" + "/$id",
+        .delete('$API_URL$ENDPOINT_ISSUE_DELETE/$project_id/$id',
             options: options)
         .then((response) {
       return ApiResponse(response.data);
@@ -1406,7 +1403,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .get(API_URL + ENDPOINT_COMMENT_GET + "/$issue_id", options: options)
+        .get('$API_URL$ENDPOINT_COMMENT_GET/$issue_id', options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
@@ -1425,7 +1422,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .post(API_URL + ENDPOINT_POST_COMMENT + "/${issue_id}",
+        .post('$API_URL$ENDPOINT_POST_COMMENT/${issue_id}',
             options: options, data: comment.toMap())
         .then((response) {
       return ApiResponse(response.data);

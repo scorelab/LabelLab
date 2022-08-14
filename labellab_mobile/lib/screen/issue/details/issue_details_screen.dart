@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/data/repository.dart';
-// import 'package:intl/intl.dart';
 import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
@@ -21,9 +19,7 @@ class IssueDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // bool _selectedMore = false;
-
-    return StreamBuilder<IssueDetailState>(
+      return StreamBuilder<IssueDetailState>(
       stream: Provider.of<IssueDetailBloc>(context).state,
       initialData: IssueDetailState.loading(),
       builder: (context, snapshot) {
@@ -35,9 +31,7 @@ class IssueDetailScreen extends StatelessWidget {
               backgroundColor: Colors.white,
               iconTheme: IconThemeData(color: Colors.black),
               actionsIconTheme: IconThemeData(color: Colors.black),
-              // expandedHeight: 200,
               elevation: 0,
-              // pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(),
                 centerTitle: true,
@@ -484,14 +478,13 @@ class IssueDetailScreen extends StatelessWidget {
           ),
           userId == comment.userId
               ? Align(
-                  // alignment: Alignment.topRight,
                   child: Container(
                     height: 10,
                     width: 10,
                     child: PopupMenuButton<int>(
                       onSelected: (int value) {
                         if (value == 0) {
-                          print("asdadasda");
+
                         } else if (value == 1) {}
                       },
                       itemBuilder: (context) {
