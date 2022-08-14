@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:labellab_mobile/data/repository.dart';
+import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/user.dart';
 
-import '../../../data/repository.dart';
-import '../../../model/issue.dart';
+
 import 'issue_details_state.dart';
 
 class IssueDetailBloc {
@@ -34,7 +35,7 @@ class IssueDetailBloc {
     _users = [];
     if (_isLoading) return;
     _isLoading = true;
-    _setState(IssueDetailState.loading(issue: _issue));
+    _setState(IssueDetailState.loading());
     _repository.getIssue(projectId, issueId).then((issue) {
       this._issue = issue;
       _setState(IssueDetailState.success(issue));
@@ -48,9 +49,9 @@ class IssueDetailBloc {
     }).catchError((err) {
       if (err is DioError) {
         _setState(
-            IssueDetailState.error(err.message.toString(), issue: _issue));
+            IssueDetailState.error(err.message.toString()));
       } else {
-        _setState(IssueDetailState.error(err.toString(), issue: _issue));
+        _setState(IssueDetailState.error(err.toString()));
       }
       _isLoading = false;
     });
@@ -78,7 +79,7 @@ class IssueDetailBloc {
       _setState(IssueDetailState.success(_issue));
     }).catchError((err) {
       _isLoading = false;
-      _setState(IssueDetailState.error(err.toString(), issue: _issue));
+      _setState(IssueDetailState.error(err.toString()));
     });
   }
 }

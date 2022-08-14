@@ -1,6 +1,8 @@
 import 'package:labellab_mobile/model/issue.dart';
+
 class IssueMapper {
   IssueMapper._();
+
    static IssueStatus mapJsonToStatus(String? status) {
     switch (status) {
       case "Open":
@@ -17,6 +19,7 @@ class IssueMapper {
         return IssueStatus.OPEN;
     }
   }
+
   static String statusToString(IssueStatus? status) {
     switch (status) {
       case IssueStatus.OPEN:
@@ -33,6 +36,7 @@ class IssueMapper {
         return "Open";
     }
   }
+
   static IssuePriority mapJsonToPriority(String? status) {
     switch (status) {
       case "Low":
@@ -81,6 +85,7 @@ class IssueMapper {
         return IssueCategory.GENERAL;
     }
   }
+
   static String categoryToString(IssueCategory? status) {
     switch (status) {
       case IssueCategory.GENERAL:

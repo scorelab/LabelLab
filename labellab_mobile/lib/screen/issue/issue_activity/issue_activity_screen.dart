@@ -57,7 +57,7 @@ class IssueActivity extends StatelessWidget {
                   : _state.issues!.isEmpty
                       ? EmptyPlaceholder(description: 'No issues available')
                       : Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(1.0),
                           child: _state.issues != null
                               ? Column(
                                   children: _state.issues!.map((issue) {
@@ -102,7 +102,6 @@ class IssueActivity extends StatelessWidget {
   }
 
   void _gotoIssueDetails(BuildContext context, Issue issueId) {
-    // debugPrint("heel");
     Application.router
         .navigateTo(
             context,

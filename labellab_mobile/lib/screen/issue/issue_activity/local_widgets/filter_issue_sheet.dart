@@ -50,15 +50,10 @@ class _FilterIssueSheetState extends State<FilterIssueSheet> {
         builder: (context, snapshot) {
           List<String> _teams = [];
 
-          // Project _project = Provider.of<ProjectDetailState>(context).project!;
+          
           if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
             final _issues = snapshot.data!.issues;
-            if (_issues != null) {
-              // _teams =
-              //     _project.teams!.map((team) => team.id!).toList();
-              //            _selectedTeam = _teams[0];
-            }
           }
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,11 +119,7 @@ class _FilterIssueSheetState extends State<FilterIssueSheet> {
           .getCategorySpecificIssue(projectId, _selectedCategory)
           .then((issues) => Navigator.of(context).pop(issues));
     } else if (_filteringOption == 2) {
-      // _repository
-      //     .getPrirotySpecificIssue(projectId, _selectPriority!)
-      //     .then((issues) => Navigator.of(context).pop(issues));
     } else {
-      //Team Filtering option
 
     }
   }
