@@ -81,6 +81,7 @@ class IssueMapper {
         return IssueCategory.GENERAL;
     }
   }
+
   static String categoryToString(IssueCategory? status) {
     switch (status) {
       case IssueCategory.GENERAL:
