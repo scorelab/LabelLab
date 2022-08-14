@@ -1,13 +1,11 @@
 import 'package:labellab_mobile/model/issue.dart';
-
 class IssueMapper {
   IssueMapper._();
-
    static IssueStatus mapJsonToStatus(String? status) {
     switch (status) {
       case "Open":
         return IssueStatus.OPEN;
-      case "in progress":
+      case "In Progress":
         return IssueStatus.IN_PROGRESS;
          case "Closed":
         return IssueStatus.CLOSED;
@@ -19,13 +17,12 @@ class IssueMapper {
         return IssueStatus.OPEN;
     }
   }
-
   static String statusToString(IssueStatus? status) {
     switch (status) {
       case IssueStatus.OPEN:
         return "Open";
       case IssueStatus.IN_PROGRESS:
-        return "in progress";
+        return "In Progress";
          case IssueStatus.CLOSED:
         return "Closed";
         case IssueStatus.DONE:
@@ -36,7 +33,6 @@ class IssueMapper {
         return "Open";
     }
   }
-
   static IssuePriority mapJsonToPriority(String? status) {
     switch (status) {
       case "Low":
@@ -52,6 +48,7 @@ class IssueMapper {
     }
   }
 
+
   static String priorityToString(IssuePriority? status) {
     switch (status) {
       case IssuePriority.LOW:
@@ -66,10 +63,7 @@ class IssueMapper {
         return "Low";
     }
   }
-
-  // GENERAL, LABEL, IMAGE, IMAGE_LABELLING, MODELS, MISC
-
-  static IssueCategory mapJsonToCategory(String? status) {
+ static IssueCategory mapJsonToCategory(String? status) {
     switch (status) {
       case "general":
         return IssueCategory.GENERAL;
@@ -87,21 +81,20 @@ class IssueMapper {
         return IssueCategory.GENERAL;
     }
   }
-
   static String categoryToString(IssueCategory? status) {
     switch (status) {
       case IssueCategory.GENERAL:
-        return "general";
+        return "General";
       case IssueCategory.LABEL:
-        return "labels";
+        return "Labels";
          case IssueCategory.IMAGE:
-        return "images";
+        return "Images";
         case IssueCategory.IMAGE_LABELLING:
-        return "image labelling";
+        return "Labelling";
         case IssueCategory.MODELS:
-        return "models";
+        return "Models";
          case IssueCategory.MISC:
-        return "misc";
+        return "Misc";
       default:
         return "";
     }

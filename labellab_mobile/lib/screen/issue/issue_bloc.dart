@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/screen/issue/issue_state.dart';
 
-import '../../data/repository.dart';
+
 
 
 class IssueBloc {
