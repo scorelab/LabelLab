@@ -67,7 +67,9 @@ class IssueMapper {
         return "Low";
     }
   }
- static IssueCategory mapJsonToCategory(String? status) {
+
+
+  static IssueCategory mapJsonToCategory(String? status) {
     switch (status) {
       case "general":
         return IssueCategory.GENERAL;
