@@ -170,10 +170,10 @@ class IssueListTile extends StatelessWidget {
         height: 30,
         width:  size.width * 0.27,
         decoration: BoxDecoration(
-          color: backgroundColor.withOpacity(0.3),
+          color: isCustomized? backgroundColor.withOpacity(0.3) :Colors.teal.withOpacity(0.3),
           border: Border.all(
             width: 1,
-            color: backgroundColor,
+            color: isCustomized?backgroundColor :Colors.teal,
           ),
         ),
         child: Padding(
@@ -183,7 +183,7 @@ class IssueListTile extends StatelessWidget {
               Icon(
                 icon,
                 size: 20,
-                color: textColor,
+                color:isCustomized? textColor:Colors.teal,
               ),
               SizedBox(
                 width: 4,
@@ -191,7 +191,7 @@ class IssueListTile extends StatelessWidget {
               Text(
                 text,
                
-                style: TextStyle(color: textColor),
+                style: TextStyle(color: isCustomized? textColor:Colors.teal),
               )
             ],
           ),
