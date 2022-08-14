@@ -306,7 +306,7 @@ class ProjectDetailScreen extends StatelessWidget {
 
   Widget _buildIssue(BuildContext context, Project project) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
       child: Column(
         children: [
           Row(

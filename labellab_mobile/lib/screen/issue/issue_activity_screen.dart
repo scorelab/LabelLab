@@ -1,14 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:labellab_mobile/model/project.dart';
+import 'package:labellab_mobile/routing/application.dart';
+
 import 'package:labellab_mobile/screen/issue/issue_bloc.dart';
-import 'package:labellab_mobile/screen/project/detail/project_detail_bloc.dart';
+import 'package:labellab_mobile/widgets/empty_placeholder.dart';
+
 import 'package:labellab_mobile/widgets/issue_list_tile.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/issue.dart';
-import '../../routing/application.dart';
-import '../../widgets/empty_placeholder.dart';
+
 import 'issue_state.dart';
 
 class IssueActivity extends StatelessWidget {
@@ -56,7 +56,7 @@ class IssueActivity extends StatelessWidget {
                 : _state.issues!.isEmpty
                     ? EmptyPlaceholder(description: 'No issues available')
                     : Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(4.0),
                         child: ListView.builder(
                           itemBuilder: (ctx, index) => IssueListTile(
                             _state.issues![index],
