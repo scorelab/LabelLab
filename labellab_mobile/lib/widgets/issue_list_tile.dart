@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
-import '../model/issue.dart';
+import 'package:labellab_mobile/model/issue.dart';
 
 class IssueListTile extends StatelessWidget {
   final Issue issue;
@@ -14,17 +14,19 @@ class IssueListTile extends StatelessWidget {
     return InkWell(
       onTap: this.onItemTapped,
       child: Card(
-        child: Container(
-          height: 80,
-          color: Colors.white,
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Container(
-                    alignment: Alignment.topLeft,
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 1,bottom: 10),
+          child: Container(
+            height: 80,
+            child: Row(
+               
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
                     child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                             flex: 4,
@@ -40,69 +42,54 @@ class IssueListTile extends StatelessWidget {
                                     )),
                               ],
                             )),
-                        Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              coloredBox(
-                                  context,
-                                  IssueMapper.statusToString(issue.issueStatus),
-                                  Icons.replay_circle_filled_rounded,
-                                  Colors.teal,
-                                  Colors.teal),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              coloredBox(
-                                  context,
-                                  IssueMapper.categoryToString(
-                                      issue.issueCategory),
-                                  _getIcon(IssueMapper.categoryToString(
-                                      issue.issueCategory)),
-                                  _getTextOrBorderColor(
-                                      IssueMapper.categoryToString(
-                                          issue.issueCategory)),
-                                  _getTextOrBorderColor(
-                                      IssueMapper.categoryToString(
-                                          issue.issueCategory))),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              coloredBox(
-                                  context,
-                                  IssueMapper.priorityToString(
-                                      issue.issuePriority),
-                                  Icons.show_chart,
-                                  _getPriorityTextColor(
-                                      IssueMapper.priorityToString(
-                                          issue.issuePriority)),
-                                  _getBackgroundColor(
-                                      IssueMapper.priorityToString(
-                                          issue.issuePriority))),
-                              SizedBox(
-                                width: 8,
-                              ),
-                            ],
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            coloredBox(
+                                context,
+                                IssueMapper.statusToString(issue.issueStatus),
+                                Icons.replay_circle_filled_rounded,
+                                Colors.teal,
+                                Colors.teal),
+                            coloredBox(
+                                context,
+                                IssueMapper.categoryToString(issue.issueCategory),
+                                _getIcon(IssueMapper.categoryToString(
+                                    issue.issueCategory)),
+                                _getTextOrBorderColor(
+                                    IssueMapper.categoryToString(
+                                        issue.issueCategory)),
+                                _getTextOrBorderColor(
+                                    IssueMapper.categoryToString(
+                                        issue.issueCategory))),
+                            coloredBox(
+                                context,
+                                IssueMapper.priorityToString(issue.issuePriority),
+                                Icons.show_chart,
+                                _getPriorityTextColor(
+                                    IssueMapper.priorityToString(
+                                        issue.issuePriority)),
+                                _getPriorityBackgroundColor(
+                                    IssueMapper.priorityToString(
+                                        issue.issuePriority))),
+                          ],
                         )
                       ],
                     ),
                   ),
+                  flex: 14,
                 ),
-                flex: 8,
-              ),
-            ],
+                SizedBox(height: 10,)
+              ],
+            ),
           ),
         ),
-        elevation: 8,
-        margin: EdgeInsets.all(10),
       ),
     );
   }
 
-  Color _getBackgroundColor(String category) {
-    switch (category) {
+  Color _getPriorityBackgroundColor(String priority) {
+    switch (priority) {
       case 'Low':
         return Colors.purple.withOpacity(0.3);
       case 'Medium':
@@ -148,8 +135,8 @@ class IssueListTile extends StatelessWidget {
     }
   }
 
-  Color _getPriorityTextColor(String category) {
-    switch (category) {
+  Color _getPriorityTextColor(String priority) {
+    switch (priority) {
       case 'Low':
         return Colors.purple;
       case 'Medium':
@@ -168,12 +155,14 @@ class IssueListTile extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Container(
         height: 30,
-        width:  size.width * 0.27,
+        width: isCustomized ? size.width * 0.3 : size.width * 0.28,
         decoration: BoxDecoration(
-          color: isCustomized? backgroundColor.withOpacity(0.3) :Colors.teal.withOpacity(0.3),
+          color: isCustomized
+              ? backgroundColor.withOpacity(0.3)
+              : Colors.teal.withOpacity(0.3),
           border: Border.all(
             width: 1,
-            color: isCustomized?backgroundColor :Colors.teal,
+            color: isCustomized ? backgroundColor : Colors.teal,
           ),
         ),
         child: Padding(
@@ -183,15 +172,14 @@ class IssueListTile extends StatelessWidget {
               Icon(
                 icon,
                 size: 20,
-                color:isCustomized? textColor:Colors.teal,
+                color: isCustomized ? textColor : Colors.teal,
               ),
               SizedBox(
                 width: 4,
               ),
               Text(
                 text,
-
-                style: TextStyle(color: isCustomized? textColor:Colors.teal),
+                style: TextStyle(color: isCustomized ? textColor : Colors.teal),
               )
             ],
           ),

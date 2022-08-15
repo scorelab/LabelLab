@@ -79,8 +79,8 @@ class ProjectDetailScreen extends StatelessWidget {
                             : Container(),
                         _buildRecentActivity(context, _state.project!),
                         _state.project != null && _state.project!.issues != null
-                  ? _buildIssue(context, _state.project!)
-                  : Container(),
+                            ? _buildIssue(context, _state.project!)
+                            : Container(),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 8, left: 16, right: 16),
@@ -306,7 +306,7 @@ class ProjectDetailScreen extends StatelessWidget {
 
   Widget _buildIssue(BuildContext context, Project project) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      padding: EdgeInsets.symmetric( horizontal: 16),
       child: Column(
         children: [
           Row(
@@ -319,20 +319,17 @@ class ProjectDetailScreen extends StatelessWidget {
               TextButton.icon(
                 icon: Icon(Icons.more_horiz_rounded),
                 label: Text("More"),
-                onPressed: () =>_goToIssues(context,project),
+                onPressed: () => _goToIssues(context, project),
               ),
             ],
           ),
           (project.issues != null && project.issues!.isNotEmpty)
               ? Container(
-                  height: min(200, project.issues!.length * 57),
+                  height: min(170, project.issues!.length * 57),
                   child: ListView(
-                    padding: const EdgeInsets.all(0),
+                     padding: const EdgeInsets.all(0),
                     children: [
-                      for (var issue in project.issues!)
-                        IssueListTile(
-                          issue
-                        )
+                      for (var issue in project.issues!) IssueListTile(issue)
                     ],
                   ),
                 )
