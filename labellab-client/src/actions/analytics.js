@@ -4,7 +4,10 @@ import {
   ANALYTICS_TIME_LABEL_SUCCESS,
   ANALYTICS_COUNT_LABEL_FAILURE,
   ANALYTICS_COUNT_LABEL_REQUEST,
-  ANALYTICS_COUNT_LABEL_SUCCESS
+  ANALYTICS_COUNT_LABEL_SUCCESS,
+  ISSUE_ANALYTICS_FAILURE,
+  ISSUE_ANALYTICS_REQUEST,
+  ISSUE_ANALYTICS_SUCCESS
 } from '../constants/index'
 
 import FetchApi from '../utils/FetchAPI'
@@ -64,5 +67,34 @@ export const getLabelCount = (projectId, callback) => {
   }
   function failure(error) {
     return { type: ANALYTICS_COUNT_LABEL_FAILURE, payload: error }
+  }
+}
+
+export const getIssueAnalytics = (projectId, callback) => {
+  return dispatch => {
+    dispatch(request())
+    FetchApi.get(
+      '/api/v1/issue_analytics/get/' + projectId
+    )
+      .then(res => {
+        dispatch(success(res.data.body))
+        callback()
+      })
+      .catch(err => {
+        if (err.response) {
+          err.response.data
+            ? dispatch(failure(err.response.data.msg))
+            : dispatch(failure(err.response.statusText, null))
+        }
+      })
+  }
+  function request() {
+    return { type: ISSUE_ANALYTICS_REQUEST }
+  }
+  function success(data) {
+    return { type: ISSUE_ANALYTICS_SUCCESS, payload: data }
+  }
+  function failure(error) {
+    return { type: ISSUE_ANALYTICS_FAILURE, payload: error }
   }
 }

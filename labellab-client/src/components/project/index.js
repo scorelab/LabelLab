@@ -8,6 +8,7 @@ import {
   fetchProject,
   getTimeLabel,
   getLabelCount,
+  getIssueAnalytics,
   fetchLabels,
   fetchCoordinates,
   fetchAllTeams,
@@ -98,6 +99,7 @@ class ProjectIndex extends Component {
       fetchTimeLabel,
       fetchLabels,
       fetchLabelCount,
+      fetchIssueAnalytics,
       fetchCoordinates,
       fetchAllTeams,
       fetchProjectRoles,
@@ -109,6 +111,7 @@ class ProjectIndex extends Component {
     fetchTimeLabel(match.params.projectId)
     fetchLabels(match.params.projectId)
     fetchLabelCount(match.params.projectId)
+    fetchIssueAnalytics(match.params.projectId)
     fetchCoordinates(match.params.projectId)
     fetchAllTeams(match.params.projectId)
     fetchProjectRoles(match.params.projectId)
@@ -234,6 +237,8 @@ ProjectIndex.propTypes = {
   history: PropTypes.object,
   fetchProject: PropTypes.func,
   fetchTimeLabel: PropTypes.func,
+  fetchLabelCount: PropTypes.func,
+  fetchIssueAnalytics: PropTypes.func,
   match: PropTypes.object,
   actionsLabel: PropTypes.object,
   fetchLabels: PropTypes.func,
@@ -265,6 +270,9 @@ const mapDispatchToProps = dispatch => {
     },
     fetchLabelCount: projectId => {
       return dispatch(getLabelCount(projectId))
+    },
+    fetchIssueAnalytics: projectId => {
+      return dispatch(getIssueAnalytics(projectId))
     },
     fetchCoordinates: projectId => {
       return dispatch(fetchCoordinates(projectId))

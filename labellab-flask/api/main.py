@@ -9,9 +9,9 @@ from werkzeug.exceptions import HTTPException
 
 from api.config import config
 from api import commands
-from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications, logs, chatroom ,issue,comments
+from api.routes import users, projects, mlclassifiers, images, labels, teams, analytics, static, ml_files, classifications, logs, chatroom ,issue,comments, notifications
 from api.extensions import db, migrate, jwt, ma, socketio
-from api.models import User, Image, Comment, Issue, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier, Log, Message
+from api.models import User, Image, Comment, Issue, Label, LabelData, ProjectMembers, Projects, Team, RevokedToken, Point, MLClassifier, Log, Message, Notification
 
 
 def create_app(config_name):
@@ -70,6 +70,7 @@ def register_blueprint(app):
     app.register_blueprint(chatroom.chatroomprint, url_prefix="/api/v1")
     app.register_blueprint(issue.issuesprint,url_prefix="/api/v1")
     app.register_blueprint(comments.commentsprint,url_prefix="/api/v1")
+    app.register_blueprint(notifications.notificationsprint,url_prefix="/api/v1")
     return None
 
 

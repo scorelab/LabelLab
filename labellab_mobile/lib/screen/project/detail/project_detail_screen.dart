@@ -306,7 +306,7 @@ class ProjectDetailScreen extends StatelessWidget {
 
   Widget _buildIssue(BuildContext context, Project project) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 5),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Column(
         children: [
           Row(
@@ -325,9 +325,9 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
           (project.issues != null && project.issues!.isNotEmpty)
               ? Container(
-                  height: min(250, project.issues!.length * 60),
+                  height: min(170, project.issues!.length * 57),
                   child: ListView(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                     padding: const EdgeInsets.all(0),
                     children: [
                       for (var issue in project.issues!) IssueListTile(issue)
                     ],

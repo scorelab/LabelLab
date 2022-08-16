@@ -21,8 +21,11 @@ from api.extensions import socketio
 from api.middleware.logs_decorator import record_logs
 from api.middleware.issue_decorator import issue_exists
 from api.middleware.comment_decorator import comment_exists
-
+from api.controllers.notificationscontroller import notification
 from api.models.Comment import Comment
+
+from api.extensions import socketio
+
 
 class AddComment(MethodView):
     """
@@ -233,9 +236,21 @@ def handle_send_comment_event(data):
             )
     except Exception as err:
         socketio.emit('comment_error', f'Something went wrong!')
-        
+    
     new_comment = save_comment(comment)
     socketio.emit('receive_comment', new_comment)
+
+    message = f'{username} commented on the issue assigned to you'
+    type = 'issue_assigned_comments'
+    current_user = get_jwt_identity()
+    
+    if(user_id != current_user):
+        notification.send(
+            current_app._get_current_object(),
+            message=message,
+            type=type,
+            users=[user_id]
+        )
 
 commentController = {
     "add_comment": AddComment.as_view("add_comment"),

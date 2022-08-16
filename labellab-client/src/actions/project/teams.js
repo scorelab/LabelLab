@@ -215,7 +215,6 @@ export const handleMessageReceive = teamId => {
     socket.on('receive_message', data => {
       const messageTeamId = data.team_id
       if (messageTeamId == teamId) {
-        console.log(data)
         dispatch(success(data))
       }
     })
@@ -225,14 +224,15 @@ export const handleMessageReceive = teamId => {
   }
 }
 
-export const sendMessage = (message, teamId, userId, entityType, entityId) => {
+export const sendMessage = (message, teamId, userId, entityType, entityId, tagged_users_id) => {
   return dispatch => {
     const data = {
       body: message,
       team_id: teamId,
       user_id: userId,
       entity_type: entityType,
-      entity_id: entityId
+      entity_id: entityId,
+      tagged_users: tagged_users_id
     }
     socket.emit('send_message', data)
     dispatch(success())

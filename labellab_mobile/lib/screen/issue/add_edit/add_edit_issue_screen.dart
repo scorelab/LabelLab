@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/data/repository.dart';
+import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 
-import '../../../model/issue.dart';
+
 
 class AddEditIssueScreen extends StatefulWidget {
   final Repository _repository = Repository();

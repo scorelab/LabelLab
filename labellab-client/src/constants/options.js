@@ -51,5 +51,14 @@ export const categoryOptions = [
     'High': 'orange',
     'Medium': 'blue',
     'Low': 'green',
+  },
+  icons = {
+    'project_membership_changed': 'clipboard list',
+    'team_membership_changed': 'users',
+    'admin_status': 'user',
+    'issue_assigned': 'ticket alternate',
+    'issue_assigned_updated': 'ticket alternate',
+    'issue_assigned_comments': 'comments',
+    'mentioned': 'at'
   }
   

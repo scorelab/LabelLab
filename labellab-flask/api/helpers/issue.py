@@ -70,6 +70,12 @@ def fetch_all_issue_by_team_id(project_id, team_id):
     issues = Issue.query.filter_by(project_id=project_id, team_id=team_id)
     return issues
 
+def to_json_multiple(issues):
+    """
+    Returns Issue JSON object array
+    """
+    return issues_schema.dump(issues).data
+
 def to_json(issue):
     """
     Returns an Issue JSON object
