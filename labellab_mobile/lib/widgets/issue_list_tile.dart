@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
 import 'package:labellab_mobile/model/issue.dart';
+import 'color_box.dart' as coloredbox;
 
 class IssueListTile extends StatelessWidget {
   final Issue issue;
@@ -16,17 +17,16 @@ class IssueListTile extends StatelessWidget {
       child: Card(
         elevation: 2,
         child: Padding(
-          padding: const EdgeInsets.only(top: 1,bottom: 10),
+          padding: const EdgeInsets.only(top: 1, bottom: 10),
           child: Container(
             height: 80,
             child: Row(
-               
               children: [
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                             flex: 4,
@@ -45,15 +45,15 @@ class IssueListTile extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            coloredBox(
-                                context,
+                            coloredbox.ColoredBox(
                                 IssueMapper.statusToString(issue.issueStatus),
                                 Icons.replay_circle_filled_rounded,
                                 Colors.teal,
-                                Colors.teal),
-                            coloredBox(
-                                context,
-                                IssueMapper.categoryToString(issue.issueCategory),
+                                Colors.teal,
+                                isCustomized),
+                            coloredbox.ColoredBox(
+                                IssueMapper.categoryToString(
+                                    issue.issueCategory),
                                 _getIcon(IssueMapper.categoryToString(
                                     issue.issueCategory)),
                                 _getTextOrBorderColor(
@@ -61,17 +61,19 @@ class IssueListTile extends StatelessWidget {
                                         issue.issueCategory)),
                                 _getTextOrBorderColor(
                                     IssueMapper.categoryToString(
-                                        issue.issueCategory))),
-                            coloredBox(
-                                context,
-                                IssueMapper.priorityToString(issue.issuePriority),
+                                        issue.issueCategory)),
+                                isCustomized),
+                            coloredbox.ColoredBox(
+                                IssueMapper.priorityToString(
+                                    issue.issuePriority),
                                 Icons.show_chart,
                                 _getPriorityTextColor(
                                     IssueMapper.priorityToString(
                                         issue.issuePriority)),
                                 _getPriorityBackgroundColor(
                                     IssueMapper.priorityToString(
-                                        issue.issuePriority))),
+                                        issue.issuePriority)),
+                                isCustomized),
                           ],
                         )
                       ],
@@ -79,7 +81,9 @@ class IssueListTile extends StatelessWidget {
                   ),
                   flex: 14,
                 ),
-                SizedBox(height: 10,)
+                SizedBox(
+                  height: 10,
+                )
               ],
             ),
           ),
