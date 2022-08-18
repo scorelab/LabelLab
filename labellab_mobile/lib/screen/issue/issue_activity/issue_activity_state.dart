@@ -1,5 +1,4 @@
 import 'package:labellab_mobile/model/issue.dart';
-import 'package:labellab_mobile/model/user.dart';
 
 class IssueActivityState {
   late bool isLoading;
@@ -7,15 +6,15 @@ class IssueActivityState {
   String? updateError;
   List<Issue>? issues;
 
-  IssueActivityState.loading({this.issues}) {
+  IssueActivityState.loading() {
     isLoading = true;
   }
 
-  IssueActivityState.error(this.error, {this.issues}) {
+  IssueActivityState.error(this.error, ) {
     this.isLoading = false;
   }
 
-  IssueActivityState.updateError(this.error, {this.issues}) {
+  IssueActivityState.updateError(this.error, ) {
     this.isLoading = false;
   }
 

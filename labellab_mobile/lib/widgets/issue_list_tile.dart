@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
-import '../model/issue.dart';
+import 'package:labellab_mobile/model/issue.dart';
+import 'color_box.dart' as coloredbox;
 
 class IssueListTile extends StatelessWidget {
   final Issue issue;
@@ -14,17 +15,18 @@ class IssueListTile extends StatelessWidget {
     return InkWell(
       onTap: this.onItemTapped,
       child: Card(
-        child: Container(
-          height: 80,
-          color: Colors.white,
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Container(
-                    alignment: Alignment.topLeft,
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 1, bottom: 10),
+          child: Container(
+            height: 80,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                             flex: 4,
@@ -40,69 +42,57 @@ class IssueListTile extends StatelessWidget {
                                     )),
                               ],
                             )),
-                        Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              coloredBox(
-                                  context,
-                                  IssueMapper.statusToString(issue.issueStatus),
-                                  Icons.replay_circle_filled_rounded,
-                                  Colors.teal,
-                                  Colors.teal),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              coloredBox(
-                                  context,
-                                  IssueMapper.categoryToString(
-                                      issue.issueCategory),
-                                  _getIcon(IssueMapper.categoryToString(
-                                      issue.issueCategory)),
-                                  _getTextOrBorderColor(
-                                      IssueMapper.categoryToString(
-                                          issue.issueCategory)),
-                                  _getTextOrBorderColor(
-                                      IssueMapper.categoryToString(
-                                          issue.issueCategory))),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              coloredBox(
-                                  context,
-                                  IssueMapper.priorityToString(
-                                      issue.issuePriority),
-                                  Icons.show_chart,
-                                  _getPriorityTextColor(
-                                      IssueMapper.priorityToString(
-                                          issue.issuePriority)),
-                                  _getBackgroundColor(
-                                      IssueMapper.priorityToString(
-                                          issue.issuePriority))),
-                              SizedBox(
-                                width: 8,
-                              ),
-                            ],
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            coloredbox.ColoredBox(
+                                IssueMapper.statusToString(issue.issueStatus),
+                                Icons.replay_circle_filled_rounded,
+                                Colors.teal,
+                                Colors.teal,
+                                isCustomized),
+                            coloredbox.ColoredBox(
+                                IssueMapper.categoryToString(
+                                    issue.issueCategory),
+                                _getIcon(IssueMapper.categoryToString(
+                                    issue.issueCategory)),
+                                _getTextOrBorderColor(
+                                    IssueMapper.categoryToString(
+                                        issue.issueCategory)),
+                                _getTextOrBorderColor(
+                                    IssueMapper.categoryToString(
+                                        issue.issueCategory)),
+                                isCustomized),
+                            coloredbox.ColoredBox(
+                                IssueMapper.priorityToString(
+                                    issue.issuePriority),
+                                Icons.show_chart,
+                                _getPriorityTextColor(
+                                    IssueMapper.priorityToString(
+                                        issue.issuePriority)),
+                                _getPriorityBackgroundColor(
+                                    IssueMapper.priorityToString(
+                                        issue.issuePriority)),
+                                isCustomized),
+                          ],
                         )
                       ],
                     ),
                   ),
                 ),
-                flex: 8,
-              ),
-            ],
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
           ),
         ),
-        elevation: 8,
-        margin: EdgeInsets.all(10),
       ),
     );
   }
 
-  Color _getBackgroundColor(String category) {
-    switch (category) {
+  Color _getPriorityBackgroundColor(String priority) {
+    switch (priority) {
       case 'Low':
         return Colors.purple.withOpacity(0.3);
       case 'Medium':
