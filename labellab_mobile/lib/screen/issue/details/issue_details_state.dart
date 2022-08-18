@@ -1,6 +1,6 @@
+import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/user.dart';
 
-import '../../../model/issue.dart';
 
 class IssueDetailState {
   bool isLoading = false;

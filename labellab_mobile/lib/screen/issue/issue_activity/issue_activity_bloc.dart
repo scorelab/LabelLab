@@ -13,7 +13,6 @@ class IssueActivityBloc {
   List<Issue> _issues = [];
   bool _isLoading = false;
   String _projectId;
-  List<User> _users = [];
 
   IssueActivityBloc(this._projectId) {
     _loadIssues(_projectId);
@@ -33,10 +32,10 @@ class IssueActivityBloc {
   void _loadIssues(String projectId) {
     if (_isLoading) return;
     _isLoading = true;
-    _setState(IssueActivityState.loading(issues: _issues));
+    _setState(IssueActivityState.loading());
     _repository.getIssuesLocal().then((issues) {
       this._issues = issues;
-      _setState(IssueActivityState.loading(issues: _issues));
+      _setState(IssueActivityState.loading());
     });
     _repository.getIssues(projectId).then((issues) {
       this._issues = issues;
@@ -45,10 +44,10 @@ class IssueActivityBloc {
     }).catchError((err) {
       if (err is DioError) {
         _setState(
-            IssueActivityState.error(err.message.toString(), issues: _issues));
+            IssueActivityState.error(err.message.toString(),));
       } else {
         _issueController
-            .add(IssueActivityState.error(err.toString(), issues: _issues));
+            .add(IssueActivityState.error(err.toString(), ));
       }
       _isLoading = false;
     });
