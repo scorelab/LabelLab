@@ -25,7 +25,6 @@ import 'package:labellab_mobile/model/user.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:labellab_mobile/screen/train/dialogs/dto/model_dto.dart';
 
-
 abstract class LabelLabAPI {
   Future<LoginResponse> login(AuthUser user);
   Future<RefreshResponse> refreshToken(String? refreshToken);
@@ -131,20 +130,22 @@ abstract class LabelLabAPI {
 
   //Users List
   Future<List<User>> getUsers(String? token);
-  
+
   // Issues
   Future<List<Issue>> getIssues(String? token, String? project_id);
-  Future<Issue> getIssue(String? token, String? id,String? project_id);
+  Future<Issue> getIssue(String? token, String? id, String? project_id);
   Future<ApiResponse> createIssue(String? token, Issue issue);
   Future<ApiResponse> updateIssue(String? token, Issue issue);
-  Future<List<Issue>> getCategorySpecificIssue(String? token, String? project_id,String category);
-  Future<ApiResponse> deleteIssue(String? token, String? id, String? project_id);
+  Future<List<Issue>> getCategorySpecificIssue(
+      String? token, String? project_id, String category);
+  Future<ApiResponse> deleteIssue(
+      String? token, String? id, String? project_id);
   Future<ApiResponse> assignIssue(
-      String? token, String projectId, String issueId,String assigneeId);
-
+      String? token, String projectId, String issueId, String assigneeId);
 
   //Comments
   Future<List<Comment>> getComments(String? token, String? issue_id);
-  Future<ApiResponse> postComment(String? token,Comment comment, String  text);
-
+  Future<ApiResponse> postComment(String? token, Comment comment, String text);
+  Future<ApiResponse> updateComment(String? token, String? id, Comment comment);
+  Future<ApiResponse> deleteComment(String? token, String? id, Comment comment);
 }
