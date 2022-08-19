@@ -6,8 +6,6 @@ import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
 import 'package:labellab_mobile/routing/application.dart';
 import 'package:labellab_mobile/widgets/label_text_form_field.dart';
 
-
-
 class AddEditIssueScreen extends StatefulWidget {
   final Repository _repository = Repository();
   final String? id;
@@ -29,17 +27,16 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
   bool _isLoading = false;
   String? _error;
 
-  String _selectedCategory = 'all';
-
   final _categoryOptions = [
-    'all',
-    'general',
-    'images',
-    'labels',
-    'models',
-    'image labelling',
+    'General',
+    'Images',
+    'Labels',
+    'Models',
+    'Labelling',
+    'Misc'
   ];
 
+  String _selectedCategory = 'General';
   @override
   void initState() {
     if (_editing) {
@@ -94,7 +91,8 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
               ),
               Center(
                 child: DropdownButton(
-                  value: _selectedCategory,
+                  value:
+                      _selectedCategory.isNotEmpty ? _selectedCategory : null,
                   icon: const Icon(Icons.keyboard_arrow_down),
                   items: _categoryOptions.map((String items) {
                     return DropdownMenuItem(
@@ -212,7 +210,7 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
 
   void _loadProjectLogic() {
     widget._repository
-        .getIssue(widget.project_id,widget.id)
+        .getIssue(widget.project_id, widget.id)
         .then((Issue issue) {
       // print(issue.description);
       setState(() {

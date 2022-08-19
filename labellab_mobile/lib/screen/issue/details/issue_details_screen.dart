@@ -126,8 +126,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
   void _sendComment(String comment) {
     if (comment.isEmpty) return;
     setState(() {
-    Provider.of<IssueDetailBloc>(context, listen: false).sendComment(comment);
-      
+      Provider.of<IssueDetailBloc>(context, listen: false).sendComment(comment);
     });
   }
 
@@ -361,13 +360,6 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
     ];
   }
 
-  Widget _buildCommentPlaceholder(BuildContext context, String description) {
-    return ExpansionTile(
-      leading: Icon(Icons.comment),
-      title: Text("Comments"),
-    );
-  }
-
   void _assignIssue(BuildContext context, Issue issue, User user) {
     String assignee_ID = user.id!;
     Provider.of<IssueDetailBloc>(context, listen: false).assignIssue(
@@ -425,13 +417,14 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
 
   Widget _commentItem(BuildContext context, Comment comment, int userId) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.only(left: 20, top: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
@@ -488,9 +481,12 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
                           ),
                         ],
                       ),
-                      Text(
-                        comment.body!,
-                        style: TextStyle(color: Colors.grey, fontSize: 15),
+                      Container(
+                        margin: EdgeInsets.only(right: 35),
+                        child: Text(
+                          comment.body!,
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -498,37 +494,79 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
               ],
             ),
           ),
-          SizedBox(
-            width: 10.0,
-          ),
           userId == comment.userId
-              ? Align(
-                  child: Container(
-                    height: 10,
-                    width: 10,
-                    child: PopupMenuButton<int>(
-                      onSelected: (int value) {
-                        if (value == 0) {
-                        } else if (value == 1) {}
-                      },
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            value: 0,
-                            child: Text("Edit"),
-                          ),
-                          PopupMenuItem(
-                            value: 1,
-                            child: Text("Delete"),
-                          ),
-                        ];
-                      },
-                    ),
+              ? Container(
+                  // margin: EdgeInsets.only(left: 12),
+                  child: PopupMenuButton<int>(
+                    onSelected: (int value) async {
+                      if (value == 0) {
+                        final String? newText =
+                            await _asyncInputDialog(context);
+                        setState(() {
+                          comment.body = newText;
+                          Provider.of<IssueDetailBloc>(context, listen: false)
+                              .updateCommet(comment, comment.id.toString());
+                        });
+                      } else if (value == 1) {
+                        setState(() {
+                          Provider.of<IssueDetailBloc>(context, listen: false)
+                              .ddeleteComment(comment, comment.id.toString());
+                        });
+                      }
+                    },
+                    itemBuilder: (context) {
+                      return [
+                        PopupMenuItem(
+                          value: 0,
+                          child: Text("Edit"),
+                        ),
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text("Delete"),
+                        ),
+                      ];
+                    },
                   ),
                 )
               : Container(),
         ],
       ),
+    );
+  }
+
+  Future<String?> _asyncInputDialog(BuildContext context) async {
+    String sampleText = '';
+    return showDialog<String>(
+      context: context,
+      barrierDismissible:
+          false, // dialog is dismissible with a tap on the barrier
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update your comment'),
+          content: new Row(
+            children: <Widget>[
+              new Expanded(
+                  child: new TextField(
+                autofocus: true,
+                decoration: new InputDecoration(
+                  focusColor: Colors.teal,
+                    labelText: 'Update Comment Here'),
+                onChanged: (value) {
+                  sampleText = value;
+                },
+              ))
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop(sampleText);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -87,4 +87,13 @@ class IssueDetailBloc {
     commentTosend.body = comment;
     _repository.postComment(commentTosend, issueId!);
   }
+
+  void updateCommet(Comment comment, String issue_id) {
+    _repository.updateComment(comment, issueId!);
+    refresh();
+  }
+
+  void ddeleteComment(Comment comment, String issue_id) {
+    _repository.deleteComment(comment, issueId!);
+  }
 }

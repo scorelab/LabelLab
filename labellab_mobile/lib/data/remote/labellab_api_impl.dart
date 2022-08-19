@@ -94,6 +94,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
 
   static const ENDPOINT_COMMENT_GET = "comment/get";
   static const ENDPOINT_POST_COMMENT = "comment/create/";
+  static const ENDPOINT_UPDATE_COMMENT = "comment/comment_info";
 
   static const ENDPOINT_PROJECT_GET_ACTIVITY_LOGS = "logs";
 
@@ -1312,10 +1313,8 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .put(
-            '$API_URL$ENPOINT_ISSUE_UPDATE/${issue.project_id}/${issue.id}',
-            options: options,
-            data: issue.toMap())
+        .put('$API_URL$ENPOINT_ISSUE_UPDATE/${issue.project_id}/${issue.id}',
+            options: options, data: issue.toMap())
         .then((response) {
       return ApiResponse(response.data);
     });
@@ -1327,8 +1326,7 @@ class LabelLabAPIImpl extends LabelLabAPI {
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
-        .get('$API_URL$ENPOINT_ISSUE_INFO/$project_id/$id',
-            options: options)
+        .get('$API_URL$ENPOINT_ISSUE_INFO/$project_id/$id', options: options)
         .then((response) {
       final bool isSuccess = response.data['success'];
       if (isSuccess) {
@@ -1343,9 +1341,9 @@ class LabelLabAPIImpl extends LabelLabAPI {
     });
   }
 
-    @override
+  @override
   Future<ApiResponse> assignIssue(
-      String? token, String projectId, String issueId,String assigneeId) {
+      String? token, String projectId, String issueId, String assigneeId) {
     Options options =
         Options(headers: {HttpHeaders.authorizationHeader: "Bearer " + token!});
     final data = {"assignee_id": assigneeId};
@@ -1416,14 +1414,43 @@ class LabelLabAPIImpl extends LabelLabAPI {
     });
   }
 
-    @override
-  Future<ApiResponse> postComment(String? token, Comment comment,String issue_id) {
+  @override
+  Future<ApiResponse> postComment(
+      String? token, Comment comment, String issue_id) {
     Options options = Options(
       headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
     );
     return _dio!
         .post('$API_URL$ENDPOINT_POST_COMMENT/${issue_id}',
             options: options, data: comment.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> updateComment(
+      String? token, String? id, Comment comment) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .put('$API_URL$ENDPOINT_UPDATE_COMMENT/${id}/${comment.id}',
+            options: options, data: comment.toMap())
+        .then((response) {
+      return ApiResponse(response.data);
+    });
+  }
+
+  @override
+  Future<ApiResponse> deleteComment(
+      String? token, String? id, Comment comment) {
+    Options options = Options(
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token!},
+    );
+    return _dio!
+        .delete('$API_URL$ENDPOINT_UPDATE_COMMENT/${id}/${comment.id}',
+            options: options)
         .then((response) {
       return ApiResponse(response.data);
     });
