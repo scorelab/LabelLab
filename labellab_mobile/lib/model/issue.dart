@@ -1,7 +1,4 @@
 import 'package:labellab_mobile/model/comment.dart';
-import 'package:labellab_mobile/model/team.dart';
-import 'package:labellab_mobile/model/user.dart';
-
 import 'mapper/issue_mapper.dart';
 
 enum IssueStatus { REVIEW, IN_PROGRESS, CLOSED, DONE, OPEN }
@@ -77,7 +74,7 @@ class Issue {
     return {
       "title": issueTitle,
       "description": description,
-      "category": IssueMapper.categoryToString(issueCategory)
+      "category": IssueMapper.categoryToString(issueCategory,isSending: true)
     };
   }
 }
