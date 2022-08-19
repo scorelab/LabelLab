@@ -134,7 +134,7 @@ class Repository {
     return _api.searchUser(accessToken, email);
   }
 
-    Future<List<User>> getUsers() {
+  Future<List<User>> getUsers() {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.getUsers(accessToken);
   }
@@ -484,9 +484,9 @@ class Repository {
     });
   }
 
-  Future<Issue> getIssue(String? id,String? project_id) {
+  Future<Issue> getIssue(String? id, String? project_id) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
-    return _api.getIssue(accessToken, project_id,id);
+    return _api.getIssue(accessToken, project_id, id);
   }
 
   Future<ApiResponse> createIssue(Issue issue) {
@@ -499,30 +499,37 @@ class Repository {
     return _api.updateIssue(accessToken, issue);
   }
 
-  Future<List<Issue>> getCategorySpecificIssue(String projectId, String category) {
+  Future<List<Issue>> getCategorySpecificIssue(
+      String projectId, String category) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
     return _api.getCategorySpecificIssue(accessToken, projectId, category);
   }
 
-  
-  Future<ApiResponse?> deleteIssue(String? id,String project_id) {
+  Future<ApiResponse?> deleteIssue(String? id, String project_id) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
-    return _api.deleteIssue(accessToken, id,project_id);
+    return _api.deleteIssue(accessToken, id, project_id);
   }
 
-    Future<ApiResponse?> assignIssue(
-      String projectId, String issueId,String assigneeId) {
+  Future<ApiResponse?> assignIssue(
+      String projectId, String issueId, String assigneeId) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
-    return _api.assignIssue(accessToken, projectId,issueId,assigneeId);
+    return _api.assignIssue(accessToken, projectId, issueId, assigneeId);
   }
 
-    Future<ApiResponse> postComment(Comment comment, String  issue_id) {
+  Future<ApiResponse> postComment(Comment comment, String issue_id) {
     if (accessToken == null) return Future.error(ERROR_MESSAGE);
-    return _api.postComment(accessToken, comment,issue_id);
+    return _api.postComment(accessToken, comment, issue_id);
   }
 
-  
+  Future<ApiResponse> updateComment(Comment comment, String issue_id) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.updateComment(accessToken, issue_id, comment);
+  }
 
+  Future<ApiResponse?> deleteComment(Comment comment, String issue_id) {
+    if (accessToken == null) return Future.error(ERROR_MESSAGE);
+    return _api.deleteComment(accessToken, issue_id, comment);
+  }
 
   // Singleton
   static final Repository _respository = Repository._internal();
