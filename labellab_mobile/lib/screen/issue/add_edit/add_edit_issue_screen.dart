@@ -149,18 +149,21 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
     return null;
   }
 
-  void _update(BuildContext context) {
+  void _update(BuildContext context) async {
     final form = _key.currentState!;
     if (!form.validate()) return;
     form.save();
     setState(() {
       _isLoading = true;
     });
-    final Issue _issue = Issue();
+
+    final Issue _issue = _editing
+        ? await widget._repository.getIssue( widget.project_id,widget.id)
+        : Issue();
     _issue.project_id = int.parse(widget.project_id!);
     _issue.issueTitle = _nameController.text;
     _issue.description = _descriptionController.text;
-    _issue.issueCategory = IssueMapper.mapJsonToCategory(_selectedCategory);
+    _issue.issueCategory = IssueMapper.mapJsonToCategory(_selectedCategory.toLowerCase());
     _updateLogic(_issue).then((String message) {
       if (message == "Success") {
         Application.router.pop(context);
@@ -193,14 +196,14 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
   }
 
   Future<String> _updateLogic(Issue issue) {
-    if (issue.id == null) {
-      // Create new project
+    if (issue.project_id == null) {
+      // Create new issue
       return widget._repository.createIssue(issue).then((res) {
         if (!res.success!) return res.msg!;
         return "Success";
       });
     } else {
-      // Update the existing project
+      // Update the existing issue
       return widget._repository.updateIssue(issue).then((res) {
         if (!res.success!) return res.msg!;
         return "Success";
