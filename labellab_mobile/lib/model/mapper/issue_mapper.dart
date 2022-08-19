@@ -87,21 +87,20 @@ class IssueMapper {
         return IssueCategory.GENERAL;
     }
   }
-
-  static String categoryToString(IssueCategory? status) {
+  static String categoryToString(IssueCategory? status,{bool isSending = false} ) {
     switch (status) {
       case IssueCategory.GENERAL:
-        return "General";
+        return isSending ?"general":"General";
       case IssueCategory.LABEL:
-        return "Labels";
+        return isSending ?"labels":"Labels";
          case IssueCategory.IMAGE:
-        return "Images";
+        return isSending ?"images":"Images";
         case IssueCategory.IMAGE_LABELLING:
-        return "Labelling";
+        return isSending ?"image labelling":"Labelling";
         case IssueCategory.MODELS:
-        return "Models";
+        return isSending ?"models":"Models";
          case IssueCategory.MISC:
-        return "Misc";
+        return isSending ?"misc":"Misc";
       default:
         return "";
     }
