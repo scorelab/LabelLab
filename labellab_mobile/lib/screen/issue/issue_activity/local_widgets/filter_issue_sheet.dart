@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/data/repository.dart';
+import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_bloc.dart';
 import 'package:labellab_mobile/screen/issue/issue_activity/issue_activity_state.dart';
 import 'package:labellab_mobile/screen/project/project_activity/local_widgets/filter_dropdown.dart';
 import 'package:provider/provider.dart';
-
-import '../issue_activity_bloc.dart';
 
 class FilterIssueSheet extends StatefulWidget {
   @override
@@ -49,8 +48,6 @@ class _FilterIssueSheetState extends State<FilterIssueSheet> {
         stream: Provider.of<IssueActivityBloc>(context).issues,
         builder: (context, snapshot) {
           List<String> _teams = [];
-
-          
           if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
             final _issues = snapshot.data!.issues;
@@ -119,9 +116,7 @@ class _FilterIssueSheetState extends State<FilterIssueSheet> {
           .getCategorySpecificIssue(projectId, _selectedCategory)
           .then((issues) => Navigator.of(context).pop(issues));
     } else if (_filteringOption == 2) {
-    } else {
-
-    }
+    } else {}
   }
 
   void _setFilteringOption(String value) {
@@ -130,8 +125,8 @@ class _FilterIssueSheetState extends State<FilterIssueSheet> {
     });
   }
 
-  void _setCategory(String value) {
-    _selectedCategory = value;
+  void _setCategory(String category) {
+    _selectedCategory = category;
   }
 
   void _setSelectTeam(String teamName) {
