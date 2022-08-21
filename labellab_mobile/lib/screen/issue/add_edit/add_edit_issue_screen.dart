@@ -196,7 +196,7 @@ class _AddEditIssueScreenState extends State<AddEditIssueScreen> {
   }
 
   Future<String> _updateLogic(Issue issue) {
-    if (issue.project_id == null) {
+    if (issue.id ==null) {
       // Create new issue
       return widget._repository.createIssue(issue).then((res) {
         if (!res.success!) return res.msg!;

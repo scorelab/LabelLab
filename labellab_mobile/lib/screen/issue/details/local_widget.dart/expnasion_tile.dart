@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:labellab_mobile/model/issue.dart';
 import 'package:labellab_mobile/model/mapper/issue_mapper.dart';
@@ -43,7 +40,8 @@ class ExpandableTextState extends State<ExpandableText>
                           width: size.width / 40,
                         ),
                         Text(
-                          IssueMapper.categoryToString(widget.issue.issueCategory),
+                          IssueMapper.categoryToString(
+                              widget.issue.issueCategory),
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         SizedBox(
@@ -87,7 +85,7 @@ class ExpandableTextState extends State<ExpandableText>
                       ),
                       title: Text(widget.issue.updated_At.toString()),
                     ),
-                                        SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                     Text(
@@ -95,7 +93,11 @@ class ExpandableTextState extends State<ExpandableText>
                       style: TextStyle(color: Colors.grey, fontSize: 15),
                     ),
                     ListTile(
-                      title: Text(widget.issue.entityType ==null ? "General " :widget.issue.entityType.toString() + " : " + widget.issue.entityId.toString()),
+                      title: Text(widget.issue.entityType == null
+                          ? "General "
+                          : widget.issue.entityType.toString() +
+                              " : " +
+                              widget.issue.entityId.toString()),
                     )
                   ],
                 ),
@@ -107,13 +109,15 @@ class ExpandableTextState extends State<ExpandableText>
               onTap: () => setState(
                 () => expanded = false,
               ),
-              child: Text('Less', style: TextStyle(color: Color.fromARGB(255, 24, 138, 191))),
+              child: Text('Less',
+                  style: TextStyle(color: Color.fromARGB(255, 24, 138, 191))),
             )
           : InkWell(
               onTap: () => setState(
                 () => expanded = true,
               ),
-              child: Text('More', style: TextStyle(color: Color.fromARGB(255, 24, 138, 191))),
+              child: Text('More',
+                  style: TextStyle(color: Color.fromARGB(255, 24, 138, 191))),
             )
     ]);
   }
