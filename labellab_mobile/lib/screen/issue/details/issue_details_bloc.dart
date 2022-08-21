@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:labellab_mobile/data/repository.dart';
 import 'package:labellab_mobile/model/comment.dart';
 import 'package:labellab_mobile/model/issue.dart';
