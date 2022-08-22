@@ -35,7 +35,7 @@ flask-marshmallow==0.10.1
 Flask-Migrate==2.5.3
 Flask-MySQL==1.5.1
 Flask-Script==2.0.6
-Flask-SocketIO==5.1.0
+Flask-SocketIO==5.2.0
 Flask-SQLAlchemy==2.4.1
 future==0.18.2
 futures==3.1.1
@@ -86,8 +86,8 @@ pyparsing==2.4.7
 python-dateutil==2.8.1
 python-dotenv==0.11.0
 python-editor==1.0.4
-python-engineio==4.2.0
-python-socketio==5.3.0
+python-engineio==4.3.3
+python-socketio==5.7.1
 pytz==2019.3
 PyYAML==5.3.1
 requests==2.22.0
