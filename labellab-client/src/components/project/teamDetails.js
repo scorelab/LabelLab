@@ -16,7 +16,7 @@ import {
   Dropdown,
   Message
 } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 import {
   fetchTeam,
@@ -206,6 +206,15 @@ class TeamDetails extends Component {
 
     return (
       <Fragment>
+        {teamActions.errors ? (
+          teamActions.errors == '404' ? (
+            <Redirect to="/404" />
+          ) : (
+            teamActions.errors == '401' ? (
+              <Redirect to="/401" />
+            ) : null
+          )
+        ) : null}
         {teamActions.isfetching ? (
           <Dimmer active>
             <Loader indeterminate>Have some patience </Loader>
@@ -283,11 +292,11 @@ class TeamDetails extends Component {
                     <Table.Body>
                       {team.logs
                         ? team.logs.map(log => (
-                            <Table.Row key={log.id}>
-                              <Table.Cell width={16}>{log.message}</Table.Cell>
-                              <Table.Cell width={0}></Table.Cell>
-                            </Table.Row>
-                          ))
+                          <Table.Row key={log.id}>
+                            <Table.Cell width={16}>{log.message}</Table.Cell>
+                            <Table.Cell width={0}></Table.Cell>
+                          </Table.Row>
+                        ))
                         : null}
                     </Table.Body>
                   </Table>
@@ -309,29 +318,29 @@ class TeamDetails extends Component {
                     <Table.Body>
                       {team.members
                         ? team.members.map(member => (
-                            <Table.Row key={member.id}>
-                              <Table.Cell>
-                                <Header as="h4" subheader>
-                                  {member.name}
-                                  <Header.Subheader>
-                                    {member.email}
-                                  </Header.Subheader>
-                                </Header>
-                              </Table.Cell>
-                              <Table.Cell>
-                                {roles && roles.includes('admin') ? (
-                                  <Button
-                                    icon
-                                    onClick={() =>
-                                      this.removeTeamMember(member.email)
-                                    }
-                                  >
-                                    <Icon name="user delete" />
-                                  </Button>
-                                ) : null}
-                              </Table.Cell>
-                            </Table.Row>
-                          ))
+                          <Table.Row key={member.id}>
+                            <Table.Cell>
+                              <Header as="h4" subheader>
+                                {member.name}
+                                <Header.Subheader>
+                                  {member.email}
+                                </Header.Subheader>
+                              </Header>
+                            </Table.Cell>
+                            <Table.Cell>
+                              {roles && roles.includes('admin') ? (
+                                <Button
+                                  icon
+                                  onClick={() =>
+                                    this.removeTeamMember(member.email)
+                                  }
+                                >
+                                  <Icon name="user delete" />
+                                </Button>
+                              ) : null}
+                            </Table.Cell>
+                          </Table.Row>
+                        ))
                         : null}
                     </Table.Body>
                   </Table>

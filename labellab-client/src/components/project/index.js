@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Switch } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import Loadable from 'react-loadable'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -86,6 +86,10 @@ const Chatroom = Loadable({
   loader: () => import('./chatroom'),
   loading: Loading
 })
+const NotFound = Loadable({
+  loader: () => import('../error/notFound.js'),
+  loading: Loading
+})
 
 class ProjectIndex extends Component {
   constructor(props) {
@@ -123,6 +127,15 @@ class ProjectIndex extends Component {
     const { match, actions, history, actionsLabel } = this.props
     return (
       <React.Fragment>
+        {actions.errors ? (
+          actions.errors == '404' ? (
+            <Redirect to="/404" />
+          ) : (
+            actions.errors == '401' ? (
+              <Redirect to="/401" />
+            ) : null
+          )
+        ) : null}
         {actions.isfetching || actionsLabel.isfetching ? (
           <Dimmer active>
             <Loader indeterminate>Have some patience :)</Loader>
@@ -140,6 +153,11 @@ class ProjectIndex extends Component {
           </Sidebar>
           <div className="project-non-side-section">
             <Switch>
+              <PrivateRoute
+                exact
+                path={`${match.path}/`}
+                component={Team}
+              />
               <PrivateRoute
                 exact
                 path={`${match.path}/team`}
@@ -223,6 +241,7 @@ class ProjectIndex extends Component {
                 path={`${match.path}/chatroom/:teamId`}
                 component={Chatroom}
               />
+              <Route path="*" component={NotFound}/>
             </Switch>
           </div>
         </div>

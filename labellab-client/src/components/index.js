@@ -53,6 +53,16 @@ const Redirect = Loadable({
   loading: Loading
 })
 
+const NotFound = Loadable({
+  loader: () => import('./error/notFound.js'),
+  loading: Loading
+})
+
+const Unauthorized = Loadable({
+  loader: () => import('./error/unauthorized.js'),
+  loading: Loading
+})
+
 const ForgotPassword = Loadable({
   loader: () => import('../components/login/ForgotPassword'),
   loading: Loading
@@ -91,6 +101,9 @@ class App extends Component {
               component={ModelEditor}
             />
             <PrivateRoute path={`/project/:projectId`} component={Project} />
+            <Route path="/404" component={NotFound}/>
+            <Route path="/401" component={Unauthorized}/>
+            <Route path="*" component={NotFound}/>
           </Switch>
         </React.Fragment>
       </BrowserRouter>
