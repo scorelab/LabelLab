@@ -170,9 +170,14 @@ import {
         })
         .catch(err => {
           if (err.response) {
-            err.response.data
+            if(err.response.status==404 || err.response.status==401) {
+              dispatch(failure(err.response.status))
+            }
+            else {
+              err.response.data.msg
               ? dispatch(failure(err.response.data.msg))
-              : dispatch(failure(err.response.statusText, null))
+              : dispatch(failure(err.response.statusText))
+            }
           }
         })
     }

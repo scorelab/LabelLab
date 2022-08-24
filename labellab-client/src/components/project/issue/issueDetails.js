@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react'
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import {
@@ -173,6 +174,15 @@ function IssueDetails(props) {
 
     return (
         <Fragment>
+            {issuesActions.errors ? (
+                issuesActions.errors == '404' ? (
+                    <Redirect to="/404" />
+                ) : (
+                    issuesActions.errors == '401' ? (
+                        <Redirect to="/401" />
+                    ) : null
+                )
+            ) : null}
             {issuesActions.isUpdating ? (
                 <Dimmer active>
                     <Loader indeterminate>Updating issue...</Loader>

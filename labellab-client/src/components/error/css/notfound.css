@@ -1,0 +1,16 @@
+.main {
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 5em;
+
+}
+.green {
+    color: green
+}
