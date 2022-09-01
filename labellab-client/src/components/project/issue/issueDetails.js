@@ -209,24 +209,25 @@ function IssueDetails(props) {
             ) : null}
             {issue && logs ? (
                 <Fragment>
-                    <Grid>
+                    <Grid className='issue-details-grand-parent'>
                         <Grid.Row >
                             <Grid.Column width={8}>
                                 <Header as='h2'>
                                     <Grid>
                                         <Grid.Row width={16}>
                                             <Grid.Column width={3} verticalAlign='middle'>
-                                                <Header color='green' size='tiny'>
+                                                <Header color='green' size='tiny' className='issue-id'>
                                                     #{issue.id}
                                                 </Header>
                                             </Grid.Column>
                                             <Grid.Column width={13}>
-                                                <Header as='h2' onClick={() => toggleShow('title')}>
+                                                <Header as='h2' onClick={() => toggleShow('title')} className='issue-title'>
                                                     {issueDetails.title.show ? (
                                                         <Input
                                                             name="title"
                                                             value={issueDetails.title.value}
                                                             onChange={handleChange}
+                                                            className='issue-title-edit'
                                                         />
                                                     ) :
                                                         `${issue.title}`
@@ -235,16 +236,16 @@ function IssueDetails(props) {
                                             </Grid.Column>
                                         </Grid.Row>
                                     </Grid>
-                                    {users && users.length > 0 && users.map(person => {
+                                    {users && users.length > 0 && users.map((person, index) => {
                                         if (issue.createdBy == person.id)
                                             return (
-                                                <Fragment>
-                                                    <Header.Subheader>
-                                                        reported {moment.utc(issue.createdAt).local().startOf('hour').fromNow()} by {person.name}
-                                                    </Header.Subheader>
-                                                    <Header.Subheader>
-                                                        last updated {moment.utc(issue.updatedAt).local().startOf('hour').fromNow()}
-                                                    </Header.Subheader>
+                                                <Fragment key={index}>
+                                                        <Header.Subheader className='issue-created'>
+                                                            reported {moment.utc(issue.createdAt).local().startOf('hour').fromNow()} by {person.name}
+                                                        </Header.Subheader>
+                                                        <Header.Subheader className='issue-updated'>
+                                                            last updated {moment.utc(issue.updatedAt).local().startOf('hour').fromNow()}
+                                                        </Header.Subheader>
                                                 </Fragment>
                                             )
                                     })}
@@ -252,13 +253,14 @@ function IssueDetails(props) {
                             </Grid.Column>
                             <Grid.Column width={4}>
                                 <Header as='h2' verticalAlign='middle'>
-                                    <Header.Subheader onClick={() => toggleShow('due_date')}>
+                                    <Header.Subheader onClick={() => toggleShow('due_date')} className='issue-due'>
                                         {issueDetails.due_date.show ? (
                                             <Input
                                                 name="due_date"
                                                 type='datetime-local'
                                                 value={issueDetails.due_date.value}
                                                 onChange={handleChange}
+                                                className='issue-due-edit'
                                             />
                                         ) : (
                                             <em>{issue.dueDate ? `Due ${moment(issue.dueDate).format('LLL')}` : `No due date`}</em>
@@ -275,9 +277,10 @@ function IssueDetails(props) {
                                         name='status'
                                         value={issueDetails.status.value}
                                         onChange={handleChange}
+                                        className='issue-status-edit'
                                     />
                                 ) : (
-                                    <Label color={issue && statusColorOptions[issue.status]} size='big' horizontal floated='right' onClick={() => toggleShow('status')}>
+                                    <Label color={issue && statusColorOptions[issue.status]} size='big' horizontal floated='right' onClick={() => toggleShow('status')} className='issue-status'>
                                         {issue.status}
                                     </Label>
                                 )}
@@ -296,10 +299,11 @@ function IssueDetails(props) {
                                         name='category'
                                         value={issueDetails.category.value}
                                         onChange={handleChange}
+                                        className='issue-category-edit'
                                     />
                                 ) : (
                                     <Header as='h2'>
-                                        <Header.Subheader onClick={() => toggleShow('category')}>
+                                        <Header.Subheader onClick={() => toggleShow('category')} className='issue-category'>
                                             {issue.category}
                                         </Header.Subheader>
                                     </Header>
@@ -314,14 +318,15 @@ function IssueDetails(props) {
                                         name='team_id'
                                         value={issueDetails.team_id.value}
                                         onChange={handleChange}
+                                        className='issue-team-edit'
                                     />
                                 ) : (
                                     issue.teamId ? (
-                                        teams && teams.length > 0 && teams.map(team => {
+                                        teams && teams.length > 0 && teams.map((team,index) => {
                                             if (team.value == issue.teamId)
                                                 return (
-                                                    <Header as='h2'>
-                                                        <Header.Subheader onClick={() => toggleShow('team_id')}>
+                                                    <Header as='h2' key={index}>
+                                                        <Header.Subheader onClick={() => toggleShow('team_id')} className='issue-team'>
                                                             {team.text}
                                                         </Header.Subheader>
                                                     </Header>
@@ -329,7 +334,7 @@ function IssueDetails(props) {
                                         })
                                     ) : (
                                         <Header as='h2'>
-                                            <Header.Subheader onClick={() => toggleShow('team_id')}>
+                                            <Header.Subheader onClick={() => toggleShow('team_id')} className='issue-team'>
                                                 None
                                             </Header.Subheader>
                                         </Header>
@@ -345,9 +350,10 @@ function IssueDetails(props) {
                                         name='priority'
                                         value={issueDetails.priority.value}
                                         onChange={handleChange}
+                                        className='issue-priority-edit'
                                     />
                                 ) : (
-                                    <Header as='h5' color={priorityColorOptions[issue.priority]} onClick={() => toggleShow('priority')}>
+                                    <Header as='h5' color={priorityColorOptions[issue.priority]} onClick={() => toggleShow('priority')} className='issue-priority'>
                                         {issue.priority}
                                     </Header>
                                 )}
@@ -361,14 +367,15 @@ function IssueDetails(props) {
                                         name='assignee_id'
                                         value={issueDetails.assignee_id.value}
                                         onChange={handleChange}
+                                        className='issue-assignee-edit'
                                     />
                                 ) : (
                                     <div>
                                         {issue.assigneeId ? (
-                                            users && users.length > 0 && users.map(person => {
+                                            users && users.length > 0 && users.map((person, index) => {
                                                 if (issue.assigneeId == person.id)
                                                     return (
-                                                        <Header as='h3' floated='left' onClick={() => toggleShow('assignee_id')}>
+                                                        <Header as='h3' floated='left' onClick={() => toggleShow('assignee_id')} key={index} className='issue-assignee'>
                                                             <Header.Subheader>
                                                                 <Image circular src={person.thumbnail} avatar /> {person.name}
                                                             </Header.Subheader>
@@ -377,7 +384,7 @@ function IssueDetails(props) {
                                                     )
                                             })
                                         ) : (
-                                            <Header as='h3' floated='left' onClick={() => toggleShow('assignee_id')}>
+                                            <Header as='h3' floated='left' onClick={() => toggleShow('assignee_id')} className='issue-assignee'>
                                                 <Header.Subheader>
                                                     <Icon name="user circle" className='user-icon' /> Not assigned
                                                 </Header.Subheader>
@@ -391,8 +398,9 @@ function IssueDetails(props) {
                         <Grid.Row>
                             <Grid.Column width={16}>
                                 <Header as="h4" floated='left'>Associated Entity : </Header>
+                                
                                 {issueDetails.entity_type.show ? (
-                                    <div>
+                                    <div className='issue-entity-edit'>
                                         <Select
                                             placeholder="Entity Type"
                                             options={entityTypeOptions}
@@ -411,11 +419,11 @@ function IssueDetails(props) {
                                 ) : (
                                     issue.entityType ? (
                                         <Fragment>
-                                            {entities && entities[issue.entityType].map((entity) => {
+                                            {entities && entities[issue.entityType].map((entity,index) => {
                                                 if (issue.entityId == entity.value)
                                                     return (
-                                                        <Header as='h2'>
-                                                            <Header.Subheader onClick={() => toggleShow('entity_type')}>
+                                                        <Header as='h2' key={index}>
+                                                            <Header.Subheader onClick={() => toggleShow('entity_type')} className='issue-entity'>
                                                                 {`(${issue.entityType})  ${entity.text}`}
                                                             </Header.Subheader>
                                                         </Header>
@@ -440,11 +448,12 @@ function IssueDetails(props) {
                                     name='description'
                                     value={issueDetails.description.value}
                                     onChange={handleChange}
+                                    className='issue-description-edit'
                                 />
                             </Form>
                         ) : (
                             <Header as='h2'>
-                                <Header.Subheader onClick={() => toggleShow('description')}>
+                                <Header.Subheader onClick={() => toggleShow('description')} className='issue-description'>
                                     {issue.description}
                                 </Header.Subheader>
                             </Header>
@@ -458,6 +467,7 @@ function IssueDetails(props) {
                             disabled={
                                 issueDetails.assignee_id.value == null || !assign}
                             onClick={handleAssign}
+                            className="assign-button"
                         >
                             Assign
                         </Button>
@@ -466,14 +476,16 @@ function IssueDetails(props) {
                             disabled={
                                 issueDetails.title.value == '' || issueDetails['description'].value == '' || issueDetails['category'].value == '' || !update}
                             onClick={handleSubmit}
+                            className="update-button"
                         >
                             Update
                         </Button>
-                        <Button negative onClick={() => setOpen(true)}>Delete</Button>
+                        <Button negative onClick={() => setOpen(true)} className="delete-button">Delete</Button>
                         <Confirm
                             open={open}
                             onCancel={() => setOpen(false)}
                             onConfirm={handleDelete}
+                            className="delete-confirmation"
                         />
                     </Container>
 
@@ -488,7 +500,7 @@ function IssueDetails(props) {
                                     <div className='comment-section'>
                                         {comments && comments.length > 0 ? comments.map((comment, index) => {
                                             return (
-                                                <Comment key={index}>
+                                                <Comment key={index} className='comments'>
                                                     <Comment.Avatar src={comment.thumbnail} />
                                                     <Comment.Content>
                                                         <Comment.Author as='a'>{comment.username}</Comment.Author>
@@ -511,8 +523,8 @@ function IssueDetails(props) {
                                             size="mini"
                                             avatar
                                         />
-                                        <Input placeholder='Type something...' onChange={handleChange} name='comment' value={comment} />
-                                        <Button icon='send' onClick={handleSendComment} color='green' />
+                                        <Input placeholder='Type something...' onChange={handleChange} name='comment' value={comment} className='comment-box' />
+                                        <Button icon='send' onClick={handleSendComment} color='green' className='send-comment'/>
                                     </Form>
                                 </Comment.Group>
                             </Grid.Column>
@@ -529,9 +541,10 @@ function IssueDetails(props) {
                                                         warning={log.category === 'labels'}
                                                         active={log.category === 'general'}
                                                         key={log.id}
+                                                        className="log"
                                                     >
                                                         <Table.Cell width={12}>
-                                                            <Header as="h4" subheader>
+                                                            <Header as="h4" className='log-details'>
                                                                 {log.message}
                                                                 <Header.Subheader as="h6">
                                                                     {moment.utc(log.timestamp).local().startOf('minute').fromNow()} by {log.username}
@@ -567,7 +580,6 @@ function IssueDetails(props) {
 }
 
 IssueDetails.propTypes = {
-    issue: PropTypes.array,
     logs: PropTypes.array,
     roles: PropTypes.array,
     comments: PropTypes.array

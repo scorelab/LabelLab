@@ -16,7 +16,10 @@
     text-align: left !important;
     cursor: pointer;
 }
-.issue-link {
+.issue-item {
+    text-align: center !important;
+}
+.issue-activity {
     color: black !important;
 }
 .comment-section {

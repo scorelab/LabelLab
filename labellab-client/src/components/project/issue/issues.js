@@ -153,8 +153,8 @@ function ProjectIssues(props) {
 
   const handleDelete = () => {
     const { projectId, deleteIssue } = props
-    if(activeIssue)
-    deleteIssue(projectId, activeIssue.id, callback)
+    if (activeIssue)
+      deleteIssue(projectId, activeIssue.id, callback)
   }
 
   const callback = () => {
@@ -205,15 +205,15 @@ function ProjectIssues(props) {
           </Message.Content>
         </Message>
       ) : null}
-      <Grid>
-        <Grid.Row textAlign='bottom'>
+      <Grid className="issues-grand-parent">
+        <Grid.Row>
           <Grid.Column width={4}>
-            <Button onClick={toggleForm} positive>
+            <Button onClick={toggleForm} positive className='add-issue'>
               Add Issue
             </Button>
           </Grid.Column>
           <Grid.Column width={3}>
-            <Header as="h4" subheader>Category</Header>
+            <Header as="h4">Category</Header>
             <Dropdown
               floating
               fluid
@@ -223,10 +223,11 @@ function ProjectIssues(props) {
               value={category}
               options={categoryOptions}
               onChange={filterOnCategory}
+              className='category-filter'
             />
           </Grid.Column>
           <Grid.Column width={3}>
-            <Header as="h4" subheader>Team</Header>
+            <Header as="h4">Team</Header>
             <Dropdown
               floating
               fluid
@@ -236,10 +237,11 @@ function ProjectIssues(props) {
               value={team}
               options={teams}
               onChange={filterOnTeam}
+              className='team-filter'
             />
           </Grid.Column>
           <Grid.Column width={3}>
-            <Header as="h4" subheader>Entity Type</Header>
+            <Header as="h4">Entity Type</Header>
             <Dropdown
               floating
               fluid
@@ -249,10 +251,11 @@ function ProjectIssues(props) {
               value={entityType}
               options={entityTypeOptions}
               onChange={filterOnEntityType}
+              className='entity-type-filter'
             />
           </Grid.Column>
           <Grid.Column width={3}>
-            <Header as="h4" subheader>Entities</Header>
+            <Header as="h4">Entities</Header>
             <Dropdown
               floating
               fluid
@@ -263,11 +266,12 @@ function ProjectIssues(props) {
               value={entityId}
               options={entityOptions}
               onChange={filterOnEntityId}
+              className='entity-id-filter'
             />
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Table color="green" selectable>
+      <Table color="green" selectable className='issues-list'>
         <Table.Header>
           <Table.Row className="center">
             <Table.HeaderCell>ID</Table.HeaderCell>
@@ -286,24 +290,25 @@ function ProjectIssues(props) {
               <Table.Row
                 key={issue.id}
                 onClick={() => handleClick(issue.id)}
-                className="center"
+                className="issue-item"
               >
                 <Table.Cell><Header as="h4" color="grey">#{issue.id}</Header></Table.Cell>
                 <Table.Cell width={8}>
-                  <Header as="h4" subheader className="issue-header">
+                  <Header as="h4" className="issue-header">
                     {issue.title}
-                    {members && members.length > 0 && members.map(member => {
-                      if (issue.created_by == member.user_id)
+                    {users && users.length > 0 && users.map(member => {
+                      if (issue.created_by == member.id) {
                         return (
-                          <Header.Subheader>
+                          <Header.Subheader className="issue-subheader">
                             reported {moment.utc(issue.created_at).local().startOf('hour').fromNow()} by {member.name} <br />
                           </Header.Subheader>
                         )
+                      }
                     })
                     }
                   </Header>
                 </Table.Cell>
-                <Table.Cell width={2}>{issue.category}</Table.Cell>
+                <Table.Cell width={2} className="issue-category">{issue.category}</Table.Cell>
                 {issue.team_id ? (
                   teams && teams.length > 0 && teams.map(team => {
                     if (team.key == issue.team_id)
@@ -318,17 +323,17 @@ function ProjectIssues(props) {
                     None
                   </Table.Cell>
                 )}
-                <Table.Cell width={2}>
+                <Table.Cell width={2} className="issue-priority">
                   <Header as="h5" color={priorityColorOptions[issue.priority]}>
                     {issue.priority}
                   </Header>
                 </Table.Cell>
-                <Table.Cell width={2}>
+                <Table.Cell width={2} className="issue-status">
                   <Label color={statusColorOptions[issue.status]} size='medium' horizontal className="issue-status-label">
                     {issue.status}
                   </Label>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell className="issue-assignee">
                   {issue.assignee_id ? (
                     users && users.length > 0 && users.map(user => {
                       if (issue.assignee_id == user.id)
@@ -348,14 +353,14 @@ function ProjectIssues(props) {
                     } />
                   )}
                 </Table.Cell>
-                <Table.Cell width={1}>
+                <Table.Cell width={1} className="issue-actions">
                   <Dropdown item icon='ellipsis horizontal' simple>
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={handleUpdate} data={issue} icon='edit' text='Edit' />
-                      <Dropdown.Item onClick={() => toggleOpen(issue)} id={issue.id} icon='trash' text='Delete' />
+                      <Dropdown.Item onClick={handleUpdate} data={issue} icon='edit' text='Edit' className="issue-edit"/>
+                      <Dropdown.Item onClick={() => toggleOpen(issue)} id={issue.id} icon='trash' text='Delete' className="issue-delete"/>
                       <Dropdown.Item>
-                        <Link to={`/project/${issue.project_id}/logs/entity/issue/${issue.id}`} className='issue-link'>
-                          <Dropdown.Item icon='history' text='Activity'/>
+                        <Link to={`/project/${issue.project_id}/logs/entity/issue/${issue.id}`} className='issue-activity'>
+                          <Dropdown.Item icon='history' text='Activity' />
                         </Link>
                       </Dropdown.Item>
                     </Dropdown.Menu>
@@ -382,6 +387,7 @@ function ProjectIssues(props) {
           boundaryRange={1}
           totalPages={issues && issues.total ? Math.ceil(issues.total / issues.perPage) : 1}
           onPageChange={handlePaginationChange}
+          className="pagination"
         />
       </Container>
       <IssueActions
@@ -393,7 +399,7 @@ function ProjectIssues(props) {
         toggleForm={toggleForm}
         fetchProjectIssues={fetchProjectIssues}
       />
-      <Modal size="mini" open={open} onClose={() => toggleOpen('')}>
+      <Modal size="mini" open={open} onClose={() => toggleOpen('')} className="delete-issue-modal">
         <Modal.Header>
           Delete Issue
         </Modal.Header>
@@ -401,10 +407,10 @@ function ProjectIssues(props) {
           Are you sure you want delete {activeIssue.title} ?
         </Modal.Content>
         <Modal.Actions>
-          <Button positive onClick={handleDelete}>
+          <Button positive onClick={handleDelete} className="delete-issue-yes">
             Yes
           </Button>
-          <Button negative onClick={() => toggleOpen('')}>
+          <Button negative onClick={() => toggleOpen('')} className="delete-issue-no">
             No
           </Button>
         </Modal.Actions>
@@ -414,7 +420,7 @@ function ProjectIssues(props) {
 }
 
 ProjectIssues.propTypes = {
-  issues: PropTypes.array
+  issues: PropTypes.object
 }
 
 const mapStateToProps = state => {
