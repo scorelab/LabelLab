@@ -1,10 +1,28 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class MessageInput extends StatelessWidget {
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:labellab_mobile/model/user.dart';
+
+class MessageInput extends StatefulWidget {
   final TextEditingController controller;
   final Function onSubmit;
+  List<User>? list;
 
-  MessageInput(this.controller, this.onSubmit);
+  MessageInput(this.controller, this.onSubmit, {this.list});
+
+  @override
+  State<MessageInput> createState() => _MessageInputState();
+}
+
+class _MessageInputState extends State<MessageInput> {
+  List<Map<String, dynamic>> mentiondata = [];
+
+  bool isDataLoading = true;
+  // String nonHashvalue = "";
+  Timer? _debounce;
+  GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,38 +41,89 @@ class MessageInput extends StatelessWidget {
                 minHeight: 50,
                 maxHeight: 100,
               ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                reverse: true,
-                child: TextField(
-                  cursorColor: Colors.grey,
-                  controller: controller,
-                  onSubmitted: (message) {
-                    onSubmit(message);
-                    controller.clear();
-                  },
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 20.0,
-                    ),
-                    hintText: 'Send a message',
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      color: Colors.grey[400],
-                      fontFamily: 'Lato',
-                    ),
-                  ),
+              child: FlutterMentions(
+                onEditingComplete: () {
+                  widget.onSubmit; 
+                },
+                onMentionAdd: (Map<String, dynamic> map) {},
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Send a message",
                 ),
+                style: const TextStyle(fontSize: 16, color: Colors.black),
+                onSearchChanged: (String trigger, String value) {
+                  if (trigger == "@") {
+                    if (_debounce?.isActive ?? false) _debounce!.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 200), () {
+                      setState(() {
+                        widget.list!.forEach((element) {
+                          mentiondata.add({
+                            "username": element.username,
+                            "id": element.id,
+                            "name": element.name,
+                            "thumbnail": element.thumbnail,
+                            "display": element.username ?? ""
+                          });
+                        });
+                      });
+                      print(mentiondata);
+                    });
+                  }
+                },
+                key: key,
+                maxLines: 5,
+                minLines: 1,
+                suggestionPosition: SuggestionPosition.Top,
+                mentions: [
+                  Mention(
+                      trigger: '@',
+                      disableMarkup: false,
+                      markupBuilder: ((trigger, mention, id) {
+                        return "@[__${mention}__]";
+                      }),
+                      style: const TextStyle(color: Colors.blue),
+                      data: mentiondata.reversed.toList(),
+                      matchAll: true,
+                      suggestionBuilder: (data) {
+                        return Container(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: <Widget>[
+                              CircleAvatar(
+                                backgroundColor: Colors.black12,
+                                radius: 25,
+                                child: ClipOval(
+                                  child: Image(
+                                    width: 60,
+                                    height: 60,
+                                    image: CachedNetworkImageProvider(
+                                        data['thumbnail']),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20.0,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(data['name']),
+                                  Text('@${data['username']}'),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                ],
               ),
             ),
           ),
           IconButton(
             onPressed: () {
-              onSubmit(controller.text);
-              controller.clear();
+              widget.onSubmit(widget.controller.text);
+              widget.controller.clear();
             },
             icon: Icon(
               Icons.chevron_right_outlined,
