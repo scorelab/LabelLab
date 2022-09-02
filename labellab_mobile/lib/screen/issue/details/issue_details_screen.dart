@@ -95,7 +95,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
                                     // height: 50,
                                     child: Column(
                                       children: [
-                                        MessageInput(_controller, _sendComment),
+                                        MessageInput(_controller, _sendComment,list: _state.users,),
                                         for (var comment
                                             in _state.issue!.comments!)
                                           _commentItem(context, comment,
@@ -112,7 +112,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
                                 title: Text(
                                     "Comments"), // padding: const EdgeInsets.all(0),
                                 children: [
-                                  MessageInput(_controller, _sendComment)
+                                  MessageInput(_controller, _sendComment,list: _state.users,)
                                 ],
                               ),
                       ],
