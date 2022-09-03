@@ -131,13 +131,12 @@ function IssueDetails(props) {
     }
 
     const handleSubmit = () => {
+        const issueData = {}
         for (const [key, data] of Object.entries(issueDetails)) {
-            if (data.value == null || (typeof data.value === 'string' && data.value.trim() == ''))
-                delete issueDetails[key]
-            else
-                issueDetails[key] = data.value
+            if (data.value != null && (typeof data.value === 'string' && data.value.trim() != ''))
+                issueData[key] = data.value
         }
-        props.updateIssue(projectId, issue.id, issueDetails, successCallback)
+        props.updateIssue(projectId, issue.id, issueData, successCallback)
     }
 
     const successCallback = () => {
@@ -222,7 +221,7 @@ function IssueDetails(props) {
                                             </Grid.Column>
                                             <Grid.Column width={13}>
                                                 <Header as='h2' onClick={() => toggleShow('title')} className='issue-title'>
-                                                    {issueDetails.title.show ? (
+                                                    {issueDetails.title && issueDetails.title.show ? (
                                                         <Input
                                                             name="title"
                                                             value={issueDetails.title.value}
@@ -240,12 +239,12 @@ function IssueDetails(props) {
                                         if (issue.createdBy == person.id)
                                             return (
                                                 <Fragment key={index}>
-                                                        <Header.Subheader className='issue-created'>
-                                                            reported {moment.utc(issue.createdAt).local().startOf('hour').fromNow()} by {person.name}
-                                                        </Header.Subheader>
-                                                        <Header.Subheader className='issue-updated'>
-                                                            last updated {moment.utc(issue.updatedAt).local().startOf('hour').fromNow()}
-                                                        </Header.Subheader>
+                                                    <Header.Subheader className='issue-created'>
+                                                        reported {moment.utc(issue.createdAt).local().startOf('hour').fromNow()} by {person.name}
+                                                    </Header.Subheader>
+                                                    <Header.Subheader className='issue-updated'>
+                                                        last updated {moment.utc(issue.updatedAt).local().startOf('hour').fromNow()}
+                                                    </Header.Subheader>
                                                 </Fragment>
                                             )
                                     })}
@@ -254,7 +253,7 @@ function IssueDetails(props) {
                             <Grid.Column width={4}>
                                 <Header as='h2' verticalAlign='middle'>
                                     <Header.Subheader onClick={() => toggleShow('due_date')} className='issue-due'>
-                                        {issueDetails.due_date.show ? (
+                                        {issueDetails.due_date && issueDetails.due_date.show ? (
                                             <Input
                                                 name="due_date"
                                                 type='datetime-local'
@@ -269,7 +268,7 @@ function IssueDetails(props) {
                                 </Header>
                             </Grid.Column>
                             <Grid.Column width={3} textAlign='right'>
-                                {statusOptions && issueDetails.status.show ? (
+                                {statusOptions && issueDetails.status && issueDetails.status.show ? (
                                     <Select
                                         fluid
                                         options={statusOptions}
@@ -292,7 +291,7 @@ function IssueDetails(props) {
                         <Grid.Row width={16}>
                             <Grid.Column width={4}>
                                 <Header as='h4' className='detail-header'>Category</Header>
-                                {issueDetails.category.show ? (
+                                {issueDetails.category && issueDetails.category.show ? (
                                     <Select
                                         fluid
                                         options={categoryOptions}
@@ -311,7 +310,7 @@ function IssueDetails(props) {
                             </Grid.Column>
                             <Grid.Column width={4}>
                                 <Header as='h4' className='detail-header'>Team</Header>
-                                {issueDetails.team_id.show ? (
+                                {issueDetails.team_id && issueDetails.team_id.show ? (
                                     <Select
                                         placeholder="Assign Team"
                                         options={entities.team}
@@ -322,7 +321,7 @@ function IssueDetails(props) {
                                     />
                                 ) : (
                                     issue.teamId ? (
-                                        teams && teams.length > 0 && teams.map((team,index) => {
+                                        teams && teams.length > 0 && teams.map((team, index) => {
                                             if (team.value == issue.teamId)
                                                 return (
                                                     <Header as='h2' key={index}>
@@ -343,7 +342,7 @@ function IssueDetails(props) {
                             </Grid.Column>
                             <Grid.Column width={4}>
                                 <Header as='h4' className='detail-header'>Priority</Header>
-                                {issueDetails.priority.show ? (
+                                {issueDetails.priority && issueDetails.priority.show ? (
                                     <Select
                                         placeholder="Priority"
                                         options={priorityOptions}
@@ -360,7 +359,7 @@ function IssueDetails(props) {
                             </Grid.Column>
                             <Grid.Column width={4}>
                                 <Header as='h4' className='detail-header'>Assignee</Header>
-                                {issueDetails.assignee_id.show && roles && roles.includes('admin') ? (
+                                {issueDetails.assignee_id && issueDetails.assignee_id.show && roles && roles.includes('admin') ? (
                                     <Select
                                         placeholder="Assign a member"
                                         options={members}
@@ -398,8 +397,8 @@ function IssueDetails(props) {
                         <Grid.Row>
                             <Grid.Column width={16}>
                                 <Header as="h4" floated='left'>Associated Entity : </Header>
-                                
-                                {issueDetails.entity_type.show ? (
+
+                                {issueDetails.entity_type && issueDetails.entity_type.show ? (
                                     <div className='issue-entity-edit'>
                                         <Select
                                             placeholder="Entity Type"
@@ -419,7 +418,7 @@ function IssueDetails(props) {
                                 ) : (
                                     issue.entityType ? (
                                         <Fragment>
-                                            {entities && entities[issue.entityType].map((entity,index) => {
+                                            {entities && entities[issue.entityType].map((entity, index) => {
                                                 if (issue.entityId == entity.value)
                                                     return (
                                                         <Header as='h2' key={index}>
@@ -441,7 +440,7 @@ function IssueDetails(props) {
                         </Grid.Row>
                     </Grid>
                     <Container fluid>
-                        {issueDetails.description.show ? (
+                        {issueDetails.description && issueDetails.description.show ? (
                             <Form>
                                 <TextArea
                                     placeholder='Describe the issue in detail...'
@@ -524,7 +523,7 @@ function IssueDetails(props) {
                                             avatar
                                         />
                                         <Input placeholder='Type something...' onChange={handleChange} name='comment' value={comment} className='comment-box' />
-                                        <Button icon='send' onClick={handleSendComment} color='green' className='send-comment'/>
+                                        <Button icon='send' onClick={handleSendComment} color='green' className='send-comment' />
                                     </Form>
                                 </Comment.Group>
                             </Grid.Column>
