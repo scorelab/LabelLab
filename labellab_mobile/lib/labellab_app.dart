@@ -34,7 +34,6 @@ class LabelLabApp extends StatelessWidget {
               ),
             ),
           ),
-          //darkTheme: ThemeData.dark(),
           darkTheme: ThemeData(
             primarySwatch: Colors.teal,
             primaryColor: Theme.of(context).canvasColor,

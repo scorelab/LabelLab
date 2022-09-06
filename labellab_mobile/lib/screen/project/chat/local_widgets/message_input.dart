@@ -41,10 +41,10 @@ class _MessageInputState extends State<MessageInput> {
                 maxHeight: 100,
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 0),
                 child: FlutterMentions(
                   onEditingComplete: () {
-                    widget.onSubmit(isDataLoading); 
+                    widget.onSubmit(isDataLoading);
                   },
                   onMentionAdd: (Map<String, dynamic> map) {},
                   decoration: InputDecoration(
@@ -85,34 +85,48 @@ class _MessageInputState extends State<MessageInput> {
                         data: mentiondata.reversed.toList(),
                         matchAll: true,
                         suggestionBuilder: (data) {
-                          return Container(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: <Widget>[
-                                CircleAvatar(
-                                  backgroundColor: Colors.black12,
-                                  radius: 25,
-                                  child: ClipOval(
-                                    child: Image(
-                                      width: 60,
-                                      height: 60,
-                                      image: CachedNetworkImageProvider(
-                                          data['thumbnail']),
-                                      fit: BoxFit.cover,
-                                    ),
+                          return Padding(
+                            padding: const EdgeInsets.only(left:30.0),
+                            child: Card(
+                              elevation: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
                                   ),
+                                  // borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                const SizedBox(
-                                  width: 20.0,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                // margin: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
                                   children: <Widget>[
-                                    Text(data['name']),
-                                    Text('@${data['username']}'),
+                                    CircleAvatar(
+                                      backgroundColor: Colors.black12,
+                                      radius: 25,
+                                      child: ClipOval(
+                                        child: Image(
+                                          width: 60,
+                                          height: 60,
+                                          image: CachedNetworkImageProvider(
+                                              data['thumbnail']),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 20.0,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(data['name']),
+                                        Text('@${data['username']}'),
+                                      ],
+                                    )
                                   ],
-                                )
-                              ],
+                                ),
+                              ),
                             ),
                           );
                         }),
