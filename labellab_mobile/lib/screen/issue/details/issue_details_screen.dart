@@ -95,7 +95,11 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
                                     // height: 50,
                                     child: Column(
                                       children: [
-                                        MessageInput(_controller, _sendComment,list: _state.users,),
+                                        MessageInput(
+                                          _controller,
+                                          _sendComment,
+                                          list: _state.users,
+                                        ),
                                         for (var comment
                                             in _state.issue!.comments!)
                                           _commentItem(context, comment,
@@ -112,7 +116,11 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
                                 title: Text(
                                     "Comments"), // padding: const EdgeInsets.all(0),
                                 children: [
-                                  MessageInput(_controller, _sendComment,list: _state.users,)
+                                  MessageInput(
+                                    _controller,
+                                    _sendComment,
+                                    list: _state.users,
+                                  )
                                 ],
                               ),
                       ],
@@ -198,14 +206,8 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
                   _getPriorityBackgroundColor(
                       IssueMapper.priorityToString(issue.issuePriority)),
                   true),
-
-              //   ],
-              // )
             ],
           ),
-          // SizedBox(
-          //   width: size.width / 3.2,
-          // ),
         ],
       ),
     );
@@ -419,12 +421,10 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 20, top: 20),
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
@@ -501,7 +501,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
                     onSelected: (int value) async {
                       if (value == 0) {
                         final String? newText =
-                            await _asyncInputDialog(context);
+                            await _asyncInputDialog(context, comment);
                         setState(() {
                           comment.body = newText;
                           Provider.of<IssueDetailBloc>(context, listen: false)
@@ -534,23 +534,23 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> {
     );
   }
 
-  Future<String?> _asyncInputDialog(BuildContext context) async {
-    String sampleText = '';
+  Future<String?> _asyncInputDialog(
+      BuildContext context, Comment comment) async {
+    String sampleText = comment.body!;
     return showDialog<String>(
       context: context,
-      barrierDismissible:
-          false, // dialog is dismissible with a tap on the barrier
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Update your comment'),
           content: new Row(
             children: <Widget>[
               new Expanded(
-                  child: new TextField(
+                  child: new TextFormField(
+                initialValue: sampleText,
                 autofocus: true,
                 decoration: new InputDecoration(
-                  focusColor: Colors.teal,
-                    labelText: 'Update Comment Here'),
+                    focusColor: Colors.teal, labelText: 'Update Comment Here'),
                 onChanged: (value) {
                   sampleText = value;
                 },
