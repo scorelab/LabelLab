@@ -41,8 +41,10 @@ class _MessageInputState extends State<MessageInput> {
                 maxHeight: 100,
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 0),
+                padding: const EdgeInsets.only(left: 10),
                 child: FlutterMentions(
+                  suggestionListDecoration:
+                      BoxDecoration(color: Colors.grey.shade300),
                   onEditingComplete: () {
                     widget.onSubmit(isDataLoading);
                   },
@@ -57,6 +59,7 @@ class _MessageInputState extends State<MessageInput> {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       _debounce = Timer(const Duration(milliseconds: 200), () {
                         setState(() {
+                          mentiondata = [];
                           widget.list!.forEach((element) {
                             mentiondata.add({
                               "username": element.username,
@@ -86,35 +89,38 @@ class _MessageInputState extends State<MessageInput> {
                         matchAll: true,
                         suggestionBuilder: (data) {
                           return Padding(
-                            padding: const EdgeInsets.only(left:30.0),
-                            child: Card(
-                              elevation: 2,
-                              child: Container(
+                            padding: const EdgeInsets.only(left: 25, bottom: 5),
+                            child: Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: Colors.grey,
+                                    ),
                                   ),
-                                  // borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                // margin: EdgeInsets.all(10),
-                                padding: const EdgeInsets.all(10.0),
+                                // padding: const EdgeInsets.all(10.0),
                                 child: Row(
                                   children: <Widget>[
-                                    CircleAvatar(
-                                      backgroundColor: Colors.black12,
-                                      radius: 25,
-                                      child: ClipOval(
-                                        child: Image(
-                                          width: 60,
-                                          height: 60,
-                                          image: CachedNetworkImageProvider(
-                                              data['thumbnail']),
-                                          fit: BoxFit.cover,
+                                    Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.black12,
+                                          radius: 20,
+                                          child: ClipOval(
+                                            child: Image(
+                                              width: 60,
+                                              height: 60,
+                                              image: CachedNetworkImageProvider(
+                                                  data['thumbnail']),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(
-                                      width: 20.0,
+                                      width: 10.0,
                                     ),
                                     Column(
                                       crossAxisAlignment:
@@ -125,9 +131,7 @@ class _MessageInputState extends State<MessageInput> {
                                       ],
                                     )
                                   ],
-                                ),
-                              ),
-                            ),
+                                )),
                           );
                         }),
                   ],
