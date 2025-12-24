@@ -73,7 +73,7 @@ class ProfileCard extends Component {
       uploadImage(data, this.imageCallback)
     } else if (file && file.size > 101200) {
       this.setState({
-        max_size_error: 'max sized reached'
+        max_size_error: 'Max size reached'
       })
     } else {
       let data = {

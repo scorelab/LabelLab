@@ -15,7 +15,9 @@ class Navbar extends Component {
 
     return (
       <header className="navbar">
-        <div className="main-nav-title">LABELLAB</div>
+        <Link to="/" className="main-nav-title">
+          LABELLAB
+        </Link>
         <input type="checkbox" className="menu-btn" id="menu-btn" />
         <label htmlFor="menu-btn" className="menu-icon">
           <span className="nav-icon"></span>
@@ -40,6 +42,7 @@ class Navbar extends Component {
                   <Image
                     className="profilepic"
                     centered
+                    alt="Profile"
                     src={
                       user.profileImage === ''
                         ? `${user.thumbnail}`

@@ -52,7 +52,7 @@ class Dashboard extends Component {
     const { file, image } = this.state
     if (file && file.size > 101200) {
       this.setState({
-        maxSizeError: 'max sized reached'
+        maxSizeError: 'Max size reached'
       })
     } else {
       let data = {
