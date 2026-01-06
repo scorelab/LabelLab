@@ -1,5 +1,8 @@
 # LabelLab
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e61f4e6d42574cb9aedcf565f76c8559)](https://app.codacy.com/gh/ashmitkhandelwal1/LabelLab/dashboard)
+
+
 ![labellab](https://user-images.githubusercontent.com/45410599/125047461-a1ebf100-e0bc-11eb-9849-0aa7eb15156c.png)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
