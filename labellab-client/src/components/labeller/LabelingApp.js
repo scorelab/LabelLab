@@ -308,6 +308,7 @@ class LabelingApp extends Component {
             points: figure.points,
             id: figure.id,
             label_type: label.label_type,
+            label_name: label.label_name,
             tracingOptions: figure.tracingOptions
           })
           // if (figure.id === selectedFigureId) {

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Polyline, Polygon, CircleMarker } from 'react-leaflet'
+import { Polyline, Polygon, CircleMarker, Tooltip } from 'react-leaflet'
 
 class Figure extends Component {
   constructor(props) {
@@ -128,14 +128,18 @@ class Figure extends Component {
           fillColor={fillColor}
           opacity={sketch ? '0.7' : '1.0'}
           dashArray={dashArray}
-          interactive={id !== 'trace'} // always set interactive to true, to avoid bugs in leaflet-react
+          interactive={id !== 'trace'}
           onClick={() => {
             if (interactive) {
               onSelect()
               skipNextClick()
             }
           }}
-        />
+        >
+          <Tooltip permanent direction="center">
+            {figure.label_name}
+          </Tooltip>
+        </PolyComp>
         {guideLines}
         {this.makeExtraElements()}
         {!finished || editing ? vertices : null}
