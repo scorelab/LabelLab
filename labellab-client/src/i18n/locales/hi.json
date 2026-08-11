@@ -1,0 +1,21 @@
+{
+  "login": {
+    "authenticating": "प्रमाणीकरण हो रहा है...",
+    "title": "अपने खाते में लॉग इन करें",
+    "email": "ई-मेल पता",
+    "password": "पासवर्ड",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "loginButton": "लॉग इन करें",
+    "noAccount": "खाता नहीं है?",
+    "createAccount": "खाता बनाएं",
+    "or": "या",
+    "emailRequired": "ई-मेल पता आवश्यक है!",
+    "emailInvalid": "ई-मेल पता अमान्य है!",
+    "passwordRequired": "पासवर्ड आवश्यक है!"
+  },
+  "navbar": {
+    "profile": "प्रोफ़ाइल",
+    "logout": "लॉग आउट",
+    "loading": "लोड हो रहा है"
+  }
+}

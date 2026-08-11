@@ -1,0 +1,21 @@
+{
+  "login": {
+    "authenticating": "Authenticating...",
+    "title": "Login to your account",
+    "email": "E-mail address",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Log in",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create an account",
+    "or": "Or",
+    "emailRequired": "E-mail address is required!",
+    "emailInvalid": "E-mail address is invalid!",
+    "passwordRequired": "Password is required!"
+  },
+  "navbar": {
+    "profile": "Profile",
+    "logout": "Logout",
+    "loading": "LOADING"
+  }
+}

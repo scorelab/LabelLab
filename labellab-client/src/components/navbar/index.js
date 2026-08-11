@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Image, Header, Dropdown } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { withTranslation } from 'react-i18next'
 import PropTypes from 'prop-types'
 import './css/navbar.css'
 import Searchbar from './searchbar'
@@ -35,7 +36,7 @@ class Navbar extends Component {
                   content={user.username}
                 />
                 {isfetching ? (
-                  <h4>LOADING</h4>
+                  <h4>{this.props.t('navbar.loading')}</h4>
                 ) : user ? (
                   <Image
                     className="profilepic"
@@ -53,17 +54,17 @@ class Navbar extends Component {
               <Dropdown className="dropdown">
                 <Dropdown.Menu>
                   <Dropdown.Item>
-                    <Link to="/profile">Profile</Link>
+                    <Link to="/profile">{this.props.t('navbar.profile')}</Link>
                   </Dropdown.Item>
                   <Dropdown.Item as="label" onClick={this.handleClick}>
-                    Logout
+                    {this.props.t('navbar.logout')}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
           </li>
           <li>
-            <h4 className="logout">Logout</h4>
+            <h4 className="logout">{this.props.t('navbar.logout')}</h4>
           </li>
         </ul>
       </header>
@@ -83,4 +84,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(Navbar)
+export default withTranslation()(connect(mapStateToProps, null)(Navbar))

@@ -2,20 +2,23 @@ import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16';
 import { testStore, findByTestAttr } from '../../utils/TestUtils'
-import LoginIndex from '../../components/login/index'
+import { LoginIndex } from '../../components/login/index'
 
 Enzyme.configure({ 
     adapter: new Adapter(), 
     disableLifecycleMethods: true 
 });
 
-const setUp = (initialState={}, props={}) => {
-    const store = testStore(initialState);
-    const wrapper = shallow(<LoginIndex store={store} {...props}/>)
-                    .childAt(0)
-                    .dive();
-    return wrapper;
-};
+const setUp = (initialState = {}, props = {}) => {
+  const store = testStore(initialState)
+  return shallow(
+  <LoginIndex
+    store={store}
+    t={(key) => key}
+    {...props}
+  />
+)
+}
 
 describe('Login Component', () => {
 
