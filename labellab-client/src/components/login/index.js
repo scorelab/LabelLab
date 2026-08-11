@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { withTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   Input,
@@ -56,11 +57,11 @@ class LoginIndex extends Component {
         errors.email = value.length
           ? isEmail(value)
             ? ''
-            : 'E-mail address is invalid!'
-          : 'E-mail address is required!'
+            : t('login.emailInvalid')
+          : t('login.emailRequired')
         break
       case 'password':
-        errors.password = value.length ? '' : 'Password is required!'
+        errors.password = value.length ? '' : t('login.passwordRequired')
         break
       default:
         break
@@ -81,7 +82,7 @@ class LoginIndex extends Component {
     } else {
       let errors = { ...this.state.errors }
 
-      errors.password = password.length ? '' : 'Password is required!'
+      errors.password = password.length ? '' : t('login.passwordRequired')
       errors.email = email.length
         ? isEmail(email)
           ? ''
@@ -116,31 +117,32 @@ class LoginIndex extends Component {
       statusText,
       registerStatusText,
       authError,
+      t,
     } = this.props
     const { email, password, errors } = this.state
     return (
       <div className="login-grand-parent">
         {isAuthenticating ? (
           <Dimmer active>
-            <Loader content="Authenticating..." />
+            <Loader content={t('login.authenticating')} />
           </Dimmer>
         ) : null}
         <div className="login-parent">
           <Header as="h2" textAlign="center">
             <Header.Content>
               LabelLab
-              <Header.Subheader>Login to your account</Header.Subheader>
+              <Header.Subheader>{t('login.title')}</Header.Subheader>
             </Header.Content>
           </Header>
 
           <div className="login-form">
             <Form onSubmit={this.handleSubmit}>
               <Form.Field error={!!errors.email}>
-                <label>E-mail address</label>
+                <label>{t('login.email')}</label>
                 <Input
                   type="text"
                   className="email"
-                  placeholder="E-mail address"
+                  placeholder={t('login.email')}
                   name="email"
                   value={email}
                   onChange={this.handleChange}
@@ -153,11 +155,11 @@ class LoginIndex extends Component {
               </Form.Field>
 
               <Form.Field error={!!errors.password}>
-                <label>Password</label>
+                <label>{t('login.password')}</label>
 
                 <Input
                   type={this.state.showPassword ? 'text' : 'password'}
-                  placeholder="Password"
+                  placeholder={t('login.password')}
                   className="password"
                   name="password"
                   value={password}
@@ -190,19 +192,19 @@ class LoginIndex extends Component {
                 </Message>
               )}
               <div className="action">
-                <Link to="/forgotpassword">Forgot password?</Link>
+                <Link to="/forgotpassword">{t('login.forgotPassword')}</Link>
               </div>
 
-              <Button primary>Log in</Button>
+              <Button primary>{t('login.loginButton')}</Button>
             </Form>
           </div>
 
           <div className="action">
-            Don&apos;t have an account?&nbsp;
-            <Link to="/register">Create an account</Link>
+            {t('login.noAccount')}&nbsp;
+            <Link to="/register">{t('login.createAccount')}</Link>
           </div>
 
-          <Divider horizontal>Or</Divider>
+          <Divider horizontal>{t('login.or')}</Divider>
 
           <div className="login-oauth-icon">
             <GoogleContainer />
@@ -238,4 +240,8 @@ const mapActionToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapActionToProps)(LoginIndex)
+export { LoginIndex }
+
+export default withTranslation()(
+  connect(mapStateToProps, mapActionToProps)(LoginIndex)
+)
